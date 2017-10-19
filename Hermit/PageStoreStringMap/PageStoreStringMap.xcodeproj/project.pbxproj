@@ -1,0 +1,539 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		EF6511D31F657ED6002D8065 /* PageStoreStringMapKit_iOS.h in Headers */ = {isa = PBXBuildFile; fileRef = EF6511D11F657ED6002D8065 /* PageStoreStringMapKit_iOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EF6511D71F657EE1002D8065 /* CommitPageStoreStringMapChanges.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5EA41D8788B20056E526 /* CommitPageStoreStringMapChanges.cpp */; };
+		EF6511D81F657EE1002D8065 /* GetPageStoreStringMapValue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5EA61D8788B20056E526 /* GetPageStoreStringMapValue.cpp */; };
+		EF6511D91F657EE1002D8065 /* LockPageStoreStringMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5EAA1D8788B20056E526 /* LockPageStoreStringMap.cpp */; };
+		EF6511DA1F657EE1002D8065 /* PageStoreStringMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5EAC1D8788B20056E526 /* PageStoreStringMap.cpp */; };
+		EF6511DB1F657EE1002D8065 /* SetPageStoreStringMapValue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5EAE1D8788B20056E526 /* SetPageStoreStringMapValue.cpp */; };
+		EF6511DC1F657EE1002D8065 /* UnlockPageStoreStringMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5EB01D8788B20056E526 /* UnlockPageStoreStringMap.cpp */; };
+		EF6511DD1F657EE1002D8065 /* ValidatePageStoreStringMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5EB21D8788B20056E526 /* ValidatePageStoreStringMap.cpp */; };
+		EF6511DE1F657EE1002D8065 /* WithPageStoreStringMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5EB41D8788B20056E526 /* WithPageStoreStringMap.cpp */; };
+		EF6511F01F657F4E002D8065 /* StringMapKit_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF6511EF1F657F4E002D8065 /* StringMapKit_iOS.framework */; };
+		EF6511F21F657F53002D8065 /* FoundationKit_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF6511F11F657F53002D8065 /* FoundationKit_iOS.framework */; };
+		EF7255771F18D1C60054DCE0 /* PageStoreStringMapKit.h in Headers */ = {isa = PBXBuildFile; fileRef = EF7255751F18D1C60054DCE0 /* PageStoreStringMapKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EF72557B1F18D1E20054DCE0 /* CommitPageStoreStringMapChanges.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5EA41D8788B20056E526 /* CommitPageStoreStringMapChanges.cpp */; };
+		EF72557C1F18D1E20054DCE0 /* GetPageStoreStringMapValue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5EA61D8788B20056E526 /* GetPageStoreStringMapValue.cpp */; };
+		EF72557D1F18D1E20054DCE0 /* LockPageStoreStringMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5EAA1D8788B20056E526 /* LockPageStoreStringMap.cpp */; };
+		EF72557E1F18D1E20054DCE0 /* PageStoreStringMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5EAC1D8788B20056E526 /* PageStoreStringMap.cpp */; };
+		EF72557F1F18D1E20054DCE0 /* SetPageStoreStringMapValue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5EAE1D8788B20056E526 /* SetPageStoreStringMapValue.cpp */; };
+		EF7255801F18D1E20054DCE0 /* UnlockPageStoreStringMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5EB01D8788B20056E526 /* UnlockPageStoreStringMap.cpp */; };
+		EF7255811F18D1E20054DCE0 /* ValidatePageStoreStringMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5EB21D8788B20056E526 /* ValidatePageStoreStringMap.cpp */; };
+		EF7255821F18D1E20054DCE0 /* WithPageStoreStringMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5EB41D8788B20056E526 /* WithPageStoreStringMap.cpp */; };
+		EF7255851F18D2160054DCE0 /* FoundationKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF7255841F18D2160054DCE0 /* FoundationKit.framework */; };
+		EF7255871F18D2230054DCE0 /* StringMapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF7255861F18D2230054DCE0 /* StringMapKit.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		EF6511CF1F657ED6002D8065 /* PageStoreStringMapKit_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PageStoreStringMapKit_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF6511D11F657ED6002D8065 /* PageStoreStringMapKit_iOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PageStoreStringMapKit_iOS.h; sourceTree = "<group>"; };
+		EF6511D21F657ED6002D8065 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		EF6511EF1F657F4E002D8065 /* StringMapKit_iOS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StringMapKit_iOS.framework; path = "../StringMap/build/Debug-iphoneos/StringMapKit_iOS.framework"; sourceTree = "<group>"; };
+		EF6511F11F657F53002D8065 /* FoundationKit_iOS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FoundationKit_iOS.framework; path = "../../../../../Library/Developer/Xcode/DerivedData/Library_iPad-cykhkprszqxavbeqjragltzevmga/Build/Products/Debug-iphonesimulator/FoundationKit_iOS.framework"; sourceTree = "<group>"; };
+		EF7255731F18D1C60054DCE0 /* PageStoreStringMapKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PageStoreStringMapKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF7255751F18D1C60054DCE0 /* PageStoreStringMapKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PageStoreStringMapKit.h; sourceTree = "<group>"; };
+		EF7255761F18D1C60054DCE0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		EF7255841F18D2160054DCE0 /* FoundationKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FoundationKit.framework; path = "../../../../Library/Developer/Xcode/DerivedData/Vault_Browser-etrnbxqipwhocnapsvsbsqbjzmyg/Build/Products/Debug/FoundationKit.framework"; sourceTree = "<group>"; };
+		EF7255861F18D2230054DCE0 /* StringMapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StringMapKit.framework; path = "../../../../Library/Developer/Xcode/DerivedData/Vault_Browser-etrnbxqipwhocnapsvsbsqbjzmyg/Build/Products/Debug/StringMapKit.framework"; sourceTree = "<group>"; };
+		EFAD5EA41D8788B20056E526 /* CommitPageStoreStringMapChanges.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CommitPageStoreStringMapChanges.cpp; sourceTree = "<group>"; };
+		EFAD5EA51D8788B20056E526 /* CommitPageStoreStringMapChanges.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommitPageStoreStringMapChanges.h; sourceTree = "<group>"; };
+		EFAD5EA61D8788B20056E526 /* GetPageStoreStringMapValue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GetPageStoreStringMapValue.cpp; sourceTree = "<group>"; };
+		EFAD5EA71D8788B20056E526 /* GetPageStoreStringMapValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetPageStoreStringMapValue.h; sourceTree = "<group>"; };
+		EFAD5EA81D8788B20056E526 /* LibPageStoreStringMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LibPageStoreStringMap.h; sourceTree = "<group>"; };
+		EFAD5EA91D8788B20056E526 /* LibPageStoreStringMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LibPageStoreStringMap.m; sourceTree = "<group>"; };
+		EFAD5EAA1D8788B20056E526 /* LockPageStoreStringMap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LockPageStoreStringMap.cpp; sourceTree = "<group>"; };
+		EFAD5EAB1D8788B20056E526 /* LockPageStoreStringMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LockPageStoreStringMap.h; sourceTree = "<group>"; };
+		EFAD5EAC1D8788B20056E526 /* PageStoreStringMap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PageStoreStringMap.cpp; sourceTree = "<group>"; };
+		EFAD5EAD1D8788B20056E526 /* PageStoreStringMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PageStoreStringMap.h; sourceTree = "<group>"; };
+		EFAD5EAE1D8788B20056E526 /* SetPageStoreStringMapValue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SetPageStoreStringMapValue.cpp; sourceTree = "<group>"; };
+		EFAD5EAF1D8788B20056E526 /* SetPageStoreStringMapValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetPageStoreStringMapValue.h; sourceTree = "<group>"; };
+		EFAD5EB01D8788B20056E526 /* UnlockPageStoreStringMap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UnlockPageStoreStringMap.cpp; sourceTree = "<group>"; };
+		EFAD5EB11D8788B20056E526 /* UnlockPageStoreStringMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UnlockPageStoreStringMap.h; sourceTree = "<group>"; };
+		EFAD5EB21D8788B20056E526 /* ValidatePageStoreStringMap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ValidatePageStoreStringMap.cpp; sourceTree = "<group>"; };
+		EFAD5EB31D8788B20056E526 /* ValidatePageStoreStringMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ValidatePageStoreStringMap.h; sourceTree = "<group>"; };
+		EFAD5EB41D8788B20056E526 /* WithPageStoreStringMap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WithPageStoreStringMap.cpp; sourceTree = "<group>"; };
+		EFAD5EB51D8788B20056E526 /* WithPageStoreStringMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WithPageStoreStringMap.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		EF6511CB1F657ED6002D8065 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF6511F21F657F53002D8065 /* FoundationKit_iOS.framework in Frameworks */,
+				EF6511F01F657F4E002D8065 /* StringMapKit_iOS.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EF72556F1F18D1C60054DCE0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF7255871F18D2230054DCE0 /* StringMapKit.framework in Frameworks */,
+				EF7255851F18D2160054DCE0 /* FoundationKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		EF6511D01F657ED6002D8065 /* PageStoreStringMapKit_iOS */ = {
+			isa = PBXGroup;
+			children = (
+				EF6511D11F657ED6002D8065 /* PageStoreStringMapKit_iOS.h */,
+				EF6511D21F657ED6002D8065 /* Info.plist */,
+			);
+			path = PageStoreStringMapKit_iOS;
+			sourceTree = "<group>";
+		};
+		EF7255741F18D1C60054DCE0 /* PageStoreStringMapKit */ = {
+			isa = PBXGroup;
+			children = (
+				EF7255751F18D1C60054DCE0 /* PageStoreStringMapKit.h */,
+				EF7255761F18D1C60054DCE0 /* Info.plist */,
+			);
+			path = PageStoreStringMapKit;
+			sourceTree = "<group>";
+		};
+		EF7255831F18D2160054DCE0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				EF6511F11F657F53002D8065 /* FoundationKit_iOS.framework */,
+				EF6511EF1F657F4E002D8065 /* StringMapKit_iOS.framework */,
+				EF7255861F18D2230054DCE0 /* StringMapKit.framework */,
+				EF7255841F18D2160054DCE0 /* FoundationKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		EFAD5E8F1D8788760056E526 = {
+			isa = PBXGroup;
+			children = (
+				EFAD5EA41D8788B20056E526 /* CommitPageStoreStringMapChanges.cpp */,
+				EFAD5EA51D8788B20056E526 /* CommitPageStoreStringMapChanges.h */,
+				EFAD5EA61D8788B20056E526 /* GetPageStoreStringMapValue.cpp */,
+				EFAD5EA71D8788B20056E526 /* GetPageStoreStringMapValue.h */,
+				EFAD5EA81D8788B20056E526 /* LibPageStoreStringMap.h */,
+				EFAD5EA91D8788B20056E526 /* LibPageStoreStringMap.m */,
+				EFAD5EAA1D8788B20056E526 /* LockPageStoreStringMap.cpp */,
+				EFAD5EAB1D8788B20056E526 /* LockPageStoreStringMap.h */,
+				EFAD5EAC1D8788B20056E526 /* PageStoreStringMap.cpp */,
+				EFAD5EAD1D8788B20056E526 /* PageStoreStringMap.h */,
+				EFAD5EAE1D8788B20056E526 /* SetPageStoreStringMapValue.cpp */,
+				EFAD5EAF1D8788B20056E526 /* SetPageStoreStringMapValue.h */,
+				EFAD5EB01D8788B20056E526 /* UnlockPageStoreStringMap.cpp */,
+				EFAD5EB11D8788B20056E526 /* UnlockPageStoreStringMap.h */,
+				EFAD5EB21D8788B20056E526 /* ValidatePageStoreStringMap.cpp */,
+				EFAD5EB31D8788B20056E526 /* ValidatePageStoreStringMap.h */,
+				EFAD5EB41D8788B20056E526 /* WithPageStoreStringMap.cpp */,
+				EFAD5EB51D8788B20056E526 /* WithPageStoreStringMap.h */,
+				EF7255741F18D1C60054DCE0 /* PageStoreStringMapKit */,
+				EF6511D01F657ED6002D8065 /* PageStoreStringMapKit_iOS */,
+				EFAD5E991D8788760056E526 /* Products */,
+				EF7255831F18D2160054DCE0 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		EFAD5E991D8788760056E526 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				EF7255731F18D1C60054DCE0 /* PageStoreStringMapKit.framework */,
+				EF6511CF1F657ED6002D8065 /* PageStoreStringMapKit_iOS.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		EF6511CC1F657ED6002D8065 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF6511D31F657ED6002D8065 /* PageStoreStringMapKit_iOS.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EF7255701F18D1C60054DCE0 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF7255771F18D1C60054DCE0 /* PageStoreStringMapKit.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		EF6511CE1F657ED6002D8065 /* PageStoreStringMapKit_iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EF6511D61F657ED6002D8065 /* Build configuration list for PBXNativeTarget "PageStoreStringMapKit_iOS" */;
+			buildPhases = (
+				EF6511CA1F657ED6002D8065 /* Sources */,
+				EF6511CB1F657ED6002D8065 /* Frameworks */,
+				EF6511CC1F657ED6002D8065 /* Headers */,
+				EF6511CD1F657ED6002D8065 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PageStoreStringMapKit_iOS;
+			productName = PageStoreStringMapKit_iOS;
+			productReference = EF6511CF1F657ED6002D8065 /* PageStoreStringMapKit_iOS.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		EF7255721F18D1C60054DCE0 /* PageStoreStringMapKit */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EF72557A1F18D1C60054DCE0 /* Build configuration list for PBXNativeTarget "PageStoreStringMapKit" */;
+			buildPhases = (
+				EF72556E1F18D1C60054DCE0 /* Sources */,
+				EF72556F1F18D1C60054DCE0 /* Frameworks */,
+				EF7255701F18D1C60054DCE0 /* Headers */,
+				EF7255711F18D1C60054DCE0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PageStoreStringMapKit;
+			productName = PageStoreStringMapKit;
+			productReference = EF7255731F18D1C60054DCE0 /* PageStoreStringMapKit.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		EFAD5E901D8788760056E526 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0900;
+				ORGANIZATIONNAME = peymojo;
+				TargetAttributes = {
+					EF6511CE1F657ED6002D8065 = {
+						CreatedOnToolsVersion = 8.3.3;
+						DevelopmentTeam = HQWNX3S2CF;
+						ProvisioningStyle = Automatic;
+					};
+					EF7255721F18D1C60054DCE0 = {
+						CreatedOnToolsVersion = 8.3.3;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = EFAD5E931D8788760056E526 /* Build configuration list for PBXProject "PageStoreStringMap" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = EFAD5E8F1D8788760056E526;
+			productRefGroup = EFAD5E991D8788760056E526 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				EF7255721F18D1C60054DCE0 /* PageStoreStringMapKit */,
+				EF6511CE1F657ED6002D8065 /* PageStoreStringMapKit_iOS */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		EF6511CD1F657ED6002D8065 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EF7255711F18D1C60054DCE0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		EF6511CA1F657ED6002D8065 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF6511D71F657EE1002D8065 /* CommitPageStoreStringMapChanges.cpp in Sources */,
+				EF6511D81F657EE1002D8065 /* GetPageStoreStringMapValue.cpp in Sources */,
+				EF6511D91F657EE1002D8065 /* LockPageStoreStringMap.cpp in Sources */,
+				EF6511DA1F657EE1002D8065 /* PageStoreStringMap.cpp in Sources */,
+				EF6511DB1F657EE1002D8065 /* SetPageStoreStringMapValue.cpp in Sources */,
+				EF6511DC1F657EE1002D8065 /* UnlockPageStoreStringMap.cpp in Sources */,
+				EF6511DD1F657EE1002D8065 /* ValidatePageStoreStringMap.cpp in Sources */,
+				EF6511DE1F657EE1002D8065 /* WithPageStoreStringMap.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EF72556E1F18D1C60054DCE0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF72557B1F18D1E20054DCE0 /* CommitPageStoreStringMapChanges.cpp in Sources */,
+				EF72557C1F18D1E20054DCE0 /* GetPageStoreStringMapValue.cpp in Sources */,
+				EF72557D1F18D1E20054DCE0 /* LockPageStoreStringMap.cpp in Sources */,
+				EF72557E1F18D1E20054DCE0 /* PageStoreStringMap.cpp in Sources */,
+				EF72557F1F18D1E20054DCE0 /* SetPageStoreStringMapValue.cpp in Sources */,
+				EF7255801F18D1E20054DCE0 /* UnlockPageStoreStringMap.cpp in Sources */,
+				EF7255811F18D1E20054DCE0 /* ValidatePageStoreStringMap.cpp in Sources */,
+				EF7255821F18D1E20054DCE0 /* WithPageStoreStringMap.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		EF6511D41F657ED6002D8065 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = HQWNX3S2CF;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				HEADER_SEARCH_PATHS = ../../;
+				INFOPLIST_FILE = PageStoreStringMapKit_iOS/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.filehaven.PageStoreStringMapKit-iOS";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		EF6511D51F657ED6002D8065 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = HQWNX3S2CF;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				HEADER_SEARCH_PATHS = ../../;
+				INFOPLIST_FILE = PageStoreStringMapKit_iOS/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.filehaven.PageStoreStringMapKit-iOS";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		EF7255781F18D1C60054DCE0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CODE_SIGN_IDENTITY = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				HEADER_SEARCH_PATHS = ../../;
+				INFOPLIST_FILE = PageStoreStringMapKit/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_BUNDLE_IDENTIFIER = com.filehaven.PageStoreStringMapKit;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		EF7255791F18D1C60054DCE0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CODE_SIGN_IDENTITY = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				HEADER_SEARCH_PATHS = ../../;
+				INFOPLIST_FILE = PageStoreStringMapKit/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_BUNDLE_IDENTIFIER = com.filehaven.PageStoreStringMapKit;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		EFAD5E9F1D8788760056E526 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		EFAD5EA01D8788760056E526 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		EF6511D61F657ED6002D8065 /* Build configuration list for PBXNativeTarget "PageStoreStringMapKit_iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EF6511D41F657ED6002D8065 /* Debug */,
+				EF6511D51F657ED6002D8065 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EF72557A1F18D1C60054DCE0 /* Build configuration list for PBXNativeTarget "PageStoreStringMapKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EF7255781F18D1C60054DCE0 /* Debug */,
+				EF7255791F18D1C60054DCE0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EFAD5E931D8788760056E526 /* Build configuration list for PBXProject "PageStoreStringMap" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EFAD5E9F1D8788760056E526 /* Debug */,
+				EFAD5EA01D8788760056E526 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = EFAD5E901D8788760056E526 /* Project object */;
+}

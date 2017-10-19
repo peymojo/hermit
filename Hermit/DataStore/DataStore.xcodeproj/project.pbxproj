@@ -1,0 +1,487 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		EF72551A1F18CDA10054DCE0 /* DataStoreKit.h in Headers */ = {isa = PBXBuildFile; fileRef = EF7255181F18CDA10054DCE0 /* DataStoreKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EF72551E1F18CDB00054DCE0 /* DataPath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD59811D86B6520056E526 /* DataPath.cpp */; };
+		EF72551F1F18CDB00054DCE0 /* DataStore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF95B6DB1EF3A30800E8CED3 /* DataStore.cpp */; };
+		EF7255221F18CDF80054DCE0 /* FoundationKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF7255211F18CDF80054DCE0 /* FoundationKit.framework */; };
+		EFF398DC1F65569000B1BD33 /* DataStoreKit_iOS.h in Headers */ = {isa = PBXBuildFile; fileRef = EFF398DA1F65569000B1BD33 /* DataStoreKit_iOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EFF398E01F65569900B1BD33 /* DataPath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD59811D86B6520056E526 /* DataPath.cpp */; };
+		EFF398E11F65569900B1BD33 /* DataStore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF95B6DB1EF3A30800E8CED3 /* DataStore.cpp */; };
+		EFF398E91F6556E500B1BD33 /* FoundationKit_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EFF398E81F6556E500B1BD33 /* FoundationKit_iOS.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		EF7255161F18CDA10054DCE0 /* DataStoreKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DataStoreKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF7255181F18CDA10054DCE0 /* DataStoreKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DataStoreKit.h; sourceTree = "<group>"; };
+		EF7255191F18CDA10054DCE0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		EF7255211F18CDF80054DCE0 /* FoundationKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FoundationKit.framework; path = "../../../../Library/Developer/Xcode/DerivedData/Vault_Browser-etrnbxqipwhocnapsvsbsqbjzmyg/Build/Products/Debug/FoundationKit.framework"; sourceTree = "<group>"; };
+		EF95B6DB1EF3A30800E8CED3 /* DataStore.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DataStore.cpp; sourceTree = "<group>"; };
+		EFAD59811D86B6520056E526 /* DataPath.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DataPath.cpp; sourceTree = "<group>"; };
+		EFAD59821D86B6520056E526 /* DataPath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataPath.h; sourceTree = "<group>"; };
+		EFAD59831D86B6520056E526 /* DataStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataStore.h; sourceTree = "<group>"; };
+		EFAD59841D86B6520056E526 /* DataStoreEncryptionSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataStoreEncryptionSetting.h; sourceTree = "<group>"; };
+		EFAD59891D86B6520056E526 /* LibDataStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LibDataStore.h; sourceTree = "<group>"; };
+		EFAD598A1D86B6520056E526 /* LibDataStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LibDataStore.m; sourceTree = "<group>"; };
+		EFAD59911D86B6520056E526 /* WithDataStoreCallback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WithDataStoreCallback.h; sourceTree = "<group>"; };
+		EFF398D81F65569000B1BD33 /* DataStoreKit_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DataStoreKit_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EFF398DA1F65569000B1BD33 /* DataStoreKit_iOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DataStoreKit_iOS.h; sourceTree = "<group>"; };
+		EFF398DB1F65569000B1BD33 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		EFF398E81F6556E500B1BD33 /* FoundationKit_iOS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FoundationKit_iOS.framework; path = "../../../../../Library/Developer/Xcode/DerivedData/Library_iPad-cykhkprszqxavbeqjragltzevmga/Build/Products/Debug-iphonesimulator/FoundationKit_iOS.framework"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		EF7255121F18CDA10054DCE0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF7255221F18CDF80054DCE0 /* FoundationKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EFF398D41F65569000B1BD33 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EFF398E91F6556E500B1BD33 /* FoundationKit_iOS.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		EF7255171F18CDA10054DCE0 /* DataStoreKit */ = {
+			isa = PBXGroup;
+			children = (
+				EF7255181F18CDA10054DCE0 /* DataStoreKit.h */,
+				EF7255191F18CDA10054DCE0 /* Info.plist */,
+			);
+			path = DataStoreKit;
+			sourceTree = "<group>";
+		};
+		EF7255201F18CDF80054DCE0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				EFF398E81F6556E500B1BD33 /* FoundationKit_iOS.framework */,
+				EF7255211F18CDF80054DCE0 /* FoundationKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		EFAD596A1D86B6170056E526 = {
+			isa = PBXGroup;
+			children = (
+				EFAD59811D86B6520056E526 /* DataPath.cpp */,
+				EFAD59821D86B6520056E526 /* DataPath.h */,
+				EF95B6DB1EF3A30800E8CED3 /* DataStore.cpp */,
+				EFAD59831D86B6520056E526 /* DataStore.h */,
+				EFAD59841D86B6520056E526 /* DataStoreEncryptionSetting.h */,
+				EFAD59891D86B6520056E526 /* LibDataStore.h */,
+				EFAD598A1D86B6520056E526 /* LibDataStore.m */,
+				EF7255171F18CDA10054DCE0 /* DataStoreKit */,
+				EFF398D91F65569000B1BD33 /* DataStoreKit_iOS */,
+				EFAD59741D86B6170056E526 /* Products */,
+				EFAD59911D86B6520056E526 /* WithDataStoreCallback.h */,
+				EF7255201F18CDF80054DCE0 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		EFAD59741D86B6170056E526 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				EF7255161F18CDA10054DCE0 /* DataStoreKit.framework */,
+				EFF398D81F65569000B1BD33 /* DataStoreKit_iOS.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		EFF398D91F65569000B1BD33 /* DataStoreKit_iOS */ = {
+			isa = PBXGroup;
+			children = (
+				EFF398DA1F65569000B1BD33 /* DataStoreKit_iOS.h */,
+				EFF398DB1F65569000B1BD33 /* Info.plist */,
+			);
+			path = DataStoreKit_iOS;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		EF7255131F18CDA10054DCE0 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF72551A1F18CDA10054DCE0 /* DataStoreKit.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EFF398D51F65569000B1BD33 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EFF398DC1F65569000B1BD33 /* DataStoreKit_iOS.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		EF7255151F18CDA10054DCE0 /* DataStoreKit */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EF72551D1F18CDA10054DCE0 /* Build configuration list for PBXNativeTarget "DataStoreKit" */;
+			buildPhases = (
+				EF7255111F18CDA10054DCE0 /* Sources */,
+				EF7255121F18CDA10054DCE0 /* Frameworks */,
+				EF7255131F18CDA10054DCE0 /* Headers */,
+				EF7255141F18CDA10054DCE0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DataStoreKit;
+			productName = DataStoreKit;
+			productReference = EF7255161F18CDA10054DCE0 /* DataStoreKit.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		EFF398D71F65569000B1BD33 /* DataStoreKit_iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EFF398DF1F65569000B1BD33 /* Build configuration list for PBXNativeTarget "DataStoreKit_iOS" */;
+			buildPhases = (
+				EFF398D31F65569000B1BD33 /* Sources */,
+				EFF398D41F65569000B1BD33 /* Frameworks */,
+				EFF398D51F65569000B1BD33 /* Headers */,
+				EFF398D61F65569000B1BD33 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DataStoreKit_iOS;
+			productName = DataStoreKit_iOS;
+			productReference = EFF398D81F65569000B1BD33 /* DataStoreKit_iOS.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		EFAD596B1D86B6170056E526 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0900;
+				ORGANIZATIONNAME = peymojo;
+				TargetAttributes = {
+					EF7255151F18CDA10054DCE0 = {
+						CreatedOnToolsVersion = 8.3.3;
+						ProvisioningStyle = Automatic;
+					};
+					EFF398D71F65569000B1BD33 = {
+						CreatedOnToolsVersion = 8.3.3;
+						DevelopmentTeam = HQWNX3S2CF;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = EFAD596E1D86B6170056E526 /* Build configuration list for PBXProject "DataStore" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = EFAD596A1D86B6170056E526;
+			productRefGroup = EFAD59741D86B6170056E526 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				EF7255151F18CDA10054DCE0 /* DataStoreKit */,
+				EFF398D71F65569000B1BD33 /* DataStoreKit_iOS */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		EF7255141F18CDA10054DCE0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EFF398D61F65569000B1BD33 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		EF7255111F18CDA10054DCE0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF72551E1F18CDB00054DCE0 /* DataPath.cpp in Sources */,
+				EF72551F1F18CDB00054DCE0 /* DataStore.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EFF398D31F65569000B1BD33 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EFF398E01F65569900B1BD33 /* DataPath.cpp in Sources */,
+				EFF398E11F65569900B1BD33 /* DataStore.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		EF72551B1F18CDA10054DCE0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CODE_SIGN_IDENTITY = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				HEADER_SEARCH_PATHS = ../../;
+				INFOPLIST_FILE = DataStoreKit/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_BUNDLE_IDENTIFIER = com.filehaven.DataStoreKit;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		EF72551C1F18CDA10054DCE0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CODE_SIGN_IDENTITY = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				HEADER_SEARCH_PATHS = ../../;
+				INFOPLIST_FILE = DataStoreKit/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_BUNDLE_IDENTIFIER = com.filehaven.DataStoreKit;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		EFAD597A1D86B6170056E526 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		EFAD597B1D86B6170056E526 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		EFF398DD1F65569000B1BD33 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = HQWNX3S2CF;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				HEADER_SEARCH_PATHS = ../../;
+				INFOPLIST_FILE = DataStoreKit_iOS/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.filehaven.DataStoreKit-iOS";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		EFF398DE1F65569000B1BD33 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = HQWNX3S2CF;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				HEADER_SEARCH_PATHS = ../../;
+				INFOPLIST_FILE = DataStoreKit_iOS/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.filehaven.DataStoreKit-iOS";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		EF72551D1F18CDA10054DCE0 /* Build configuration list for PBXNativeTarget "DataStoreKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EF72551B1F18CDA10054DCE0 /* Debug */,
+				EF72551C1F18CDA10054DCE0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EFAD596E1D86B6170056E526 /* Build configuration list for PBXProject "DataStore" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EFAD597A1D86B6170056E526 /* Debug */,
+				EFAD597B1D86B6170056E526 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EFF398DF1F65569000B1BD33 /* Build configuration list for PBXNativeTarget "DataStoreKit_iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EFF398DD1F65569000B1BD33 /* Debug */,
+				EFF398DE1F65569000B1BD33 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = EFAD596B1D86B6170056E526 /* Project object */;
+}
