@@ -71,6 +71,7 @@ namespace hermit {
 											 "DataWriter: exception during writeData:", [exception.name UTF8String],
 											 "reason:", [exception.reason UTF8String]);
 								resultBlock->Call(h_, StreamDataResult::kError);
+								return;
 							}
 							
 							mBytesWritten += bytesToWrite;
