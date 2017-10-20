@@ -21,6 +21,7 @@
 #import <string>
 #import <sys/errno.h>
 #import "Hermit/Foundation/Notification.h"
+#import "Hermit/Foundation/QueueAsyncTask.h"
 #import "FilePathToCocoaPathString.h"
 #import "StreamInFileData.h"
 
@@ -66,7 +67,33 @@ namespace hermit {
 				}
 				
 				//
+				class StreamTask : public AsyncTask {
+				public:
+					//
+					StreamTask(const HermitPtr& h_, const FileStreamerPtr& streamer) : mH_(h_), mStreamer(streamer) {
+					}
+					
+					//
+					virtual void PerformTask(const int32_t& taskId) override {
+						mStreamer->PerformStreamTask(mH_);
+					}
+					
+					//
+					HermitPtr mH_;
+					FileStreamerPtr mStreamer;
+				};
+				
+				//
 				void StreamNextChunk(const HermitPtr& h_) {
+					auto task = std::make_shared<StreamTask>(h_, shared_from_this());
+					if (!QueueAsyncTask(task, 1)) {
+						NOTIFY_ERROR(h_, "StreamInFileData: QueueAsyncTask failed.");
+						mCompletion->Call(h_, StreamDataResult::kError);
+						return;
+					}
+				}
+				//
+				void PerformStreamTask(const HermitPtr& h_) {
 					@autoreleasepool {
 						@try {
 							NSData* data = [mFileHandle readDataOfLength:(size_t)mChunkSize];
