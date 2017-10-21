@@ -22,12 +22,13 @@
 #include "Hermit/DataStore/DataPath.h"
 
 namespace hermit {
-namespace s3datastore {
-
-//
-void S3PathToDataPath(const std::string& inS3Path, const datastore::DataPathCallbackRef& inCallback);
-	
-} // namespace s3datastore
+	namespace s3datastore {
+		
+		//
+		bool S3PathToDataPath(const std::string& s3Path, datastore::DataPathPtr& outDataPath);
+		
+	} // namespace s3datastore
 } // namespace hermit
 
-#endif 
+#endif
+

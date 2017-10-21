@@ -32,9 +32,9 @@ namespace hermit {
 			FilePathDataPath(file::FilePathPtr inFilePath);
 			
 			//
-			virtual void AppendPathComponent(const HermitPtr& h_,
-											 const std::string& inName,
-											 const datastore::DataPathCallbackRef& inCallback) override;
+			virtual bool AppendPathComponent(const HermitPtr& h_,
+											 const std::string& name,
+											 datastore::DataPathPtr& outDataPath) override;
 			
 			//
 			virtual void GetStringRepresentation(const HermitPtr& h_, std::string& outStringRepresentation) override;

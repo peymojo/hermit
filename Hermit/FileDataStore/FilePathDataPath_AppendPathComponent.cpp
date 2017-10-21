@@ -25,26 +25,24 @@ namespace hermit {
 	namespace filedatastore {
 		
 		//
-		void FilePathDataPath::AppendPathComponent(const HermitPtr& h_,
-												   const std::string& inName,
-												   const datastore::DataPathCallbackRef& inCallback) {
+		bool FilePathDataPath::AppendPathComponent(const HermitPtr& h_,
+												   const std::string& name,
+												   datastore::DataPathPtr& outDataPath) {
 			
 			file::FilePathPtr newPath;
-			file::AppendToFilePath(h_, mFilePath, inName, newPath);
+			file::AppendToFilePath(h_, mFilePath, name, newPath);
 			if (newPath == nullptr) {
-				NOTIFY_ERROR(h_, "AppendToFilePath failed, parent path:", mFilePath, "name:", inName);
-				inCallback.Call(false, nullptr);
-				return;
+				NOTIFY_ERROR(h_, "AppendToFilePath failed, parent path:", mFilePath, "name:", name);
+				return false;
 			}
 			
-			datastore::DataPathCallbackClassT<datastore::DataPathPtr> dataPathCallback;
-			FilePathToDataPath(h_, newPath, dataPathCallback);
-			if (!dataPathCallback.mSuccess) {
+			datastore::DataPathPtr dataPath;
+			if (!FilePathToDataPath(h_, newPath, dataPath)) {
 				NOTIFY_ERROR(h_, "FilePathToDataPath failed for path:", newPath);
-				inCallback.Call(false, nullptr);
-				return;
+				return false;
 			}
-			inCallback.Call(true, dataPathCallback.mPath);
+			outDataPath = dataPath;
+			return true;
 		}
 		
 	} // namespace filedatastore

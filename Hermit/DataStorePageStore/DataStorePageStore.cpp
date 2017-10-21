@@ -135,16 +135,15 @@ namespace {
 			DataStorePageStore& pageStore = static_cast<DataStorePageStore&>(*mPageStore);
 			DataStorePageStore::PageMap pageTable;
 			if (status == datastore::LoadDataStoreDataStatus::kItemNotFound) {
-				datastore::DataPathCallbackClassT<datastore::DataPathPtr> pagesPath;
-				mPath->AppendPathComponent(h_, "pages", pagesPath);
-				if (!pagesPath.mSuccess) {
+				datastore::DataPathPtr pagesPath;
+				if (!mPath->AppendPathComponent(h_, "pages", pagesPath)) {
 					NOTIFY_ERROR(h_, "AppendToDataPath failed for pages path.");
 					mCompletion->Call(kReadPageTableResult_Error);
 					return;
 				}
 				
 				ListCallback callback(pageTable, false);
-				auto result = mDataStore->ListContents(h_, pagesPath.mPath, callback);
+				auto result = mDataStore->ListContents(h_, pagesPath, callback);
 				if (result == datastore::ListDataStoreContentsResult::kCanceled) {
 					mCompletion->Call(kReadPageTableResult_Canceled);
 					return;
@@ -241,9 +240,8 @@ namespace {
 		}
 		
 		std::string indexName("index.json");
-		datastore::DataPathCallbackClassT<datastore::DataPathPtr> indexPath;
-		path->AppendPathComponent(h_, indexName, indexPath);
-		if (!indexPath.mSuccess) {
+		datastore::DataPathPtr indexPath;
+		if (!path->AppendPathComponent(h_, indexName, indexPath)) {
 			NOTIFY_ERROR(h_, "AppendToDataPath failed for indexName:", indexName);
 			inCompletionFunction->Call(kReadPageTableResult_Error);
 			return;
@@ -252,7 +250,7 @@ namespace {
 		auto dataBlock = std::make_shared<datastore::LoadDataStoreDataData>();
 		auto completion = std::make_shared<CompletionBlock>(inPageStore, dataStore, path, dataBlock, inCompletionFunction);
 		auto encryptionSetting = datastore::kDataStoreEncryptionSetting_Default;
-		dataStore->LoadData(h_, indexPath.mPath, encryptionSetting, dataBlock, completion);
+		dataStore->LoadData(h_, indexPath, encryptionSetting, dataBlock, completion);
 	}
 	
 	//

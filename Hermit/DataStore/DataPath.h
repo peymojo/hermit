@@ -19,7 +19,8 @@
 #ifndef DataPath_h
 #define DataPath_h
 
-#include "Hermit/Foundation/Callback.h"
+#include <memory>
+#include <string>
 #include "Hermit/Foundation/Hermit.h"
 
 namespace hermit {
@@ -28,40 +29,12 @@ namespace hermit {
 		//
 		class DataPath;
 		typedef std::shared_ptr<DataPath> DataPathPtr;
-		
+
 		//
-		DEFINE_CALLBACK_2A(DataPathCallback, bool, DataPathPtr);
-		
-		//
-		template <typename ManagedDataPathPtrT>
-		class DataPathCallbackClassT : public DataPathCallback {
+		class DataPath {
 		public:
 			//
-			DataPathCallbackClassT()
-			:
-			mSuccess(false) {
-			}
-			
-			//
-			bool Function(const bool& inSuccess, const DataPathPtr& inPath) {
-				mSuccess = inSuccess;
-				if (inSuccess) {
-					mPath = inPath;
-				}
-				return true;
-			}
-			
-			//
-			bool mSuccess;
-			ManagedDataPathPtrT mPath;
-		};
-		
-		//
-		struct DataPath {
-			//
-			virtual void AppendPathComponent(const HermitPtr& h_,
-											 const std::string& inName,
-											 const DataPathCallbackRef& inCallback);
+			virtual bool AppendPathComponent(const HermitPtr& h_, const std::string& name, DataPathPtr& outNewPath);
 			
 			//
 			virtual void GetStringRepresentation(const HermitPtr& h_, std::string& outStringRepresentation);
@@ -73,7 +46,7 @@ namespace hermit {
 			//
 			virtual ~DataPath() = default;
 		};
-		
+
 		//
 		void StreamOut(const HermitPtr& h_, std::ostream& strm, DataPathPtr arg);
 		

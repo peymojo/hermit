@@ -20,13 +20,14 @@
 #include "S3PathToDataPath.h"
 
 namespace hermit {
-namespace s3datastore {
-
-//
-void S3PathToDataPath(const std::string& inS3Path, const datastore::DataPathCallbackRef& inCallback) {
-	auto s3DataPath = std::make_shared<S3DataPath>(inS3Path);
-	inCallback.Call(true, s3DataPath);
-}
-
-} // namespace s3datastore
+	namespace s3datastore {
+		
+		//
+		bool S3PathToDataPath(const std::string& s3Path, datastore::DataPathPtr& outDataPath) {
+			outDataPath = std::make_shared<S3DataPath>(s3Path);
+			return true;
+		}
+		
+	} // namespace s3datastore
 } // namespace hermit
+

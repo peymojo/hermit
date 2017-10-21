@@ -19,16 +19,13 @@
 #include "FilePathDataPath.h"
 
 namespace hermit {
-namespace filedatastore {
-
-//
-//
-FilePathDataPath::FilePathDataPath(
-	file::FilePathPtr inFilePath)
-	:
-	mFilePath(inFilePath)
-{
-}
-
-} // namespace filedatastore
+	namespace filedatastore {
+		
+		//
+		FilePathDataPath::FilePathDataPath(file::FilePathPtr inFilePath) :
+		mFilePath(inFilePath) {
+		}
+		
+	} // namespace filedatastore
 } // namespace hermit
+

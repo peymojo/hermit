@@ -27,9 +27,7 @@ namespace hermit {
 	namespace filedatastore {
 		
 		//
-		void FilePathToDataPath(const HermitPtr& h_,
-								const file::FilePathPtr& inFilePath,
-								const datastore::DataPathCallbackRef& inCallback);
+		bool FilePathToDataPath(const HermitPtr& h_, const file::FilePathPtr& filePath, datastore::DataPathPtr& outDataPath);
 		
 	} // namespace filedatastore
 } // namespace hermit

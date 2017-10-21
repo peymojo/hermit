@@ -20,18 +20,16 @@
 #include "WithS3DataStore.h"
 
 namespace hermit {
-namespace s3datastore {
-
-//
-//
-void WithS3DataStore(
-	const s3bucket::S3BucketPtr& inS3Bucket,
-	const bool& inUseReducedRedundancyStorage,
-	const datastore::WithDataStoreCallbackRef& inCallback)
-{
-	auto dataStore = std::make_shared<S3DataStore>(inS3Bucket, inUseReducedRedundancyStorage);
-	inCallback.Call(datastore::kWithDataStoreCallbackStatus_Success, dataStore);
-}
-
-} // namespace s3datastore
+	namespace s3datastore {
+		
+		//
+		bool WithS3DataStore(const s3bucket::S3BucketPtr& s3Bucket,
+							 const bool& useReducedRedundancyStorage,
+							 datastore::DataStorePtr& outDataStore) {
+			outDataStore = std::make_shared<S3DataStore>(s3Bucket, useReducedRedundancyStorage);
+			return true;
+		}
+		
+	} // namespace s3datastore
 } // namespace hermit
+

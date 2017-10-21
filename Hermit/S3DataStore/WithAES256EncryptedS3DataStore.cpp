@@ -20,21 +20,19 @@
 #include "WithAES256EncryptedS3DataStore.h"
 
 namespace hermit {
-namespace s3datastore {
-
-//
-//
-void WithAES256EncryptedS3DataStore(
-	const s3bucket::S3BucketPtr& inS3Bucket,
-	const bool& inUseReducedRedundancyStorage,
-	const std::string& inAESKey,
-	const datastore::WithDataStoreCallbackRef& inCallback)
-{
-	auto dataStore = std::make_shared<AES256EncryptedS3DataStore>(inS3Bucket,
-																  inUseReducedRedundancyStorage,
-																  inAESKey);
-	inCallback.Call(datastore::kWithDataStoreCallbackStatus_Success, dataStore);
-}
-
-} // namespace s3datastore
+	namespace s3datastore {
+		
+		//
+		bool WithAES256EncryptedS3DataStore(const s3bucket::S3BucketPtr& s3Bucket,
+											const bool& useReducedRedundancyStorage,
+											const std::string& aesKey,
+											datastore::DataStorePtr& outDataStore) {
+			outDataStore = std::make_shared<AES256EncryptedS3DataStore>(s3Bucket,
+																		useReducedRedundancyStorage,
+																		aesKey);
+			return true;
+		}
+		
+	} // namespace s3datastore
 } // namespace hermit
+

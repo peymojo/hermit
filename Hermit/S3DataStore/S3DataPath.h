@@ -23,33 +23,34 @@
 #include "Hermit/DataStore/DataPath.h"
 
 namespace hermit {
-namespace s3datastore {
-
-//
-class S3DataPath : public datastore::DataPath {
-public:
-	//
-	S3DataPath(const std::string& inPath);
-	
-	//
-	virtual void AppendPathComponent(const HermitPtr& h_,
-									 const std::string& inName,
-									 const datastore::DataPathCallbackRef& inCallback) override;
-
-	//
-	virtual void GetStringRepresentation(const HermitPtr& h_, std::string& outStringRepresentation) override;
-
-	//
-	virtual void GetLastPathComponent(const HermitPtr& h_, std::string& outLastPathComponent) override;
-
-	//
-	std::string mPath;
-};
-
-//
-typedef std::shared_ptr<S3DataPath> S3DataPathPtr;
-
-} // namespace s3datastore
+	namespace s3datastore {
+		
+		//
+		class S3DataPath : public datastore::DataPath {
+		public:
+			//
+			S3DataPath(const std::string& inPath);
+			
+			//
+			virtual bool AppendPathComponent(const HermitPtr& h_,
+											 const std::string& name,
+											 datastore::DataPathPtr& outDataPath) override;
+			
+			//
+			virtual void GetStringRepresentation(const HermitPtr& h_, std::string& outStringRepresentation) override;
+			
+			//
+			virtual void GetLastPathComponent(const HermitPtr& h_, std::string& outLastPathComponent) override;
+			
+			//
+			std::string mPath;
+		};
+		
+		//
+		typedef std::shared_ptr<S3DataPath> S3DataPathPtr;
+		
+	} // namespace s3datastore
 } // namespace hermit
 
-#endif 
+#endif
+

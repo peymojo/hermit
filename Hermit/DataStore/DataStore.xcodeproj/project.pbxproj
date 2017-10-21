@@ -29,7 +29,6 @@
 		EFAD59841D86B6520056E526 /* DataStoreEncryptionSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataStoreEncryptionSetting.h; sourceTree = "<group>"; };
 		EFAD59891D86B6520056E526 /* LibDataStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LibDataStore.h; sourceTree = "<group>"; };
 		EFAD598A1D86B6520056E526 /* LibDataStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LibDataStore.m; sourceTree = "<group>"; };
-		EFAD59911D86B6520056E526 /* WithDataStoreCallback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WithDataStoreCallback.h; sourceTree = "<group>"; };
 		EFF398D81F65569000B1BD33 /* DataStoreKit_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DataStoreKit_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EFF398DA1F65569000B1BD33 /* DataStoreKit_iOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DataStoreKit_iOS.h; sourceTree = "<group>"; };
 		EFF398DB1F65569000B1BD33 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -87,7 +86,6 @@
 				EF7255171F18CDA10054DCE0 /* DataStoreKit */,
 				EFF398D91F65569000B1BD33 /* DataStoreKit_iOS */,
 				EFAD59741D86B6170056E526 /* Products */,
-				EFAD59911D86B6520056E526 /* WithDataStoreCallback.h */,
 				EF7255201F18CDF80054DCE0 /* Frameworks */,
 			);
 			sourceTree = "<group>";

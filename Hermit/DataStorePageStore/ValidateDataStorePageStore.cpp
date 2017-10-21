@@ -41,9 +41,8 @@ namespace {
 		}
 
 		DataStorePageStore& pageStore = static_cast<DataStorePageStore&>(*inParams.pageStore);
-		datastore::DataPathCallbackClassT<datastore::DataPathPtr> pagesPath;
-		pageStore.mPath->AppendPathComponent(inParams.h_, "pages", pagesPath);
-		if (!pagesPath.mSuccess) {
+		datastore::DataPathPtr pagesPath;
+		if (!pageStore.mPath->AppendPathComponent(inParams.h_, "pages", pagesPath)) {
 			NOTIFY_ERROR(inParams.h_, "ValidatePages: AppendToDataPath failed for pages path.");
 			inParams.completion->Call(pagestore::kValidatePageStoreStatus_Error);
 			return;
@@ -53,23 +52,22 @@ namespace {
 		for (auto it = pageStore.mPageTable.begin(); it != end; ++it) {
 			std::string pageFileName = it->second;
 			
-			datastore::DataPathCallbackClassT<datastore::DataPathPtr> pagePath;
+			datastore::DataPathPtr pagePath;
+			bool success = false;
 			if (pageFileName[0] == '#') {
 				//	transitional page store without "pages" subdir for older pages
-				pageStore.mPath->AppendPathComponent(inParams.h_, pageFileName.c_str() + 1, pagePath);
+				success = pageStore.mPath->AppendPathComponent(inParams.h_, pageFileName.c_str() + 1, pagePath);
 			}
 			else {
-				pagesPath.mPath->AppendPathComponent(inParams.h_, pageFileName, pagePath);
+				success = pagesPath->AppendPathComponent(inParams.h_, pageFileName, pagePath);
 			}
 			
-			if (!pagePath.mSuccess) {
-				NOTIFY_ERROR(inParams.h_,
-							 "ValidatePages: AppendToDataPath failed, continuing, pageFileName:",
-							 pageFileName);
+			if (!success) {
+				NOTIFY_ERROR(inParams.h_, "ValidatePages: AppendPathComponent failed, continuing, pageFileName:", pageFileName);
 			}
 			else {
 				datastore::ItemExistsInDataStoreCallbackClass exists;
-				pageStore.mDataStore->ItemExists(inParams.h_, pagePath.mPath, exists);
+				pageStore.mDataStore->ItemExists(inParams.h_, pagePath, exists);
 				if (exists.mStatus == datastore::ItemExistsInDataStoreStatus::kCanceled) {
 					inParams.completion->Call(pagestore::kValidatePageStoreStatus_Canceled);
 					return;
@@ -80,9 +78,7 @@ namespace {
 								 pageFileName);
 				}
 				else if (!exists.mExists) {
-					NOTIFY_ERROR(inParams.h_,
-								 "ValidatePages: Page missing, continuing, pageFileName:",
-								 pageFileName);
+					NOTIFY_ERROR(inParams.h_, "ValidatePages: Page missing, continuing, pageFileName:", pageFileName);
 				}
 			}
 		}

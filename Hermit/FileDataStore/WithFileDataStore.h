@@ -19,18 +19,16 @@
 #ifndef WithFileDataStore_h
 #define WithFileDataStore_h
 
-#include "Hermit/Foundation/Callback.h"
-#include "Hermit/DataStore/WithDataStoreCallback.h"
+#include "Hermit/DataStore/DataStore.h"
 
 namespace hermit {
-namespace filedatastore {
-
-//
-//
-void WithFileDataStore(
-	const datastore::WithDataStoreCallbackRef& inCallback);
-
-} // namespace filedatastore
+	namespace filedatastore {
+		
+		//
+		bool WithFileDataStore(datastore::DataStorePtr& outFileDataStore);
+		
+	} // namespace filedatastore
 } // namespace hermit
 
-#endif 
+#endif
+

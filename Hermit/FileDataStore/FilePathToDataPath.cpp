@@ -24,18 +24,13 @@ namespace hermit {
 	namespace filedatastore {
 		
 		//
-		void FilePathToDataPath(const HermitPtr& h_,
-								const file::FilePathPtr& inFilePath,
-								const datastore::DataPathCallbackRef& inCallback) {
-			
-			if (inFilePath == nullptr) {
+		bool FilePathToDataPath(const HermitPtr& h_, const file::FilePathPtr& filePath, datastore::DataPathPtr& outDataPath) {
+			if (filePath == nullptr) {
 				NOTIFY_ERROR(h_, "FilePathToDataPath: inFilePath is null.");
-				inCallback.Call(false, nullptr);
-				return;
-			}
-			
-			auto filePathDataPath = std::make_shared<FilePathDataPath>(inFilePath);
-			inCallback.Call(true, filePathDataPath);
+				return false;
+			}			
+			outDataPath = std::make_shared<FilePathDataPath>(filePath);
+			return true;
 		}
 		
 	} // namespace filedatastore

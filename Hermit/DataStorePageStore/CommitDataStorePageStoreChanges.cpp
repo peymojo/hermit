@@ -134,36 +134,32 @@ namespace {
 			
 			
 			
-				datastore::DataPathCallbackClassT<datastore::DataPathPtr> pagesPath;
-				pageStore.mPath->AppendPathComponent(mParams.h_, "pages", pagesPath);
-				if (!pagesPath.mSuccess) {
-					NOTIFY_ERROR(h_, "WriteIndexCompletion: AppendToDataPath failed for pages path.");
+				datastore::DataPathPtr pagesPath;
+				if (!pageStore.mPath->AppendPathComponent(mParams.h_, "pages", pagesPath)) {
+					NOTIFY_ERROR(h_, "WriteIndexCompletion: AppendPathComponent failed for pages path.");
 				}
 				else {
 					auto end = mObsoletePages.end();
 					for (auto it = mObsoletePages.begin(); it != end; ++it) {
 						std::string pageName(it->second);
-						datastore::DataPathCallbackClassT<datastore::DataPathPtr> pagePath;
+						datastore::DataPathPtr pagePath;
+						bool success = false;
 						if (pageName[0] == '#') {
 							// support for older page store
-							pageStore.mPath->AppendPathComponent(mParams.h_, pageName.c_str() + 1, pagePath);
+							success = pageStore.mPath->AppendPathComponent(mParams.h_, pageName.c_str() + 1, pagePath);
 						}
 						else {
-							pagesPath.mPath->AppendPathComponent(mParams.h_, pageName, pagePath);
+							success = pagesPath->AppendPathComponent(mParams.h_, pageName, pagePath);
 						}
-						if (!pagePath.mSuccess) {
-							NOTIFY_ERROR(h_,
-										 "WriteIndexCompletion: AppendToDataPath failed for pageName:",
-										 pageName);
+						if (!success) {
+							NOTIFY_ERROR(h_, "WriteIndexCompletion: AppendPathComponent failed for pageName:", pageName);
 						}
 						else {
 							// use a proxy to avoid cancel during a delete, since these are obsolete
 							// s3 objects and there's a cost associated with keeping them around
 							auto proxy = std::make_shared<DeleteItemH_Proxy>(mParams.h_);
-							if (!pageStore.mDataStore->DeleteItem(proxy, pagePath.mPath)) {
-								NOTIFY_ERROR(h_,
-											 "WriteIndexCompletion: DeleteDataStoreItem failed for pageName:",
-											 pageName);
+							if (!pageStore.mDataStore->DeleteItem(proxy, pagePath)) {
+								NOTIFY_ERROR(h_, "WriteIndexCompletion: DeleteItem failed for pageName:", pageName);
 							}
 						}
 					}
@@ -219,9 +215,8 @@ namespace {
 			return;
 		}
 		
-		datastore::DataPathCallbackClassT<datastore::DataPathPtr> indexPath;
-		pageStore.mPath->AppendPathComponent(inParams.h_, "index.json", indexPath);
-		if (!indexPath.mSuccess) {
+		datastore::DataPathPtr indexPath;
+		if (!pageStore.mPath->AppendPathComponent(inParams.h_, "index.json", indexPath)) {
 			NOTIFY_ERROR(inParams.h_, "CommitDataStorePageStoreChanges: AppendToDataPath failed for index.json.");
 			inParams.completion->Call(pagestore::kCommitPageStoreChangesStatus_Error);
 			return;
@@ -232,7 +227,7 @@ namespace {
 																							   pageTable,
 																							   obsoletePages));
 		pageStore.mDataStore->WriteData(inParams.h_,
-										indexPath.mPath,
+										indexPath,
 										dataBuffer,
 										datastore::kDataStoreEncryptionSetting_Default,
 										completion);
@@ -376,15 +371,14 @@ namespace {
 		
 		DataStorePageStore& pageStore = static_cast<DataStorePageStore&>(*inParams.pageStore);
 		
-		datastore::DataPathCallbackClassT<datastore::DataPathPtr> pagesPath;
-		pageStore.mPath->AppendPathComponent(inParams.h_, "pages", pagesPath);
-		if (!pagesPath.mSuccess) {
+		datastore::DataPathPtr pagesPath;
+		if (!pageStore.mPath->AppendPathComponent(inParams.h_, "pages", pagesPath)) {
 			NOTIFY_ERROR(inParams.h_, "CommitChanges: AppendToDataPath failed for pages path.");
 			inParams.completion->Call(pagestore::kCommitPageStoreChangesStatus_Error);
 			return;
 		}
 		
-		auto result = pageStore.mDataStore->CreateLocationIfNeeded(inParams.h_, pagesPath.mPath);
+		auto result = pageStore.mDataStore->CreateLocationIfNeeded(inParams.h_, pagesPath);
 		if (result != datastore::kCreateDataStoreLocationIfNeededStatus_Success) {
 			NOTIFY_ERROR(inParams.h_, "CommitChanges: CreateDataStoreLocationIfNeeded failed for pages path.");
 			inParams.completion->Call(pagestore::kCommitPageStoreChangesStatus_Error);
@@ -398,12 +392,9 @@ namespace {
 			encoding::CreateAlphaNumericID(inParams.h_, 20, pageId);
 			pageId += ".page";
 		
-			datastore::DataPathCallbackClassT<datastore::DataPathPtr> pagePath;
-			pagesPath.mPath->AppendPathComponent(inParams.h_, pageId, pagePath);
-			if (!pagePath.mSuccess) {
-				NOTIFY_ERROR(inParams.h_,
-							 "CommitChanges: AppendToDataPath failed for pageFileName:",
-							 pageId);
+			datastore::DataPathPtr pagePath;
+			if (!pagesPath->AppendPathComponent(inParams.h_, pageId, pagePath)) {
+				NOTIFY_ERROR(inParams.h_, "CommitChanges: AppendToDataPath failed for pageFileName:", pageId);
 				aggregator->PrimaryTaskFailed();
 				break;
 			}
@@ -411,7 +402,7 @@ namespace {
 			auto completion = std::make_shared<WriteCompletion>(it->first, pageId, aggregator);
 			aggregator->TaskAdded();
 			pageStore.mDataStore->WriteData(inParams.h_,
-											pagePath.mPath,
+											pagePath,
 											it->second,
 											datastore::kDataStoreEncryptionSetting_Default,
 											completion);

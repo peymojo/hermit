@@ -19,18 +19,16 @@
 #ifndef WithAES256EncryptedFileDataStore_h
 #define WithAES256EncryptedFileDataStore_h
 
-#include "Hermit/DataStore/WithDataStoreCallback.h"
+#include "Hermit/DataStore/DataStore.h"
 
 namespace hermit {
-namespace filedatastore {
-
-//
-//
-void WithAES256EncryptedFileDataStore(
-	const std::string& inAESKey,
-	const datastore::WithDataStoreCallbackRef& inCallback);
-
-} // namespace filedatastore
+	namespace filedatastore {
+		
+		//
+		bool WithAES256EncryptedFileDataStore(const std::string& aesKey, datastore::DataStorePtr& outDataStore);
+		
+	} // namespace filedatastore
 } // namespace hermit
 
-#endif 
+#endif
+

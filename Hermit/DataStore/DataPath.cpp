@@ -23,9 +23,9 @@ namespace hermit {
 	namespace datastore {
 		
 		//
-		void DataPath::AppendPathComponent(const HermitPtr& h_, const std::string& inName, const DataPathCallbackRef& inCallback) {
+		bool DataPath::AppendPathComponent(const HermitPtr& h_, const std::string& name, DataPathPtr& outNewPath) {
 			NOTIFY_ERROR(h_, "DataPath::AppendPathComponent not implemented.");
-			inCallback.Call(false, nullptr);
+			return false;
 		}
 		
 		//

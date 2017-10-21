@@ -20,14 +20,14 @@
 #include "WithFileDataStore.h"
 
 namespace hermit {
-namespace filedatastore {
-
-//
-void WithFileDataStore(const datastore::WithDataStoreCallbackRef& inCallback) {
-	auto dataStore = std::make_shared<FileDataStore>();
-	inCallback.Call(datastore::kWithDataStoreCallbackStatus_Success, dataStore);
-}
-
-} // namespace filedatastore
+	namespace filedatastore {
+		
+		//
+		bool WithFileDataStore(datastore::DataStorePtr& outDataStore) {
+			outDataStore = std::make_shared<FileDataStore>();
+			return true;
+		}
+		
+	} // namespace filedatastore
 } // namespace hermit
 

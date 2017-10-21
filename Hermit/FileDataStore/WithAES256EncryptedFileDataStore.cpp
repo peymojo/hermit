@@ -20,17 +20,14 @@
 #include "WithAES256EncryptedFileDataStore.h"
 
 namespace hermit {
-namespace filedatastore {
-
-//
-//
-void WithAES256EncryptedFileDataStore(
-	const std::string& inAESKey,
-	const datastore::WithDataStoreCallbackRef& inCallback)
-{
-	auto dataStore = std::make_shared<AES256EncryptedFileDataStore>(inAESKey);
-	inCallback.Call(datastore::kWithDataStoreCallbackStatus_Success, dataStore);
-}
-
-} // namespace filedatastore
+	namespace filedatastore {
+		
+		//
+		bool WithAES256EncryptedFileDataStore(const std::string& aesKey, datastore::DataStorePtr& outDataStore) {
+			outDataStore = std::make_shared<AES256EncryptedFileDataStore>(aesKey);
+			return true;
+		}
+		
+	} // namespace filedatastore
 } // namespace hermit
+

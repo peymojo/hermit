@@ -98,34 +98,32 @@ namespace hermit {
 			path = pageStore.mPath;
 			pageFileName = it->second;
 				
-			datastore::DataPathCallbackClassT<datastore::DataPathPtr> pagesPath;
-			path->AppendPathComponent(h_, "pages", pagesPath);
-			if (!pagesPath.mSuccess) {
+			datastore::DataPathPtr pagesPath;
+			if (!path->AppendPathComponent(h_, "pages", pagesPath)) {
 				NOTIFY_ERROR(h_, "ReadPageData: AppendToDataPath failed for pages path.");
 				inCompletionFunction->Call(pagestore::kReadPageStorePageResult_Error, DataBuffer());
 				return;
 			}
 				
-			datastore::DataPathCallbackClassT<datastore::DataPathPtr> pagePath;
+			datastore::DataPathPtr pagePath;
+			bool success = false;
 			if (pageFileName[0] == '#') {
 				// older page stores had page files at the root rather than under the "pages" folder
-				path->AppendPathComponent(h_, pageFileName.c_str() + 1, pagePath);
+				success = path->AppendPathComponent(h_, pageFileName.c_str() + 1, pagePath);
 			}
 			else {
-				pagesPath.mPath->AppendPathComponent(h_, pageFileName, pagePath);
+				success = pagesPath->AppendPathComponent(h_, pageFileName, pagePath);
 			}
-			if (!pagePath.mSuccess) {
+			if (!success) {
 				NOTIFY_ERROR(h_, "ReadPageData: AppendToDataPath failed for pageFileName:", pageFileName);
 				inCompletionFunction->Call(pagestore::kReadPageStorePageResult_Error, DataBuffer());
 				return;
 			}
 				
 			auto dataBlock = std::make_shared<datastore::LoadDataStoreDataData>();
-			auto completion = std::make_shared<CompletionBlock>(pageFileName,
-																dataBlock,
-																inCompletionFunction);
+			auto completion = std::make_shared<CompletionBlock>(pageFileName, dataBlock, inCompletionFunction);
 			auto encryptionSetting = datastore::kDataStoreEncryptionSetting_Default;
-			dataStore->LoadData(h_, pagePath.mPath, encryptionSetting, dataBlock, completion);
+			dataStore->LoadData(h_, pagePath, encryptionSetting, dataBlock, completion);
 		}
 			
 		//

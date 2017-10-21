@@ -24,16 +24,15 @@ namespace hermit {
 	namespace s3datastore {
 		
 		//
-		void S3DataPath::AppendPathComponent(const HermitPtr& h_,
-											 const std::string& inName,
-											 const datastore::DataPathCallbackRef& inCallback) {
-			
+		bool S3DataPath::AppendPathComponent(const HermitPtr& h_,
+											 const std::string& name,
+											 datastore::DataPathPtr& outDataPath) {
 			std::string pathWithTrailingSlash;
 			string::AddTrailingSlash(mPath, pathWithTrailingSlash);
 			std::string newPath(pathWithTrailingSlash);
-			newPath += inName;
+			newPath += name;
 			
-			S3PathToDataPath(newPath, inCallback);
+			return S3PathToDataPath(newPath, outDataPath);
 		}
 		
 	} // namespace s3datastore

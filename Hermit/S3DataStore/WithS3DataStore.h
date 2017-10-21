@@ -19,21 +19,20 @@
 #ifndef WithS3DataStore_h
 #define WithS3DataStore_h
 
-#include "Hermit/DataStore/WithDataStoreCallback.h"
+#include "Hermit/DataStore/DataStore.h"
 #include "Hermit/Foundation/Callback.h"
 #include "Hermit/S3Bucket/S3Bucket.h"
 
 namespace hermit {
-namespace s3datastore {
-
-//
-//
-void WithS3DataStore(
-	const s3bucket::S3BucketPtr& inS3Bucket,
-	const bool& inUseReducedRedundancyStorage,
-	const datastore::WithDataStoreCallbackRef& inCallback);
-
-} // namespace s3datastore
+	namespace s3datastore {
+		
+		//
+		bool WithS3DataStore(const s3bucket::S3BucketPtr& s3Bucket,
+							 const bool& useReducedRedundancyStorage,
+							 datastore::DataStorePtr& outDataStore);
+		
+	} // namespace s3datastore
 } // namespace hermit
 
-#endif 
+#endif
+
