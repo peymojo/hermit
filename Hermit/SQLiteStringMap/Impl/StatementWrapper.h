@@ -16,18 +16,39 @@
 //	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#include "PageStoreStringMap.h"
-#include "WithPageStoreStringMap.h"
+#ifndef StatementWrapper_h
+#define StatementWrapper_h
+
+#include <sqlite3.h>
 
 namespace hermit {
-	namespace pagestorestringmap {
-		
-		//
-		stringmap::WithStringMapResult WithPageStoreStringMap(const pagestore::PageStorePtr& inPageStore,
-															  stringmap::StringMapPtr& outStringMap) {
-			outStringMap = std::make_shared<PageStoreStringMap>(inPageStore);
-			return stringmap::WithStringMapResult::kSuccess;
-		}
-		
-	} // namespace pagestorestringmap
+	namespace sqlitestringmap {
+		namespace Impl {
+			
+			//
+			class StatementWrapper {
+			public:
+				//
+				StatementWrapper() : mStatement(nullptr) {
+				}
+				
+				//
+				StatementWrapper(sqlite3_stmt* statement) : mStatement(statement) {
+				}
+				
+				//
+				~StatementWrapper() {
+					if (mStatement != nullptr) {
+						sqlite3_finalize(mStatement);
+					}
+				}
+				
+				//
+				sqlite3_stmt* mStatement;
+			};
+			
+		} // namespace Impl
+	} // namespace sqlitestringmap
 } // namespace hermit
+
+#endif /* StatementWrapper_h */

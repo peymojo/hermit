@@ -27,6 +27,15 @@ namespace hermit {
 	namespace stringmap {
 
 		//
+		enum class WithStringMapResult {
+			kUnknown,
+			kSuccess,
+			kCanceled,
+			kStringMapTooOld,
+			kError
+		};
+
+		//
 		enum GetStringMapValueStatus {
 			kGetStringMapValueStatus_Unknown,
 			kGetStringMapValueStatus_EntryFound,

@@ -28,7 +28,6 @@
 		EFAD5DAD1D8785460056E526 /* LibStringMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LibStringMap.h; sourceTree = "<group>"; };
 		EFAD5DAE1D8785460056E526 /* LibStringMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LibStringMap.m; sourceTree = "<group>"; };
 		EFAD5DB41D8785460056E526 /* StringMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringMap.h; sourceTree = "<group>"; };
-		EFAD5DB91D8785460056E526 /* WithStringMapCallback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WithStringMapCallback.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,15 +80,14 @@
 		EFAD5D941D8784F40056E526 = {
 			isa = PBXGroup;
 			children = (
-				EF75EB541EF3C309004DF277 /* StringMap.cpp */,
+				EF92C2271F11072A0097D708 /* Frameworks */,
 				EFAD5DAD1D8785460056E526 /* LibStringMap.h */,
 				EFAD5DAE1D8785460056E526 /* LibStringMap.m */,
+				EFAD5D9E1D8784F40056E526 /* Products */,
+				EF75EB541EF3C309004DF277 /* StringMap.cpp */,
 				EFAD5DB41D8785460056E526 /* StringMap.h */,
-				EFAD5DB91D8785460056E526 /* WithStringMapCallback.h */,
 				EF92C21F1F1106A10097D708 /* StringMapKit */,
 				EF6511E51F657F13002D8065 /* StringMapKit_iOS */,
-				EFAD5D9E1D8784F40056E526 /* Products */,
-				EF92C2271F11072A0097D708 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};

@@ -25,26 +25,20 @@ namespace hermit {
 	namespace datastorestringmap {
 		
 		//
-		//
-		void WithDataStoreStringMap(const HermitPtr& h_,
-									const datastore::DataStorePtr& inDataStore,
-									const datastore::DataPathPtr& inPath,
-									const stringmap::WithStringMapCallbackRef& inCallback)
-		{
+		stringmap::WithStringMapResult WithDataStoreStringMap(const HermitPtr& h_,
+															  const datastore::DataStorePtr& inDataStore,
+															  const datastore::DataPathPtr& inPath,
+															  stringmap::StringMapPtr& outStringMap) {
 			pagestore::WithPageStoreCallbackClassT<pagestore::PageStorePtr> pageStore;
 			datastorepagestore::WithDataStorePageStore(inDataStore, inPath, pageStore);
-			if (pageStore.mStatus == pagestore::kWithPageStoreStatus_Canceled)
-			{
-				inCallback.Call(stringmap::kWithStringMapStatus_Canceled, nullptr);
-				return;
+			if (pageStore.mStatus == pagestore::kWithPageStoreStatus_Canceled) {
+				return stringmap::WithStringMapResult::kCanceled;
 			}
-			if (pageStore.mStatus != pagestore::kWithPageStoreStatus_Success)
-			{
+			if (pageStore.mStatus != pagestore::kWithPageStoreStatus_Success) {
 				NOTIFY_ERROR(h_, "WithDataStoreStringMap: WithDataStorePageStore failed");
-				inCallback.Call(stringmap::kWithStringMapStatus_Error, nullptr);
-				return;
+				return stringmap::WithStringMapResult::kError;
 			}
-			pagestorestringmap::WithPageStoreStringMap(pageStore.mPageStore, inCallback);
+			return pagestorestringmap::WithPageStoreStringMap(pageStore.mPageStore, outStringMap);
 		}
 		
 	} // namespace datastorestringmap

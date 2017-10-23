@@ -16,18 +16,15 @@
 //	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#include "PageStoreStringMap.h"
-#include "WithPageStoreStringMap.h"
+#include "SQLiteStringMap.h"
 
 namespace hermit {
-	namespace pagestorestringmap {
-		
-		//
-		stringmap::WithStringMapResult WithPageStoreStringMap(const pagestore::PageStorePtr& inPageStore,
-															  stringmap::StringMapPtr& outStringMap) {
-			outStringMap = std::make_shared<PageStoreStringMap>(inPageStore);
-			return stringmap::WithStringMapResult::kSuccess;
+	namespace sqlitestringmap {
+
+		void SQLiteStringMap::CommitChanges(const HermitPtr& h_,
+											const stringmap::CommitStringMapChangesCompletionFunctionPtr& inCompletion) {
 		}
-		
-	} // namespace pagestorestringmap
+
+	} // namespace sqlitestringmap
 } // namespace hermit
+

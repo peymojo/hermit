@@ -20,18 +20,17 @@
 #define WithPageStoreStringMap_h
 
 #include "Hermit/PageStore/PageStore.h"
-#include "Hermit/StringMap/WithStringMapCallback.h"
+#include "Hermit/StringMap/StringMap.h"
 
 namespace hermit {
-namespace pagestorestringmap {
-
-//
-//
-void WithPageStoreStringMap(
-	const pagestore::PageStorePtr& inPageStore,
-	const stringmap::WithStringMapCallbackRef& inCallback);
-
-} // namespace pagestorestringmap
+	namespace pagestorestringmap {
+		
+		//
+		stringmap::WithStringMapResult WithPageStoreStringMap(const pagestore::PageStorePtr& inPageStore,
+															  stringmap::StringMapPtr& outStringMap);
+		
+	} // namespace pagestorestringmap
 } // namespace hermit
 
 #endif
+

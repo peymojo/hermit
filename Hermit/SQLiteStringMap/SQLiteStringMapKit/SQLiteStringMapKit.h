@@ -16,18 +16,14 @@
 //	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#include "PageStoreStringMap.h"
-#include "WithPageStoreStringMap.h"
+#import <Cocoa/Cocoa.h>
 
-namespace hermit {
-	namespace pagestorestringmap {
-		
-		//
-		stringmap::WithStringMapResult WithPageStoreStringMap(const pagestore::PageStorePtr& inPageStore,
-															  stringmap::StringMapPtr& outStringMap) {
-			outStringMap = std::make_shared<PageStoreStringMap>(inPageStore);
-			return stringmap::WithStringMapResult::kSuccess;
-		}
-		
-	} // namespace pagestorestringmap
-} // namespace hermit
+//! Project version number for SQLiteStringMapKit.
+FOUNDATION_EXPORT double SQLiteStringMapKitVersionNumber;
+
+//! Project version string for SQLiteStringMapKit.
+FOUNDATION_EXPORT const unsigned char SQLiteStringMapKitVersionString[];
+
+// In this header, you should import all the public headers of your framework using statements like #import <SQLiteStringMapKit/PublicHeader.h>
+
+

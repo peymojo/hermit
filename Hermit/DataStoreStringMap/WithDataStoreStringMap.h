@@ -19,20 +19,19 @@
 #ifndef WithDataStoreStringMap_h
 #define WithDataStoreStringMap_h
 
-#include "Hermit/Foundation/Hermit.h"
 #include "Hermit/DataStore/DataPath.h"
 #include "Hermit/DataStore/DataStore.h"
-#include "Hermit/StringMap/WithStringMapCallback.h"
+#include "Hermit/Foundation/Hermit.h"
+#include "Hermit/StringMap/StringMap.h"
 
 namespace hermit {
 	namespace datastorestringmap {
 		
 		//
-		//
-		void WithDataStoreStringMap(const HermitPtr& h_,
-									const datastore::DataStorePtr& inDataStore,
-									const datastore::DataPathPtr& inPath,
-									const stringmap::WithStringMapCallbackRef& inCallback);
+		stringmap::WithStringMapResult WithDataStoreStringMap(const HermitPtr& h_,
+															  const datastore::DataStorePtr& inDataStore,
+															  const datastore::DataPathPtr& inPath,
+															  stringmap::StringMapPtr& outStringMap);
 		
 	} // namespace datastorestringmap
 } // namespace hermit
