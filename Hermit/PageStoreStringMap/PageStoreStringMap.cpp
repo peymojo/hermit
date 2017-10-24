@@ -64,44 +64,43 @@ namespace hermit {
 			class ReadPageCompletion : public pagestore::ReadPageStorePageCompletionFunction {
 			public:
 				//
-				ReadPageCompletion(const HermitPtr& h_,
-								   const stringmap::StringMapPtr& inStringMap,
+				ReadPageCompletion(const stringmap::StringMapPtr& inStringMap,
 								   const std::string& inKey,
 								   const LoadStringMapPageCompletionFunctionPtr& inCompletionFunction) :
-				mH_(h_),
 				mStringMap(inStringMap),
 				mKey(inKey),
 				mCompletionFunction(inCompletionFunction) {
 				}
 				
 				//
-				void Call(const pagestore::ReadPageStorePageResult& inResult, const DataBuffer& inPageData) {
-					if (inResult == pagestore::kReadPageStorePageResult_Canceled) {
-						mCompletionFunction->Call(LoadStringMapPageStatus::kCanceled, nullptr);
+				virtual void Call(const HermitPtr& h_,
+								  const pagestore::ReadPageStorePageResult& inResult,
+								  const DataBuffer& inPageData) override {
+					if (inResult == pagestore::ReadPageStorePageResult::kCanceled) {
+						mCompletionFunction->Call(h_, LoadStringMapPageResult::kCanceled, nullptr);
 						return;
 					}
-					if (inResult == pagestore::kReadPageStorePageResult_PageNotFound) {
-						NOTIFY_ERROR(mH_, "PageStoreStringMap::LoadPage: kReadPageStorePageResult_PageNotFound for page:", mKey);
-						mCompletionFunction->Call(LoadStringMapPageStatus::kPageNotFound, nullptr);
+					if (inResult == pagestore::ReadPageStorePageResult::kPageNotFound) {
+						NOTIFY_ERROR(h_, "PageStoreStringMap::LoadPage: kReadPageStorePageResult_PageNotFound for page:", mKey);
+						mCompletionFunction->Call(h_, LoadStringMapPageResult::kPageNotFound, nullptr);
 						return;
 					}
-					if (inResult != pagestore::kReadPageStorePageResult_Success) {
-						NOTIFY_ERROR(mH_, "PageStoreStringMap::LoadPage: ReadPageStorePage failed for page:", mKey);
-						mCompletionFunction->Call(LoadStringMapPageStatus::kError, nullptr);
+					if (inResult != pagestore::ReadPageStorePageResult::kSuccess) {
+						NOTIFY_ERROR(h_, "PageStoreStringMap::LoadPage: ReadPageStorePage failed for page:", mKey);
+						mCompletionFunction->Call(h_, LoadStringMapPageResult::kError, nullptr);
 						return;
 					}
 					
 					StringMapPtr map;
-					if (!ParsePageData(mH_, inPageData, map)) {
-						NOTIFY_ERROR(mH_, "PageStoreStringMap::LoadPage: ParsePageData failed for page:", mKey);
-						mCompletionFunction->Call(LoadStringMapPageStatus::kError, nullptr);
+					if (!ParsePageData(h_, inPageData, map)) {
+						NOTIFY_ERROR(h_, "PageStoreStringMap::LoadPage: ParsePageData failed for page:", mKey);
+						mCompletionFunction->Call(h_, LoadStringMapPageResult::kError, nullptr);
 						return;
 					}
-					mCompletionFunction->Call(LoadStringMapPageStatus::kSuccess, map);
+					mCompletionFunction->Call(h_, LoadStringMapPageResult::kSuccess, map);
 				}
 				
 				//
-				HermitPtr mH_;
 				stringmap::StringMapPtr mStringMap;
 				std::string mKey;
 				LoadStringMapPageCompletionFunctionPtr mCompletionFunction;
@@ -123,7 +122,7 @@ namespace hermit {
 				
 				//
 				void PerformTask(const int32_t& inTaskID) {
-					auto completion = std::make_shared<ReadPageCompletion>(mH_, mStringMap, mKey, mCompletionFunction);
+					auto completion = std::make_shared<ReadPageCompletion>(mStringMap, mKey, mCompletionFunction);
 					PageStoreStringMap& stringMap = static_cast<PageStoreStringMap&>(*mStringMap);
 					stringMap.mPageStore->ReadPage(mH_, mKey, completion);
 				}
@@ -249,7 +248,7 @@ namespace hermit {
 			auto task = std::make_shared<LoadPageTask>(h_, shared_from_this(), inKey, inCompletionFunction);
 			if (!QueueAsyncTask(task, 20)) {
 				NOTIFY_ERROR(h_, "QueueAsyncTask failed");
-				inCompletionFunction->Call(LoadStringMapPageStatus::kError, nullptr);
+				inCompletionFunction->Call(h_, LoadStringMapPageResult::kError, nullptr);
 			}
 		}
 		

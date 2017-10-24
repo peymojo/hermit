@@ -16,12 +16,14 @@
 //	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+#include "Impl/SQLiteStringMapImpl.h"
 #include "SQLiteStringMap.h"
 
 namespace hermit {
 	namespace sqlitestringmap {
 		
 		void SQLiteStringMap::Unlock(const HermitPtr& h_) {
+			mImpl->Unlock(h_);
 		}
 		
 	} // namespace sqlitestringmap

@@ -38,48 +38,33 @@ namespace {
 						stringmap::CommitStringMapChangesCompletionFunctionPtr, completion);
 
 	//
-	//
-	class CommitCallback
-		:
-		public pagestore::CommitPageStoreChangesCompletionFunction
-	{
+	class CommitCallback : public pagestore::CommitPageStoreChangesCompletionFunction {
 	public:
 		//
-		//
-		CommitCallback(
-			const CommitPageStoreStringMapChangesParams& inParams)
-			:
-			mParams(inParams)
-		{
+		CommitCallback(const CommitPageStoreStringMapChangesParams& inParams) : mParams(inParams) {
 		}
 		
 		//
-		//
-		void Call(const pagestore::CommitPageStoreChangesStatus& inStatus)
-		{
-			if (inStatus == pagestore::kCommitPageStoreChangesStatus_Canceled)
-			{
-				mParams.completion->Call(mParams.h_, stringmap::kCommitStringMapChangesStatus_Canceled);
+		virtual void Call(const HermitPtr& h_, const pagestore::CommitPageStoreChangesResult& inResult) override {
+			if (inResult == pagestore::CommitPageStoreChangesResult::kCanceled) {
+				mParams.completion->Call(h_, stringmap::CommitStringMapChangesResult::kCanceled);
 				return;
 			}
-			if (inStatus != pagestore::kCommitPageStoreChangesStatus_Success)
-			{
-				NOTIFY_ERROR(mParams.h_, "CommitPageStoreStringMapChanges: CommitPageStoreChanges failed.");
-				mParams.completion->Call(mParams.h_, stringmap::kCommitStringMapChangesStatus_Error);
+			if (inResult != pagestore::CommitPageStoreChangesResult::kSuccess) {
+				NOTIFY_ERROR(h_, "CommitPageStoreStringMapChanges: CommitPageStoreChanges failed.");
+				mParams.completion->Call(h_, stringmap::CommitStringMapChangesResult::kError);
 				return;
 			}
 
 			PageStoreStringMap& stringMap = static_cast<PageStoreStringMap&>(*mParams.stringMap);
 			auto pageEnd = stringMap.mPages.end();
-			for (auto pageIt = stringMap.mPages.begin(); pageIt != pageEnd; ++pageIt)
-			{
+			for (auto pageIt = stringMap.mPages.begin(); pageIt != pageEnd; ++pageIt) {
 				pageIt->second->mDirty = false;
 			}
 
-			mParams.completion->Call(mParams.h_, stringmap::kCommitStringMapChangesStatus_Success);
+			mParams.completion->Call(h_, stringmap::CommitStringMapChangesResult::kSuccess);
 		}
 		
-		//
 		//
 		CommitPageStoreStringMapChangesParams mParams;
 	};
@@ -159,24 +144,19 @@ namespace {
 		}
 
 		//
-		//
-		void AllTasksComplete()
-		{
-			if (mAtLeastOneTaskCanceled)
-			{
-				mParams.completion->Call(mParams.h_, stringmap::kCommitStringMapChangesStatus_Canceled);
+		void AllTasksComplete() {
+			if (mAtLeastOneTaskCanceled) {
+				mParams.completion->Call(mParams.h_, stringmap::CommitStringMapChangesResult::kCanceled);
 				return;
 			}
-			if (mPrimaryTaskFailed)
-			{
+			if (mPrimaryTaskFailed) {
 				NOTIFY_ERROR(mParams.h_, "CommitPageStoreStringMapChanges: mPrimaryTaskFailed.");
-				mParams.completion->Call(mParams.h_, stringmap::kCommitStringMapChangesStatus_Error);
+				mParams.completion->Call(mParams.h_, stringmap::CommitStringMapChangesResult::kError);
 				return;
 			}
-			if (mAtLeastOneTaskFailed)
-			{
+			if (mAtLeastOneTaskFailed) {
 				NOTIFY_ERROR(mParams.h_, "CommitPageStoreStringMapChanges: AtLeastOneTaskFailed.");
-				mParams.completion->Call(mParams.h_, stringmap::kCommitStringMapChangesStatus_Error);
+				mParams.completion->Call(mParams.h_, stringmap::CommitStringMapChangesResult::kError);
 				return;
 			}
 
@@ -390,13 +370,13 @@ namespace {
 		{
 			if (inStatus == kInitPageStoreStringMapStatus_Canceled)
 			{
-				mParams.completion->Call(h_, stringmap::kCommitStringMapChangesStatus_Canceled);
+				mParams.completion->Call(h_, stringmap::CommitStringMapChangesResult::kCanceled);
 				return;
 			}
 			if (inStatus != kInitPageStoreStringMapStatus_Success)
 			{
 				NOTIFY_ERROR(mParams.h_, "CommitPageStoreStringMapChanges: Init failed.");
-				mParams.completion->Call(h_, stringmap::kCommitStringMapChangesStatus_Error);
+				mParams.completion->Call(h_, stringmap::CommitStringMapChangesResult::kError);
 				return;
 			}
 			PerformWork(mParams);
@@ -421,9 +401,9 @@ namespace {
 		}
 		
 		//
-		virtual void Call(const HermitPtr& h_, const stringmap::CommitStringMapChangesStatus& inStatus) override {
+		virtual void Call(const HermitPtr& h_, const stringmap::CommitStringMapChangesResult& inResult) override {
 			mParams.stringMap->Unlock(h_);
-			mParams.completion->Call(h_, inStatus);
+			mParams.completion->Call(h_, inResult);
 		}
 
 		//
@@ -448,18 +428,17 @@ namespace {
 		
 		//
 		//
-		void Call(
-			const stringmap::LockStringMapStatus& inStatus)
+		virtual void Call(const HermitPtr& h_, const stringmap::LockStringMapResult& inResult)
 		{
-			if (inStatus == stringmap::kLockStringMapStatus_Canceled)
+			if (inResult == stringmap::LockStringMapResult::kCanceled)
 			{
-				mParams.completion->Call(mParams.h_, stringmap::kCommitStringMapChangesStatus_Canceled);
+				mParams.completion->Call(h_, stringmap::CommitStringMapChangesResult::kCanceled);
 				return;
 			}
-			if (inStatus != stringmap::kLockStringMapStatus_Success)
+			if (inResult != stringmap::LockStringMapResult::kSuccess)
 			{
 				NOTIFY_ERROR(mParams.h_, "CommitPageStoreStringMapChanges: LockStringMap failed.");
-				mParams.completion->Call(mParams.h_, stringmap::kCommitStringMapChangesStatus_Error);
+				mParams.completion->Call(h_, stringmap::CommitStringMapChangesResult::kError);
 				return;
 			}
 			

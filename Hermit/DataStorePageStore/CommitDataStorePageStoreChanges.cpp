@@ -78,16 +78,15 @@ namespace {
 		}
 		
 		//
-		//
 		virtual void Call(const HermitPtr& h_, const datastore::WriteDataStoreDataStatus& inStatus) override {
 
 			if (inStatus == datastore::kWriteDataStoreDataStatus_Canceled) {
-				mParams.completion->Call(pagestore::kCommitPageStoreChangesStatus_Canceled);
+				mParams.completion->Call(h_, pagestore::CommitPageStoreChangesResult::kCanceled);
 				return;
 			}
 			if (inStatus != datastore::kWriteDataStoreDataStatus_Success) {
 				NOTIFY_ERROR(h_, "WriteIndexCompletion: WriteDataStoreData failed for index.");
-				mParams.completion->Call(pagestore::kCommitPageStoreChangesStatus_Error);
+				mParams.completion->Call(h_, pagestore::CommitPageStoreChangesResult::kError);
 				return;
 			}
 			
@@ -108,7 +107,7 @@ namespace {
 						for (auto it = pageStore.mPageTable.begin(); it != end; ++it) {
 							if (!pages.insert(it->second).second) {
 								NOTIFY_ERROR(h_, "WriteIndexCompletion: !pages.insert(it->second).second?");
-								mParams.completion->Call(pagestore::kCommitPageStoreChangesStatus_Error);
+								mParams.completion->Call(h_, pagestore::CommitPageStoreChangesResult::kError);
 								return;
 							}
 						}
@@ -122,7 +121,7 @@ namespace {
 											 it->first,
 											 "value:",
 											 it->second);
-								mParams.completion->Call(pagestore::kCommitPageStoreChangesStatus_Error);
+								mParams.completion->Call(h_, pagestore::CommitPageStoreChangesResult::kError);
 								return;
 							}
 						}
@@ -166,7 +165,7 @@ namespace {
 				}
 			}
 			
-			mParams.completion->Call(pagestore::kCommitPageStoreChangesStatus_Success);
+			mParams.completion->Call(h_, pagestore::CommitPageStoreChangesResult::kSuccess);
 		}
 
 		//
@@ -179,7 +178,7 @@ namespace {
 	void WritePageStoreIndex(const CommitDataStorePageStoreChangesParams& inParams,
 							 const DataStorePageStore::PageMap& inUpdatedPageTable) {
 		if (CHECK_FOR_ABORT(inParams.h_)) {
-			inParams.completion->Call(pagestore::kCommitPageStoreChangesStatus_Canceled);
+			inParams.completion->Call(inParams.h_, pagestore::CommitPageStoreChangesResult::kCanceled);
 			return;
 		}
 
@@ -211,14 +210,14 @@ namespace {
 		json::DataValueToJSON(inParams.h_, rootObject, jsonString);
 		if (jsonString.empty()) {
 			NOTIFY_ERROR(inParams.h_, "CommitDataStorePageStoreChanges: DataValueToJSON failed.");
-			inParams.completion->Call(pagestore::kCommitPageStoreChangesStatus_Error);
+			inParams.completion->Call(inParams.h_, pagestore::CommitPageStoreChangesResult::kError);
 			return;
 		}
 		
 		datastore::DataPathPtr indexPath;
 		if (!pageStore.mPath->AppendPathComponent(inParams.h_, "index.json", indexPath)) {
 			NOTIFY_ERROR(inParams.h_, "CommitDataStorePageStoreChanges: AppendToDataPath failed for index.json.");
-			inParams.completion->Call(pagestore::kCommitPageStoreChangesStatus_Error);
+			inParams.completion->Call(inParams.h_, pagestore::CommitPageStoreChangesResult::kError);
 			return;
 		}
 		
@@ -310,17 +309,17 @@ namespace {
 			ThreadLockScope lock(mLock);
 			
 			if (mWriteStatus == datastore::kWriteDataStoreDataStatus_Canceled) {
-				mParams.completion->Call(pagestore::kCommitPageStoreChangesStatus_Canceled);
+				mParams.completion->Call(mParams.h_, pagestore::CommitPageStoreChangesResult::kCanceled);
 				return;
 			}
 			if (mPrimaryTaskFailed) {
 				NOTIFY_ERROR(mParams.h_, "CommitDataStorePageStoreChanges: mPrimaryTaskFailed.");
-				mParams.completion->Call(pagestore::kCommitPageStoreChangesStatus_Error);
+				mParams.completion->Call(mParams.h_, pagestore::CommitPageStoreChangesResult::kError);
 				return;
 			}
 			if (mWriteStatus != datastore::kWriteDataStoreDataStatus_Success) {
 				NOTIFY_ERROR(mParams.h_, "CommitDataStorePageStoreChanges: PageWrite failed.");
-				mParams.completion->Call(pagestore::kCommitPageStoreChangesStatus_Error);
+				mParams.completion->Call(mParams.h_, pagestore::CommitPageStoreChangesResult::kError);
 				return;
 			}
 			
@@ -365,7 +364,7 @@ namespace {
 	//
 	void CommitChanges(const CommitDataStorePageStoreChangesParams& inParams) {
 		if (CHECK_FOR_ABORT(inParams.h_)) {
-			inParams.completion->Call(pagestore::kCommitPageStoreChangesStatus_Canceled);
+			inParams.completion->Call(inParams.h_, pagestore::CommitPageStoreChangesResult::kCanceled);
 			return;
 		}
 		
@@ -374,14 +373,14 @@ namespace {
 		datastore::DataPathPtr pagesPath;
 		if (!pageStore.mPath->AppendPathComponent(inParams.h_, "pages", pagesPath)) {
 			NOTIFY_ERROR(inParams.h_, "CommitChanges: AppendToDataPath failed for pages path.");
-			inParams.completion->Call(pagestore::kCommitPageStoreChangesStatus_Error);
+			inParams.completion->Call(inParams.h_, pagestore::CommitPageStoreChangesResult::kError);
 			return;
 		}
 		
 		auto result = pageStore.mDataStore->CreateLocationIfNeeded(inParams.h_, pagesPath);
 		if (result != datastore::kCreateDataStoreLocationIfNeededStatus_Success) {
 			NOTIFY_ERROR(inParams.h_, "CommitChanges: CreateDataStoreLocationIfNeeded failed for pages path.");
-			inParams.completion->Call(pagestore::kCommitPageStoreChangesStatus_Error);
+			inParams.completion->Call(inParams.h_, pagestore::CommitPageStoreChangesResult::kError);
 			return;
 		}
 
@@ -418,14 +417,14 @@ namespace {
 		}
 		
 		//
-		virtual void Call(const ReadPageTableResult& inResult) override {
-			if (inResult == kReadPageTableResult_Canceled) {
-				mParams.completion->Call(pagestore::kCommitPageStoreChangesStatus_Canceled);
+		virtual void Call(const HermitPtr& h_, const ReadPageTableResult& inResult) override {
+			if (inResult == ReadPageTableResult::kCanceled) {
+				mParams.completion->Call(h_, pagestore::CommitPageStoreChangesResult::kCanceled);
 				return;
 			}
-			if (inResult != kReadPageTableResult_Success) {
-				NOTIFY_ERROR(mParams.h_, "CommitDataStorePageStoreChanges: ReadPageTable failed");
-				mParams.completion->Call(pagestore::kCommitPageStoreChangesStatus_Error);
+			if (inResult != ReadPageTableResult::kSuccess) {
+				NOTIFY_ERROR(h_, "CommitDataStorePageStoreChanges: ReadPageTable failed");
+				mParams.completion->Call(h_, pagestore::CommitPageStoreChangesResult::kError);
 				return;
 			}
 			CommitChanges(mParams);
@@ -438,14 +437,14 @@ namespace {
 	//
 	void PerformWork(const CommitDataStorePageStoreChangesParams& inParams) {
 		if (CHECK_FOR_ABORT(inParams.h_)) {
-			inParams.completion->Call(pagestore::kCommitPageStoreChangesStatus_Canceled);
+			inParams.completion->Call(inParams.h_, pagestore::CommitPageStoreChangesResult::kCanceled);
 			return;
 		}
 		
 		DataStorePageStore& pageStore = static_cast<DataStorePageStore&>(*inParams.pageStore);
 			
 		if (pageStore.mDirtyPages.empty()) {
-			inParams.completion->Call(pagestore::kCommitPageStoreChangesStatus_Success);
+			inParams.completion->Call(inParams.h_, pagestore::CommitPageStoreChangesResult::kSuccess);
 			return;
 		}
 
@@ -467,9 +466,9 @@ namespace {
 		}
 		
 		//
-		void Call(const pagestore::CommitPageStoreChangesStatus& inStatus) {
+		virtual void Call(const HermitPtr& h_, const pagestore::CommitPageStoreChangesResult& inResult) override {
 			mParams.pageStore->Unlock(mParams.h_);
-			mParams.completion->Call(inStatus);
+			mParams.completion->Call(h_, inResult);
 		}
 
 		//
@@ -487,12 +486,12 @@ namespace {
 		//
 		void Call(const pagestore::LockPageStoreStatus& inStatus) {
 			if (inStatus == pagestore::kLockPageStoreStatus_Canceled) {
-				mParams.completion->Call(pagestore::kCommitPageStoreChangesStatus_Canceled);
+				mParams.completion->Call(mParams.h_, pagestore::CommitPageStoreChangesResult::kCanceled);
 				return;
 			}
 			if (inStatus != pagestore::kLockPageStoreStatus_Success) {
 				NOTIFY_ERROR(mParams.h_, "CommitDataStorePageStoreChanges: LockPageStore failed.");
-				mParams.completion->Call(pagestore::kCommitPageStoreChangesStatus_Error);
+				mParams.completion->Call(mParams.h_, pagestore::CommitPageStoreChangesResult::kError);
 				return;
 			}
 			

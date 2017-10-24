@@ -23,6 +23,7 @@ namespace hermit {
 
 		void SQLiteStringMap::CommitChanges(const HermitPtr& h_,
 											const stringmap::CommitStringMapChangesCompletionFunctionPtr& inCompletion) {
+			inCompletion->Call(h_, stringmap::CommitStringMapChangesResult::kSuccess);
 		}
 
 	} // namespace sqlitestringmap

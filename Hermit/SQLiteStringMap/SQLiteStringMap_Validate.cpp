@@ -16,6 +16,7 @@
 //	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+#include "Hermit/Foundation/Notification.h"
 #include "SQLiteStringMap.h"
 
 namespace hermit {
@@ -23,6 +24,8 @@ namespace hermit {
 		
 		void SQLiteStringMap::Validate(const HermitPtr& h_,
 									   const stringmap::ValidateStringMapCompletionFunctionPtr& inCompletion) {
+			NOTIFY_ERROR(h_, "SQLiteStringMap::Validate unimplemented");
+			inCompletion->Call(h_, stringmap::ValidateStringMapResult::kError);
 		}
 		
 	} // namespace sqlitestringmap

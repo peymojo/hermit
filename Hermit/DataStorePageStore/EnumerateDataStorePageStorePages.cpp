@@ -52,32 +52,29 @@ namespace hermit {
 			class TableLoaded : public ReadPageTableCompletionFunction {
 			public:
 				//
-				TableLoaded(const HermitPtr& h_,
-							const pagestore::PageStorePtr& inPageStore,
+				TableLoaded(const pagestore::PageStorePtr& inPageStore,
 							const pagestore::EnumeratePageStorePagesEnumerationFunctionPtr& inEnumerationFunction,
 							const pagestore::EnumeratePageStorePagesCompletionFunctionPtr& inCompletionFunction) :
-				mH_(h_),
 				mPageStore(inPageStore),
 				mEnumerationFunction(inEnumerationFunction),
 				mCompletionFunction(inCompletionFunction) {
 				}
 				
 				//
-				virtual void Call(const ReadPageTableResult& inResult) override {
-					if (inResult == kReadPageTableResult_Canceled) {
-						mCompletionFunction->Call(mH_, pagestore::kEnumeratePageStorePagesResult_Canceled);
+				virtual void Call(const HermitPtr& h_, const ReadPageTableResult& inResult) override {
+					if (inResult == ReadPageTableResult::kCanceled) {
+						mCompletionFunction->Call(h_, pagestore::kEnumeratePageStorePagesResult_Canceled);
 						return;
 					}
-					if (inResult != kReadPageTableResult_Success) {
-						NOTIFY_ERROR(mH_, "EnumerateDataStorePageStorePages: ReadPageTable failed");
-						mCompletionFunction->Call(mH_, pagestore::kEnumeratePageStorePagesResult_Error);
+					if (inResult != ReadPageTableResult::kSuccess) {
+						NOTIFY_ERROR(h_, "EnumerateDataStorePageStorePages: ReadPageTable failed");
+						mCompletionFunction->Call(h_, pagestore::kEnumeratePageStorePagesResult_Error);
 						return;
 					}
-					EnumeratePages(mH_, mPageStore, mEnumerationFunction, mCompletionFunction);
+					EnumeratePages(h_, mPageStore, mEnumerationFunction, mCompletionFunction);
 				}
 				
 				//
-				HermitPtr mH_;
 				pagestore::PageStorePtr mPageStore;
 				pagestore::EnumeratePageStorePagesEnumerationFunctionPtr mEnumerationFunction;
 				pagestore::EnumeratePageStorePagesCompletionFunctionPtr mCompletionFunction;
@@ -97,8 +94,7 @@ namespace hermit {
 				
 				if (!pageStore.mPageTableLoaded) {
 					DataStorePageStore& pageStore = static_cast<DataStorePageStore&>(*inPageStore);
-					auto completion = std::make_shared<TableLoaded>(h_,
-																	inPageStore,
+					auto completion = std::make_shared<TableLoaded>(inPageStore,
 																	inEnumerationFunction,
 																	inCompletionFunction);
 					pageStore.ReadPageTable(h_, completion);

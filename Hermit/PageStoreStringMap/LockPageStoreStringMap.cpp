@@ -44,15 +44,15 @@ namespace hermit {
 				//
 				virtual void Call(const HermitPtr& h_, const TaskQueueLockStatus& inStatus) override {
 					if (inStatus == kTaskQueueLockStatus_Cancel) {
-						mCompletionFunction->Call(stringmap::kLockStringMapStatus_Canceled);
+						mCompletionFunction->Call(h_, stringmap::LockStringMapResult::kCanceled);
 						return;
 					}
 					if (inStatus != kTaskQueueLockStatus_Success) {
 						NOTIFY_ERROR(h_, "LockPageStoreStringMap: stringMap.Lock failed.");
-						mCompletionFunction->Call(stringmap::kLockStringMapStatus_Error);
+						mCompletionFunction->Call(h_, stringmap::LockStringMapResult::kError);
 						return;
 					}
-					mCompletionFunction->Call(stringmap::kLockStringMapStatus_Success);
+					mCompletionFunction->Call(h_, stringmap::LockStringMapResult::kSuccess);
 				}
 				
 				//

@@ -40,58 +40,48 @@ namespace hermit {
 				}
 				inMapPage->mDirty = true;
 				
-				inCompletionFunction->Call(h_, stringmap::kSetStringMapValueResult_Success);
+				inCompletionFunction->Call(h_, stringmap::SetStringMapValueResult::kSuccess);
 			}
 			
 			//
-			//
-			class LoadCallback
-			:
-			public LoadStringMapPageCompletionFunction
-			{
+			class LoadCallback : public LoadStringMapPageCompletionFunction {
 			public:
 				//
 				//
-				LoadCallback(const HermitPtr& h_,
-							 const StringMapPagePtr& inMapPage,
+				LoadCallback(const StringMapPagePtr& inMapPage,
 							 const std::string& inKey,
 							 const std::string& inValue,
-							 const stringmap::SetStringMapValueCompletionFunctionPtr& inCompletionFunction)
-				:
-				mH_(h_),
+							 const stringmap::SetStringMapValueCompletionFunctionPtr& inCompletionFunction) :
 				mMapPage(inMapPage),
 				mKey(inKey),
 				mValue(inValue),
-				mCompletionFunction(inCompletionFunction)
-				{
+				mCompletionFunction(inCompletionFunction) {
 				}
 				
 				//
-				//
-				virtual void Call(const LoadStringMapPageStatus& inStatus, const StringMapPtr& inMap) override
-				{
-					if (inStatus == LoadStringMapPageStatus::kCanceled) {
-						mCompletionFunction->Call(mH_, stringmap::kSetStringMapValueResult_Canceled);
+				virtual void Call(const HermitPtr& h_,
+								  const LoadStringMapPageResult& inResult,
+								  const StringMapPtr& inMap) override {
+					if (inResult == LoadStringMapPageResult::kCanceled) {
+						mCompletionFunction->Call(h_, stringmap::SetStringMapValueResult::kCanceled);
 						return;
 					}
-					if (inStatus == LoadStringMapPageStatus::kPageNotFound) {
-						NOTIFY_ERROR(mH_, "SetPageStoreStringMapValue: kPageNotFound, key:", mKey);
-						mCompletionFunction->Call(mH_, stringmap::kSetStringMapValueResult_Error);
+					if (inResult == LoadStringMapPageResult::kPageNotFound) {
+						NOTIFY_ERROR(h_, "SetPageStoreStringMapValue: kPageNotFound, key:", mKey);
+						mCompletionFunction->Call(h_, stringmap::SetStringMapValueResult::kError);
 						return;
 					}
-					if (inStatus != LoadStringMapPageStatus::kSuccess) {
-						NOTIFY_ERROR(mH_, "SetPageStoreStringMapValue: LoadStringMapPage failed, key:", mKey);
-						mCompletionFunction->Call(mH_, stringmap::kSetStringMapValueResult_Error);
+					if (inResult != LoadStringMapPageResult::kSuccess) {
+						NOTIFY_ERROR(h_, "SetPageStoreStringMapValue: LoadStringMapPage failed, key:", mKey);
+						mCompletionFunction->Call(h_, stringmap::SetStringMapValueResult::kError);
 						return;
 					}
 					
 					mMapPage->mMap = inMap;
-					SetValue(mH_, mMapPage, mKey, mValue, mCompletionFunction);
+					SetValue(h_, mMapPage, mKey, mValue, mCompletionFunction);
 				}
 				
 				//
-				//
-				HermitPtr mH_;
 				StringMapPagePtr mMapPage;
 				std::string mKey;
 				std::string mValue;
@@ -109,8 +99,7 @@ namespace hermit {
 				PageStoreStringMap& stringMap = static_cast<PageStoreStringMap&>(*inStringMap);
 				
 				ThreadLockScope lock(stringMap.mLock);
-				if (stringMap.mPages.empty())
-				{
+				if (stringMap.mPages.empty()) {
 					StringMapPtr map(new StringMap());
 					map->mEntries.insert(StringMap::Map::value_type(inKey, inValue));
 					
@@ -121,20 +110,17 @@ namespace hermit {
 					
 					stringMap.mPages.insert(PageStoreStringMap::PageMap::value_type(" ", page));
 					
-					inCompletionFunction->Call(h_, stringmap::kSetStringMapValueResult_Success);
+					inCompletionFunction->Call(h_, stringmap::SetStringMapValueResult::kSuccess);
 					return;
 				}
 				
 				auto pageIt = stringMap.mPages.lower_bound(inKey);
-				if (pageIt != stringMap.mPages.begin())
-				{
+				if (pageIt != stringMap.mPages.begin()) {
 					pageIt--;
 				}
 				
-				if (pageIt->second->mMap == nullptr)
-				{
-					auto completion = std::make_shared<LoadCallback>(h_,
-																	 pageIt->second,
+				if (pageIt->second->mMap == nullptr) {
+					auto completion = std::make_shared<LoadCallback>(pageIt->second,
 																	 inKey,
 																	 inValue,
 																	 inCompletionFunction);
@@ -146,47 +132,34 @@ namespace hermit {
 			}
 			
 			//
-			//
-			class InitCallback
-			:
-			public InitPageStoreStringMapCompletionFunction
-			{
+			class InitCallback : public InitPageStoreStringMapCompletionFunction {
 			public:
 				//
-				//
-				InitCallback(const HermitPtr& h_,
-							 const stringmap::StringMapPtr& inStringMap,
+				InitCallback(const stringmap::StringMapPtr& inStringMap,
 							 const std::string& inKey,
 							 const std::string& inValue,
-							 const stringmap::SetStringMapValueCompletionFunctionPtr& inCompletionFunction)
-				:
-				mH_(h_),
+							 const stringmap::SetStringMapValueCompletionFunctionPtr& inCompletionFunction) :
 				mStringMap(inStringMap),
 				mKey(inKey),
 				mValue(inValue),
-				mCompletionFunction(inCompletionFunction)
-				{
+				mCompletionFunction(inCompletionFunction) {
 				}
 				
 				//
 				virtual void Call(const HermitPtr& h_, const InitPageStoreStringMapStatus& inStatus) override {
-					if (inStatus == kInitPageStoreStringMapStatus_Canceled)
-					{
-						mCompletionFunction->Call(mH_, stringmap::kSetStringMapValueResult_Canceled);
+					if (inStatus == kInitPageStoreStringMapStatus_Canceled) {
+						mCompletionFunction->Call(h_, stringmap::SetStringMapValueResult::kCanceled);
 						return;
 					}
-					if (inStatus != kInitPageStoreStringMapStatus_Success)
-					{
-						NOTIFY_ERROR(mH_, "SetPageStoreStringMapValue: Init failed.");
-						mCompletionFunction->Call(mH_, stringmap::kSetStringMapValueResult_Error);
+					if (inStatus != kInitPageStoreStringMapStatus_Success) {
+						NOTIFY_ERROR(h_, "SetPageStoreStringMapValue: Init failed.");
+						mCompletionFunction->Call(h_, stringmap::SetStringMapValueResult::kError);
 						return;
 					}
-					PerformWork(mH_, mStringMap, mKey, mValue, mCompletionFunction);
+					PerformWork(h_, mStringMap, mKey, mValue, mCompletionFunction);
 				}
 				
 				//
-				//
-				HermitPtr mH_;
 				stringmap::StringMapPtr mStringMap;
 				std::string mKey;
 				std::string mValue;
@@ -216,13 +189,9 @@ namespace hermit {
 				}
 				
 				//
-				//
-				virtual void PerformTask(
-										 const int32_t& inTaskID)
-				{
+				virtual void PerformTask(const int32_t& inTaskID) {
 					PageStoreStringMap& stringMap = static_cast<PageStoreStringMap&>(*mStringMap);
-					
-					auto completion = std::make_shared<InitCallback>(mH_, mStringMap, mKey, mValue, mCompletionFunction);
+					auto completion = std::make_shared<InitCallback>(mStringMap, mKey, mValue, mCompletionFunction);
 					stringMap.Init(mH_, completion);
 				}
 				
@@ -280,19 +249,19 @@ namespace hermit {
 			if (inStringMap == nullptr)
 			{
 				NOTIFY_ERROR(h_, "SetPageStoreStringMapValue: inStringMap == null.");
-				inCompletionFunction->Call(h_, stringmap::kSetStringMapValueResult_Error);
+				inCompletionFunction->Call(h_, stringmap::SetStringMapValueResult::kError);
 				return;
 			}
 			if (inKey.empty())
 			{
 				NOTIFY_ERROR(h_, "SetPageStoreStringMapValue: null key.");
-				inCompletionFunction->Call(h_, stringmap::kSetStringMapValueResult_Error);
+				inCompletionFunction->Call(h_, stringmap::SetStringMapValueResult::kError);
 				return;
 			}
 			if (inKey[0] < ' ')
 			{
 				NOTIFY_ERROR(h_, "SetPageStoreStringMapValue: invalid key.");
-				inCompletionFunction->Call(h_, stringmap::kSetStringMapValueResult_Error);
+				inCompletionFunction->Call(h_, stringmap::SetStringMapValueResult::kError);
 				return;
 			}
 			
@@ -301,7 +270,7 @@ namespace hermit {
 			PageStoreStringMap& stringMap = static_cast<PageStoreStringMap&>(*inStringMap);
 			if (!stringMap.QueueTask(task)) {
 				NOTIFY_ERROR(h_, "SetPageStoreStringMapValue: QueueTask failed.");
-				inCompletionFunction->Call(h_, stringmap::kSetStringMapValueResult_Error);
+				inCompletionFunction->Call(h_, stringmap::SetStringMapValueResult::kError);
 			}
 		}
 		

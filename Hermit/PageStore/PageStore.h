@@ -44,16 +44,17 @@ namespace hermit {
 
 		
 		//
-		enum ReadPageStorePageResult {
-			kReadPageStorePageResult_Unknown,
-			kReadPageStorePageResult_Success,
-			kReadPageStorePageResult_PageNotFound,
-			kReadPageStorePageResult_Canceled,
-			kReadPageStorePageResult_Error
+		enum class ReadPageStorePageResult {
+			kUnknown,
+			kSuccess,
+			kPageNotFound,
+			kCanceled,
+			kError
 		};
 		
 		//
-		DEFINE_ASYNC_FUNCTION_2A(ReadPageStorePageCompletionFunction,
+		DEFINE_ASYNC_FUNCTION_3A(ReadPageStorePageCompletionFunction,
+								 HermitPtr,
 								 ReadPageStorePageResult,					// inResult
 								 DataBuffer);								// inPageData
 		
@@ -84,28 +85,29 @@ namespace hermit {
 		
 		
 		//
-		enum CommitPageStoreChangesStatus {
-			kCommitPageStoreChangesStatus_Unknown,
-			kCommitPageStoreChangesStatus_Success,
-			kCommitPageStoreChangesStatus_Canceled,
-			kCommitPageStoreChangesStatus_Error
+		enum class CommitPageStoreChangesResult {
+			kUnknown,
+			kSuccess,
+			kCanceled,
+			kError
 		};
 		
 		//
-		DEFINE_ASYNC_FUNCTION_1A(CommitPageStoreChangesCompletionFunction, CommitPageStoreChangesStatus);
+		DEFINE_ASYNC_FUNCTION_2A(CommitPageStoreChangesCompletionFunction, HermitPtr, CommitPageStoreChangesResult);
 		
 
 		//
-		enum ValidatePageStoreStatus {
-			kValidatePageStoreStatus_Unknown,
-			kValidatePageStoreStatus_Success,
-			kValidatePageStoreStatus_Canceled,
-			kValidatePageStoreStatus_Error
+		enum class ValidatePageStoreResult {
+			kUnknown,
+			kSuccess,
+			kCanceled,
+			kError
 		};
 		
 		//
-		DEFINE_ASYNC_FUNCTION_1A(ValidatePageStoreCompletionFunction,
-								 ValidatePageStoreStatus);				// inStatus
+		DEFINE_ASYNC_FUNCTION_2A(ValidatePageStoreCompletionFunction,
+								 HermitPtr,
+								 ValidatePageStoreResult);				// inStatus
 		
 		
 		//

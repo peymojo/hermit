@@ -41,21 +41,21 @@ namespace hermit {
 			//
 			virtual void Call(const HermitPtr& h_, const datastore::LoadDataStoreDataStatus& status) override {
 				if (status == datastore::LoadDataStoreDataStatus::kCanceled) {
-					mCompletion->Call(pagestore::kReadPageStorePageResult_Canceled, DataBuffer());
+					mCompletion->Call(h_, pagestore::ReadPageStorePageResult::kCanceled, DataBuffer());
 					return;
 				}
 				if (status == datastore::LoadDataStoreDataStatus::kItemNotFound) {
 					NOTIFY_ERROR(h_, "ReadPageData: Page missing? name:", mPageFileName);
-					mCompletion->Call(pagestore::kReadPageStorePageResult_PageNotFound, DataBuffer());
+					mCompletion->Call(h_, pagestore::ReadPageStorePageResult::kPageNotFound, DataBuffer());
 					return;
 				}
 				if (status != datastore::LoadDataStoreDataStatus::kSuccess) {
 					NOTIFY_ERROR(h_, "ReadPageData: LoadDataStoreData failed, pageFileName:", mPageFileName);
-					mCompletion->Call(pagestore::kReadPageStorePageResult_Error, DataBuffer());
+					mCompletion->Call(h_, pagestore::ReadPageStorePageResult::kError, DataBuffer());
 					return;
 				}
 				auto dataBuffer = DataBuffer(mData->mData.data(), mData->mData.size());
-				mCompletion->Call(pagestore::kReadPageStorePageResult_Success, dataBuffer);
+				mCompletion->Call(h_, pagestore::ReadPageStorePageResult::kSuccess, dataBuffer);
 			}
 				
 			//
@@ -70,7 +70,7 @@ namespace hermit {
 						  const std::string& inPageName,
 						  const pagestore::ReadPageStorePageCompletionFunctionPtr& inCompletionFunction) {
 			if (CHECK_FOR_ABORT(h_)) {
-				inCompletionFunction->Call(pagestore::kReadPageStorePageResult_Canceled, DataBuffer());
+				inCompletionFunction->Call(h_, pagestore::ReadPageStorePageResult::kCanceled, DataBuffer());
 				return;
 			}
 				
@@ -82,7 +82,8 @@ namespace hermit {
 				
 			auto dataIt = pageStore.mDirtyPages.find(inPageName);
 			if (dataIt != pageStore.mDirtyPages.end()) {
-				inCompletionFunction->Call(pagestore::kReadPageStorePageResult_Success,
+				inCompletionFunction->Call(h_,
+										   pagestore::ReadPageStorePageResult::kSuccess,
 										   DataBuffer(dataIt->second->Data(), dataIt->second->Size()));
 						
 				return;
@@ -90,7 +91,7 @@ namespace hermit {
 					
 			auto it = pageStore.mPageTable.find(inPageName);
 			if (it == pageStore.mPageTable.end()) {
-				inCompletionFunction->Call(pagestore::kReadPageStorePageResult_PageNotFound, DataBuffer());
+				inCompletionFunction->Call(h_, pagestore::ReadPageStorePageResult::kPageNotFound, DataBuffer());
 				return;
 			}
 					
@@ -101,7 +102,7 @@ namespace hermit {
 			datastore::DataPathPtr pagesPath;
 			if (!path->AppendPathComponent(h_, "pages", pagesPath)) {
 				NOTIFY_ERROR(h_, "ReadPageData: AppendToDataPath failed for pages path.");
-				inCompletionFunction->Call(pagestore::kReadPageStorePageResult_Error, DataBuffer());
+				inCompletionFunction->Call(h_, pagestore::ReadPageStorePageResult::kError, DataBuffer());
 				return;
 			}
 				
@@ -116,7 +117,7 @@ namespace hermit {
 			}
 			if (!success) {
 				NOTIFY_ERROR(h_, "ReadPageData: AppendToDataPath failed for pageFileName:", pageFileName);
-				inCompletionFunction->Call(pagestore::kReadPageStorePageResult_Error, DataBuffer());
+				inCompletionFunction->Call(h_, pagestore::ReadPageStorePageResult::kError, DataBuffer());
 				return;
 			}
 				
@@ -130,32 +131,29 @@ namespace hermit {
 		class TableLoaded : public ReadPageTableCompletionFunction {
 		public:
 			//
-			TableLoaded(const HermitPtr& h_,
-						const pagestore::PageStorePtr& inPageStore,
+			TableLoaded(const pagestore::PageStorePtr& inPageStore,
 						const std::string& inPageName,
 						const pagestore::ReadPageStorePageCompletionFunctionPtr& inCompletionFunction) :
-			mH_(h_),
 			mPageStore(inPageStore),
 			mPageName(inPageName),
 			mCompletionFunction(inCompletionFunction) {
 			}
 				
 			//
-			virtual void Call(const ReadPageTableResult& inResult) override {
-				if (inResult == kReadPageTableResult_Canceled) {
-					mCompletionFunction->Call(pagestore::kReadPageStorePageResult_Canceled, DataBuffer());
+			virtual void Call(const HermitPtr& h_, const ReadPageTableResult& inResult) override {
+				if (inResult == ReadPageTableResult::kCanceled) {
+					mCompletionFunction->Call(h_, pagestore::ReadPageStorePageResult::kCanceled, DataBuffer());
 					return;
 				}
-				if (inResult != kReadPageTableResult_Success) {
-					NOTIFY_ERROR(mH_, "ReadDataStorePageStorePage: ReadPageTable failed");
-					mCompletionFunction->Call(pagestore::kReadPageStorePageResult_Error, DataBuffer());
+				if (inResult != ReadPageTableResult::kSuccess) {
+					NOTIFY_ERROR(h_, "ReadDataStorePageStorePage: ReadPageTable failed");
+					mCompletionFunction->Call(h_, pagestore::ReadPageStorePageResult::kError, DataBuffer());
 					return;
 				}
-				ReadPageData(mH_, mPageStore, mPageName, mCompletionFunction);
+				ReadPageData(h_, mPageStore, mPageName, mCompletionFunction);
 			}
 				
 			//
-			HermitPtr mH_;
 			pagestore::PageStorePtr mPageStore;
 			std::string mPageName;
 			pagestore::ReadPageStorePageCompletionFunctionPtr mCompletionFunction;
@@ -167,16 +165,13 @@ namespace hermit {
 						 const std::string& inPageName,
 						 const pagestore::ReadPageStorePageCompletionFunctionPtr& inCompletionFunction) {
 			if (CHECK_FOR_ABORT(h_)) {
-				inCompletionFunction->Call(pagestore::kReadPageStorePageResult_Canceled, DataBuffer());
+				inCompletionFunction->Call(h_, pagestore::ReadPageStorePageResult::kCanceled, DataBuffer());
 				return;
 			}
 				
 			DataStorePageStore& pageStore = static_cast<DataStorePageStore&>(*inPageStore);
 			if (!pageStore.mPageTableLoaded) {
-				auto completion = std::make_shared<TableLoaded>(h_,
-																inPageStore,
-																inPageName,
-																inCompletionFunction);
+				auto completion = std::make_shared<TableLoaded>(inPageStore, inPageName, inCompletionFunction);
 				pageStore.ReadPageTable(h_, completion);
 				return;
 			}
@@ -220,9 +215,10 @@ namespace hermit {
 			}
 				
 			//
-			virtual void Call(const pagestore::ReadPageStorePageResult& inResult, const DataBuffer& inPageData) override {
-				mCompletionFunction->Call(inResult, inPageData);
-					
+			virtual void Call(const HermitPtr& h_,
+							  const pagestore::ReadPageStorePageResult& inResult,
+							  const DataBuffer& inPageData) override {
+				mCompletionFunction->Call(h_, inResult, inPageData);
 				DataStorePageStore& pageStore = static_cast<DataStorePageStore&>(*mPageStore);
 				pageStore.TaskComplete();
 			}
@@ -242,7 +238,7 @@ namespace hermit {
 			auto task = std::make_shared<Task>(h_, inPageStore, inPageName, proxy);
 			if (!pageStore.QueueTask(task)) {
 				NOTIFY_ERROR(h_, "pageStore.QueueTask failed");
-				inCompletionFunction->Call(pagestore::ReadPageStorePageResult::kReadPageStorePageResult_Error, DataBuffer());
+				inCompletionFunction->Call(h_, pagestore::ReadPageStorePageResult::kError, DataBuffer());
 			}
 		}
 		

@@ -36,26 +36,27 @@ namespace hermit {
 		};
 
 		//
-		enum GetStringMapValueStatus {
-			kGetStringMapValueStatus_Unknown,
-			kGetStringMapValueStatus_EntryFound,
-			kGetStringMapValueStatus_EntryNotFound,
-			kGetStringMapValueStatus_Canceled,
-			kGetStringMapValueStatus_Error
+		enum class GetStringMapValueResult {
+			kUnknown,
+			kEntryFound,
+			kEntryNotFound,
+			kCanceled,
+			kError
 		};
 		
 		//
-		DEFINE_ASYNC_FUNCTION_2A(GetStringMapValueCompletionFunction,
-								 GetStringMapValueStatus,					// inStatus
+		DEFINE_ASYNC_FUNCTION_3A(GetStringMapValueCompletionFunction,
+								 HermitPtr,
+								 GetStringMapValueResult,					// inStatus
 								 std::string);								// inValue
 		
 
 		//
-		enum SetStringMapValueResult {
-			kSetStringMapValueResult_Unknown,
-			kSetStringMapValueResult_Success,
-			kSetStringMapValueResult_Canceled,
-			kSetStringMapValueResult_Error
+		enum class SetStringMapValueResult {
+			kUnknown,
+			kSuccess,
+			kCanceled,
+			kError
 		};
 		
 		//
@@ -65,42 +66,44 @@ namespace hermit {
 		
 		
 		//
-		enum LockStringMapStatus {
-			kLockStringMapStatus_Unknown,
-			kLockStringMapStatus_Success,
-			kLockStringMapStatus_Canceled,
-			kLockStringMapStatus_Error
+		enum class LockStringMapResult {
+			kUnknown,
+			kSuccess,
+			kCanceled,
+			kError
 		};
 		
 		//
-		DEFINE_ASYNC_FUNCTION_1A(LockStringMapCompletionFunction, LockStringMapStatus);
+		DEFINE_ASYNC_FUNCTION_2A(LockStringMapCompletionFunction,
+								 HermitPtr,
+								 LockStringMapResult);
 		
 
 		//
-		enum CommitStringMapChangesStatus {
-			kCommitStringMapChangesStatus_Unknown,
-			kCommitStringMapChangesStatus_Success,
-			kCommitStringMapChangesStatus_Canceled,
-			kCommitStringMapChangesStatus_Error
+		enum class CommitStringMapChangesResult {
+			kUnknown,
+			kSuccess,
+			kCanceled,
+			kError
 		};
 		
 		//
 		DEFINE_ASYNC_FUNCTION_2A(CommitStringMapChangesCompletionFunction,
 								 HermitPtr,
-								 CommitStringMapChangesStatus);				// inStatus
+								 CommitStringMapChangesResult);				// inStatus
 		
 
 		//
-		//
-		enum ValidateStringMapResult {
-			kValidateStringMapResult_Unknown,
-			kValidateStringMapResult_Success,
-			kValidateStringMapResult_Canceled,
-			kValidateStringMapResult_Error
+		enum class ValidateStringMapResult {
+			kUnknown,
+			kSuccess,
+			kCanceled,
+			kError
 		};
 		
 		//
-		DEFINE_ASYNC_FUNCTION_1A(ValidateStringMapCompletionFunction,
+		DEFINE_ASYNC_FUNCTION_2A(ValidateStringMapCompletionFunction,
+								 HermitPtr,
 								 ValidateStringMapResult);					// inResult
 		
 		//

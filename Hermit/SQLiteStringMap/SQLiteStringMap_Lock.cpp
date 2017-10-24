@@ -16,13 +16,48 @@
 //	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+#include "Hermit/Foundation/Notification.h"
+#include "Impl/SQLiteStringMapImpl.h"
 #include "SQLiteStringMap.h"
 
 namespace hermit {
 	namespace sqlitestringmap {
 		
+		namespace SQLiteStringMap_Lock_Impl {
+			
+			//
+			class LockCallback : public hermit::TaskQueueLockCallback {
+			public:
+				//
+				LockCallback(const stringmap::LockStringMapCompletionFunctionPtr& completion) :
+				mCompletion(completion) {
+				}
+				
+				//
+				void Call(const hermit::HermitPtr& h_, const hermit::TaskQueueLockStatus& status) override {
+					if (status == hermit::kTaskQueueLockStatus_Cancel) {
+						mCompletion->Call(h_, stringmap::LockStringMapResult::kCanceled);
+						return;
+					}
+					if (status != hermit::kTaskQueueLockStatus_Success) {
+						NOTIFY_ERROR(h_, "inStatus != hermit::kTaskQueueLockStatus_Success.");
+						mCompletion->Call(h_, stringmap::LockStringMapResult::kError);
+						return;
+					}
+					mCompletion->Call(h_, stringmap::LockStringMapResult::kSuccess);
+				}
+				
+				//
+				stringmap::LockStringMapCompletionFunctionPtr mCompletion;
+			};
+			
+		} // namespace SQLiteStringMap_Lock_Impl
+		using namespace SQLiteStringMap_Lock_Impl;
+		
 		void SQLiteStringMap::Lock(const HermitPtr& h_,
 								   const stringmap::LockStringMapCompletionFunctionPtr& inCompletion) {
+			auto callback = std::make_shared<LockCallback>(inCompletion);
+			mImpl->Lock(h_, callback);
 		}
 		
 	} // namespace sqlitestringmap

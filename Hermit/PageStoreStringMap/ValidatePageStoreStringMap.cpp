@@ -34,39 +34,26 @@ namespace hermit {
 								stringmap::ValidateStringMapCompletionFunctionPtr, completion);
 			
 			//
-			//
-			class ValidatePageStoreCompletion
-			:
-			public pagestore::ValidatePageStoreCompletionFunction
-			{
+			class ValidatePageStoreCompletion : public pagestore::ValidatePageStoreCompletionFunction {
 			public:
 				//
-				//
-				ValidatePageStoreCompletion(const Params& inParams)
-				:
-				mParams(inParams)
-				{
+				ValidatePageStoreCompletion(const Params& inParams) : mParams(inParams) {
 				}
 				
 				//
-				//
-				virtual void Call(const pagestore::ValidatePageStoreStatus& inStatus) override
-				{
-					if (inStatus == pagestore::kValidatePageStoreStatus_Canceled)
-					{
-						mParams.completion->Call(stringmap::kValidateStringMapResult_Canceled);
+				virtual void Call(const HermitPtr& h_, const pagestore::ValidatePageStoreResult& inResult) override {
+					if (inResult == pagestore::ValidatePageStoreResult::kCanceled) {
+						mParams.completion->Call(h_, stringmap::ValidateStringMapResult::kCanceled);
 					}
-					if (inStatus != pagestore::kValidatePageStoreStatus_Success)
-					{
+					if (inResult != pagestore::ValidatePageStoreResult::kSuccess) {
 						NOTIFY_ERROR(mParams.h_, "ValidatePageStoreStringMap: ValidatePageStore failed.");
-						mParams.completion->Call(stringmap::kValidateStringMapResult_Error);
+						mParams.completion->Call(h_, stringmap::ValidateStringMapResult::kError);
 						return;
 					}
 					
-					mParams.completion->Call(stringmap::kValidateStringMapResult_Success);
+					mParams.completion->Call(h_, stringmap::ValidateStringMapResult::kSuccess);
 				}
 				
-				//
 				//
 				Params mParams;
 			};
@@ -102,10 +89,7 @@ namespace hermit {
 			};
 			
 			//
-			//
-			class CompletionProxy
-			:
-			public stringmap::ValidateStringMapCompletionFunction {
+			class CompletionProxy : public stringmap::ValidateStringMapCompletionFunction {
 			public:
 				//
 				CompletionProxy(const stringmap::StringMapPtr& inStringMap,
@@ -115,9 +99,8 @@ namespace hermit {
 				}
 				
 				//
-				virtual void Call(const stringmap::ValidateStringMapResult& inResult) override {
-					mCompletionFunction->Call(inResult);
-					
+				virtual void Call(const HermitPtr& h_, const stringmap::ValidateStringMapResult& inResult) override {
+					mCompletionFunction->Call(h_, inResult);
 					PageStoreStringMap& stringMap = static_cast<PageStoreStringMap&>(*mStringMap);
 					stringMap.TaskComplete();
 				}
@@ -139,7 +122,7 @@ namespace hermit {
 			auto task = std::make_shared<Task>(Params(h_, inStringMap, completion));
 			if (!stringMap.QueueTask(task)) {
 				NOTIFY_ERROR(h_, "stringMap.QueueTask failed");
-				inCompletionFunction->Call(stringmap::ValidateStringMapResult::kValidateStringMapResult_Error);
+				inCompletionFunction->Call(h_, stringmap::ValidateStringMapResult::kError);
 			}
 		}
 		

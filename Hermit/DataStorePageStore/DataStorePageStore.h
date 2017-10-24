@@ -32,15 +32,15 @@ namespace hermit {
 	namespace datastorepagestore {
 		
 		//
-		enum ReadPageTableResult {
-			kReadPageTableResult_Unknown,
-			kReadPageTableResult_Success,
-			kReadPageTableResult_Canceled,
-			kReadPageTableResult_Error
+		enum class ReadPageTableResult {
+			kUnknown,
+			kSuccess,
+			kCanceled,
+			kError
 		};
 		
 		//
-		DEFINE_ASYNC_FUNCTION_1A(ReadPageTableCompletionFunction, ReadPageTableResult);
+		DEFINE_ASYNC_FUNCTION_2A(ReadPageTableCompletionFunction, HermitPtr, ReadPageTableResult);
 		
 		//
 		class DataStorePageStore : public pagestore::PageStore, public TaskQueue,

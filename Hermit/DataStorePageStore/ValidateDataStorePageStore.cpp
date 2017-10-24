@@ -36,7 +36,7 @@ namespace {
 	//
 	void ValidatePages(const Params& inParams) {
 		if (CHECK_FOR_ABORT(inParams.h_)) {
-			inParams.completion->Call(pagestore::kValidatePageStoreStatus_Canceled);
+			inParams.completion->Call(inParams.h_, pagestore::ValidatePageStoreResult::kCanceled);
 			return;
 		}
 
@@ -44,7 +44,7 @@ namespace {
 		datastore::DataPathPtr pagesPath;
 		if (!pageStore.mPath->AppendPathComponent(inParams.h_, "pages", pagesPath)) {
 			NOTIFY_ERROR(inParams.h_, "ValidatePages: AppendToDataPath failed for pages path.");
-			inParams.completion->Call(pagestore::kValidatePageStoreStatus_Error);
+			inParams.completion->Call(inParams.h_, pagestore::ValidatePageStoreResult::kError);
 			return;
 		}
 
@@ -69,7 +69,7 @@ namespace {
 				datastore::ItemExistsInDataStoreCallbackClass exists;
 				pageStore.mDataStore->ItemExists(inParams.h_, pagePath, exists);
 				if (exists.mStatus == datastore::ItemExistsInDataStoreStatus::kCanceled) {
-					inParams.completion->Call(pagestore::kValidatePageStoreStatus_Canceled);
+					inParams.completion->Call(inParams.h_, pagestore::ValidatePageStoreResult::kCanceled);
 					return;
 				}
 				if (exists.mStatus != datastore::ItemExistsInDataStoreStatus::kSuccess) {
@@ -82,7 +82,7 @@ namespace {
 				}
 			}
 		}
-		inParams.completion->Call(pagestore::kValidatePageStoreStatus_Success);
+		inParams.completion->Call(inParams.h_, pagestore::ValidatePageStoreResult::kSuccess);
 	}
 
 	//
@@ -93,14 +93,14 @@ namespace {
 		}
 		
 		//
-		virtual void Call(const ReadPageTableResult& inResult) override {
-			if (inResult == kReadPageTableResult_Canceled) {
-				mParams.completion->Call(pagestore::kValidatePageStoreStatus_Canceled);
+		virtual void Call(const HermitPtr& h_, const ReadPageTableResult& inResult) override {
+			if (inResult == ReadPageTableResult::kCanceled) {
+				mParams.completion->Call(h_, pagestore::ValidatePageStoreResult::kCanceled);
 				return;
 			}
-			if (inResult != kReadPageTableResult_Success) {
-				NOTIFY_ERROR(mParams.h_, "ValidateDataStorePageStore: ReadPageTable failed");
-				mParams.completion->Call(pagestore::kValidatePageStoreStatus_Error);
+			if (inResult != ReadPageTableResult::kSuccess) {
+				NOTIFY_ERROR(h_, "ValidateDataStorePageStore: ReadPageTable failed");
+				mParams.completion->Call(h_, pagestore::ValidatePageStoreResult::kError);
 				return;
 			}
 			ValidatePages(mParams);
@@ -120,7 +120,7 @@ namespace {
 		//
 		void PerformTask(const int32_t& inTaskID) {
 			if (CHECK_FOR_ABORT(mParams.h_)) {
-				mParams.completion->Call(pagestore::kValidatePageStoreStatus_Canceled);
+				mParams.completion->Call(mParams.h_, pagestore::ValidatePageStoreResult::kCanceled);
 				return;
 			}
 		
@@ -148,8 +148,8 @@ namespace {
 		}
 
 		//
-		virtual void Call(const pagestore::ValidatePageStoreStatus& inStatus) override {
-			mCompletionFunction->Call(inStatus);
+		virtual void Call(const HermitPtr& h_, const pagestore::ValidatePageStoreResult& inResult) override {
+			mCompletionFunction->Call(h_, inResult);
 			DataStorePageStore& pageStore = static_cast<DataStorePageStore&>(*mPageStore);
 			pageStore.TaskComplete();
 		}
@@ -170,7 +170,7 @@ void ValidateDataStorePageStore(const HermitPtr& h_,
 	auto task = std::make_shared<Task>(Params(h_, inPageStore, proxy));
 	if (!pageStore.QueueTask(task)) {
 		NOTIFY_ERROR(h_, "pageStore.QueueTask failed");
-		inCompletionFunction->Call(pagestore::ValidatePageStoreStatus::kValidatePageStoreStatus_Error);
+		inCompletionFunction->Call(h_, pagestore::ValidatePageStoreResult::kError);
 	}
 }
 

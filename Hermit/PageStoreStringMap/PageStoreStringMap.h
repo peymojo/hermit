@@ -84,9 +84,7 @@ enum InitPageStoreStringMapStatus
 DEFINE_ASYNC_FUNCTION_2A(InitPageStoreStringMapCompletionFunction, HermitPtr, InitPageStoreStringMapStatus);
 
 //
-//
-enum class LoadStringMapPageStatus
-{
+enum class LoadStringMapPageResult {
 	kUnknown,
 	kSuccess,
 	kCanceled,
@@ -95,9 +93,9 @@ enum class LoadStringMapPageStatus
 };
 
 //
-//
-DEFINE_ASYNC_FUNCTION_2A(LoadStringMapPageCompletionFunction,
-						 LoadStringMapPageStatus,
+DEFINE_ASYNC_FUNCTION_3A(LoadStringMapPageCompletionFunction,
+						 HermitPtr,
+						 LoadStringMapPageResult,
 						 StringMapPtr);
 
 //

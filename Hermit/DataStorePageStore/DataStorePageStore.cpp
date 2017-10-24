@@ -128,7 +128,7 @@ namespace {
 		//
 		virtual void Call(const HermitPtr& h_, const datastore::LoadDataStoreDataStatus& status) override {
 			if (status == datastore::LoadDataStoreDataStatus::kCanceled) {
-				mCompletion->Call(kReadPageTableResult_Canceled);
+				mCompletion->Call(h_, ReadPageTableResult::kCanceled);
 				return;
 			}
 			
@@ -138,14 +138,14 @@ namespace {
 				datastore::DataPathPtr pagesPath;
 				if (!mPath->AppendPathComponent(h_, "pages", pagesPath)) {
 					NOTIFY_ERROR(h_, "AppendToDataPath failed for pages path.");
-					mCompletion->Call(kReadPageTableResult_Error);
+					mCompletion->Call(h_, ReadPageTableResult::kError);
 					return;
 				}
 				
 				ListCallback callback(pageTable, false);
 				auto result = mDataStore->ListContents(h_, pagesPath, callback);
 				if (result == datastore::ListDataStoreContentsResult::kCanceled) {
-					mCompletion->Call(kReadPageTableResult_Canceled);
+					mCompletion->Call(h_, ReadPageTableResult::kCanceled);
 					return;
 				}
 				if (result == datastore::ListDataStoreContentsResult::kSuccess) {
@@ -153,25 +153,25 @@ namespace {
 						ListCallback legacyCallback(pageTable, true);
 						auto legacyResult = mDataStore->ListContents(h_, mPath, legacyCallback);
 						if (legacyResult == datastore::ListDataStoreContentsResult::kCanceled) {
-							mCompletion->Call(kReadPageTableResult_Canceled);
+							mCompletion->Call(h_, ReadPageTableResult::kCanceled);
 							return;
 						}
 						if (legacyResult != datastore::ListDataStoreContentsResult::kSuccess) {
 							NOTIFY_ERROR(h_, "ListDataStoreContents failed (legacy pass).");
-							mCompletion->Call(kReadPageTableResult_Error);
+							mCompletion->Call(h_, ReadPageTableResult::kError);
 							return;
 						}
 					}
 				}
 				else {
 					NOTIFY_ERROR(h_, "ListDataStoreContents failed.");
-					mCompletion->Call(kReadPageTableResult_Error);
+					mCompletion->Call(h_, ReadPageTableResult::kError);
 					return;
 				}
 			}
 			else if (status != datastore::LoadDataStoreDataStatus::kSuccess) {
 				NOTIFY_ERROR(h_, "LoadDataStoreData failed for index.");
-				mCompletion->Call(kReadPageTableResult_Error);
+				mCompletion->Call(h_, ReadPageTableResult::kError);
 				return;
 			}
 			else {
@@ -179,7 +179,7 @@ namespace {
 				uint64_t bytesConsumed = 0;
 				if (!json::JSONToDataValue(h_, mData->mData, mData->mData.size(), values, bytesConsumed)) {
 					NOTIFY_ERROR(h_, "JSONToDataValue failed for index.");
-					mCompletion->Call(kReadPageTableResult_Error);
+					mCompletion->Call(h_, ReadPageTableResult::kError);
 					return;
 				}
 				
@@ -187,12 +187,12 @@ namespace {
 				value::ValuePtr pagesValue = indexValues.GetItem("pages");
 				if (pagesValue == nullptr) {
 					NOTIFY_ERROR(h_, "pages value missing from index.json");
-					mCompletion->Call(kReadPageTableResult_Error);
+					mCompletion->Call(h_, ReadPageTableResult::kError);
 					return;
 				}
 				if (pagesValue->GetDataType() != value::DataType::kArray) {
 					NOTIFY_ERROR(h_, "pages value not an array");
-					mCompletion->Call(kReadPageTableResult_Error);
+					mCompletion->Call(h_, ReadPageTableResult::kError);
 					return;
 				}
 				value::ArrayValuePtr pagesArray = std::static_pointer_cast<value::ArrayValue>(pagesValue);
@@ -201,14 +201,14 @@ namespace {
 				pagesArray->VisitItemPtrs(h_, pageVisitor);
 				if (pageVisitor.mErrorOccurred) {
 					NOTIFY_ERROR(h_, "pageVisitor");
-					mCompletion->Call(kReadPageTableResult_Error);
+					mCompletion->Call(h_, ReadPageTableResult::kError);
 					return;
 				}
 			}
 
 			pageStore.mPageTable.swap(pageTable);
 			pageStore.mPageTableLoaded = true;
-			mCompletion->Call(kReadPageTableResult_Success);
+			mCompletion->Call(h_, ReadPageTableResult::kSuccess);
 		}
 		
 		//
@@ -226,7 +226,7 @@ namespace {
 
 		DataStorePageStore& pageStore = static_cast<DataStorePageStore&>(*inPageStore);
 		if (pageStore.mPageTableLoaded) {
-			inCompletionFunction->Call(kReadPageTableResult_Success);
+			inCompletionFunction->Call(h_, ReadPageTableResult::kSuccess);
 			return;
 		}
 
@@ -235,7 +235,7 @@ namespace {
 		datastore::DataPathPtr path = pageStore.mPath;
 
 		if (CHECK_FOR_ABORT(h_)) {
-			inCompletionFunction->Call(kReadPageTableResult_Canceled);
+			inCompletionFunction->Call(h_, ReadPageTableResult::kCanceled);
 			return;
 		}
 		
@@ -243,7 +243,7 @@ namespace {
 		datastore::DataPathPtr indexPath;
 		if (!path->AppendPathComponent(h_, indexName, indexPath)) {
 			NOTIFY_ERROR(h_, "AppendToDataPath failed for indexName:", indexName);
-			inCompletionFunction->Call(kReadPageTableResult_Error);
+			inCompletionFunction->Call(h_, ReadPageTableResult::kError);
 			return;
 		}
 		
@@ -341,7 +341,7 @@ void DataStorePageStore::Validate(const HermitPtr& h_,
 void DataStorePageStore::ReadPageTable(const HermitPtr& h_, const ReadPageTableCompletionFunctionPtr& inCompletionFunction) {
 	auto task = std::make_shared<ReadTableTask>(h_, shared_from_this(), inCompletionFunction);
 	if (!QueueAsyncTask(task, 5)) {
-		inCompletionFunction->Call(ReadPageTableResult::kReadPageTableResult_Error);
+		inCompletionFunction->Call(h_, ReadPageTableResult::kError);
 	}
 }
 
