@@ -34,7 +34,7 @@ namespace {
 					 const datastore::DataStorePtr& inDataStore,
 					 const datastore::DataPathPtr& inPath,
 					 const SharedBufferPtr& inData,
-					 const datastore::DataStoreEncryptionSetting& inEncryptionSetting,
+					 const datastore::EncryptionSetting& inEncryptionSetting,
 					 const datastore::WriteDataStoreDataCompletionFunctionPtr& inCompletionFunction) {
 		if (CHECK_FOR_ABORT(h_)) {
 			inCompletionFunction->Call(h_, datastore::kWriteDataStoreDataStatus_Canceled);
@@ -44,7 +44,7 @@ namespace {
 		AES256EncryptedFileDataStore& dataStore = static_cast<AES256EncryptedFileDataStore&>(*inDataStore);
 
 		std::string encryptedFileData;
-		if (inEncryptionSetting == datastore::kDataStoreEncryptionSetting_Unencrypted) {
+		if (inEncryptionSetting == datastore::EncryptionSetting::kUnencrypted) {
 			encryptedFileData.assign(inData->Data(), inData->Size());
 		}
 		else {
@@ -89,7 +89,7 @@ namespace {
 			 const datastore::DataStorePtr& inDataStore,
 			 const datastore::DataPathPtr& inPath,
 			 const SharedBufferPtr& inData,
-			 const datastore::DataStoreEncryptionSetting& inEncryptionSetting,
+			 const datastore::EncryptionSetting& inEncryptionSetting,
 			 const datastore::WriteDataStoreDataCompletionFunctionPtr& inCompletionFunction) :
 		mH_(h_),
 		mDataStore(inDataStore),
@@ -114,7 +114,7 @@ namespace {
 		datastore::DataStorePtr mDataStore;
 		datastore::DataPathPtr mPath;
 		SharedBufferPtr mData;
-		datastore::DataStoreEncryptionSetting mEncryptionSetting;
+		datastore::EncryptionSetting mEncryptionSetting;
 		datastore::WriteDataStoreDataCompletionFunctionPtr mCompletionFunction;
 	};
 
@@ -125,7 +125,7 @@ void WriteAES256EncryptedFileDataStoreData(const HermitPtr& h_,
 										   const datastore::DataStorePtr& inDataStore,
 										   const datastore::DataPathPtr& inPath,
 										   const SharedBufferPtr& inData,
-										   const datastore::DataStoreEncryptionSetting& inEncryptionSetting,
+										   const datastore::EncryptionSetting& inEncryptionSetting,
 										   const datastore::WriteDataStoreDataCompletionFunctionPtr& inCompletionFunction) {
 	auto task = std::make_shared<Task>(h_,
 									   inDataStore,

@@ -62,7 +62,7 @@ namespace {
 					 const datastore::DataStorePtr& inDataStore,
 					 const datastore::DataPathPtr& inPath,
 					 const SharedBufferPtr& inData,
-					 const datastore::DataStoreEncryptionSetting& inEncryptionSetting,
+					 const datastore::EncryptionSetting& inEncryptionSetting,
 					 const datastore::WriteDataStoreDataCompletionFunctionPtr& inCompletionFunction) {
 
 		if (CHECK_FOR_ABORT(h_)) {
@@ -73,7 +73,7 @@ namespace {
 		AES256EncryptedS3DataStore& dataStore = static_cast<AES256EncryptedS3DataStore&>(*inDataStore);
 
 		std::string encryptedS3Data;
-		if (inEncryptionSetting == datastore::kDataStoreEncryptionSetting_Unencrypted) {
+		if (inEncryptionSetting == datastore::EncryptionSetting::kUnencrypted) {
 			encryptedS3Data.assign(inData->Data(), inData->Size());
 		}
 		else {
@@ -123,7 +123,7 @@ namespace {
 			 const datastore::DataStorePtr& inDataStore,
 			 const datastore::DataPathPtr& inPath,
 			 const SharedBufferPtr& inData,
-			 const datastore::DataStoreEncryptionSetting& inEncryptionSetting,
+			 const datastore::EncryptionSetting& inEncryptionSetting,
 			 const datastore::WriteDataStoreDataCompletionFunctionPtr& inCompletionFunction) :
 		mH_(h_),
 		mDataStore(inDataStore),
@@ -149,7 +149,7 @@ namespace {
 		datastore::DataStorePtr mDataStore;
 		datastore::DataPathPtr mPath;
 		SharedBufferPtr mData;
-		datastore::DataStoreEncryptionSetting mEncryptionSetting;
+		datastore::EncryptionSetting mEncryptionSetting;
 		datastore::WriteDataStoreDataCompletionFunctionPtr mCompletionFunction;
 	};
 
@@ -161,7 +161,7 @@ void WriteAES256EncryptedS3DataStoreData(const HermitPtr& h_,
 										 const datastore::DataStorePtr& inDataStore,
 										 const datastore::DataPathPtr& inPath,
 										 const SharedBufferPtr& inData,
-										 const datastore::DataStoreEncryptionSetting& inEncryptionSetting,
+										 const datastore::EncryptionSetting& inEncryptionSetting,
 										 const datastore::WriteDataStoreDataCompletionFunctionPtr& inCompletionFunction) {
 	auto task = std::make_shared<Task>(h_,
 									   inDataStore,

@@ -249,7 +249,7 @@ namespace {
 		
 		auto dataBlock = std::make_shared<datastore::LoadDataStoreDataData>();
 		auto completion = std::make_shared<CompletionBlock>(inPageStore, dataStore, path, dataBlock, inCompletionFunction);
-		auto encryptionSetting = datastore::kDataStoreEncryptionSetting_Default;
+		auto encryptionSetting = datastore::EncryptionSetting::kDefault;
 		dataStore->LoadData(h_, indexPath, encryptionSetting, dataBlock, completion);
 	}
 	

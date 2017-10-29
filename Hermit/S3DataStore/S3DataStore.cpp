@@ -58,7 +58,7 @@ namespace hermit {
 		//
 		void S3DataStore::LoadData(const HermitPtr& h_,
 								   const datastore::DataPathPtr& inPath,
-								   const datastore::DataStoreEncryptionSetting& inEncryptionSetting,
+								   const datastore::EncryptionSetting& inEncryptionSetting,
 								   const datastore::LoadDataStoreDataDataBlockPtr& inDataBlock,
 								   const datastore::LoadDataStoreDataCompletionBlockPtr& inCompletion) {
 			LoadS3DataStoreData(h_, shared_from_this(), inPath, inEncryptionSetting, inDataBlock, inCompletion);
@@ -68,7 +68,7 @@ namespace hermit {
 		void S3DataStore::WriteData(const HermitPtr& h_,
 									const datastore::DataPathPtr& inPath,
 									const SharedBufferPtr& inData,
-									const datastore::DataStoreEncryptionSetting& inEncryptionSetting,
+									const datastore::EncryptionSetting& inEncryptionSetting,
 									const datastore::WriteDataStoreDataCompletionFunctionPtr& inCompletionFunction) {
 			WriteS3DataStoreData(h_,
 								 shared_from_this(),

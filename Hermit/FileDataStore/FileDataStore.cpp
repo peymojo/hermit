@@ -56,7 +56,7 @@ namespace hermit {
 		//
 		void FileDataStore::LoadData(const HermitPtr& h_,
 									 const datastore::DataPathPtr& inPath,
-									 const datastore::DataStoreEncryptionSetting& inEncryptionSetting,
+									 const datastore::EncryptionSetting& inEncryptionSetting,
 									 const datastore::LoadDataStoreDataDataBlockPtr& inDataBlock,
 									 const datastore::LoadDataStoreDataCompletionBlockPtr& inCompletion) {
 			LoadFileDataStoreData(h_, shared_from_this(), inPath, inEncryptionSetting, inDataBlock, inCompletion);
@@ -66,7 +66,7 @@ namespace hermit {
 		void FileDataStore::WriteData(const HermitPtr& h_,
 									  const datastore::DataPathPtr& inPath,
 									  const SharedBufferPtr& inData,
-									  const datastore::DataStoreEncryptionSetting& inEncryptionSetting,
+									  const datastore::EncryptionSetting& inEncryptionSetting,
 									  const datastore::WriteDataStoreDataCompletionFunctionPtr& inCompletionFunction) {
 			WriteFileDataStoreData(h_,
 								   shared_from_this(),

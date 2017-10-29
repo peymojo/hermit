@@ -16,22 +16,21 @@
 //	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef DataStoreEncryptionSetting_h
-#define DataStoreEncryptionSetting_h
+#ifndef EncryptionSetting_h
+#define EncryptionSetting_h
 
 namespace hermit {
-namespace datastore {
-
-//
-//
-enum DataStoreEncryptionSetting
-{
-	kDataStoreEncryptionSetting_Unknown,
-	kDataStoreEncryptionSetting_Default,
-	kDataStoreEncryptionSetting_Unencrypted
-};
-
-} // namespace datastore
+	namespace datastore {
+		
+		//
+		enum class EncryptionSetting {
+			kUnknown,
+			kDefault,
+			kUnencrypted
+		};
+		
+	} // namespace datastore
 } // namespace hermit
 
 #endif
+

@@ -46,7 +46,7 @@ namespace hermit {
 		//
 		void DataStore::LoadData(const HermitPtr& h_,
 								 const DataPathPtr& inPath,
-								 const DataStoreEncryptionSetting& inEncryptionSetting,
+								 const EncryptionSetting& inEncryptionSetting,
 								 const LoadDataStoreDataDataBlockPtr& inDataBlock,
 								 const LoadDataStoreDataCompletionBlockPtr& inCompletion) {
 			NOTIFY_ERROR(h_, "unimplemented");
@@ -56,7 +56,7 @@ namespace hermit {
 		void DataStore::WriteData(const HermitPtr& h_,
 								  const DataPathPtr& inPath,
 								  const SharedBufferPtr& inData,
-								  const DataStoreEncryptionSetting& inEncryptionSetting,
+								  const EncryptionSetting& inEncryptionSetting,
 								  const WriteDataStoreDataCompletionFunctionPtr& inCompletionFunction) {
 			NOTIFY_ERROR(h_, "unimplemented");
 		}

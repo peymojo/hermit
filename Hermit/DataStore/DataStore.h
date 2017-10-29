@@ -26,7 +26,7 @@
 #include "Hermit/Foundation/DataBuffer.h"
 #include "Hermit/Foundation/SharedBuffer.h"
 #include "DataPath.h"
-#include "DataStoreEncryptionSetting.h"
+#include "EncryptionSetting.h"
 
 namespace hermit {
 	namespace datastore {
@@ -165,7 +165,7 @@ namespace hermit {
 			//
 			virtual void LoadData(const HermitPtr& h_,
 								  const DataPathPtr& inPath,
-								  const DataStoreEncryptionSetting& inEncryptionSetting,
+								  const EncryptionSetting& inEncryptionSetting,
 								  const LoadDataStoreDataDataBlockPtr& inDataBlock,
 								  const LoadDataStoreDataCompletionBlockPtr& inCompletion);
 
@@ -173,7 +173,7 @@ namespace hermit {
 			virtual void WriteData(const HermitPtr& h_,
 								   const DataPathPtr& inPath,
 								   const SharedBufferPtr& inData,
-								   const DataStoreEncryptionSetting& inEncryptionSetting,
+								   const EncryptionSetting& inEncryptionSetting,
 								   const WriteDataStoreDataCompletionFunctionPtr& inCompletionFunction);
 
 			//

@@ -29,7 +29,7 @@ namespace hermit {
 												   const datastore::DataStorePtr& inDataStore,
 												   const datastore::DataPathPtr& inPath,
 												   const SharedBufferPtr& inData,
-												   const datastore::DataStoreEncryptionSetting& inEncryptionSetting,
+												   const datastore::EncryptionSetting& inEncryptionSetting,
 												   const datastore::WriteDataStoreDataCompletionFunctionPtr& inCompletionFunction);
 		
 	} // namespace filedatastore

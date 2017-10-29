@@ -51,7 +51,7 @@ namespace hermit {
 			//
 			virtual void LoadData(const HermitPtr& h_,
 								  const datastore::DataPathPtr& inPath,
-								  const datastore::DataStoreEncryptionSetting& inEncryptionSetting,
+								  const datastore::EncryptionSetting& inEncryptionSetting,
 								  const datastore::LoadDataStoreDataDataBlockPtr& inDataBlock,
 								  const datastore::LoadDataStoreDataCompletionBlockPtr& inCompletion) override;
 			
@@ -59,7 +59,7 @@ namespace hermit {
 			virtual void WriteData(const HermitPtr& h_,
 								   const datastore::DataPathPtr& inPath,
 								   const SharedBufferPtr& inData,
-								   const datastore::DataStoreEncryptionSetting& inEncryptionSetting,
+								   const datastore::EncryptionSetting& inEncryptionSetting,
 								   const datastore::WriteDataStoreDataCompletionFunctionPtr& inCompletionFunction) override;
 			
 			//

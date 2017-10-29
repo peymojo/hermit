@@ -228,7 +228,7 @@ namespace {
 		pageStore.mDataStore->WriteData(inParams.h_,
 										indexPath,
 										dataBuffer,
-										datastore::kDataStoreEncryptionSetting_Default,
+										datastore::EncryptionSetting::kDefault,
 										completion);
 	}
 
@@ -403,7 +403,7 @@ namespace {
 			pageStore.mDataStore->WriteData(inParams.h_,
 											pagePath,
 											it->second,
-											datastore::kDataStoreEncryptionSetting_Default,
+											datastore::EncryptionSetting::kDefault,
 											completion);
 		}
 		aggregator->AllTasksAdded();

@@ -28,7 +28,7 @@ namespace hermit {
 		void LoadAES256EncryptedFileDataStoreData(const HermitPtr& h_,
 												  const datastore::DataStorePtr& inDataStore,
 												  const datastore::DataPathPtr& inPath,
-												  const datastore::DataStoreEncryptionSetting& inEncryptionSetting,
+												  const datastore::EncryptionSetting& inEncryptionSetting,
 												  const datastore::LoadDataStoreDataDataBlockPtr& inDataBlock,
 												  const datastore::LoadDataStoreDataCompletionBlockPtr& inCompletion);
 		

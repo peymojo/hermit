@@ -34,7 +34,7 @@ namespace hermit {
 			public:
 				//
 				CompletionBlock(const datastore::DataPathPtr& inPath,
-								const datastore::DataStoreEncryptionSetting& inEncryptionSetting,
+								const datastore::EncryptionSetting& inEncryptionSetting,
 								const std::string& inAESKey,
 								const datastore::LoadDataStoreDataDataPtr& inData,
 								const datastore::LoadDataStoreDataDataBlockPtr& inDataBlock,
@@ -62,7 +62,7 @@ namespace hermit {
 						return;
 					}
 					
-					if (mEncryptionSetting == datastore::kDataStoreEncryptionSetting_Unencrypted) {
+					if (mEncryptionSetting == datastore::EncryptionSetting::kUnencrypted) {
 						mDataBlock->Call(DataBuffer(mData->mData.data(), mData->mData.size()));
 						mCompletion->Call(h_, datastore::LoadDataStoreDataStatus::kSuccess);
 						return;
@@ -94,7 +94,7 @@ namespace hermit {
 
 				//
 				datastore::DataPathPtr mPath;
-				datastore::DataStoreEncryptionSetting mEncryptionSetting;
+				datastore::EncryptionSetting mEncryptionSetting;
 				std::string mAESKey;
 				datastore::LoadDataStoreDataDataPtr mData;
 				datastore::LoadDataStoreDataDataBlockPtr mDataBlock;
@@ -107,7 +107,7 @@ namespace hermit {
 		void LoadAES256EncryptedFileDataStoreData(const HermitPtr& h_,
 												  const datastore::DataStorePtr& inDataStore,
 												  const datastore::DataPathPtr& inPath,
-												  const datastore::DataStoreEncryptionSetting& inEncryptionSetting,
+												  const datastore::EncryptionSetting& inEncryptionSetting,
 												  const datastore::LoadDataStoreDataDataBlockPtr& inDataBlock,
 												  const datastore::LoadDataStoreDataCompletionBlockPtr& inCompletion) {
 			AES256EncryptedFileDataStore& dataStore = static_cast<AES256EncryptedFileDataStore&>(*inDataStore);

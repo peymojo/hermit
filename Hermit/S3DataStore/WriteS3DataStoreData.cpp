@@ -34,7 +34,7 @@ namespace {
 					 const datastore::DataStorePtr& inDataStore,
 					 const datastore::DataPathPtr& inPath,
 					 const SharedBufferPtr& inData,
-					 const datastore::DataStoreEncryptionSetting& inEncryptionSetting,
+					 const datastore::EncryptionSetting& inEncryptionSetting,
 					 const datastore::WriteDataStoreDataCompletionFunctionPtr& inCompletionFunction) {
 		if (CHECK_FOR_ABORT(h_)) {
 			inCompletionFunction->Call(h_, datastore::kWriteDataStoreDataStatus_Canceled);
@@ -107,7 +107,7 @@ namespace {
 			 const datastore::DataStorePtr& inDataStore,
 			 const datastore::DataPathPtr& inPath,
 			 const SharedBufferPtr& inData,
-			 const datastore::DataStoreEncryptionSetting& inEncryptionSetting,
+			 const datastore::EncryptionSetting& inEncryptionSetting,
 			 const datastore::WriteDataStoreDataCompletionFunctionPtr& inCompletionFunction) :
 		mH_(h_),
 		mDataStore(inDataStore),
@@ -136,7 +136,7 @@ namespace {
 		datastore::DataStorePtr mDataStore;
 		datastore::DataPathPtr mPath;
 		SharedBufferPtr mData;
-		datastore::DataStoreEncryptionSetting mEncryptionSetting;
+		datastore::EncryptionSetting mEncryptionSetting;
 		datastore::WriteDataStoreDataCompletionFunctionPtr mCompletionFunction;
 	};
 
@@ -148,7 +148,7 @@ void WriteS3DataStoreData(const HermitPtr& h_,
 						  const datastore::DataStorePtr& inDataStore,
 						  const datastore::DataPathPtr& inPath,
 						  const SharedBufferPtr& inData,
-						  const datastore::DataStoreEncryptionSetting& inEncryptionSetting,
+						  const datastore::EncryptionSetting& inEncryptionSetting,
 						  const datastore::WriteDataStoreDataCompletionFunctionPtr& inCompletionFunction) {
 	auto task = std::make_shared<Task>(h_,
 									   inDataStore,
