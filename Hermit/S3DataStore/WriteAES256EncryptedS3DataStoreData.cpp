@@ -18,8 +18,8 @@
 
 #include "Hermit/Encoding/AES256EncryptCBC.h"
 #include "Hermit/Encoding/CreateInputVector.h"
+#include "Hermit/Foundation/AsyncTaskQueue.h"
 #include "Hermit/Foundation/Notification.h"
-#include "Hermit/Foundation/QueueAsyncTask.h"
 #include "AES256EncryptedS3DataStore.h"
 #include "WriteS3DataStoreData.h"
 #include "WriteAES256EncryptedS3DataStoreData.h"

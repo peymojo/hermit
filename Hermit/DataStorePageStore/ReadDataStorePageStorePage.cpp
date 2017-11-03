@@ -18,8 +18,8 @@
 
 #include <string>
 #include "Hermit/DataStore/DataPath.h"
+#include "Hermit/Foundation/AsyncTaskQueue.h"
 #include "Hermit/Foundation/Notification.h"
-#include "Hermit/Foundation/QueueAsyncTask.h"
 #include "DataStorePageStore.h"
 #include "ReadDataStorePageStorePage.h"
 

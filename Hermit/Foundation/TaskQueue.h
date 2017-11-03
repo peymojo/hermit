@@ -20,8 +20,8 @@
 #define TaskQueue_h
 
 #include "AsyncFunction.h"
+#include "AsyncTaskQueue.h"
 #include "Hermit.h"
-#include "QueueAsyncTask.h"
 
 namespace hermit {
 

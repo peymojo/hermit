@@ -18,8 +18,8 @@
 
 #include <string>
 #include "Hermit/File/WriteFileData.h"
+#include "Hermit/Foundation/AsyncTaskQueue.h"
 #include "Hermit/Foundation/Notification.h"
-#include "Hermit/Foundation/QueueAsyncTask.h"
 #include "FilePathDataPath.h"
 #include "WriteFileDataStoreData.h"
 

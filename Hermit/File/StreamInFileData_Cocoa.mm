@@ -20,8 +20,8 @@
 #import <Foundation/FoundationErrors.h>
 #import <string>
 #import <sys/errno.h>
+#import "Hermit/Foundation/AsyncTaskQueue.h"
 #import "Hermit/Foundation/Notification.h"
-#import "Hermit/Foundation/QueueAsyncTask.h"
 #import "FilePathToCocoaPathString.h"
 #import "StreamInFileData.h"
 

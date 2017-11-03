@@ -16,16 +16,41 @@
 //	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef CancelAsyncTask_h
-#define CancelAsyncTask_h
+#ifndef AsyncTaskQueue_h
+#define AsyncTaskQueue_h
 
-#include <cstdint>
+#include <memory>
 
 namespace hermit {
 
 	//
-	bool CancelAsyncTask(const std::int32_t& taskID);
+	class AsyncTask {
+	public:
+		//
+		AsyncTask() {
+		}
+		
+		//
+		virtual ~AsyncTask() {
+		}
+		
+		//
+		virtual void PerformTask(const int32_t& taskId) = 0;
+	};
+	typedef std::shared_ptr<AsyncTask> AsyncTaskPtr;
 	
+	//
+	int32_t GetNextTaskId();
+	
+	//
+	bool QueueAsyncTask(const AsyncTaskPtr& task, const int32_t& priority);
+
+	//
+	bool CancelAsyncTask(const std::int32_t& taskID);
+
+	//
+	void ShutdownAsyncTaskQueue();
+
 } // namespace hermit
 
 #endif

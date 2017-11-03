@@ -19,9 +19,7 @@
 #include <map>
 #include <pthread.h>
 #include <string>
-#include "CancelAsyncTask.h"
-#include "QueueAsyncTask.h"
-#include "ShutdownAsyncTasksQueue.h"
+#include "AsyncTaskQueue.h"
 #include "StaticLog.h"
 #include "Thread.h"
 #include "ThreadLock.h"
@@ -156,13 +154,13 @@ bool CancelAsyncTask(const int32_t& taskId) {
 }
 	
 //
-void ShutdownAsyncTasksQueue() {
+void ShutdownAsyncTaskQueue() {
 	{
 		ThreadLockScope lock(sTasksLock);
 		if (sThreadsStarted) {
 			sThreadsStarted = false;
 			if (!sTasks.empty()) {
-				StaticLog("ShutdownAsyncTasksQueue: !mTasks.empty()");
+				StaticLog("ShutdownAsyncTaskQueue: !mTasks.empty()");
 			}
 		
 			pthread_mutex_lock(&sMutex);

@@ -16,8 +16,8 @@
 //	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+#include "Hermit/Foundation/AsyncTaskQueue.h"
 #include "Hermit/Foundation/Notification.h"
-#include "Hermit/Foundation/QueueAsyncTask.h"
 #include "CommitPageStoreStringMapChanges.h"
 #include "GetPageStoreStringMapValue.h"
 #include "LockPageStoreStringMap.h"

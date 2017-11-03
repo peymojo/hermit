@@ -17,8 +17,8 @@
 //
 
 #include <string>
+#include "Hermit/Foundation/AsyncTaskQueue.h"
 #include "Hermit/Foundation/Notification.h"
-#include "Hermit/Foundation/QueueAsyncTask.h"
 #include "S3DataPath.h"
 #include "S3DataStore.h"
 #include "WriteS3DataStoreData.h"
