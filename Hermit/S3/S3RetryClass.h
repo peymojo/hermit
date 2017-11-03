@@ -19,8 +19,8 @@
 #ifndef S3RetryClass_h
 #define S3RetryClass_h
 
+#include <thread>
 #include "Hermit/Foundation/Hermit.h"
-#include "Hermit/Foundation/Thread.h"
 #include "S3Notification.h"
 
 namespace hermit {
@@ -68,7 +68,7 @@ namespace hermit {
 							t.Canceled();
 							break;
 						}
-						Sleep(200);
+						std::this_thread::sleep_for(std::chrono::milliseconds(200));
 					}
 					sleepInterval += sleepIntervalStep;
 					sleepIntervalStep += 2;

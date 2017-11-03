@@ -21,7 +21,6 @@
 #include <string>
 #include "AsyncTaskQueue.h"
 #include "StaticLog.h"
-#include "Thread.h"
 #include "ThreadLock.h"
 
 namespace hermit {

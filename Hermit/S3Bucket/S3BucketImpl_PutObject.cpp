@@ -17,7 +17,6 @@
 //
 
 #include "Hermit/Foundation/Notification.h"
-#include "Hermit/Foundation/Thread.h"
 #include "Hermit/S3/PutS3Object.h"
 #include "Hermit/S3/S3RetryClass.h"
 #include "S3BucketImpl.h"

@@ -17,7 +17,6 @@
 //
 
 #include "Hermit/Foundation/Notification.h"
-#include "Hermit/Foundation/Thread.h"
 #include "Hermit/S3/GenerateAWS4SigningKey.h"
 #include "Hermit/S3/GetS3BucketLocation.h"
 #include "Hermit/S3/S3RetryClass.h"

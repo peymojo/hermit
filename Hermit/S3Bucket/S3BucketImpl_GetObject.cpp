@@ -122,7 +122,7 @@ namespace hermit {
 								mCompletion->Call(h_, s3::S3Result::kCanceled);
 								return;
 							}
-							Sleep(200);
+							std::this_thread::sleep_for(std::chrono::milliseconds(200));
 						}
 						mSleepInterval += mSleepIntervalStep;
 						mSleepIntervalStep += 2;

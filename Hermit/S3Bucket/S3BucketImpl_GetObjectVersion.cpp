@@ -17,7 +17,6 @@
 //
 
 #include "Hermit/Foundation/Notification.h"
-#include "Hermit/Foundation/Thread.h"
 #include "Hermit/S3/GetS3BucketLocation.h"
 #include "Hermit/S3/GetS3ObjectWithVersion.h"
 #include "Hermit/S3/S3RetryClass.h"
@@ -125,7 +124,7 @@ namespace hermit {
 								mCompletion->Call(h_, s3::S3Result::kCanceled);
 								return;
 							}
-							Sleep(200);
+							std::this_thread::sleep_for(std::chrono::milliseconds(200));
 						}
 						mSleepInterval += mSleepIntervalStep;
 						mSleepIntervalStep += 2;

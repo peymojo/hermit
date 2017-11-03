@@ -19,7 +19,6 @@
 #include <vector>
 #include "Hermit/Encoding/CalculateSHA256.h"
 #include "Hermit/Foundation/Notification.h"
-#include "Hermit/Foundation/Thread.h"
 #include "Hermit/String/BinaryStringToHex.h"
 #include "Hermit/S3/AbortS3MultipartUpload.h"
 #include "Hermit/S3/CompleteS3MultipartUpload.h"

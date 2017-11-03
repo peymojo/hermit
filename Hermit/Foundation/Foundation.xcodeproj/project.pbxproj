@@ -23,7 +23,6 @@
 		EF92C0EB1F10F72D0097D708 /* AsyncTaskQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFE49F481D86AFE60044BC06 /* AsyncTaskQueue.cpp */; };
 		EF92C0EC1F10F72D0097D708 /* SharedBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFE49F4A1D86AFE60044BC06 /* SharedBuffer.cpp */; };
 		EF92C0ED1F10F72D0097D708 /* TaskQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFE49F511D86AFE60044BC06 /* TaskQueue.cpp */; };
-		EF92C0EE1F10F72D0097D708 /* Thread_Mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFE49F531D86AFE60044BC06 /* Thread_Mac.cpp */; };
 		EF92C0EF1F10F72D0097D708 /* ThreadLock_Mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFE49F551D86AFE60044BC06 /* ThreadLock_Mac.cpp */; };
 		EF92C0F11F10F77C0097D708 /* StaticLog.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFE49F4E1D86AFE60044BC06 /* StaticLog.mm */; };
 		EF92C0F21F10F7940097D708 /* LoggingHermit.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFE49F411D86AFE60044BC06 /* LoggingHermit.mm */; };
@@ -45,7 +44,6 @@
 		EFF397061F65507700B1BD33 /* SharedBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFE49F4A1D86AFE60044BC06 /* SharedBuffer.cpp */; };
 		EFF3970A1F65507700B1BD33 /* StaticLog.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFE49F4E1D86AFE60044BC06 /* StaticLog.mm */; };
 		EFF3970C1F65507700B1BD33 /* TaskQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFE49F511D86AFE60044BC06 /* TaskQueue.cpp */; };
-		EFF3970E1F65507700B1BD33 /* Thread_Mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFE49F531D86AFE60044BC06 /* Thread_Mac.cpp */; };
 		EFF397101F65507700B1BD33 /* ThreadLock_Mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFE49F551D86AFE60044BC06 /* ThreadLock_Mac.cpp */; };
 /* End PBXBuildFile section */
 
@@ -90,8 +88,6 @@
 		EFE49F4F1D86AFE60044BC06 /* StreamDataFunction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StreamDataFunction.h; sourceTree = "<group>"; };
 		EFE49F511D86AFE60044BC06 /* TaskQueue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TaskQueue.cpp; sourceTree = "<group>"; };
 		EFE49F521D86AFE60044BC06 /* TaskQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskQueue.h; sourceTree = "<group>"; };
-		EFE49F531D86AFE60044BC06 /* Thread_Mac.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Thread_Mac.cpp; sourceTree = "<group>"; };
-		EFE49F541D86AFE60044BC06 /* Thread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Thread.h; sourceTree = "<group>"; };
 		EFE49F551D86AFE60044BC06 /* ThreadLock_Mac.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ThreadLock_Mac.cpp; sourceTree = "<group>"; };
 		EFE49F561D86AFE60044BC06 /* ThreadLock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThreadLock.h; sourceTree = "<group>"; };
 		EFF396D21F65504600B1BD33 /* FoundationKit_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FoundationKit_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -179,8 +175,6 @@
 				EFE49F4F1D86AFE60044BC06 /* StreamDataFunction.h */,
 				EFE49F511D86AFE60044BC06 /* TaskQueue.cpp */,
 				EFE49F521D86AFE60044BC06 /* TaskQueue.h */,
-				EFE49F531D86AFE60044BC06 /* Thread_Mac.cpp */,
-				EFE49F541D86AFE60044BC06 /* Thread.h */,
 				EFE49F551D86AFE60044BC06 /* ThreadLock_Mac.cpp */,
 				EFE49F561D86AFE60044BC06 /* ThreadLock.h */,
 			);
@@ -341,7 +335,6 @@
 				EF59A64A1F5911A500902A12 /* CompareMemory.cpp in Sources */,
 				EFAB5ACE1F642BF2002DFCC5 /* GetPrimaryMACAddress.cpp in Sources */,
 				EF92C0ED1F10F72D0097D708 /* TaskQueue.cpp in Sources */,
-				EF92C0EE1F10F72D0097D708 /* Thread_Mac.cpp in Sources */,
 				EF92C0EF1F10F72D0097D708 /* ThreadLock_Mac.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -363,7 +356,6 @@
 				EFF397061F65507700B1BD33 /* SharedBuffer.cpp in Sources */,
 				EFF3970A1F65507700B1BD33 /* StaticLog.mm in Sources */,
 				EFF3970C1F65507700B1BD33 /* TaskQueue.cpp in Sources */,
-				EFF3970E1F65507700B1BD33 /* Thread_Mac.cpp in Sources */,
 				EFF397101F65507700B1BD33 /* ThreadLock_Mac.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
