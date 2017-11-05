@@ -18,6 +18,7 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <string>
+#include "Hermit/Foundation/AsyncTaskQueue.h"
 #include "Hermit/Foundation/Notification.h"
 #include "GetFilePathUTF8String.h"
 #include "LoadFileData.h"
@@ -71,7 +72,34 @@ namespace hermit {
 			};
 			
 			//
+			class LoadTask : public AsyncTask {
+			public:
+				//
+				LoadTask(const HermitPtr& h_, const DataLoaderPtr& loader) : mH_(h_), mLoader(loader) {
+				}
+				
+				//
+				virtual void PerformTask(const int32_t& taskId) override {
+					mLoader->PerformLoadTask(mH_);
+				}
+				
+				//
+				HermitPtr mH_;
+				DataLoaderPtr mLoader;
+			};
+
+			//
 			void LoadNextChunk(const HermitPtr& h_) {
+				auto task = std::make_shared<LoadTask>(h_, shared_from_this());
+				if (!QueueAsyncTask(task, 1)) {
+					NOTIFY_ERROR(h_, "LoadFileData: QueueAsyncTask failed.");
+					mCompletion->Call(h_, LoadFileDataResult::kError);
+					return;
+				}
+			}
+					
+			//
+			void PerformLoadTask(const HermitPtr& h_) {
 				if (mFileHandle == nullptr) {
 					mFileHandle = ::fopen(mFilePathUTF8.c_str(), "rb");
 					if (mFileHandle == nullptr) {
