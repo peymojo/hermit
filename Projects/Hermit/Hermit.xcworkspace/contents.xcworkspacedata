@@ -5,6 +5,27 @@
       location = "group:s3util/s3util.xcodeproj">
    </FileRef>
    <FileRef
+      location = "group:../../Hermit/Encoding/Encoding.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:../../Hermit/File/File.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:../../Hermit/Foundation/Foundation.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:../../Hermit/HTTP/HTTP.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:../../Hermit/S3/S3.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:../../Hermit/String/String.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:../../Hermit/Value/Value.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:../../Hermit/XML/XML.xcodeproj">
    </FileRef>
 </Workspace>

@@ -10,6 +10,9 @@
 		EF2CF5981FF2336200652E69 /* CommandLineTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF2CF5961FF2336200652E69 /* CommandLineTool.cpp */; };
 		EF2CF59B1FF2356500652E69 /* ListBucketsTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF2CF5991FF2356500652E69 /* ListBucketsTool.cpp */; };
 		EF2CF59E1FF2418D00652E69 /* FoundationKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF2CF59F1FF2418D00652E69 /* FoundationKit.framework */; };
+		EF2CF5A21FF2442300652E69 /* ReadKeyFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF2CF5A01FF2442300652E69 /* ReadKeyFile.cpp */; };
+		EF2CF5A31FF2474B00652E69 /* FileKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF2CF5A41FF2474B00652E69 /* FileKit.framework */; };
+		EF2CF5A51FF247A700652E69 /* S3Kit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF2CF5A61FF247A700652E69 /* S3Kit.framework */; };
 		EFF563D41FF22F2E0084DE22 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFF563D31FF22F2E0084DE22 /* main.cpp */; };
 /* End PBXBuildFile section */
 
@@ -32,6 +35,10 @@
 		EF2CF59A1FF2356500652E69 /* ListBucketsTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ListBucketsTool.h; sourceTree = "<group>"; };
 		EF2CF59C1FF23AAA00652E69 /* OperationTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OperationTimer.h; path = ../../OperationTimer.h; sourceTree = "<group>"; };
 		EF2CF59F1FF2418D00652E69 /* FoundationKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FoundationKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF2CF5A01FF2442300652E69 /* ReadKeyFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ReadKeyFile.cpp; path = ../../ReadKeyFile.cpp; sourceTree = "<group>"; };
+		EF2CF5A11FF2442300652E69 /* ReadKeyFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ReadKeyFile.h; path = ../../ReadKeyFile.h; sourceTree = "<group>"; };
+		EF2CF5A41FF2474B00652E69 /* FileKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FileKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF2CF5A61FF247A700652E69 /* S3Kit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = S3Kit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EFF563D01FF22F2E0084DE22 /* s3util */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = s3util; sourceTree = BUILT_PRODUCTS_DIR; };
 		EFF563D31FF22F2E0084DE22 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -41,6 +48,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EF2CF5A51FF247A700652E69 /* S3Kit.framework in Frameworks */,
+				EF2CF5A31FF2474B00652E69 /* FileKit.framework in Frameworks */,
 				EF2CF59E1FF2418D00652E69 /* FoundationKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -51,6 +60,8 @@
 		EF2CF59D1FF2418D00652E69 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				EF2CF5A61FF247A700652E69 /* S3Kit.framework */,
+				EF2CF5A41FF2474B00652E69 /* FileKit.framework */,
 				EF2CF59F1FF2418D00652E69 /* FoundationKit.framework */,
 			);
 			name = Frameworks;
@@ -82,6 +93,8 @@
 				EF2CF59A1FF2356500652E69 /* ListBucketsTool.h */,
 				EFF563D31FF22F2E0084DE22 /* main.cpp */,
 				EF2CF59C1FF23AAA00652E69 /* OperationTimer.h */,
+				EF2CF5A01FF2442300652E69 /* ReadKeyFile.cpp */,
+				EF2CF5A11FF2442300652E69 /* ReadKeyFile.h */,
 			);
 			path = s3util;
 			sourceTree = "<group>";
@@ -144,6 +157,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EFF563D41FF22F2E0084DE22 /* main.cpp in Sources */,
+				EF2CF5A21FF2442300652E69 /* ReadKeyFile.cpp in Sources */,
 				EF2CF59B1FF2356500652E69 /* ListBucketsTool.cpp in Sources */,
 				EF2CF5981FF2336200652E69 /* CommandLineTool.cpp in Sources */,
 			);
