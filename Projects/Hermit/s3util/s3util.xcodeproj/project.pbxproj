@@ -9,10 +9,16 @@
 /* Begin PBXBuildFile section */
 		EF2CF5981FF2336200652E69 /* CommandLineTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF2CF5961FF2336200652E69 /* CommandLineTool.cpp */; };
 		EF2CF59B1FF2356500652E69 /* ListBucketsTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF2CF5991FF2356500652E69 /* ListBucketsTool.cpp */; };
-		EF2CF59E1FF2418D00652E69 /* FoundationKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF2CF59F1FF2418D00652E69 /* FoundationKit.framework */; };
 		EF2CF5A21FF2442300652E69 /* ReadKeyFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF2CF5A01FF2442300652E69 /* ReadKeyFile.cpp */; };
-		EF2CF5A31FF2474B00652E69 /* FileKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF2CF5A41FF2474B00652E69 /* FileKit.framework */; };
-		EF2CF5A51FF247A700652E69 /* S3Kit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF2CF5A61FF247A700652E69 /* S3Kit.framework */; };
+		EF2CF5BF1FF249E900652E69 /* libFoundationLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EF2CF5C01FF249E900652E69 /* libFoundationLib.a */; };
+		EF2CF5CE1FF24A0800652E69 /* libFileLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EF2CF5CF1FF24A0800652E69 /* libFileLib.a */; };
+		EF2CF6181FF24A9D00652E69 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF2CF6171FF24A9D00652E69 /* CoreFoundation.framework */; };
+		EF2CF61A1FF24AB800652E69 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF2CF6191FF24AB800652E69 /* Foundation.framework */; };
+		EF2CF6461FF24B4900652E69 /* libS3Lib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EF2CF6471FF24B4900652E69 /* libS3Lib.a */; };
+		EF2CF6581FF24C1000652E69 /* libXMLLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EF2CF6591FF24C1000652E69 /* libXMLLib.a */; };
+		EF2CF6791FF24C4200652E69 /* libStringLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EF2CF67A1FF24C4200652E69 /* libStringLib.a */; };
+		EF2CF6A81FF24C8400652E69 /* libEncodingLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EF2CF6A91FF24C8400652E69 /* libEncodingLib.a */; };
+		EF2CF6BC1FF24CB700652E69 /* libHTTPLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EF2CF6BD1FF24CB700652E69 /* libHTTPLib.a */; };
 		EFF563D41FF22F2E0084DE22 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFF563D31FF22F2E0084DE22 /* main.cpp */; };
 /* End PBXBuildFile section */
 
@@ -39,6 +45,15 @@
 		EF2CF5A11FF2442300652E69 /* ReadKeyFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ReadKeyFile.h; path = ../../ReadKeyFile.h; sourceTree = "<group>"; };
 		EF2CF5A41FF2474B00652E69 /* FileKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FileKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF2CF5A61FF247A700652E69 /* S3Kit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = S3Kit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF2CF5C01FF249E900652E69 /* libFoundationLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libFoundationLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF2CF5CF1FF24A0800652E69 /* libFileLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libFileLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF2CF6171FF24A9D00652E69 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		EF2CF6191FF24AB800652E69 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		EF2CF6471FF24B4900652E69 /* libS3Lib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libS3Lib.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF2CF6591FF24C1000652E69 /* libXMLLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libXMLLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF2CF67A1FF24C4200652E69 /* libStringLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libStringLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF2CF6A91FF24C8400652E69 /* libEncodingLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libEncodingLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF2CF6BD1FF24CB700652E69 /* libHTTPLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libHTTPLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		EFF563D01FF22F2E0084DE22 /* s3util */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = s3util; sourceTree = BUILT_PRODUCTS_DIR; };
 		EFF563D31FF22F2E0084DE22 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -48,9 +63,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EF2CF5A51FF247A700652E69 /* S3Kit.framework in Frameworks */,
-				EF2CF5A31FF2474B00652E69 /* FileKit.framework in Frameworks */,
-				EF2CF59E1FF2418D00652E69 /* FoundationKit.framework in Frameworks */,
+				EF2CF6BC1FF24CB700652E69 /* libHTTPLib.a in Frameworks */,
+				EF2CF6A81FF24C8400652E69 /* libEncodingLib.a in Frameworks */,
+				EF2CF6791FF24C4200652E69 /* libStringLib.a in Frameworks */,
+				EF2CF6581FF24C1000652E69 /* libXMLLib.a in Frameworks */,
+				EF2CF6461FF24B4900652E69 /* libS3Lib.a in Frameworks */,
+				EF2CF61A1FF24AB800652E69 /* Foundation.framework in Frameworks */,
+				EF2CF6181FF24A9D00652E69 /* CoreFoundation.framework in Frameworks */,
+				EF2CF5CE1FF24A0800652E69 /* libFileLib.a in Frameworks */,
+				EF2CF5BF1FF249E900652E69 /* libFoundationLib.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -60,6 +81,15 @@
 		EF2CF59D1FF2418D00652E69 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				EF2CF6BD1FF24CB700652E69 /* libHTTPLib.a */,
+				EF2CF6A91FF24C8400652E69 /* libEncodingLib.a */,
+				EF2CF67A1FF24C4200652E69 /* libStringLib.a */,
+				EF2CF6591FF24C1000652E69 /* libXMLLib.a */,
+				EF2CF6471FF24B4900652E69 /* libS3Lib.a */,
+				EF2CF6191FF24AB800652E69 /* Foundation.framework */,
+				EF2CF6171FF24A9D00652E69 /* CoreFoundation.framework */,
+				EF2CF5CF1FF24A0800652E69 /* libFileLib.a */,
+				EF2CF5C01FF249E900652E69 /* libFoundationLib.a */,
 				EF2CF5A61FF247A700652E69 /* S3Kit.framework */,
 				EF2CF5A41FF2474B00652E69 /* FileKit.framework */,
 				EF2CF59F1FF2418D00652E69 /* FoundationKit.framework */,

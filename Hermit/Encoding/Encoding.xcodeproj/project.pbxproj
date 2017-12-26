@@ -7,6 +7,40 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EF2CF6821FF24C6600652E69 /* EncodingLib.h in Headers */ = {isa = PBXBuildFile; fileRef = EF2CF6811FF24C6600652E69 /* EncodingLib.h */; };
+		EF2CF6841FF24C6600652E69 /* EncodingLib.m in Sources */ = {isa = PBXBuildFile; fileRef = EF2CF6831FF24C6600652E69 /* EncodingLib.m */; };
+		EF2CF6881FF24C7100652E69 /* AES256.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD586D1D86B2E10056E526 /* AES256.cpp */; };
+		EF2CF6891FF24C7100652E69 /* AES256DecryptCBC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58701D86B2E10056E526 /* AES256DecryptCBC.cpp */; };
+		EF2CF68A1FF24C7100652E69 /* AES256DecryptCBCFromStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58721D86B2E10056E526 /* AES256DecryptCBCFromStream.cpp */; };
+		EF2CF68B1FF24C7100652E69 /* AES256EncryptCBC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58751D86B2E10056E526 /* AES256EncryptCBC.cpp */; };
+		EF2CF68C1FF24C7100652E69 /* AES256EncryptCBCFromStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58771D86B2E10056E526 /* AES256EncryptCBCFromStream.cpp */; };
+		EF2CF68D1FF24C7100652E69 /* Base64.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58791D86B2E10056E526 /* Base64.cpp */; };
+		EF2CF68E1FF24C7100652E69 /* Base64ToBinary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD587B1D86B2E10056E526 /* Base64ToBinary.cpp */; };
+		EF2CF68F1FF24C7100652E69 /* BinaryToBase64.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD587D1D86B2E10056E526 /* BinaryToBase64.cpp */; };
+		EF2CF6901FF24C7100652E69 /* BinaryToBase64Modified.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD587F1D86B2E10056E526 /* BinaryToBase64Modified.cpp */; };
+		EF2CF6911FF24C7100652E69 /* CalculateCRC32.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58811D86B2E10056E526 /* CalculateCRC32.cpp */; };
+		EF2CF6921FF24C7100652E69 /* CalculateDataCRC32.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58831D86B2E10056E526 /* CalculateDataCRC32.cpp */; };
+		EF2CF6931FF24C7100652E69 /* CalculateHMACSHA1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58851D86B2E10056E526 /* CalculateHMACSHA1.cpp */; };
+		EF2CF6941FF24C7100652E69 /* CalculateHMACSHA256.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58871D86B2E10056E526 /* CalculateHMACSHA256.cpp */; };
+		EF2CF6951FF24C7100652E69 /* CalculateMD5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58891D86B2E10056E526 /* CalculateMD5.cpp */; };
+		EF2CF6961FF24C7100652E69 /* CalculateMD5FromStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD588C1D86B2E10056E526 /* CalculateMD5FromStream.cpp */; };
+		EF2CF6971FF24C7100652E69 /* CalculateMurmur3_128.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD588E1D86B2E10056E526 /* CalculateMurmur3_128.cpp */; };
+		EF2CF6981FF24C7100652E69 /* CalculateSHA1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58911D86B2E10056E526 /* CalculateSHA1.cpp */; };
+		EF2CF6991FF24C7100652E69 /* CalculateSHA256.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58931D86B2E10056E526 /* CalculateSHA256.cpp */; };
+		EF2CF69A1FF24C7100652E69 /* CRC32.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58951D86B2E10056E526 /* CRC32.cpp */; };
+		EF2CF69B1FF24C7100652E69 /* CreateAlphaNumericID.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58971D86B2E10056E526 /* CreateAlphaNumericID.cpp */; };
+		EF2CF69C1FF24C7100652E69 /* CreateInputVector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58991D86B2E10056E526 /* CreateInputVector.cpp */; };
+		EF2CF69D1FF24C7100652E69 /* CreateUUIDString_Mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD589B1D86B2E10056E526 /* CreateUUIDString_Mac.cpp */; };
+		EF2CF69E1FF24C7100652E69 /* CreateUUIDString_Unix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD589C1D86B2E10056E526 /* CreateUUIDString_Unix.cpp */; };
+		EF2CF69F1FF24C7100652E69 /* CreateUUIDStringBase64Modified.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD589E1D86B2E10056E526 /* CreateUUIDStringBase64Modified.cpp */; };
+		EF2CF6A01FF24C7100652E69 /* EncodeHMACSHA1PBKDF2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58A01D86B2E10056E526 /* EncodeHMACSHA1PBKDF2.cpp */; };
+		EF2CF6A11FF24C7100652E69 /* EncryptChallengeText.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58A21D86B2E10056E526 /* EncryptChallengeText.cpp */; };
+		EF2CF6A21FF24C7100652E69 /* HexToBase64Modified.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58A41D86B2E10056E526 /* HexToBase64Modified.cpp */; };
+		EF2CF6A31FF24C7100652E69 /* KeyPhraseToKeyWithValues.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58A61D86B2E20056E526 /* KeyPhraseToKeyWithValues.cpp */; };
+		EF2CF6A41FF24C7100652E69 /* SHA1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58AA1D86B2E20056E526 /* SHA1.cpp */; };
+		EF2CF6A51FF24C7100652E69 /* SHA256.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58AC1D86B2E20056E526 /* SHA256.cpp */; };
+		EF2CF6A61FF24C7100652E69 /* UpdateCRC32.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58AE1D86B2E20056E526 /* UpdateCRC32.cpp */; };
+		EF2CF6A71FF24C7100652E69 /* ValidateKeyPhraseWithValues.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58B01D86B2E20056E526 /* ValidateKeyPhraseWithValues.cpp */; };
 		EF92C1D31F11006E0097D708 /* EncodingKit.h in Headers */ = {isa = PBXBuildFile; fileRef = EF92C1D11F11006E0097D708 /* EncodingKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EF92C1D71F11007B0097D708 /* AES256.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD586D1D86B2E10056E526 /* AES256.cpp */; };
 		EF92C1D81F11007B0097D708 /* AES256DecryptCBC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58701D86B2E10056E526 /* AES256DecryptCBC.cpp */; };
@@ -80,6 +114,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		EF2CF67F1FF24C6600652E69 /* libEncodingLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libEncodingLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF2CF6811FF24C6600652E69 /* EncodingLib.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EncodingLib.h; sourceTree = "<group>"; };
+		EF2CF6831FF24C6600652E69 /* EncodingLib.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EncodingLib.m; sourceTree = "<group>"; };
 		EF92C1CF1F11006E0097D708 /* EncodingKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = EncodingKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF92C1D11F11006E0097D708 /* EncodingKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EncodingKit.h; sourceTree = "<group>"; };
 		EF92C1D21F11006E0097D708 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -165,6 +202,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		EF2CF67C1FF24C6600652E69 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EF92C1CB1F11006E0097D708 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -188,6 +232,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		EF2CF6801FF24C6600652E69 /* EncodingLib */ = {
+			isa = PBXGroup;
+			children = (
+				EF2CF6811FF24C6600652E69 /* EncodingLib.h */,
+				EF2CF6831FF24C6600652E69 /* EncodingLib.m */,
+			);
+			path = EncodingLib;
+			sourceTree = "<group>";
+		};
 		EF92C1D01F11006E0097D708 /* EncodingKit */ = {
 			isa = PBXGroup;
 			children = (
@@ -285,6 +338,7 @@
 				EFAD58B11D86B2E20056E526 /* ValidateKeyPhraseWithValues.h */,
 				EF92C1D01F11006E0097D708 /* EncodingKit */,
 				EFF397C41F6552AB00B1BD33 /* EncodingKit_iOS */,
+				EF2CF6801FF24C6600652E69 /* EncodingLib */,
 				EFAD58621D86B2AF0056E526 /* Products */,
 				EF92C1F71F11046B0097D708 /* Frameworks */,
 			);
@@ -295,6 +349,7 @@
 			children = (
 				EF92C1CF1F11006E0097D708 /* EncodingKit.framework */,
 				EFF397C31F6552AB00B1BD33 /* EncodingKit_iOS.framework */,
+				EF2CF67F1FF24C6600652E69 /* libEncodingLib.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -311,6 +366,14 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		EF2CF67D1FF24C6600652E69 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF2CF6821FF24C6600652E69 /* EncodingLib.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EF92C1CC1F11006E0097D708 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -330,6 +393,23 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		EF2CF67E1FF24C6600652E69 /* EncodingLib */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EF2CF6871FF24C6600652E69 /* Build configuration list for PBXNativeTarget "EncodingLib" */;
+			buildPhases = (
+				EF2CF67B1FF24C6600652E69 /* Sources */,
+				EF2CF67C1FF24C6600652E69 /* Frameworks */,
+				EF2CF67D1FF24C6600652E69 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = EncodingLib;
+			productName = EncodingLib;
+			productReference = EF2CF67F1FF24C6600652E69 /* libEncodingLib.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 		EF92C1CE1F11006E0097D708 /* EncodingKit */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = EF92C1D61F11006E0097D708 /* Build configuration list for PBXNativeTarget "EncodingKit" */;
@@ -375,6 +455,10 @@
 				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = peymojo;
 				TargetAttributes = {
+					EF2CF67E1FF24C6600652E69 = {
+						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Automatic;
+					};
 					EF92C1CE1F11006E0097D708 = {
 						CreatedOnToolsVersion = 8.3.3;
 						ProvisioningStyle = Automatic;
@@ -400,6 +484,7 @@
 			targets = (
 				EF92C1CE1F11006E0097D708 /* EncodingKit */,
 				EFF397C21F6552AB00B1BD33 /* EncodingKit_iOS */,
+				EF2CF67E1FF24C6600652E69 /* EncodingLib */,
 			);
 		};
 /* End PBXProject section */
@@ -422,6 +507,46 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		EF2CF67B1FF24C6600652E69 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF2CF6881FF24C7100652E69 /* AES256.cpp in Sources */,
+				EF2CF6891FF24C7100652E69 /* AES256DecryptCBC.cpp in Sources */,
+				EF2CF68A1FF24C7100652E69 /* AES256DecryptCBCFromStream.cpp in Sources */,
+				EF2CF68B1FF24C7100652E69 /* AES256EncryptCBC.cpp in Sources */,
+				EF2CF68C1FF24C7100652E69 /* AES256EncryptCBCFromStream.cpp in Sources */,
+				EF2CF68D1FF24C7100652E69 /* Base64.cpp in Sources */,
+				EF2CF68E1FF24C7100652E69 /* Base64ToBinary.cpp in Sources */,
+				EF2CF68F1FF24C7100652E69 /* BinaryToBase64.cpp in Sources */,
+				EF2CF6901FF24C7100652E69 /* BinaryToBase64Modified.cpp in Sources */,
+				EF2CF6911FF24C7100652E69 /* CalculateCRC32.cpp in Sources */,
+				EF2CF6921FF24C7100652E69 /* CalculateDataCRC32.cpp in Sources */,
+				EF2CF6931FF24C7100652E69 /* CalculateHMACSHA1.cpp in Sources */,
+				EF2CF6941FF24C7100652E69 /* CalculateHMACSHA256.cpp in Sources */,
+				EF2CF6951FF24C7100652E69 /* CalculateMD5.cpp in Sources */,
+				EF2CF6961FF24C7100652E69 /* CalculateMD5FromStream.cpp in Sources */,
+				EF2CF6971FF24C7100652E69 /* CalculateMurmur3_128.cpp in Sources */,
+				EF2CF6981FF24C7100652E69 /* CalculateSHA1.cpp in Sources */,
+				EF2CF6991FF24C7100652E69 /* CalculateSHA256.cpp in Sources */,
+				EF2CF69A1FF24C7100652E69 /* CRC32.cpp in Sources */,
+				EF2CF69B1FF24C7100652E69 /* CreateAlphaNumericID.cpp in Sources */,
+				EF2CF69C1FF24C7100652E69 /* CreateInputVector.cpp in Sources */,
+				EF2CF69D1FF24C7100652E69 /* CreateUUIDString_Mac.cpp in Sources */,
+				EF2CF69E1FF24C7100652E69 /* CreateUUIDString_Unix.cpp in Sources */,
+				EF2CF69F1FF24C7100652E69 /* CreateUUIDStringBase64Modified.cpp in Sources */,
+				EF2CF6A01FF24C7100652E69 /* EncodeHMACSHA1PBKDF2.cpp in Sources */,
+				EF2CF6A11FF24C7100652E69 /* EncryptChallengeText.cpp in Sources */,
+				EF2CF6A21FF24C7100652E69 /* HexToBase64Modified.cpp in Sources */,
+				EF2CF6A31FF24C7100652E69 /* KeyPhraseToKeyWithValues.cpp in Sources */,
+				EF2CF6A41FF24C7100652E69 /* SHA1.cpp in Sources */,
+				EF2CF6A51FF24C7100652E69 /* SHA256.cpp in Sources */,
+				EF2CF6A61FF24C7100652E69 /* UpdateCRC32.cpp in Sources */,
+				EF2CF6A71FF24C7100652E69 /* ValidateKeyPhraseWithValues.cpp in Sources */,
+				EF2CF6841FF24C6600652E69 /* EncodingLib.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EF92C1CA1F11006E0097D708 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -501,6 +626,38 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		EF2CF6851FF24C6600652E69 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				HEADER_SEARCH_PATHS = ../../;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		EF2CF6861FF24C6600652E69 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				HEADER_SEARCH_PATHS = ../../;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		EF92C1D41F11006E0097D708 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -710,6 +867,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		EF2CF6871FF24C6600652E69 /* Build configuration list for PBXNativeTarget "EncodingLib" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EF2CF6851FF24C6600652E69 /* Debug */,
+				EF2CF6861FF24C6600652E69 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		EF92C1D61F11006E0097D708 /* Build configuration list for PBXNativeTarget "EncodingKit" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

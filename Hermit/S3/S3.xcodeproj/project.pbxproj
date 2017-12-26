@@ -7,6 +7,38 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EF2CF6221FF24B1A00652E69 /* S3Lib.h in Headers */ = {isa = PBXBuildFile; fileRef = EF2CF6211FF24B1A00652E69 /* S3Lib.h */; };
+		EF2CF6241FF24B1A00652E69 /* S3Lib.m in Sources */ = {isa = PBXBuildFile; fileRef = EF2CF6231FF24B1A00652E69 /* S3Lib.m */; };
+		EF2CF6281FF24B3F00652E69 /* AbortS3MultipartUpload.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD60931D878C1E0056E526 /* AbortS3MultipartUpload.cpp */; };
+		EF2CF6291FF24B3F00652E69 /* CompleteS3MultipartUpload.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD60951D878C1E0056E526 /* CompleteS3MultipartUpload.cpp */; };
+		EF2CF62A1FF24B3F00652E69 /* GenerateAWS4SigningKey.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD60971D878C1E0056E526 /* GenerateAWS4SigningKey.cpp */; };
+		EF2CF62B1FF24B3F00652E69 /* GetS3BucketACLXML.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD60991D878C1E0056E526 /* GetS3BucketACLXML.cpp */; };
+		EF2CF62C1FF24B3F00652E69 /* GetS3BucketLocation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD609B1D878C1E0056E526 /* GetS3BucketLocation.cpp */; };
+		EF2CF62D1FF24B3F00652E69 /* GetS3Object.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD609D1D878C1E0056E526 /* GetS3Object.cpp */; };
+		EF2CF62E1FF24B3F00652E69 /* GetS3ObjectWithVersion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD609F1D878C1E0056E526 /* GetS3ObjectWithVersion.cpp */; };
+		EF2CF62F1FF24B3F00652E69 /* InitiateS3MultipartUpload.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD60A11D878C1E0056E526 /* InitiateS3MultipartUpload.cpp */; };
+		EF2CF6301FF24B3F00652E69 /* PutS3Object.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD60A51D878C1E0056E526 /* PutS3Object.cpp */; };
+		EF2CF6311FF24B3F00652E69 /* PutS3ObjectUsingChunks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD60A71D878C1E0056E526 /* PutS3ObjectUsingChunks.cpp */; };
+		EF2CF6321FF24B3F00652E69 /* S3CreateBucket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD60A81D878C1E0056E526 /* S3CreateBucket.cpp */; };
+		EF2CF6331FF24B3F00652E69 /* S3DeleteObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD60AA1D878C1E0056E526 /* S3DeleteObject.cpp */; };
+		EF2CF6341FF24B3F00652E69 /* S3DeleteObjects.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD60AC1D878C1E0056E526 /* S3DeleteObjects.cpp */; };
+		EF2CF6351FF24B3F00652E69 /* S3DeleteObjectVersion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD60AE1D878C1E0056E526 /* S3DeleteObjectVersion.cpp */; };
+		EF2CF6361FF24B3F00652E69 /* S3GetBucketVersioning.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD60B01D878C1E0056E526 /* S3GetBucketVersioning.cpp */; };
+		EF2CF6371FF24B3F00652E69 /* S3GetListObjectsWithVersionsXML.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD60B21D878C1E0056E526 /* S3GetListObjectsWithVersionsXML.cpp */; };
+		EF2CF6381FF24B3F00652E69 /* S3GetListObjectsXML.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD60B41D878C1E0056E526 /* S3GetListObjectsXML.cpp */; };
+		EF2CF6391FF24B3F00652E69 /* S3ListBuckets.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD60B61D878C1E0056E526 /* S3ListBuckets.cpp */; };
+		EF2CF63A1FF24B3F00652E69 /* S3ListObjects.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD60B81D878C1E0056E526 /* S3ListObjects.cpp */; };
+		EF2CF63B1FF24B3F00652E69 /* S3ListObjectsWithSize.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD60BA1D878C1E0056E526 /* S3ListObjectsWithSize.cpp */; };
+		EF2CF63C1FF24B3F00652E69 /* S3ListObjectsWithVersions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD60BC1D878C1E0056E526 /* S3ListObjectsWithVersions.cpp */; };
+		EF2CF63D1FF24B3F00652E69 /* S3Notification.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD60BE1D878C1E0056E526 /* S3Notification.cpp */; };
+		EF2CF63E1FF24B3F00652E69 /* S3SetBucketVersioning.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD60C21D878C1E0056E526 /* S3SetBucketVersioning.cpp */; };
+		EF2CF63F1FF24B3F00652E69 /* SendS3Command.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD60C41D878C1E0056E526 /* SendS3Command.cpp */; };
+		EF2CF6401FF24B3F00652E69 /* SendS3CommandWithData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD60C71D878C1E0056E526 /* SendS3CommandWithData.cpp */; };
+		EF2CF6411FF24B3F00652E69 /* SignAWSRequestVersion2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD60C91D878C1E0056E526 /* SignAWSRequestVersion2.cpp */; };
+		EF2CF6421FF24B3F00652E69 /* StreamInS3Object.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD60CB1D878C1E0056E526 /* StreamInS3Object.cpp */; };
+		EF2CF6431FF24B3F00652E69 /* StreamInS3Request.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD60CD1D878C1E0056E526 /* StreamInS3Request.cpp */; };
+		EF2CF6441FF24B3F00652E69 /* StreamInS3RequestWithBody.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD60D11D878C1E0056E526 /* StreamInS3RequestWithBody.cpp */; };
+		EF2CF6451FF24B3F00652E69 /* UploadS3MultipartPart.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD60D31D878C1E0056E526 /* UploadS3MultipartPart.cpp */; };
 		EF7255F51F18D5B50054DCE0 /* S3Kit.h in Headers */ = {isa = PBXBuildFile; fileRef = EF7255F31F18D5B50054DCE0 /* S3Kit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EF7255F91F18D5CA0054DCE0 /* AbortS3MultipartUpload.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD60931D878C1E0056E526 /* AbortS3MultipartUpload.cpp */; };
 		EF7255FA1F18D5CA0054DCE0 /* CompleteS3MultipartUpload.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD60951D878C1E0056E526 /* CompleteS3MultipartUpload.cpp */; };
@@ -82,6 +114,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		EF2CF61F1FF24B1A00652E69 /* libS3Lib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libS3Lib.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF2CF6211FF24B1A00652E69 /* S3Lib.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = S3Lib.h; sourceTree = "<group>"; };
+		EF2CF6231FF24B1A00652E69 /* S3Lib.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = S3Lib.m; sourceTree = "<group>"; };
 		EF7255F11F18D5B50054DCE0 /* S3Kit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = S3Kit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF7255F31F18D5B50054DCE0 /* S3Kit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = S3Kit.h; sourceTree = "<group>"; };
 		EF7255F41F18D5B50054DCE0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -167,6 +202,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		EF2CF61C1FF24B1A00652E69 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EF7255ED1F18D5B50054DCE0 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -194,6 +236,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		EF2CF6201FF24B1A00652E69 /* S3Lib */ = {
+			isa = PBXGroup;
+			children = (
+				EF2CF6211FF24B1A00652E69 /* S3Lib.h */,
+				EF2CF6231FF24B1A00652E69 /* S3Lib.m */,
+			);
+			path = S3Lib;
+			sourceTree = "<group>";
+		};
 		EF7255F21F18D5B50054DCE0 /* S3Kit */ = {
 			isa = PBXGroup;
 			children = (
@@ -291,6 +342,7 @@
 				EFAD60D41D878C1E0056E526 /* UploadS3MultipartPart.h */,
 				EF7255F21F18D5B50054DCE0 /* S3Kit */,
 				EFF397DE1F6552D300B1BD33 /* S3Kit_iOS */,
+				EF2CF6201FF24B1A00652E69 /* S3Lib */,
 				EFAD60881D878BF30056E526 /* Products */,
 				EF7256171F18D6120054DCE0 /* Frameworks */,
 			);
@@ -301,6 +353,7 @@
 			children = (
 				EF7255F11F18D5B50054DCE0 /* S3Kit.framework */,
 				EFF397DD1F6552D300B1BD33 /* S3Kit_iOS.framework */,
+				EF2CF61F1FF24B1A00652E69 /* libS3Lib.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -317,6 +370,14 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		EF2CF61D1FF24B1A00652E69 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF2CF6221FF24B1A00652E69 /* S3Lib.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EF7255EE1F18D5B50054DCE0 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -336,6 +397,23 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		EF2CF61E1FF24B1A00652E69 /* S3Lib */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EF2CF6271FF24B1A00652E69 /* Build configuration list for PBXNativeTarget "S3Lib" */;
+			buildPhases = (
+				EF2CF61B1FF24B1A00652E69 /* Sources */,
+				EF2CF61C1FF24B1A00652E69 /* Frameworks */,
+				EF2CF61D1FF24B1A00652E69 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = S3Lib;
+			productName = S3Lib;
+			productReference = EF2CF61F1FF24B1A00652E69 /* libS3Lib.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 		EF7255F01F18D5B50054DCE0 /* S3Kit */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = EF7255F81F18D5B50054DCE0 /* Build configuration list for PBXNativeTarget "S3Kit" */;
@@ -381,6 +459,10 @@
 				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = peymojo;
 				TargetAttributes = {
+					EF2CF61E1FF24B1A00652E69 = {
+						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Automatic;
+					};
 					EF7255F01F18D5B50054DCE0 = {
 						CreatedOnToolsVersion = 8.3.3;
 						ProvisioningStyle = Automatic;
@@ -406,6 +488,7 @@
 			targets = (
 				EF7255F01F18D5B50054DCE0 /* S3Kit */,
 				EFF397DC1F6552D300B1BD33 /* S3Kit_iOS */,
+				EF2CF61E1FF24B1A00652E69 /* S3Lib */,
 			);
 		};
 /* End PBXProject section */
@@ -428,6 +511,44 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		EF2CF61B1FF24B1A00652E69 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF2CF6281FF24B3F00652E69 /* AbortS3MultipartUpload.cpp in Sources */,
+				EF2CF6291FF24B3F00652E69 /* CompleteS3MultipartUpload.cpp in Sources */,
+				EF2CF62A1FF24B3F00652E69 /* GenerateAWS4SigningKey.cpp in Sources */,
+				EF2CF62B1FF24B3F00652E69 /* GetS3BucketACLXML.cpp in Sources */,
+				EF2CF62C1FF24B3F00652E69 /* GetS3BucketLocation.cpp in Sources */,
+				EF2CF62D1FF24B3F00652E69 /* GetS3Object.cpp in Sources */,
+				EF2CF62E1FF24B3F00652E69 /* GetS3ObjectWithVersion.cpp in Sources */,
+				EF2CF62F1FF24B3F00652E69 /* InitiateS3MultipartUpload.cpp in Sources */,
+				EF2CF6301FF24B3F00652E69 /* PutS3Object.cpp in Sources */,
+				EF2CF6311FF24B3F00652E69 /* PutS3ObjectUsingChunks.cpp in Sources */,
+				EF2CF6321FF24B3F00652E69 /* S3CreateBucket.cpp in Sources */,
+				EF2CF6331FF24B3F00652E69 /* S3DeleteObject.cpp in Sources */,
+				EF2CF6341FF24B3F00652E69 /* S3DeleteObjects.cpp in Sources */,
+				EF2CF6351FF24B3F00652E69 /* S3DeleteObjectVersion.cpp in Sources */,
+				EF2CF6361FF24B3F00652E69 /* S3GetBucketVersioning.cpp in Sources */,
+				EF2CF6371FF24B3F00652E69 /* S3GetListObjectsWithVersionsXML.cpp in Sources */,
+				EF2CF6381FF24B3F00652E69 /* S3GetListObjectsXML.cpp in Sources */,
+				EF2CF6391FF24B3F00652E69 /* S3ListBuckets.cpp in Sources */,
+				EF2CF63A1FF24B3F00652E69 /* S3ListObjects.cpp in Sources */,
+				EF2CF63B1FF24B3F00652E69 /* S3ListObjectsWithSize.cpp in Sources */,
+				EF2CF63C1FF24B3F00652E69 /* S3ListObjectsWithVersions.cpp in Sources */,
+				EF2CF63D1FF24B3F00652E69 /* S3Notification.cpp in Sources */,
+				EF2CF63E1FF24B3F00652E69 /* S3SetBucketVersioning.cpp in Sources */,
+				EF2CF63F1FF24B3F00652E69 /* SendS3Command.cpp in Sources */,
+				EF2CF6401FF24B3F00652E69 /* SendS3CommandWithData.cpp in Sources */,
+				EF2CF6411FF24B3F00652E69 /* SignAWSRequestVersion2.cpp in Sources */,
+				EF2CF6421FF24B3F00652E69 /* StreamInS3Object.cpp in Sources */,
+				EF2CF6431FF24B3F00652E69 /* StreamInS3Request.cpp in Sources */,
+				EF2CF6441FF24B3F00652E69 /* StreamInS3RequestWithBody.cpp in Sources */,
+				EF2CF6451FF24B3F00652E69 /* UploadS3MultipartPart.cpp in Sources */,
+				EF2CF6241FF24B1A00652E69 /* S3Lib.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EF7255EC1F18D5B50054DCE0 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -505,6 +626,38 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		EF2CF6251FF24B1A00652E69 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				HEADER_SEARCH_PATHS = ../../;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		EF2CF6261FF24B1A00652E69 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				HEADER_SEARCH_PATHS = ../../;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		EF7255F61F18D5B50054DCE0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -714,6 +867,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		EF2CF6271FF24B1A00652E69 /* Build configuration list for PBXNativeTarget "S3Lib" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EF2CF6251FF24B1A00652E69 /* Debug */,
+				EF2CF6261FF24B1A00652E69 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		EF7255F81F18D5B50054DCE0 /* Build configuration list for PBXNativeTarget "S3Kit" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

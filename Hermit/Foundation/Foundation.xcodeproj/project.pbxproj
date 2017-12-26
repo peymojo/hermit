@@ -7,6 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EF2CF5AE1FF249C200652E69 /* FoundationLib.h in Headers */ = {isa = PBXBuildFile; fileRef = EF2CF5AD1FF249C200652E69 /* FoundationLib.h */; };
+		EF2CF5B01FF249C200652E69 /* FoundationLib.m in Sources */ = {isa = PBXBuildFile; fileRef = EF2CF5AF1FF249C200652E69 /* FoundationLib.m */; };
+		EF2CF5B41FF249D500652E69 /* AsyncTaskQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFE49F481D86AFE60044BC06 /* AsyncTaskQueue.cpp */; };
+		EF2CF5B51FF249D500652E69 /* CompareMemory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF59A6401F5911A500902A12 /* CompareMemory.cpp */; };
+		EF2CF5B61FF249D500652E69 /* GenerateSecureRandomBytes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFE49F3E1D86AFE60044BC06 /* GenerateSecureRandomBytes.cpp */; };
+		EF2CF5B71FF249D500652E69 /* GetCurrentUTCAndLocalTimeStrings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF59A6421F5911A500902A12 /* GetCurrentUTCAndLocalTimeStrings.cpp */; };
+		EF2CF5B81FF249D500652E69 /* GetCurrentUTCTimeString.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF59A6441F5911A500902A12 /* GetCurrentUTCTimeString.cpp */; };
+		EF2CF5B91FF249D500652E69 /* GetPrimaryMACAddress.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAB5ACC1F642BF2002DFCC5 /* GetPrimaryMACAddress.cpp */; };
+		EF2CF5BA1FF249D500652E69 /* MemXOR.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF59A6481F5911A500902A12 /* MemXOR.cpp */; };
+		EF2CF5BB1FF249D500652E69 /* Notification.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFE49F451D86AFE60044BC06 /* Notification.cpp */; };
+		EF2CF5BC1FF249D500652E69 /* SharedBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFE49F4A1D86AFE60044BC06 /* SharedBuffer.cpp */; };
+		EF2CF5BD1FF249D500652E69 /* TaskQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFE49F511D86AFE60044BC06 /* TaskQueue.cpp */; };
+		EF2CF5BE1FF249D500652E69 /* ThreadLock_Mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFE49F551D86AFE60044BC06 /* ThreadLock_Mac.cpp */; };
+		EF2CF6161FF24A8400652E69 /* StaticLog.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFE49F4E1D86AFE60044BC06 /* StaticLog.mm */; };
 		EF59A64A1F5911A500902A12 /* CompareMemory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF59A6401F5911A500902A12 /* CompareMemory.cpp */; };
 		EF59A64B1F5911A500902A12 /* CompareMemory.h in Headers */ = {isa = PBXBuildFile; fileRef = EF59A6411F5911A500902A12 /* CompareMemory.h */; };
 		EF59A64C1F5911A500902A12 /* GetCurrentUTCAndLocalTimeStrings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF59A6421F5911A500902A12 /* GetCurrentUTCAndLocalTimeStrings.cpp */; };
@@ -48,6 +62,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		EF2CF5AB1FF249C200652E69 /* libFoundationLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libFoundationLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF2CF5AD1FF249C200652E69 /* FoundationLib.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FoundationLib.h; sourceTree = "<group>"; };
+		EF2CF5AF1FF249C200652E69 /* FoundationLib.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FoundationLib.m; sourceTree = "<group>"; };
 		EF59A6401F5911A500902A12 /* CompareMemory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CompareMemory.cpp; sourceTree = "<group>"; };
 		EF59A6411F5911A500902A12 /* CompareMemory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CompareMemory.h; sourceTree = "<group>"; };
 		EF59A6421F5911A500902A12 /* GetCurrentUTCAndLocalTimeStrings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GetCurrentUTCAndLocalTimeStrings.cpp; sourceTree = "<group>"; };
@@ -96,6 +113,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		EF2CF5A81FF249C200652E69 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EF92C0DC1F10F7200097D708 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -115,6 +139,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		EF2CF5AC1FF249C200652E69 /* FoundationLib */ = {
+			isa = PBXGroup;
+			children = (
+				EF2CF5AD1FF249C200652E69 /* FoundationLib.h */,
+				EF2CF5AF1FF249C200652E69 /* FoundationLib.m */,
+			);
+			path = FoundationLib;
+			sourceTree = "<group>";
+		};
 		EF92C0E11F10F7200097D708 /* FoundationKit */ = {
 			isa = PBXGroup;
 			children = (
@@ -146,6 +179,7 @@
 				EFE49F3B1D86AFE60044BC06 /* EnumerateStringValuesFunction.h */,
 				EF92C0E11F10F7200097D708 /* FoundationKit */,
 				EFF396D31F65504600B1BD33 /* FoundationKit_iOS */,
+				EF2CF5AC1FF249C200652E69 /* FoundationLib */,
 				EF92C0F31F10F7C70097D708 /* Frameworks */,
 				EFE49F3E1D86AFE60044BC06 /* GenerateSecureRandomBytes.cpp */,
 				EFE49F3F1D86AFE60044BC06 /* GenerateSecureRandomBytes.h */,
@@ -185,6 +219,7 @@
 			children = (
 				EF92C0E01F10F7200097D708 /* FoundationKit.framework */,
 				EFF396D21F65504600B1BD33 /* FoundationKit_iOS.framework */,
+				EF2CF5AB1FF249C200652E69 /* libFoundationLib.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -201,6 +236,14 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		EF2CF5A91FF249C200652E69 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF2CF5AE1FF249C200652E69 /* FoundationLib.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EF92C0DD1F10F7200097D708 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -226,6 +269,23 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		EF2CF5AA1FF249C200652E69 /* FoundationLib */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EF2CF5B31FF249C200652E69 /* Build configuration list for PBXNativeTarget "FoundationLib" */;
+			buildPhases = (
+				EF2CF5A71FF249C200652E69 /* Sources */,
+				EF2CF5A81FF249C200652E69 /* Frameworks */,
+				EF2CF5A91FF249C200652E69 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FoundationLib;
+			productName = FoundationLib;
+			productReference = EF2CF5AB1FF249C200652E69 /* libFoundationLib.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 		EF92C0DF1F10F7200097D708 /* FoundationKit */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = EF92C0E71F10F7200097D708 /* Build configuration list for PBXNativeTarget "FoundationKit" */;
@@ -271,6 +331,10 @@
 				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = peymojo;
 				TargetAttributes = {
+					EF2CF5AA1FF249C200652E69 = {
+						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Automatic;
+					};
 					EF92C0DF1F10F7200097D708 = {
 						CreatedOnToolsVersion = 8.3.3;
 						ProvisioningStyle = Automatic;
@@ -296,6 +360,7 @@
 			targets = (
 				EF92C0DF1F10F7200097D708 /* FoundationKit */,
 				EFF396D11F65504600B1BD33 /* FoundationKit_iOS */,
+				EF2CF5AA1FF249C200652E69 /* FoundationLib */,
 			);
 		};
 /* End PBXProject section */
@@ -318,6 +383,26 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		EF2CF5A71FF249C200652E69 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF2CF6161FF24A8400652E69 /* StaticLog.mm in Sources */,
+				EF2CF5B41FF249D500652E69 /* AsyncTaskQueue.cpp in Sources */,
+				EF2CF5B51FF249D500652E69 /* CompareMemory.cpp in Sources */,
+				EF2CF5B61FF249D500652E69 /* GenerateSecureRandomBytes.cpp in Sources */,
+				EF2CF5B71FF249D500652E69 /* GetCurrentUTCAndLocalTimeStrings.cpp in Sources */,
+				EF2CF5B81FF249D500652E69 /* GetCurrentUTCTimeString.cpp in Sources */,
+				EF2CF5B91FF249D500652E69 /* GetPrimaryMACAddress.cpp in Sources */,
+				EF2CF5BA1FF249D500652E69 /* MemXOR.cpp in Sources */,
+				EF2CF5BB1FF249D500652E69 /* Notification.cpp in Sources */,
+				EF2CF5BC1FF249D500652E69 /* SharedBuffer.cpp in Sources */,
+				EF2CF5BD1FF249D500652E69 /* TaskQueue.cpp in Sources */,
+				EF2CF5BE1FF249D500652E69 /* ThreadLock_Mac.cpp in Sources */,
+				EF2CF5B01FF249C200652E69 /* FoundationLib.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EF92C0DB1F10F7200097D708 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -363,6 +448,36 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		EF2CF5B11FF249C200652E69 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		EF2CF5B21FF249C200652E69 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		EF92C0E51F10F7200097D708 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -568,6 +683,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		EF2CF5B31FF249C200652E69 /* Build configuration list for PBXNativeTarget "FoundationLib" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EF2CF5B11FF249C200652E69 /* Debug */,
+				EF2CF5B21FF249C200652E69 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		EF92C0E71F10F7200097D708 /* Build configuration list for PBXNativeTarget "FoundationKit" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

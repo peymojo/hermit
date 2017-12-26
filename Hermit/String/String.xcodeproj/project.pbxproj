@@ -7,6 +7,26 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EF2CF6611FF24C3000652E69 /* StringLib.h in Headers */ = {isa = PBXBuildFile; fileRef = EF2CF6601FF24C3000652E69 /* StringLib.h */; };
+		EF2CF6631FF24C3000652E69 /* StringLib.m in Sources */ = {isa = PBXBuildFile; fileRef = EF2CF6621FF24C3000652E69 /* StringLib.m */; };
+		EF2CF6671FF24C3A00652E69 /* AddTrailingSlash.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD580A1D86B2510056E526 /* AddTrailingSlash.cpp */; };
+		EF2CF6681FF24C3A00652E69 /* BinaryStringToHex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD580C1D86B2510056E526 /* BinaryStringToHex.cpp */; };
+		EF2CF6691FF24C3A00652E69 /* ByteSizeToString.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD580E1D86B2510056E526 /* ByteSizeToString.cpp */; };
+		EF2CF66A1FF24C3A00652E69 /* DecodeXMLEntities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58101D86B2510056E526 /* DecodeXMLEntities.cpp */; };
+		EF2CF66B1FF24C3A00652E69 /* DoubleToString.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58121D86B2510056E526 /* DoubleToString.cpp */; };
+		EF2CF66C1FF24C3A00652E69 /* EncodeXMLEntities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58141D86B2510056E526 /* EncodeXMLEntities.cpp */; };
+		EF2CF66D1FF24C3A00652E69 /* GetCommonPathParent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58161D86B2510056E526 /* GetCommonPathParent.cpp */; };
+		EF2CF66E1FF24C3A00652E69 /* GetRelativePath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58181D86B2510056E526 /* GetRelativePath.cpp */; };
+		EF2CF66F1FF24C3A00652E69 /* HexStringToBinary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD581A1D86B2510056E526 /* HexStringToBinary.cpp */; };
+		EF2CF6701FF24C3A00652E69 /* SimplifyPath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD581C1D86B2510056E526 /* SimplifyPath.cpp */; };
+		EF2CF6711FF24C3A00652E69 /* SInt32ToString.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD581E1D86B2510056E526 /* SInt32ToString.cpp */; };
+		EF2CF6721FF24C3A00652E69 /* StringToUInt32.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58221D86B2510056E526 /* StringToUInt32.cpp */; };
+		EF2CF6731FF24C3A00652E69 /* StringToUInt64.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58241D86B2510056E526 /* StringToUInt64.cpp */; };
+		EF2CF6741FF24C3A00652E69 /* StripCStyleComments.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58261D86B2510056E526 /* StripCStyleComments.cpp */; };
+		EF2CF6751FF24C3A00652E69 /* StripRedundantWhitespace.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58281D86B2510056E526 /* StripRedundantWhitespace.cpp */; };
+		EF2CF6761FF24C3A00652E69 /* TrimWhitespace.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD582A1D86B2510056E526 /* TrimWhitespace.cpp */; };
+		EF2CF6771FF24C3A00652E69 /* UInt32ToString.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD582C1D86B2510056E526 /* UInt32ToString.cpp */; };
+		EF2CF6781FF24C3A00652E69 /* UInt64ToString.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD582E1D86B2510056E526 /* UInt64ToString.cpp */; };
 		EF92C0BD1F10F2EB0097D708 /* StringKit.h in Headers */ = {isa = PBXBuildFile; fileRef = EF92C0BB1F10F2EB0097D708 /* StringKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EF92C0C11F10F3BA0097D708 /* AddTrailingSlash.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD580A1D86B2510056E526 /* AddTrailingSlash.cpp */; };
 		EF92C0C21F10F3BA0097D708 /* BinaryStringToHex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD580C1D86B2510056E526 /* BinaryStringToHex.cpp */; };
@@ -50,6 +70,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		EF2CF65E1FF24C3000652E69 /* libStringLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libStringLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF2CF6601FF24C3000652E69 /* StringLib.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StringLib.h; sourceTree = "<group>"; };
+		EF2CF6621FF24C3000652E69 /* StringLib.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StringLib.m; sourceTree = "<group>"; };
 		EF92C0B91F10F2EB0097D708 /* StringKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StringKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF92C0BB1F10F2EB0097D708 /* StringKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StringKit.h; sourceTree = "<group>"; };
 		EF92C0BC1F10F2EB0097D708 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -100,6 +123,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		EF2CF65B1FF24C3000652E69 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EF92C0B51F10F2EB0097D708 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -119,6 +149,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		EF2CF65F1FF24C3000652E69 /* StringLib */ = {
+			isa = PBXGroup;
+			children = (
+				EF2CF6601FF24C3000652E69 /* StringLib.h */,
+				EF2CF6621FF24C3000652E69 /* StringLib.m */,
+			);
+			path = StringLib;
+			sourceTree = "<group>";
+		};
 		EF92C0BA1F10F2EB0097D708 /* StringKit */ = {
 			isa = PBXGroup;
 			children = (
@@ -181,6 +220,7 @@
 				EFAD582F1D86B2510056E526 /* UInt64ToString.h */,
 				EF92C0BA1F10F2EB0097D708 /* StringKit */,
 				EFF397181F6550E900B1BD33 /* StringKit_iOS */,
+				EF2CF65F1FF24C3000652E69 /* StringLib */,
 				EFAD57FF1D86B2000056E526 /* Products */,
 				EF92C0D31F10F40D0097D708 /* Frameworks */,
 			);
@@ -191,6 +231,7 @@
 			children = (
 				EF92C0B91F10F2EB0097D708 /* StringKit.framework */,
 				EFF397171F6550E900B1BD33 /* StringKit_iOS.framework */,
+				EF2CF65E1FF24C3000652E69 /* libStringLib.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -207,6 +248,14 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		EF2CF65C1FF24C3000652E69 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF2CF6611FF24C3000652E69 /* StringLib.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EF92C0B61F10F2EB0097D708 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -226,6 +275,23 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		EF2CF65D1FF24C3000652E69 /* StringLib */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EF2CF6661FF24C3000652E69 /* Build configuration list for PBXNativeTarget "StringLib" */;
+			buildPhases = (
+				EF2CF65A1FF24C3000652E69 /* Sources */,
+				EF2CF65B1FF24C3000652E69 /* Frameworks */,
+				EF2CF65C1FF24C3000652E69 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = StringLib;
+			productName = StringLib;
+			productReference = EF2CF65E1FF24C3000652E69 /* libStringLib.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 		EF92C0B81F10F2EB0097D708 /* StringKit */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = EF92C0C01F10F2EB0097D708 /* Build configuration list for PBXNativeTarget "StringKit" */;
@@ -271,6 +337,10 @@
 				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = peymojo;
 				TargetAttributes = {
+					EF2CF65D1FF24C3000652E69 = {
+						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Automatic;
+					};
 					EF92C0B81F10F2EB0097D708 = {
 						CreatedOnToolsVersion = 8.3.3;
 						ProvisioningStyle = Automatic;
@@ -296,6 +366,7 @@
 			targets = (
 				EF92C0B81F10F2EB0097D708 /* StringKit */,
 				EFF397161F6550E900B1BD33 /* StringKit_iOS */,
+				EF2CF65D1FF24C3000652E69 /* StringLib */,
 			);
 		};
 /* End PBXProject section */
@@ -318,6 +389,32 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		EF2CF65A1FF24C3000652E69 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF2CF6671FF24C3A00652E69 /* AddTrailingSlash.cpp in Sources */,
+				EF2CF6681FF24C3A00652E69 /* BinaryStringToHex.cpp in Sources */,
+				EF2CF6691FF24C3A00652E69 /* ByteSizeToString.cpp in Sources */,
+				EF2CF66A1FF24C3A00652E69 /* DecodeXMLEntities.cpp in Sources */,
+				EF2CF66B1FF24C3A00652E69 /* DoubleToString.cpp in Sources */,
+				EF2CF66C1FF24C3A00652E69 /* EncodeXMLEntities.cpp in Sources */,
+				EF2CF66D1FF24C3A00652E69 /* GetCommonPathParent.cpp in Sources */,
+				EF2CF66E1FF24C3A00652E69 /* GetRelativePath.cpp in Sources */,
+				EF2CF66F1FF24C3A00652E69 /* HexStringToBinary.cpp in Sources */,
+				EF2CF6701FF24C3A00652E69 /* SimplifyPath.cpp in Sources */,
+				EF2CF6711FF24C3A00652E69 /* SInt32ToString.cpp in Sources */,
+				EF2CF6721FF24C3A00652E69 /* StringToUInt32.cpp in Sources */,
+				EF2CF6731FF24C3A00652E69 /* StringToUInt64.cpp in Sources */,
+				EF2CF6741FF24C3A00652E69 /* StripCStyleComments.cpp in Sources */,
+				EF2CF6751FF24C3A00652E69 /* StripRedundantWhitespace.cpp in Sources */,
+				EF2CF6761FF24C3A00652E69 /* TrimWhitespace.cpp in Sources */,
+				EF2CF6771FF24C3A00652E69 /* UInt32ToString.cpp in Sources */,
+				EF2CF6781FF24C3A00652E69 /* UInt64ToString.cpp in Sources */,
+				EF2CF6631FF24C3000652E69 /* StringLib.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EF92C0B41F10F2EB0097D708 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -371,6 +468,38 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		EF2CF6641FF24C3000652E69 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				HEADER_SEARCH_PATHS = ../../;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		EF2CF6651FF24C3000652E69 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				HEADER_SEARCH_PATHS = ../../;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		EF92C0BE1F10F2EB0097D708 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -580,6 +709,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		EF2CF6661FF24C3000652E69 /* Build configuration list for PBXNativeTarget "StringLib" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EF2CF6641FF24C3000652E69 /* Debug */,
+				EF2CF6651FF24C3000652E69 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		EF92C0C01F10F2EB0097D708 /* Build configuration list for PBXNativeTarget "StringKit" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

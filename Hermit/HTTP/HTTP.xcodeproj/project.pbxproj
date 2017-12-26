@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EF2CF6B11FF24C9800652E69 /* HTTPLib.h in Headers */ = {isa = PBXBuildFile; fileRef = EF2CF6B01FF24C9800652E69 /* HTTPLib.h */; };
+		EF2CF6B31FF24C9800652E69 /* HTTPLib.m in Sources */ = {isa = PBXBuildFile; fileRef = EF2CF6B21FF24C9800652E69 /* HTTPLib.m */; };
+		EF2CF6B71FF24CA600652E69 /* SendHTTPRequest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD57B31D86B1090056E526 /* SendHTTPRequest.cpp */; };
+		EF2CF6B81FF24CA600652E69 /* SendHTTPRequestWithBody.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD57B61D86B10A0056E526 /* SendHTTPRequestWithBody.cpp */; };
+		EF2CF6B91FF24CA600652E69 /* StreamInHTTPRequest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD57B81D86B10A0056E526 /* StreamInHTTPRequest.cpp */; };
+		EF2CF6BA1FF24CA600652E69 /* StreamInHTTPRequestWithBody_Cocoa.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFAD57BC1D86B10A0056E526 /* StreamInHTTPRequestWithBody_Cocoa.mm */; };
+		EF2CF6BB1FF24CA600652E69 /* URLEncode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD57BE1D86B10A0056E526 /* URLEncode.cpp */; };
 		EF92C20B1F1105360097D708 /* HTTPKit.h in Headers */ = {isa = PBXBuildFile; fileRef = EF92C2091F1105360097D708 /* HTTPKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EF92C20F1F1105AD0097D708 /* SendHTTPRequest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD57B31D86B1090056E526 /* SendHTTPRequest.cpp */; };
 		EF92C2101F1105AD0097D708 /* SendHTTPRequestWithBody.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD57B61D86B10A0056E526 /* SendHTTPRequestWithBody.cpp */; };
@@ -24,6 +31,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		EF2CF6AE1FF24C9800652E69 /* libHTTPLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libHTTPLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF2CF6B01FF24C9800652E69 /* HTTPLib.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HTTPLib.h; sourceTree = "<group>"; };
+		EF2CF6B21FF24C9800652E69 /* HTTPLib.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HTTPLib.m; sourceTree = "<group>"; };
 		EF92C2071F1105360097D708 /* HTTPKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = HTTPKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF92C2091F1105360097D708 /* HTTPKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HTTPKit.h; sourceTree = "<group>"; };
 		EF92C20A1F1105360097D708 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -50,6 +60,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		EF2CF6AB1FF24C9800652E69 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EF92C2031F1105360097D708 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -69,6 +86,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		EF2CF6AF1FF24C9800652E69 /* HTTPLib */ = {
+			isa = PBXGroup;
+			children = (
+				EF2CF6B01FF24C9800652E69 /* HTTPLib.h */,
+				EF2CF6B21FF24C9800652E69 /* HTTPLib.m */,
+			);
+			path = HTTPLib;
+			sourceTree = "<group>";
+		};
 		EF92C2081F1105360097D708 /* HTTPKit */ = {
 			isa = PBXGroup;
 			children = (
@@ -107,6 +133,7 @@
 				EFAD57BF1D86B10A0056E526 /* URLEncode.h */,
 				EF92C2081F1105360097D708 /* HTTPKit */,
 				EFF398331F65539800B1BD33 /* HTTPKit_iOS */,
+				EF2CF6AF1FF24C9800652E69 /* HTTPLib */,
 				EFAD57A51D86B0DB0056E526 /* Products */,
 				EF92C2141F1105FC0097D708 /* Frameworks */,
 			);
@@ -117,6 +144,7 @@
 			children = (
 				EF92C2071F1105360097D708 /* HTTPKit.framework */,
 				EFF398321F65539800B1BD33 /* HTTPKit_iOS.framework */,
+				EF2CF6AE1FF24C9800652E69 /* libHTTPLib.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -133,6 +161,14 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		EF2CF6AC1FF24C9800652E69 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF2CF6B11FF24C9800652E69 /* HTTPLib.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EF92C2041F1105360097D708 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -152,6 +188,23 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		EF2CF6AD1FF24C9800652E69 /* HTTPLib */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EF2CF6B61FF24C9800652E69 /* Build configuration list for PBXNativeTarget "HTTPLib" */;
+			buildPhases = (
+				EF2CF6AA1FF24C9800652E69 /* Sources */,
+				EF2CF6AB1FF24C9800652E69 /* Frameworks */,
+				EF2CF6AC1FF24C9800652E69 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = HTTPLib;
+			productName = HTTPLib;
+			productReference = EF2CF6AE1FF24C9800652E69 /* libHTTPLib.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 		EF92C2061F1105360097D708 /* HTTPKit */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = EF92C20E1F1105360097D708 /* Build configuration list for PBXNativeTarget "HTTPKit" */;
@@ -197,6 +250,10 @@
 				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = peymojo;
 				TargetAttributes = {
+					EF2CF6AD1FF24C9800652E69 = {
+						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Automatic;
+					};
 					EF92C2061F1105360097D708 = {
 						CreatedOnToolsVersion = 8.3.3;
 						ProvisioningStyle = Automatic;
@@ -222,6 +279,7 @@
 			targets = (
 				EF92C2061F1105360097D708 /* HTTPKit */,
 				EFF398311F65539800B1BD33 /* HTTPKit_iOS */,
+				EF2CF6AD1FF24C9800652E69 /* HTTPLib */,
 			);
 		};
 /* End PBXProject section */
@@ -244,6 +302,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		EF2CF6AA1FF24C9800652E69 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF2CF6B71FF24CA600652E69 /* SendHTTPRequest.cpp in Sources */,
+				EF2CF6B81FF24CA600652E69 /* SendHTTPRequestWithBody.cpp in Sources */,
+				EF2CF6B91FF24CA600652E69 /* StreamInHTTPRequest.cpp in Sources */,
+				EF2CF6BA1FF24CA600652E69 /* StreamInHTTPRequestWithBody_Cocoa.mm in Sources */,
+				EF2CF6BB1FF24CA600652E69 /* URLEncode.cpp in Sources */,
+				EF2CF6B31FF24C9800652E69 /* HTTPLib.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EF92C2021F1105360097D708 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -271,6 +342,38 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		EF2CF6B41FF24C9800652E69 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				HEADER_SEARCH_PATHS = ../../;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		EF2CF6B51FF24C9800652E69 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				HEADER_SEARCH_PATHS = ../../;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		EF92C20C1F1105360097D708 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -480,6 +583,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		EF2CF6B61FF24C9800652E69 /* Build configuration list for PBXNativeTarget "HTTPLib" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EF2CF6B41FF24C9800652E69 /* Debug */,
+				EF2CF6B51FF24C9800652E69 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		EF92C20E1F1105360097D708 /* Build configuration list for PBXNativeTarget "HTTPKit" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

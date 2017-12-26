@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EF2CF64F1FF24B7B00652E69 /* XMLLib.h in Headers */ = {isa = PBXBuildFile; fileRef = EF2CF64E1FF24B7B00652E69 /* XMLLib.h */; };
+		EF2CF6511FF24B7B00652E69 /* XMLLib.m in Sources */ = {isa = PBXBuildFile; fileRef = EF2CF6501FF24B7B00652E69 /* XMLLib.m */; };
+		EF2CF6551FF24B8400652E69 /* ParseXMLData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD59351D86B5080056E526 /* ParseXMLData.cpp */; };
+		EF2CF6561FF24B8400652E69 /* ParseXMLStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD59381D86B5080056E526 /* ParseXMLStream.cpp */; };
+		EF2CF6571FF24B8400652E69 /* SanitizeXML.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD593A1D86B5080056E526 /* SanitizeXML.cpp */; };
 		EF92C1571F10FE680097D708 /* XMLKit.h in Headers */ = {isa = PBXBuildFile; fileRef = EF92C1551F10FE680097D708 /* XMLKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EF92C15B1F10FE740097D708 /* ParseXMLData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD59351D86B5080056E526 /* ParseXMLData.cpp */; };
 		EF92C15C1F10FE740097D708 /* ParseXMLStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD59381D86B5080056E526 /* ParseXMLStream.cpp */; };
@@ -22,6 +27,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		EF2CF64C1FF24B7B00652E69 /* libXMLLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libXMLLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF2CF64E1FF24B7B00652E69 /* XMLLib.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMLLib.h; sourceTree = "<group>"; };
+		EF2CF6501FF24B7B00652E69 /* XMLLib.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMLLib.m; sourceTree = "<group>"; };
 		EF92C1531F10FE680097D708 /* XMLKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = XMLKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF92C1551F10FE680097D708 /* XMLKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMLKit.h; sourceTree = "<group>"; };
 		EF92C1561F10FE680097D708 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -44,6 +52,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		EF2CF6491FF24B7B00652E69 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EF92C14F1F10FE680097D708 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -65,6 +80,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		EF2CF64D1FF24B7B00652E69 /* XMLLib */ = {
+			isa = PBXGroup;
+			children = (
+				EF2CF64E1FF24B7B00652E69 /* XMLLib.h */,
+				EF2CF6501FF24B7B00652E69 /* XMLLib.m */,
+			);
+			path = XMLLib;
+			sourceTree = "<group>";
+		};
 		EF92C1541F10FE680097D708 /* XMLKit */ = {
 			isa = PBXGroup;
 			children = (
@@ -99,6 +123,7 @@
 				EFAD593B1D86B5080056E526 /* SanitizeXML.h */,
 				EF92C1541F10FE680097D708 /* XMLKit */,
 				EFF398471F6553E400B1BD33 /* XMLKit_iOS */,
+				EF2CF64D1FF24B7B00652E69 /* XMLLib */,
 				EFAD59281D86B4D90056E526 /* Products */,
 				EF92C15E1F10FEB90097D708 /* Frameworks */,
 			);
@@ -109,6 +134,7 @@
 			children = (
 				EF92C1531F10FE680097D708 /* XMLKit.framework */,
 				EFF398461F6553E400B1BD33 /* XMLKit_iOS.framework */,
+				EF2CF64C1FF24B7B00652E69 /* libXMLLib.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -125,6 +151,14 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		EF2CF64A1FF24B7B00652E69 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF2CF64F1FF24B7B00652E69 /* XMLLib.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EF92C1501F10FE680097D708 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -144,6 +178,23 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		EF2CF64B1FF24B7B00652E69 /* XMLLib */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EF2CF6541FF24B7B00652E69 /* Build configuration list for PBXNativeTarget "XMLLib" */;
+			buildPhases = (
+				EF2CF6481FF24B7B00652E69 /* Sources */,
+				EF2CF6491FF24B7B00652E69 /* Frameworks */,
+				EF2CF64A1FF24B7B00652E69 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = XMLLib;
+			productName = XMLLib;
+			productReference = EF2CF64C1FF24B7B00652E69 /* libXMLLib.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 		EF92C1521F10FE680097D708 /* XMLKit */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = EF92C15A1F10FE680097D708 /* Build configuration list for PBXNativeTarget "XMLKit" */;
@@ -189,6 +240,10 @@
 				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = peymojo;
 				TargetAttributes = {
+					EF2CF64B1FF24B7B00652E69 = {
+						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Automatic;
+					};
 					EF92C1521F10FE680097D708 = {
 						CreatedOnToolsVersion = 8.3.3;
 						ProvisioningStyle = Automatic;
@@ -214,6 +269,7 @@
 			targets = (
 				EF92C1521F10FE680097D708 /* XMLKit */,
 				EFF398451F6553E400B1BD33 /* XMLKit_iOS */,
+				EF2CF64B1FF24B7B00652E69 /* XMLLib */,
 			);
 		};
 /* End PBXProject section */
@@ -236,6 +292,17 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		EF2CF6481FF24B7B00652E69 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF2CF6551FF24B8400652E69 /* ParseXMLData.cpp in Sources */,
+				EF2CF6561FF24B8400652E69 /* ParseXMLStream.cpp in Sources */,
+				EF2CF6571FF24B8400652E69 /* SanitizeXML.cpp in Sources */,
+				EF2CF6511FF24B7B00652E69 /* XMLLib.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EF92C14E1F10FE680097D708 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -259,6 +326,38 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		EF2CF6521FF24B7B00652E69 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				HEADER_SEARCH_PATHS = ../../;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		EF2CF6531FF24B7B00652E69 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				HEADER_SEARCH_PATHS = ../../;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		EF92C1581F10FE680097D708 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -468,6 +567,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		EF2CF6541FF24B7B00652E69 /* Build configuration list for PBXNativeTarget "XMLLib" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EF2CF6521FF24B7B00652E69 /* Debug */,
+				EF2CF6531FF24B7B00652E69 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		EF92C15A1F10FE680097D708 /* Build configuration list for PBXNativeTarget "XMLKit" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
