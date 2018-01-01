@@ -20,28 +20,61 @@
 #import <Foundation/Foundation.h>
 #import "CreateHTTPSession.h"
 
+namespace hermit {
+	namespace http {
+		namespace CreateHTTPSession_Impl {
+			
+			//
+			class StreamResult : public StreamResultBlock {
+			public:
+				//
+				StreamResult() : mResult(StreamDataResult::kUnknown) {
+				}
+				
+				//
+				virtual void Call(const HermitPtr& h_, StreamDataResult result) override {
+					mResult = result;
+				}
+				
+				//
+				StreamDataResult mResult;
+			};
+
+		} // namespace CreateHTTPSession_Impl
+		using namespace CreateHTTPSession_Impl;
+	} // namespace http
+} // namespace hermit
+
+
 // magic key for objc_setAssociatedObject
 static void* const TASK_PARAMS_KEY = (void*)&TASK_PARAMS_KEY;
 
 @interface TaskParams : NSObject {
+	hermit::HermitPtr _h_;
 	hermit::DataHandlerBlockPtr _dataHandler;
 	hermit::http::HTTPRequestStatusBlockPtr _status;
 	hermit::http::HTTPRequestCompletionBlockPtr _completion;
 }
 
-- (id)initWith:(hermit::DataHandlerBlockPtr)dataHandler
+- (id)initWith:(hermit::HermitPtr)h_
+   dataHandler:(hermit::DataHandlerBlockPtr)dataHandler
 		status:(hermit::http::HTTPRequestStatusBlockPtr)status
 	completion:(hermit::http::HTTPRequestCompletionBlockPtr)completion;
+
+- (void)sendData:(NSData*)data;
+- (void)completion:(NSError*)error;
 
 @end
 
 @implementation TaskParams
 
-- (id)initWith:(hermit::DataHandlerBlockPtr)dataHandler
+- (id)initWith:(hermit::HermitPtr)h_
+   dataHandler:(hermit::DataHandlerBlockPtr)dataHandler
 		status:(hermit::http::HTTPRequestStatusBlockPtr)status
 	completion:(hermit::http::HTTPRequestCompletionBlockPtr)completion {
 	self = [super init];
 	if (self != nil) {
+		_h_ = h_;
 		_dataHandler = dataHandler;
 		_status = status;
 		_completion = completion;
@@ -49,47 +82,106 @@ static void* const TASK_PARAMS_KEY = (void*)&TASK_PARAMS_KEY;
 	return self;
 }
 
+- (void)status:(NSURLSessionTask*) task {
+	NSURLResponse* response = task.response;
+	if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+		NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
+		NSDictionary* headerParams = httpResponse.allHeaderFields;
+		__block hermit::http::HTTPParamVector params;
+		[headerParams enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+			std::string name([key UTF8String]);
+			std::string value([obj UTF8String]);
+			params.push_back(std::make_pair(name, value));
+		}];
+		
+		_status->Call(_h_, (int)httpResponse.statusCode, params);
+	}
+}
+
+- (void)sendData:(NSData*)data {
+	[data enumerateByteRangesUsingBlock:^(const void *bytes, NSRange byteRange, BOOL *stop) {
+		auto completion = std::make_shared<hermit::http::StreamResult>();
+		_dataHandler->HandleData(_h_, hermit::DataBuffer((const char*)bytes, byteRange.length), false, completion);
+	}];
+}
+
+- (void)completion:(NSError*)error {
+	hermit::http::HTTPRequestResult result = hermit::http::HTTPRequestResult::kSuccess;
+	if (error != nil) {
+		NSLog(@"error: %@", error);
+		result = hermit::http::HTTPRequestResult::kError;
+	}
+	_completion->Call(_h_, result);
+}
+
 @end
 
 
 @interface SessionDelegate : NSObject<NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDataDelegate, NSURLSessionDownloadDelegate, NSURLSessionStreamDelegate>
 
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(nullable NSError *)error;
+
 @end
 
 @implementation SessionDelegate
 
+- (void)URLSession:(NSURLSession *)session didBecomeInvalidWithError:(nullable NSError *)error {
+	NSLog(@"didBecomeInvalidWithError");
+}
+
+- (void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * _Nullable credential))completionHandler {
+	NSLog(@"session didReceiveChallenge");
+	completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
+}
+
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task willPerformHTTPRedirection:(NSHTTPURLResponse *)response newRequest:(NSURLRequest *)request completionHandler:(void (^)(NSURLRequest *))completionHandler {
+	NSLog(@"willPerformHTTPRedirection");
+	completionHandler(request);
+}
+
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * _Nullable credential))completionHandler {
+	NSLog(@"task didReceiveChallenge");
 	TaskParams* params = objc_getAssociatedObject(task, TASK_PARAMS_KEY);
 	if (params != nil) {
 	}
 }
 
-- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * _Nullable credential))completionHandler {
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task needNewBodyStream:(void (^)(NSInputStream * _Nullable bodyStream))completionHandler {
+	NSLog(@"needNewBodyStream");
+}
+
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(nullable NSError *)error {
+	NSLog(@"didCompleteWithError");
 	TaskParams* params = objc_getAssociatedObject(task, TASK_PARAMS_KEY);
 	if (params != nil) {
+		[params status:task];
+		[params completion:error];
+	}
+}
+
+//- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveResponse:(NSURLResponse *)response completionHandler:(void (^)(NSURLSessionResponseDisposition disposition))completionHandler {
+//	NSLog(@"didReceiveResponse");
+//	completionHandler(NSURLSessionResponseAllow);
+//}
+
+- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveData:(NSData *)data {
+	NSLog(@"didReceiveData");
+	TaskParams* params = objc_getAssociatedObject(dataTask, TASK_PARAMS_KEY);
+	if (params != nil) {
+		[params sendData:data];
 	}
 }
 
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didWriteData:(int64_t)bytesWritten totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
+	NSLog(@"didWriteData");
 	TaskParams* params = objc_getAssociatedObject(downloadTask, TASK_PARAMS_KEY);
 	if (params != nil) {
 	}
 }
 
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didFinishDownloadingToURL:(NSURL *)location {
+	NSLog(@"didFinishDownloadingToURL");
 	TaskParams* params = objc_getAssociatedObject(downloadTask, TASK_PARAMS_KEY);
-	if (params != nil) {
-	}
-}
-
-- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveResponse:(NSURLResponse *)response completionHandler:(void (^)(NSURLSessionResponseDisposition disposition))completionHandler {
-	TaskParams* params = objc_getAssociatedObject(dataTask, TASK_PARAMS_KEY);
-	if (params != nil) {
-	}
-}
-
-- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(nullable NSError *)error {
-	TaskParams* params = objc_getAssociatedObject(task, TASK_PARAMS_KEY);
 	if (params != nil) {
 	}
 }
@@ -99,7 +191,6 @@ static void* const TASK_PARAMS_KEY = (void*)&TASK_PARAMS_KEY;
 
 namespace hermit {
 	namespace http {
-		
 		namespace CreateHTTPSession_Impl {
 			
 			//
@@ -230,10 +321,21 @@ namespace hermit {
 													 const HTTPRequestCompletionBlockPtr& completion) override {
 					NSString* urlString = [NSString stringWithUTF8String:url.c_str()];
 					NSURL* requestURL = [NSURL URLWithString: urlString];
-					NSURLSessionDownloadTask* downloadTask = [mSession downloadTaskWithURL:requestURL];
-					TaskParams* params = [[TaskParams alloc] initWith:dataHandler status:status completion:completion];
-					objc_setAssociatedObject(downloadTask, TASK_PARAMS_KEY, params, OBJC_ASSOCIATION_RETAIN);
-					[downloadTask resume];
+					NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:requestURL];
+					request.HTTPMethod = [NSString stringWithUTF8String:method.c_str()];
+					auto end = headerParams.end();
+					for (auto it = headerParams.begin(); it != end; ++it) {
+						NSString* value = [NSString stringWithUTF8String:(*it).second.c_str()];
+						NSString* field = [NSString stringWithUTF8String:(*it).first.c_str()];
+						[request setValue:value forHTTPHeaderField:field];
+					}
+					NSURLSessionDataTask* dataTask = [mSession dataTaskWithRequest:request];
+					TaskParams* params = [[TaskParams alloc] initWith:h_
+														  dataHandler:dataHandler
+															   status:status
+														   completion:completion];
+					objc_setAssociatedObject(dataTask, TASK_PARAMS_KEY, params, OBJC_ASSOCIATION_RETAIN);
+					[dataTask resume];
 				}
 				
 			private:
@@ -248,10 +350,9 @@ namespace hermit {
 		HTTPSessionPtr CreateHTTPSession() {
 			NSURLSessionConfiguration *defaultConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
 			id <NSURLSessionDelegate> delegate = [[SessionDelegate alloc] init];
-			NSOperationQueue *operationQueue = [NSOperationQueue mainQueue];
 			NSURLSession *defaultSession = [NSURLSession sessionWithConfiguration:defaultConfiguration
 																		 delegate:delegate
-																	delegateQueue:operationQueue];
+																	delegateQueue:nil];
 
 			return std::make_shared<URLSessionHTTPSession>(defaultSession);
 		}
