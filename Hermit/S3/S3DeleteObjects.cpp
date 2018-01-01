@@ -17,6 +17,7 @@
 //
 
 #include <string>
+#include "Hermit/Foundation/Notification.h"
 #include "S3DeleteObject.h"
 #include "S3DeleteObjectVersion.h"
 #include "S3ListObjectsWithVersions.h"
@@ -24,12 +25,11 @@
 
 namespace hermit {
 	namespace s3 {
-		
-		namespace {
+		namespace S3DeleteObjects_Impl {
 
+#if 000
 			//
-			class S3ListObjectsWithVersionsClass : public S3ListObjectsWithVersionsCallback
-			{
+			class S3ListObjectsWithVersionsClass : public S3ListObjectsWithVersionsCompletion {
 			public:
 				//
 				//
@@ -89,36 +89,45 @@ namespace hermit {
 				std::string mAWSSigingKey;
 				std::string mAWSRegion;
 				std::string mBucketName;
-				const S3DeleteObjectsCallbackRef& mCallback;
+				S3DeletedObjectReporterPtr mDeletedObjectReporter;
+				S3CompletionBlockPtr mCompletion;
 			};
+#endif
 			
-		} // private namespace
+		} // namespace S3DeleteObjects_Impl
+		using namespace S3DeleteObjects_Impl;
 		
 		//
 		void S3DeleteObjects(const HermitPtr& h_,
-							 const std::string& inAWSPublicKey,
-							 const std::string& inAWSSigningKey,
-							 const uint64_t& inAWSSigningKeySize,
-							 const std::string& inAWSRegion,
-							 const std::string& inBucketName,
-							 const std::string& inPathPrefix,
-							 const S3DeleteObjectsCallbackRef& inCallback) {
-			S3ListObjectsWithVersionsClass lister(h_,
-												  inAWSPublicKey,
-												  inAWSSigningKey,
-												  inAWSSigningKeySize,
-												  inAWSRegion,
-												  inBucketName,
-												  inCallback);
+							 const std::string& awsPublicKey,
+							 const std::string& awsSigningKey,
+							 const std::string& awsRegion,
+							 const std::string& bucketName,
+							 const std::string& pathPrefix,
+							 const S3DeletedObjectReporterPtr& deletedObjectReporter,
+							 const S3CompletionBlockPtr& completion) {
+			
+			NOTIFY_ERROR(h_, "S3DeleteObjects: not implemented");
+			completion->Call(h_, S3Result::kError);
+		
+			// needs to be updated for async processing and underlying calls need to be updated
+#if 000
+			auto lister = std::make_shared<S3ListObjectsWithVersionsClass>(h_,
+																		   awsPublicKey,
+																		   awsSigningKey,
+																		   awsRegion,
+																		   bucketName,
+																		   deletedObjectReporter,
+																		   completion);
 			
 			S3ListObjectsWithVersions(h_,
-									  inAWSPublicKey,
-									  inAWSSigningKey,
-									  inAWSSigningKeySize,
-									  inAWSRegion,
-									  inBucketName, 
-									  inPathPrefix,
+									  awsPublicKey,
+									  awsSigningKey,
+									  awsRegion,
+									  bucketName,
+									  pathPrefix,
 									  lister);
+#endif
 		}
 		
 	} // namespace s3

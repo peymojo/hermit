@@ -16,131 +16,303 @@
 //	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#include <stack>
 #include <string>
-#include <vector>
 #include "Hermit/Encoding/CalculateHMACSHA256.h"
 #include "Hermit/Encoding/CalculateSHA256.h"
 #include "Hermit/Foundation/Notification.h"
-#include "Hermit/HTTP/SendHTTPRequestWithBody.h"
-#include "Hermit/HTTP/URLEncode.h"
 #include "Hermit/String/BinaryStringToHex.h"
 #include "Hermit/String/UInt64ToString.h"
-#include "Hermit/XML/ParseXMLData.h"
+#include "PutS3Object.h"
 #include "SendS3CommandWithData.h"
 #include "SignAWSRequestVersion2.h"
-#include "PutS3Object.h"
 
 namespace hermit {
 	namespace s3 {
-		
-		namespace {
+		namespace PutS3Object_Impl {
 
 			//
-			typedef std::pair<std::string, std::string> StringPair;
-			typedef std::vector<StringPair> StringPairVector;
-			
-			//
-			class EndpointParamCallback : public EnumerateStringValuesCallback {
-			public:
-				//
-				bool Function(const std::string& inName, const std::string& inValue) {
-					if (inName == "Endpoint") {
-						mNewEndpoint = inValue;
+			std::string GetEndpoint(const S3ParamVector& params) {
+				auto end = params.end();
+				for (auto it = params.begin(); it != end; ++it) {
+					if ((*it).first == "Endpoint") {
+						return (*it).second;
 					}
-					return true;
 				}
-				
-				//
-				std::string mNewEndpoint;
-			};
-			
+				return "";
+			}
+
 			//
-			class VersionParamCallback : public EnumerateStringValuesCallback {
-			public:
-				//
-				bool Function(const std::string& inName, const std::string& inValue) {
-					if ((inName == "X-Amz-Version-Id") || (inName == "x-amz-version-id")) {
-						mVersion = inValue;
+			std::string GetVersion(const S3ParamVector& params) {
+				auto end = params.end();
+				for (auto it = params.begin(); it != end; ++it) {
+					if (((*it).first == "X-Amz-Version-Id") || ((*it).first == "x-amz-version-id")) {
+						return (*it).second;
 					}
-					return true;
 				}
-				
-				//
-				std::string mVersion;
-			};
+				return "";
+			}
 			
 			//
-			class SendCommandCallback : public SendS3CommandCallback {
-			public:
+			class Redirector {
 				//
-				SendCommandCallback() : mStatus(S3Result::kUnknown) {
-				}
-				
-				//
-				bool Function(const S3Result& inStatus,
-							  const EnumerateStringValuesFunctionRef& inParamFunction,
-							  const DataBuffer& inData) {
-					mStatus = inStatus;
-					if (inStatus == S3Result::kSuccess) {
-						VersionParamCallback callback;
-						inParamFunction.Call(callback);
-						mVersion = callback.mVersion;
+				class SendCommandCompletion : public SendS3CommandCompletion {
+				public:
+					//
+					SendCommandCompletion(const std::string& url,
+										  int redirectCount,
+										  const std::string& host,
+										  const std::string& s3Path,
+										  const SharedBufferPtr& data,
+										  const std::string& dataSizeString,
+										  const std::string& dataSHA256Hex,
+										  const std::string& awsPublicKey,
+										  const std::string& awsSigningKey,
+										  const std::string& awsRegion,
+										  const PutS3ObjectCompletionPtr& completion) :
+					mURL(url),
+					mRedirectCount(redirectCount),
+					mHost(host),
+					mS3Path(s3Path),
+					mData(data),
+					mDataSizeString(dataSizeString),
+					mDataSHA256Hex(dataSHA256Hex),
+					mAWSPublicKey(awsPublicKey),
+					mAWSSigningKey(awsSigningKey),
+					mAWSRegion(awsRegion),
+					mCompletion(completion) {
+					}
+					
+					//
+					virtual void Call(const HermitPtr& h_,
+									  const S3Result& result,
+									  const S3ParamVector& params,
+									  const DataBuffer& responseData) override {
+						if (result == S3Result::kCanceled) {
+							mCompletion->Call(h_, S3Result::kCanceled, "");
+							return;
+						}
 						
-						mResponseData = std::string(inData.first, inData.second);
+						if (result == S3Result::k307TemporaryRedirect) {
+							std::string newEndpoint(GetEndpoint(params));
+							if (newEndpoint.empty()) {
+								NOTIFY_ERROR(h_,
+											 "S3Result::k307TemporaryRedirect but new endpoint is empty for url:",
+											 mURL);
+								mCompletion->Call(h_, S3Result::kError, "");
+								return;
+							}
+							if (newEndpoint == mHost) {
+								NOTIFY_ERROR(h_,
+											 "S3Result::k307TemporaryRedirect but new endpoint is the same for url:",
+											 mURL);
+								mCompletion->Call(h_, S3Result::kError, "");
+								return;
+							}
+							PutS3Object(h_,
+										mRedirectCount + 1,
+										newEndpoint,
+										mS3Path,
+										mData,
+										mDataSizeString,
+										mDataSHA256Hex,
+										mAWSPublicKey,
+										mAWSSigningKey,
+										mAWSRegion,
+										mCompletion);
+							return;
+						}
+						if ((result == S3Result::kTimedOut) ||
+							(result == S3Result::kNetworkConnectionLost) ||
+							(result == S3Result::kNoNetworkConnection) ||
+							(result == S3Result::k403AccessDenied) ||
+							(result == S3Result::kS3InternalError) ||
+							(result == S3Result::k500InternalServerError) ||
+							(result == S3Result::k503ServiceUnavailable)) {
+							mCompletion->Call(h_, result, "");
+							return;
+						}
+						if (result != S3Result::kSuccess) {
+							NOTIFY_ERROR(h_, "SendS3Command failed for URL:", mURL);
+							mCompletion->Call(h_, S3Result::kError, "");
+							return;
+						}
+						if ((responseData.first == nullptr) || (responseData.second == 0)) {
+							NOTIFY_ERROR(h_, "No response data? URL:", mURL);
+							mCompletion->Call(h_, S3Result::kError, "");
+							return;
+						}
+						
+						std::string version = GetVersion(params);
+						mCompletion->Call(h_, S3Result::kSuccess, version);
 					}
-					else if (inStatus == S3Result::k307TemporaryRedirect) {
-						EndpointParamCallback callback;
-						inParamFunction.Call(callback);
-						mNewEndpoint = callback.mNewEndpoint;
-					}
-					return true;
-				}
+					
+					//
+					std::string mURL;
+					int mRedirectCount;
+					std::string mHost;
+					std::string mS3Path;
+					SharedBufferPtr mData;
+					std::string mDataSizeString;
+					std::string mDataSHA256Hex;
+					std::string mAWSPublicKey;
+					std::string mAWSSigningKey;
+					std::string mAWSRegion;
+					PutS3ObjectCompletionPtr mCompletion;
+				};
 				
+			public:
 				//
-				S3Result mStatus;
-				std::string mResponseData;
-				std::string mNewEndpoint;
-				std::string mVersion;
+				static void PutS3Object(const HermitPtr& h_,
+										int redirectCount,
+										const std::string& host,
+										const std::string& s3Path,
+										const SharedBufferPtr& data,
+										const std::string& dataSizeString,
+										const std::string& dataSHA256Hex,
+										const std::string& awsPublicKey,
+										const std::string& awsSigningKey,
+										const std::string& awsRegion,
+										const PutS3ObjectCompletionPtr& completion) {
+					if (redirectCount > 5) {
+						NOTIFY_ERROR(h_, "Too many temporary redirects for s3Path:", s3Path);
+						completion->Call(h_, S3Result::kError, "");
+						return;
+					}
+					
+					time_t now;
+					time(&now);
+					tm globalTime;
+					gmtime_r(&now, &globalTime);
+					char dateBuf[2048];
+					strftime(dateBuf, 2048, "%Y%m%dT%H%M%SZ", &globalTime);
+					std::string dateTime(dateBuf);
+					std::string date(dateTime.substr(0, 8));
+					
+					std::string method("PUT");
+					std::string canonicalRequest(method);
+					canonicalRequest += "\n";
+					canonicalRequest += s3Path;
+					canonicalRequest += "\n";
+					canonicalRequest += "\n";
+					canonicalRequest += "content-length:";
+					canonicalRequest += dataSizeString;
+					canonicalRequest += "\n";
+					canonicalRequest += "host:";
+					canonicalRequest += host;
+					canonicalRequest += "\n";
+					canonicalRequest += "x-amz-content-sha256:";
+					canonicalRequest += dataSHA256Hex;
+					canonicalRequest += "\n";
+					canonicalRequest += "x-amz-date:";
+					canonicalRequest += dateTime;
+					canonicalRequest += "\n";
+					canonicalRequest += "x-amz-meta-sha256:";
+					canonicalRequest += dataSHA256Hex;
+					canonicalRequest += "\n";
+					canonicalRequest += "\n";
+					canonicalRequest += "content-length;host;x-amz-content-sha256;x-amz-date;x-amz-meta-sha256";
+					canonicalRequest += "\n";
+					canonicalRequest += dataSHA256Hex;
+					
+					std::string canonicalRequestSHA256;
+					encoding::CalculateSHA256(canonicalRequest, canonicalRequestSHA256);
+					std::string canonicalRequestSHA256Hex;
+					string::BinaryStringToHex(canonicalRequestSHA256, canonicalRequestSHA256Hex);
+					
+					std::string stringToSign("AWS4-HMAC-SHA256");
+					stringToSign += "\n";
+					stringToSign += dateTime;
+					stringToSign += "\n";
+					stringToSign += date;
+					stringToSign += "/";
+					stringToSign += awsRegion;
+					stringToSign += "/s3/aws4_request";
+					stringToSign += "\n";
+					stringToSign += canonicalRequestSHA256Hex;
+					
+					std::string stringToSignHMACSHA256;
+					encoding::CalculateHMACSHA256(awsSigningKey, stringToSign, stringToSignHMACSHA256);
+					std::string stringToSignHMACSHA256Hex;
+					string::BinaryStringToHex(stringToSignHMACSHA256, stringToSignHMACSHA256Hex);
+					
+					std::string authorization("AWS4-HMAC-SHA256 Credential=");
+					authorization += awsPublicKey;
+					authorization += "/";
+					authorization += date;
+					authorization += "/";
+					authorization += awsRegion;
+					authorization += "/s3/aws4_request";
+					authorization += ",";
+					authorization += "SignedHeaders=content-length;host;x-amz-content-sha256;x-amz-date;x-amz-meta-sha256";
+					authorization += ",";
+					authorization += "Signature=";
+					authorization += stringToSignHMACSHA256Hex;
+					
+					S3ParamVector params;
+					params.push_back(std::make_pair("Content-Length", dataSizeString));
+					params.push_back(std::make_pair("x-amz-date", dateTime));
+					params.push_back(std::make_pair("x-amz-content-sha256", dataSHA256Hex));
+					params.push_back(std::make_pair("x-amz-meta-sha256", dataSHA256Hex));
+					params.push_back(std::make_pair("Authorization", authorization));
+					params.push_back(std::make_pair("Expect", "100-continue"));
+					
+					std::string url("https://");
+					url += host;
+					url += s3Path;
+					
+					auto commandCompletion = std::make_shared<SendCommandCompletion>(url,
+																					 redirectCount,
+																					 host,
+																					 s3Path,
+																					 data,
+																					 dataSizeString,
+																					 dataSHA256Hex,
+																					 awsPublicKey,
+																					 awsSigningKey,
+																					 awsRegion,
+																					 completion);					
+					SendS3CommandWithData(h_,
+										  url,
+										  method,
+										  params,
+										  data,
+										  commandCompletion);
+				}
 			};
-			
-		} // private namespace
+
+		} // namespace PutS3Object_Impl
+		using namespace PutS3Object_Impl;
 		
 		//
-		//
 		void PutS3Object(const HermitPtr& h_,
-						 const std::string& inAWSPublicKey,
-						 const std::string& inAWSSigningKey,
-						 const std::string& inAWSRegion,
-						 const std::string& inS3BucketName,
-						 const std::string& inS3ObjectKey,
-						 const DataBuffer& inData,
-						 const bool& inUseReducedRedundancyStorage,
-						 const PutS3ObjectCallbackRef& inCallback) {
-			std::string region(inAWSRegion);
-			std::string method("PUT");
-			
-			std::string host(inS3BucketName);
+						 const std::string& awsPublicKey,
+						 const std::string& awsSigningKey,
+						 const std::string& awsRegion,
+						 const std::string& s3BucketName,
+						 const std::string& s3ObjectKey,
+						 const SharedBufferPtr& data,
+						 const bool& useReducedRedundancyStorage,
+						 const PutS3ObjectCompletionPtr& completion) {
+			std::string host(s3BucketName);
 			host += ".s3.amazonaws.com";
-			
-			std::string s3Path(inS3ObjectKey);
+			std::string s3Path(s3ObjectKey);
 			if ((s3Path.size() > 0) && (s3Path[0] != '/')) {
 				s3Path.insert(0, "/");
 			}
 			
-			std::string dataSize;
-			string::UInt64ToString(inData.second, dataSize);
-			if (dataSize.empty()) {
-				NOTIFY_ERROR(h_, "PutS3Object: UInt64ToString failed for inDataSize:", inData.second);
-				inCallback.Call(S3Result::kError, "");
+			std::string dataSizeString;
+			string::UInt64ToString(data->Size(), dataSizeString);
+			if (dataSizeString.empty()) {
+				NOTIFY_ERROR(h_, "PutS3Object: UInt64ToString failed for data->Size():", data->Size());
+				completion->Call(h_, S3Result::kError, "");
 				return;
 			}
 			
 			std::string dataSHA256;
-			encoding::CalculateSHA256(std::string(inData.first, inData.second), dataSHA256);
+			encoding::CalculateSHA256(std::string(data->Data(), data->Size()), dataSHA256);
 			if (dataSHA256.empty()) {
 				NOTIFY_ERROR(h_, "PutS3Object: CalculateSHA256 failed.");
-				inCallback.Call(S3Result::kError, "");
+				completion->Call(h_, S3Result::kError, "");
 				return;
 			}
 			
@@ -148,156 +320,21 @@ namespace hermit {
 			string::BinaryStringToHex(dataSHA256, dataSHA256Hex);
 			if (dataSHA256Hex.empty()) {
 				NOTIFY_ERROR(h_, "PutS3Object: BinaryStringToHex failed.");
-				inCallback.Call(S3Result::kError, "");
+				completion->Call(h_, S3Result::kError, "");
 				return;
 			}
 			
-			int redirectCount = 0;
-			while (true) {
-				time_t now;
-				time(&now);
-				tm globalTime;
-				gmtime_r(&now, &globalTime);
-				char dateBuf[2048];
-				strftime(dateBuf, 2048, "%Y%m%dT%H%M%SZ", &globalTime);
-				std::string dateTime(dateBuf);
-				std::string date(dateTime.substr(0, 8));
-				
-				std::string canonicalRequest(method);
-				canonicalRequest += "\n";
-				canonicalRequest += s3Path;
-				canonicalRequest += "\n";
-				canonicalRequest += "\n";
-				canonicalRequest += "content-length:";
-				canonicalRequest += dataSize;
-				canonicalRequest += "\n";
-				canonicalRequest += "host:";
-				canonicalRequest += host;
-				canonicalRequest += "\n";
-				canonicalRequest += "x-amz-content-sha256:";
-				canonicalRequest += dataSHA256Hex;
-				canonicalRequest += "\n";
-				canonicalRequest += "x-amz-date:";
-				canonicalRequest += dateTime;
-				canonicalRequest += "\n";
-				canonicalRequest += "x-amz-meta-sha256:";
-				canonicalRequest += dataSHA256Hex;
-				canonicalRequest += "\n";
-				canonicalRequest += "\n";
-				canonicalRequest += "content-length;host;x-amz-content-sha256;x-amz-date;x-amz-meta-sha256";
-				canonicalRequest += "\n";
-				canonicalRequest += dataSHA256Hex;
-				
-				std::string canonicalRequestSHA256;
-				encoding::CalculateSHA256(canonicalRequest, canonicalRequestSHA256);
-				std::string canonicalRequestSHA256Hex;
-				string::BinaryStringToHex(canonicalRequestSHA256, canonicalRequestSHA256Hex);
-				
-				std::string stringToSign("AWS4-HMAC-SHA256");
-				stringToSign += "\n";
-				stringToSign += dateTime;
-				stringToSign += "\n";
-				stringToSign += date;
-				stringToSign += "/";
-				stringToSign += region;
-				stringToSign += "/s3/aws4_request";
-				stringToSign += "\n";
-				stringToSign += canonicalRequestSHA256Hex;
-				
-				std::string stringToSignHMACSHA256;
-				encoding::CalculateHMACSHA256(inAWSSigningKey, stringToSign, stringToSignHMACSHA256);
-				std::string stringToSignHMACSHA256Hex;
-				string::BinaryStringToHex(stringToSignHMACSHA256, stringToSignHMACSHA256Hex);
-				
-				std::string authorization("AWS4-HMAC-SHA256 Credential=");
-				authorization += inAWSPublicKey;
-				authorization += "/";
-				authorization += date;
-				authorization += "/";
-				authorization += region;
-				authorization += "/s3/aws4_request";
-				authorization += ",";
-				authorization += "SignedHeaders=content-length;host;x-amz-content-sha256;x-amz-date;x-amz-meta-sha256";
-				authorization += ",";
-				authorization += "Signature=";
-				authorization += stringToSignHMACSHA256Hex;
-				
-				StringPairVector params;
-				params.push_back(StringPair("Content-Length", dataSize));
-				params.push_back(StringPair("x-amz-date", dateTime));
-				params.push_back(StringPair("x-amz-content-sha256", dataSHA256Hex));
-				params.push_back(StringPair("x-amz-meta-sha256", dataSHA256Hex));
-				params.push_back(StringPair("Authorization", authorization));
-				params.push_back(StringPair("Expect", "100-continue"));
-				
-				std::string url("https://");
-				url += host;
-				url += s3Path;
-				
-				EnumerateStringValuesFunctionClass headerParams(params);
-				SendCommandCallback result;
-				SendS3CommandWithData(h_,
-									  url,
-									  method,
-									  headerParams,
-									  inData,
-									  result);
-				
-				if (result.mStatus == S3Result::kCanceled) {
-					inCallback.Call(S3Result::kCanceled, "");
-					return;
-				}
-				if (result.mStatus == S3Result::k307TemporaryRedirect) {
-					if (result.mNewEndpoint.empty()) {
-						NOTIFY_ERROR(h_, "PutS3Object: S3Result::k307TemporaryRedirect but new endpoint is empty for url:", url);
-						inCallback.Call(S3Result::kError, "");
-						return;
-					}
-					if (result.mNewEndpoint == host) {
-						NOTIFY_ERROR(h_, "PutS3Object: S3Result::k307TemporaryRedirect but new endpoint is the same for url:", url);
-						inCallback.Call(S3Result::kError, "");
-						return;
-					}
-					if (++redirectCount >= 5) {
-						NOTIFY_ERROR(h_, "PutS3Object: too many temporary redirects for url:", url);
-						inCallback.Call(S3Result::kError, "");
-						return;
-					}
-					host = result.mNewEndpoint;
-					continue;
-				}
-				if (result.mStatus == S3Result::kTimedOut) {
-					inCallback.Call(S3Result::kTimedOut, "");
-					return;
-				}
-				if (result.mStatus == S3Result::kNetworkConnectionLost) {
-					inCallback.Call(S3Result::kNetworkConnectionLost, "");
-					return;
-				}
-				if (result.mStatus == S3Result::kNoNetworkConnection) {
-					inCallback.Call(S3Result::kNoNetworkConnection, "");
-					return;
-				}
-				if ((result.mStatus == S3Result::kS3InternalError) ||
-					(result.mStatus == S3Result::k500InternalServerError) ||
-					(result.mStatus == S3Result::k503ServiceUnavailable)) {
-					inCallback.Call(result.mStatus, "");
-					return;
-				}
-				if (result.mStatus == S3Result::k403AccessDenied) {
-					NOTIFY_ERROR(h_, "PutS3Object: S3Result::k403AccessDenied for URL:", url);
-					inCallback.Call(S3Result::k403AccessDenied, "");
-					return;
-				}
-				if (result.mStatus != S3Result::kSuccess) {
-					NOTIFY_ERROR(h_, "PutS3Object: SendS3Command failed for URL:", url);
-					inCallback.Call(S3Result::kError, "");
-					return;
-				}
-				
-				inCallback.Call(S3Result::kSuccess, result.mVersion);
-				break;
-			}
+			Redirector::PutS3Object(h_,
+									0,
+									host,
+									s3Path,
+									data,
+									dataSizeString,
+									dataSHA256Hex,
+									awsPublicKey,
+									awsSigningKey,
+									awsRegion,
+									completion);
 		}
 		
 	} // namespace s3

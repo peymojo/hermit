@@ -23,19 +23,17 @@ namespace hermit {
 	namespace s3 {
 		
 		//
-		//
 		void SendS3Command(const HermitPtr& h_,
-						   const std::string& inURL,
-						   const std::string& inMethod,
-						   const EnumerateStringValuesFunctionRef& inParamsFunction,
-						   const SendS3CommandCallbackRef& inCallback)
-		{
+						   const std::string& url,
+						   const std::string& method,
+						   const S3ParamVector& params,
+						   const SendS3CommandCompletionPtr& completion) {
 			SendS3CommandWithData(h_,
-								  inURL,
-								  inMethod,
-								  inParamsFunction,
-								  DataBuffer(),
-								  inCallback);
+								  url,
+								  method,
+								  params,
+								  SharedBufferPtr(),
+								  completion);
 		}
 		
 	} // namespace s3

@@ -20,7 +20,7 @@
 #define GetS3BucketLocation_h
 
 #include <string>
-#include "Hermit/Foundation/Callback.h"
+#include "Hermit/Foundation/AsyncFunction.h"
 #include "Hermit/Foundation/Hermit.h"
 #include "S3Result.h"
 
@@ -28,49 +28,17 @@ namespace hermit {
 	namespace s3 {
 		
 		//
-		//
-		DEFINE_CALLBACK_2A(
-						   GetS3BucketLocationCallback,
-						   S3Result,						// inResult
-						   std::string);					// inLocation
+		DEFINE_ASYNC_FUNCTION_3A(GetS3BucketLocationCompletion,
+								 HermitPtr,
+								 S3Result,						// result
+								 std::string);					// location
 		
-		//
-		//
-		class GetS3BucketLocationCallbackClass
-		:
-		public GetS3BucketLocationCallback {
-		public:
-			//
-			//
-			GetS3BucketLocationCallbackClass()
-			:
-			mResult(S3Result::kUnknown) {
-			}
-			
-			//
-			//
-			bool Function(const S3Result& inResult,
-						  const std::string& inLocation) {
-				mResult = inResult;
-				if (inResult == S3Result::kSuccess) {
-					mLocation = inLocation;
-				}
-				return true;
-			}
-			
-			//
-			//
-			S3Result mResult;
-			std::string mLocation;
-		};
-		
-		//
 		//
 		void GetS3BucketLocation(const HermitPtr& h_,
-								 const std::string& inBucketName,
-								 const std::string& inAWSPublicKey,
-								 const std::string& inAWSPrivateKey,
-								 const GetS3BucketLocationCallbackRef& inCallback);
+								 const std::string& bucketName,
+								 const std::string& awsPublicKey,
+								 const std::string& awsPrivateKey,
+								 const GetS3BucketLocationCompletionPtr& completion);
 		
 	} // namespace s3
 } // namespace hermit

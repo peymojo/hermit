@@ -27,59 +27,17 @@
 
 namespace hermit {
 	namespace s3 {
-		
-		namespace
-		{
-			//
-			//
-			typedef std::pair<std::string, std::string> StringPair;
-			typedef std::vector<StringPair> StringPairVector;
-			
-			//
-			//
-			class SendCommandCallback
-			:
-			public SendS3CommandCallback
-			{
-			public:
-				//
-				//
-				SendCommandCallback()
-				:
-				mStatus(S3Result::kUnknown)
-				{
-				}
-				
-				//
-				//
-				bool Function(
-							  const S3Result& inStatus,
-							  const EnumerateStringValuesFunctionRef& inParamFunction,
-							  const DataBuffer& inData)
-				{
-					mStatus = inStatus;
-					if (inStatus == S3Result::kSuccess)
-					{
-						mResponse = std::string(inData.first, inData.second);
-					}
-					return true;
-				}
-				
-				//
-				//
-				S3Result mStatus;
-				std::string mResponse;
-			};
+		namespace S3GetBucketVersioning_Impl {
 			
 			//
 			class ProcessXMLClass : public xml::ParseXMLClient {
 			private:
 				//
-				enum ParseState {
-					kParseState_New,
-					kParseState_VersioningConfiguration,
-					kParseState_Status,
-					kParseState_IgnoredElement
+				enum class ParseState {
+					kNew,
+					kVersioningConfiguration,
+					kStatus,
+					kIgnoredElement
 				};
 				
 				//
@@ -87,12 +45,10 @@ namespace hermit {
 				
 			public:
 				//
-				ProcessXMLClass(const HermitPtr& h_)
-				:
+				ProcessXMLClass(const HermitPtr& h_) :
 				mH_(h_),
-				mParseState(kParseState_New),
-				mVersioningStatus(S3BucketVersioningStatus::kUnknown)
-				{
+				mParseState(ParseState::kNew),
+				mVersioningStatus(S3BucketVersioningStatus::kUnknown) {
 				}
 				
 				//
@@ -105,36 +61,36 @@ namespace hermit {
 													const std::string& inAttributes,
 													bool inIsEmptyElement) override {
 					
-					if (mParseState == kParseState_New) {
+					if (mParseState == ParseState::kNew) {
 						if (inStartTag == "VersioningConfiguration") {
 							if (inIsEmptyElement) {
 								mVersioningStatus = S3BucketVersioningStatus::kNeverEnabled;
 							}
 							else {
-								PushState(kParseState_VersioningConfiguration);
+								PushState(ParseState::kVersioningConfiguration);
 							}
 						}
 						else if (inStartTag != "?xml") {
-							PushState(kParseState_IgnoredElement);
+							PushState(ParseState::kIgnoredElement);
 						}
 					}
-					else if (mParseState == kParseState_VersioningConfiguration) {
+					else if (mParseState == ParseState::kVersioningConfiguration) {
 						if (inStartTag == "Status") {
-							PushState(kParseState_Status);
+							PushState(ParseState::kStatus);
 						}
 						else {
-							PushState(kParseState_IgnoredElement);
+							PushState(ParseState::kIgnoredElement);
 						}
 					}
 					else {
-						PushState(kParseState_IgnoredElement);
+						PushState(ParseState::kIgnoredElement);
 					}
 					return xml::kParseXMLStatus_OK;
 				}
 				
 				//
 				virtual xml::ParseXMLStatus OnContent(const std::string& inContent) override {
-					if (mParseState == kParseState_Status) {
+					if (mParseState == ParseState::kStatus) {
 						std::string status = inContent;
 						if (status == "Enabled") {
 							mVersioningStatus = S3BucketVersioningStatus::kOn;
@@ -165,33 +121,77 @@ namespace hermit {
 				}
 				
 				//
-				//
 				HermitPtr mH_;
 				ParseState mParseState;
 				ParseStateStack mParseStateStack;
 				S3BucketVersioningStatus mVersioningStatus;
 			};
 			
-		} // private namespace
+			//
+			class CommandCompletion : public SendS3CommandCompletion {
+			public:
+				//
+				CommandCompletion(const std::string& url,
+								  const std::string& bucketName,
+								  const S3GetBucketVersioningCompletionPtr& completion) :
+				mURL(url),
+				mBucketName(bucketName),
+				mCompletion(completion) {
+				}
+				
+				//
+				virtual void Call(const HermitPtr& h_,
+								  const S3Result& result,
+								  const S3ParamVector& params,
+								  const DataBuffer& data) override {
+					if (result != S3Result::kSuccess) {
+						if (result == S3Result::k404EntityNotFound) {
+							mCompletion->Call(h_, S3Result::k404NoSuchBucket, S3BucketVersioningStatus::kUnknown);
+							return;
+						}
+						NOTIFY_ERROR(h_, "S3GetBucketVersioning: SendS3Command failed for URL:", mURL);
+						mCompletion->Call(h_, S3Result::kError, S3BucketVersioningStatus::kUnknown);
+						return;
+					}
+		
+					ProcessXMLClass pc(h_);
+					std::string response(data.first, data.second);
+					pc.Process(response);
+					bool success = (pc.mVersioningStatus != S3BucketVersioningStatus::kUnknown);
+					if (!success) {
+						NOTIFY_ERROR(h_, "S3GetBucketVersioning: couldn't parse XML response for bucket:", mBucketName);
+						NOTIFY_ERROR(h_, "response:", response);
+						mCompletion->Call(h_, S3Result::kError, S3BucketVersioningStatus::kUnknown);
+						return;
+					}
+
+					mCompletion->Call(h_, S3Result::kSuccess, pc.mVersioningStatus);
+				}
+				
+				//
+				std::string mURL;
+				std::string mBucketName;
+				S3GetBucketVersioningCompletionPtr mCompletion;
+			};
+
+		} // namespace S3GetBucketVersioning_Impl
+		using namespace S3GetBucketVersioning_Impl;
 		
 		//
-		//
 		void S3GetBucketVersioning(const HermitPtr& h_,
-								   const std::string& inBucketName,
-								   const std::string& inS3PublicKey,
-								   const std::string& inS3PrivateKey,
-								   const S3GetBucketVersioningCallbackRef& inCallback)
-		{
+								   const std::string& bucketName,
+								   const std::string& s3PublicKey,
+								   const std::string& s3PrivateKey,
+								   const S3GetBucketVersioningCompletionPtr& completion) {
 			std::string method("GET");
 			std::string contentType;
 			std::string urlToSign("/");
-			urlToSign += inBucketName;
+			urlToSign += bucketName;
 			urlToSign += "/?versioning";
 			
 			SignAWSRequestVersion2CallbackClass authCallback;
-			SignAWSRequestVersion2(
-								   inS3PublicKey,
-								   inS3PrivateKey,
+			SignAWSRequestVersion2(s3PublicKey,
+								   s3PrivateKey,
 								   method,
 								   "",
 								   contentType,
@@ -199,49 +199,22 @@ namespace hermit {
 								   urlToSign,
 								   authCallback);
 			
-			if (!authCallback.mSuccess)
-			{
+			if (!authCallback.mSuccess) {
 				NOTIFY_ERROR(h_, "S3GetBucketVersioning: SignAWSRequestVersion2 failed for URL:", urlToSign);
-				inCallback.Call(S3Result::kError, S3BucketVersioningStatus::kUnknown);
+				completion->Call(h_, S3Result::kError, S3BucketVersioningStatus::kUnknown);
 				return;
 			}
 			
-			StringPairVector params;
-			params.push_back(StringPair("Date", authCallback.mDateString));
-			params.push_back(StringPair("Authorization", authCallback.mAuthorizationString));
+			S3ParamVector params;
+			params.push_back(std::make_pair("Date", authCallback.mDateString));
+			params.push_back(std::make_pair("Authorization", authCallback.mAuthorizationString));
 			
 			std::string url("https://");
-			url += inBucketName;
+			url += bucketName;
 			url += ".s3.amazonaws.com/?versioning";
 			
-			EnumerateStringValuesFunctionClass headerParams(params);
-			SendCommandCallback result;
-			SendS3Command(h_, url, method, headerParams, result);
-			if (result.mStatus != S3Result::kSuccess) {
-				if (result.mStatus == S3Result::k404EntityNotFound) {
-					inCallback.Call(S3Result::k404NoSuchBucket, S3BucketVersioningStatus::kUnknown);
-				}
-				else {
-					NOTIFY_ERROR(h_, "S3GetBucketVersioning: SendS3Command failed for URL:", url);
-					inCallback.Call(S3Result::kError, S3BucketVersioningStatus::kUnknown);
-				}
-			}
-			else {
-				//Log(inHub, kLogLevel_Error, result.mResponse);
-				
-				ProcessXMLClass pc(h_);
-				pc.Process(result.mResponse);
-				
-				bool success = (pc.mVersioningStatus != S3BucketVersioningStatus::kUnknown);
-				if (!success) {
-					NOTIFY_ERROR(h_, "S3GetBucketVersioning: couldn't parse XML response for bucket:", inBucketName);
-					NOTIFY_ERROR(h_, "response:", result.mResponse);
-					inCallback.Call(S3Result::kError, S3BucketVersioningStatus::kUnknown);
-				}
-				else {
-					inCallback.Call(S3Result::kSuccess, pc.mVersioningStatus);
-				}
-			}
+			auto commandCompletion = std::make_shared<CommandCompletion>(url, bucketName, completion);
+			SendS3Command(h_, url, method, params, commandCompletion);
 		}
 		
 	} // namespace s3

@@ -26,42 +26,32 @@
 
 namespace hermit {
 	namespace s3 {
-		
-		//
-		//
-		namespace
-		{
+		namespace S3ListObjectsWithSize_Impl {
+
 			//
-			//
-			class ProcessS3ListObjectsWithSizeXMLClass : xml::ParseXMLClient
-			{
+			class ProcessS3ListObjectsWithSizeXMLClass : xml::ParseXMLClient {
 			private:
 				//
-				//
-				enum ParseState
-				{
-					kParseState_New,
-					kParseState_ListBucketResult,
-					kParseState_IsTruncated,
-					kParseState_Contents,
-					kParseState_Key,
-					kParseState_Size,
-					kParseState_IgnoredElement
+				enum class ParseState {
+					kNew,
+					kListBucketResult,
+					kIsTruncated,
+					kContents,
+					kKey,
+					kSize,
+					kIgnoredElement
 				};
 				
-				//
 				//
 				typedef std::stack<ParseState> ParseStateStack;
 				
 			public:
 				//
-				//
-				ProcessS3ListObjectsWithSizeXMLClass(
-													 const S3ListObjectsWithSizeCallbackRef& inCallback)
-				:
-				mCallback(inCallback),
-				mParseState(kParseState_New)
-				{
+				ProcessS3ListObjectsWithSizeXMLClass(const HermitPtr& h_,
+													 const ObjectKeyAndSizeReceiverPtr& receiver) :
+				mH_(h_),
+				mReceiver(receiver),
+				mParseState(ParseState::kNew) {
 				}
 								
 				//
@@ -84,59 +74,47 @@ namespace hermit {
 				virtual xml::ParseXMLStatus OnStart(const std::string& inStartTag,
 													const std::string& inAttributes,
 													bool inIsEmptyElement) override {
-					if (mParseState == kParseState_New)
-					{
-						if (inStartTag == "ListBucketResult")
-						{
-							PushState(kParseState_ListBucketResult);
+					if (mParseState == ParseState::kNew) {
+						if (inStartTag == "ListBucketResult") {
+							PushState(ParseState::kListBucketResult);
 						}
-						else if (inStartTag != "?xml")
-						{
-							PushState(kParseState_IgnoredElement);
+						else if (inStartTag != "?xml") {
+							PushState(ParseState::kIgnoredElement);
 						}
 					}
-					else if (mParseState == kParseState_ListBucketResult)
-					{
-						if (inStartTag == "Contents")
-						{
-							PushState(kParseState_Contents);
+					else if (mParseState == ParseState::kListBucketResult) {
+						if (inStartTag == "Contents") {
+							PushState(ParseState::kContents);
 							mPath.clear();
 							mSize = 0;
 						}
-						else if (inStartTag == "IsTruncated")
-						{
-							PushState(kParseState_IsTruncated);
+						else if (inStartTag == "IsTruncated") {
+							PushState(ParseState::kIsTruncated);
 						}
-						else
-						{
-							PushState(kParseState_IgnoredElement);
+						else {
+							PushState(ParseState::kIgnoredElement);
 						}
 					}
-					else if (mParseState == kParseState_Contents)
-					{
-						if (inStartTag == "Key")
-						{
-							PushState(kParseState_Key);
+					else if (mParseState == ParseState::kContents) {
+						if (inStartTag == "Key") {
+							PushState(ParseState::kKey);
 						}
-						else if (inStartTag == "Size")
-						{
-							PushState(kParseState_Size);
+						else if (inStartTag == "Size") {
+							PushState(ParseState::kSize);
 						}
-						else
-						{
-							PushState(kParseState_IgnoredElement);
+						else {
+							PushState(ParseState::kIgnoredElement);
 						}
 					}
-					else
-					{
-						PushState(kParseState_IgnoredElement);
+					else {
+						PushState(ParseState::kIgnoredElement);
 					}
 					return xml::kParseXMLStatus_OK;
 				}
 				
 				//
 				virtual xml::ParseXMLStatus OnContent(const std::string& inContent) override {
-					if (mParseState == kParseState_Key) {
+					if (mParseState == ParseState::kKey) {
 						mPath = inContent;
 						
 						std::string key = inContent;
@@ -144,10 +122,10 @@ namespace hermit {
 							mLastKey = key;
 						}
 					}
-					else if (mParseState == kParseState_Size) {
+					else if (mParseState == ParseState::kSize) {
 						mSize = string::StringToUInt64(inContent);
 					}
-					else if (mParseState == kParseState_IsTruncated) {
+					else if (mParseState == ParseState::kIsTruncated) {
 						mIsTruncated = inContent;
 					}
 					return xml::kParseXMLStatus_OK;
@@ -155,8 +133,10 @@ namespace hermit {
 				
 				//
 				virtual xml::ParseXMLStatus OnEnd(const std::string& inEndTag) override {
-					if (mParseState == kParseState_Contents) {
-						mCallback.Call(S3Result::kSuccess, mPath, mSize);
+					if (mParseState == ParseState::kContents) {
+						if (!mReceiver->OnOneKeyAndSize(mH_, mPath, mSize)) {
+							return xml::kParseXMLStatus_Cancel;
+						}
 					}
 					PopState();
 					return xml::kParseXMLStatus_OK;
@@ -175,7 +155,8 @@ namespace hermit {
 				}
 				
 				//
-				const S3ListObjectsWithSizeCallbackRef& mCallback;
+				HermitPtr mH_;
+				ObjectKeyAndSizeReceiverPtr mReceiver;
 				ParseState mParseState;
 				ParseStateStack mParseStateStack;
 				std::string mPath;
@@ -184,80 +165,108 @@ namespace hermit {
 				std::string mLastKey;
 			};
 			
-			//
-			class OnListObjectsXMLClass
-			:
-			public S3GetListObjectsXMLCallback
-			{
-			public:
+			class Lister {
 				//
-				OnListObjectsXMLClass(const S3ListObjectsWithSizeCallbackRef& inCallback)
-				:
-				mResult(S3Result::kUnknown),
-				mCallback(inCallback),
-				mIsTruncated(false)
-				{
-				}
-				
-				//
-				virtual bool Function(const HermitPtr& h_, const S3Result& inResult, const std::string& inXML) override {
-					mResult = inResult;
-					if (inResult == S3Result::kSuccess) {
-						ProcessS3ListObjectsWithSizeXMLClass pc(mCallback);
-						pc.Process(h_, inXML);
-						
-						mIsTruncated = (pc.GetIsTruncated() == "true");
-						if (mIsTruncated) {
-							mLastKey = pc.GetLastKey();
-						}
+				class GetListXMLCompletion : public S3GetListObjectsXMLCompletion {
+				public:
+					//
+					GetListXMLCompletion(const std::string& awsPublicKey,
+										 const std::string& awsSigningKey,
+										 const std::string& awsRegion,
+										 const std::string& bucketName,
+										 const ObjectKeyAndSizeReceiverPtr& receiver,
+										 const S3CompletionBlockPtr& completion) :
+					mAWSPublicKey(awsPublicKey),
+					mAWSSigningKey(awsSigningKey),
+					mAWSRegion(awsRegion),
+					mBucketName(bucketName),
+					mReceiver(receiver),
+					mCompletion(completion) {
 					}
-					return true;
+					
+					//
+					virtual void Call(const HermitPtr& h_, const S3Result& result, const std::string& xml) override {
+						if (result == S3Result::kCanceled) {
+							mCompletion->Call(h_, result);
+							return;
+						}
+						if (result != S3Result::kSuccess) {
+							NOTIFY_ERROR(h_, "S3ListObjectsWithSize: S3GetListObjectsXML failed.");
+							mCompletion->Call(h_, result);
+							return;
+						}
+						ProcessS3ListObjectsWithSizeXMLClass pc(h_, mReceiver);
+						pc.Process(h_, xml);
+
+						if (pc.GetIsTruncated() == "true") {
+							std::string marker(pc.GetLastKey());
+							S3ListObjectsWithSize(h_,
+												  mAWSPublicKey,
+												  mAWSSigningKey,
+												  mAWSRegion,
+												  mBucketName,
+												  marker,
+												  mReceiver,
+												  mCompletion);
+							return;
+						}
+						mCompletion->Call(h_, S3Result::kSuccess);
+					}
+					
+					//
+					std::string mAWSPublicKey;
+					std::string mAWSSigningKey;
+					std::string mAWSRegion;
+					std::string mBucketName;
+					ObjectKeyAndSizeReceiverPtr mReceiver;
+					S3CompletionBlockPtr mCompletion;
+				};
+
+			public:
+				static void S3ListObjectsWithSize(const HermitPtr& h_,
+												  const std::string& awsPublicKey,
+												  const std::string& awsSigningKey,
+												  const std::string& awsRegion,
+												  const std::string& bucketName,
+												  const std::string& marker,
+												  const ObjectKeyAndSizeReceiverPtr& receiver,
+												  const S3CompletionBlockPtr& completion) {
+					auto listCompletion = std::make_shared<GetListXMLCompletion>(awsPublicKey,
+																				 awsSigningKey,
+																				 awsRegion,
+																				 bucketName,
+																				 receiver,
+																				 completion);
+					S3GetListObjectsXML(h_,
+										awsPublicKey,
+										awsSigningKey,
+										awsRegion,
+										bucketName,
+										"",
+										marker,
+										listCompletion);
 				}
-				
-				//
-				S3Result mResult;
-				const S3ListObjectsWithSizeCallbackRef& mCallback;
-				bool mIsTruncated;
-				std::string mLastKey;
 			};
 			
-		} // private namespace
+		} // namespace S3ListObjectsWithSize_Impl
+		using namespace S3ListObjectsWithSize_Impl;
 		
 		//
 		void S3ListObjectsWithSize(const HermitPtr& h_,
-								   const std::string& inAWSPublicKey,
-								   const std::string& inAWSSigningKey,
-								   const std::string& inAWSRegion,
-								   const std::string& inBucketName,
-								   const S3ListObjectsWithSizeCallbackRef& inCallback)
-		{
-			std::string marker;
-			while (true) {
-				OnListObjectsXMLClass callback(inCallback);
-				S3GetListObjectsXML(h_,
-									inAWSPublicKey,
-									inAWSSigningKey,
-									inAWSRegion,
-									inBucketName,
-									"",
-									marker,
-									callback);
-				
-				if (callback.mResult == S3Result::kCanceled) {
-					inCallback.Call(callback.mResult, "", 0);
-					return;
-				}
-				if (callback.mResult != S3Result::kSuccess) {
-					NOTIFY_ERROR(h_, "S3ListObjectsWithSize: S3GetListObjectsXML failed.");
-					inCallback.Call(callback.mResult, "", 0);
-					return;
-				}
-				
-				if (!callback.mIsTruncated) {
-					break;
-				}
-				marker = callback.mLastKey;
-			}
+								   const std::string& awsPublicKey,
+								   const std::string& awsSigningKey,
+								   const std::string& awsRegion,
+								   const std::string& bucketName,
+								   const ObjectKeyAndSizeReceiverPtr& receiver,
+								   const S3CompletionBlockPtr& completion) {
+			Lister::S3ListObjectsWithSize(h_,
+										  awsPublicKey,
+										  awsSigningKey,
+										  awsRegion,
+										  bucketName,
+										  "",
+										  receiver,
+										  completion);
 		}
 		
 	} // namespace s3

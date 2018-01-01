@@ -19,20 +19,19 @@
 #ifndef SendS3Command_h
 #define SendS3Command_h
 
-#include "Hermit/Foundation/EnumerateStringValuesFunction.h"
 #include "Hermit/Foundation/Hermit.h"
-#include "SendS3CommandCallback.h"
+#include "S3ParamVector.h"
+#include "SendS3CommandCompletion.h"
 
 namespace hermit {
 	namespace s3 {
 		
 		//
-		//
 		void SendS3Command(const HermitPtr& h_,
-						   const std::string& inURL,
-						   const std::string& inMethod,
-						   const EnumerateStringValuesFunctionRef& inParamsFunction,
-						   const SendS3CommandCallbackRef& inCallback);
+						   const std::string& url,
+						   const std::string& method,
+						   const S3ParamVector& params,
+						   const SendS3CommandCompletionPtr& completion);
 		
 	} // namespace s3
 } // namespace hermit

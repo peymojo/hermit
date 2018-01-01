@@ -25,12 +25,12 @@ namespace hermit {
 	namespace s3 {
 		
 		//
-		//
-		bool S3SetBucketVersioning(const HermitPtr& h_,
-								   const std::string& inS3PublicKey,
-								   const std::string& inS3PrivateKey,
-								   const std::string& inBucketName,
-								   const bool& inVersioningEnabled);
+		void S3SetBucketVersioning(const HermitPtr& h_,
+								   const std::string& s3PublicKey,
+								   const std::string& s3PrivateKey,
+								   const std::string& bucketName,
+								   const bool& versioningEnabled,
+								   const S3CompletionBlockPtr& completion);
 		
 	} // namespace s3
 } // namespace hermit

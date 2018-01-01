@@ -117,6 +117,7 @@
 		EF2CF61F1FF24B1A00652E69 /* libS3Lib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libS3Lib.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF2CF6211FF24B1A00652E69 /* S3Lib.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = S3Lib.h; sourceTree = "<group>"; };
 		EF2CF6231FF24B1A00652E69 /* S3Lib.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = S3Lib.m; sourceTree = "<group>"; };
+		EF3E52341FF75CD0008610A8 /* S3ParamVector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = S3ParamVector.h; sourceTree = "<group>"; };
 		EF7255F11F18D5B50054DCE0 /* S3Kit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = S3Kit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF7255F31F18D5B50054DCE0 /* S3Kit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = S3Kit.h; sourceTree = "<group>"; };
 		EF7255F41F18D5B50054DCE0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -176,7 +177,7 @@
 		EFAD60C31D878C1E0056E526 /* S3SetBucketVersioning.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = S3SetBucketVersioning.h; sourceTree = "<group>"; };
 		EFAD60C41D878C1E0056E526 /* SendS3Command.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SendS3Command.cpp; sourceTree = "<group>"; };
 		EFAD60C51D878C1E0056E526 /* SendS3Command.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SendS3Command.h; sourceTree = "<group>"; };
-		EFAD60C61D878C1E0056E526 /* SendS3CommandCallback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SendS3CommandCallback.h; sourceTree = "<group>"; };
+		EFAD60C61D878C1E0056E526 /* SendS3CommandCompletion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SendS3CommandCompletion.h; sourceTree = "<group>"; };
 		EFAD60C71D878C1E0056E526 /* SendS3CommandWithData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SendS3CommandWithData.cpp; sourceTree = "<group>"; };
 		EFAD60C81D878C1E0056E526 /* SendS3CommandWithData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SendS3CommandWithData.h; sourceTree = "<group>"; };
 		EFAD60C91D878C1E0056E526 /* SignAWSRequestVersion2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SignAWSRequestVersion2.cpp; sourceTree = "<group>"; };
@@ -185,8 +186,7 @@
 		EFAD60CC1D878C1E0056E526 /* StreamInS3Object.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StreamInS3Object.h; sourceTree = "<group>"; };
 		EFAD60CD1D878C1E0056E526 /* StreamInS3Request.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StreamInS3Request.cpp; sourceTree = "<group>"; };
 		EFAD60CE1D878C1E0056E526 /* StreamInS3Request.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StreamInS3Request.h; sourceTree = "<group>"; };
-		EFAD60CF1D878C1E0056E526 /* StreamInS3RequestCallback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StreamInS3RequestCallback.h; sourceTree = "<group>"; };
-		EFAD60D01D878C1E0056E526 /* StreamInS3RequestDataHandlerFunction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StreamInS3RequestDataHandlerFunction.h; sourceTree = "<group>"; };
+		EFAD60CF1D878C1E0056E526 /* StreamInS3RequestCompletion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StreamInS3RequestCompletion.h; sourceTree = "<group>"; };
 		EFAD60D11D878C1E0056E526 /* StreamInS3RequestWithBody.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StreamInS3RequestWithBody.cpp; sourceTree = "<group>"; };
 		EFAD60D21D878C1E0056E526 /* StreamInS3RequestWithBody.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StreamInS3RequestWithBody.h; sourceTree = "<group>"; };
 		EFAD60D31D878C1E0056E526 /* UploadS3MultipartPart.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UploadS3MultipartPart.cpp; sourceTree = "<group>"; };
@@ -278,6 +278,7 @@
 				EFAD60941D878C1E0056E526 /* AbortS3MultipartUpload.h */,
 				EFAD60951D878C1E0056E526 /* CompleteS3MultipartUpload.cpp */,
 				EFAD60961D878C1E0056E526 /* CompleteS3MultipartUpload.h */,
+				EF7256171F18D6120054DCE0 /* Frameworks */,
 				EFAD60971D878C1E0056E526 /* GenerateAWS4SigningKey.cpp */,
 				EFAD60981D878C1E0056E526 /* GenerateAWS4SigningKey.h */,
 				EFAD60991D878C1E0056E526 /* GetS3BucketACLXML.cpp */,
@@ -292,6 +293,7 @@
 				EFAD60A21D878C1E0056E526 /* InitiateS3MultipartUpload.h */,
 				EFAD60A31D878C1E0056E526 /* LibS3.h */,
 				EFAD60A41D878C1E0056E526 /* LibS3.m */,
+				EFAD60881D878BF30056E526 /* Products */,
 				EFAD60A51D878C1E0056E526 /* PutS3Object.cpp */,
 				EFAD60A61D878C1E0056E526 /* PutS3Object.h */,
 				EFAD60A71D878C1E0056E526 /* PutS3ObjectUsingChunks.cpp */,
@@ -309,6 +311,9 @@
 				EFAD60B31D878C1E0056E526 /* S3GetListObjectsWithVersionsXML.h */,
 				EFAD60B41D878C1E0056E526 /* S3GetListObjectsXML.cpp */,
 				EFAD60B51D878C1E0056E526 /* S3GetListObjectsXML.h */,
+				EF7255F21F18D5B50054DCE0 /* S3Kit */,
+				EFF397DE1F6552D300B1BD33 /* S3Kit_iOS */,
+				EF2CF6201FF24B1A00652E69 /* S3Lib */,
 				EFAD60B61D878C1E0056E526 /* S3ListBuckets.cpp */,
 				EFAD60B71D878C1E0056E526 /* S3ListBuckets.h */,
 				EFAD60B81D878C1E0056E526 /* S3ListObjects.cpp */,
@@ -319,13 +324,14 @@
 				EFAD60BD1D878C1E0056E526 /* S3ListObjectsWithVersions.h */,
 				EFAD60BE1D878C1E0056E526 /* S3Notification.cpp */,
 				EFAD60BF1D878C1E0056E526 /* S3Notification.h */,
+				EF3E52341FF75CD0008610A8 /* S3ParamVector.h */,
 				EFAD60C01D878C1E0056E526 /* S3Result.h */,
 				EFAD60C11D878C1E0056E526 /* S3RetryClass.h */,
 				EFAD60C21D878C1E0056E526 /* S3SetBucketVersioning.cpp */,
 				EFAD60C31D878C1E0056E526 /* S3SetBucketVersioning.h */,
 				EFAD60C41D878C1E0056E526 /* SendS3Command.cpp */,
 				EFAD60C51D878C1E0056E526 /* SendS3Command.h */,
-				EFAD60C61D878C1E0056E526 /* SendS3CommandCallback.h */,
+				EFAD60C61D878C1E0056E526 /* SendS3CommandCompletion.h */,
 				EFAD60C71D878C1E0056E526 /* SendS3CommandWithData.cpp */,
 				EFAD60C81D878C1E0056E526 /* SendS3CommandWithData.h */,
 				EFAD60C91D878C1E0056E526 /* SignAWSRequestVersion2.cpp */,
@@ -334,17 +340,11 @@
 				EFAD60CC1D878C1E0056E526 /* StreamInS3Object.h */,
 				EFAD60CD1D878C1E0056E526 /* StreamInS3Request.cpp */,
 				EFAD60CE1D878C1E0056E526 /* StreamInS3Request.h */,
-				EFAD60CF1D878C1E0056E526 /* StreamInS3RequestCallback.h */,
-				EFAD60D01D878C1E0056E526 /* StreamInS3RequestDataHandlerFunction.h */,
+				EFAD60CF1D878C1E0056E526 /* StreamInS3RequestCompletion.h */,
 				EFAD60D11D878C1E0056E526 /* StreamInS3RequestWithBody.cpp */,
 				EFAD60D21D878C1E0056E526 /* StreamInS3RequestWithBody.h */,
 				EFAD60D31D878C1E0056E526 /* UploadS3MultipartPart.cpp */,
 				EFAD60D41D878C1E0056E526 /* UploadS3MultipartPart.h */,
-				EF7255F21F18D5B50054DCE0 /* S3Kit */,
-				EFF397DE1F6552D300B1BD33 /* S3Kit_iOS */,
-				EF2CF6201FF24B1A00652E69 /* S3Lib */,
-				EFAD60881D878BF30056E526 /* Products */,
-				EF7256171F18D6120054DCE0 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};

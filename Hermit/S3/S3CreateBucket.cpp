@@ -18,100 +18,49 @@
 
 #include <stack>
 #include <string>
+#include <thread>
 #include <vector>
 #include "Hermit/Foundation/Notification.h"
 #include "Hermit/XML/ParseXMLData.h"
-#include "S3RetryClass.h"
 #include "SendS3CommandWithData.h"
 #include "SignAWSRequestVersion2.h"
 #include "S3CreateBucket.h"
+#include "S3Notification.h"
 
 namespace hermit {
 	namespace s3 {
-		
-		namespace
-		{
-			//
-			//
-			typedef std::pair<std::string, std::string> StringPair;
-			typedef std::vector<StringPair> StringPairVector;
+		namespace S3CreateBucket_Impl {
 			
 			//
-			//
-			class SendCommandCallback
-			:
-			public SendS3CommandCallback
-			{
-			public:
-				//
-				//
-				SendCommandCallback()
-				:
-				mStatus(S3Result::kUnknown)
-				{
-				}
-				
-				//
-				//
-				bool Function(
-							  const S3Result& inStatus,
-							  const EnumerateStringValuesFunctionRef& inParamFunction,
-							  const DataBuffer& inData)
-				{
-					mStatus = inStatus;
-					if (inStatus == S3Result::kSuccess)
-					{
-						mResponseData = std::string(inData.first, inData.second);
-					}
-					return true;
-				}
-				
-				//
-				//
-				S3Result mStatus;
-				std::string mResponseData;
-			};
-			
-			//
-			//
-			class ProcessS3CreateBucketXMLClass : xml::ParseXMLClient
-			{
+			class ProcessS3CreateBucketXMLClass : xml::ParseXMLClient {
 			private:
 				//
-				//
-				enum ParseState
-				{
-					kParseState_New,
-					kParseState_Error,
-					kParseState_Error_Code,
-					kParseState_Error_Message,
-					kParseState_Error_StringToSignBytes,
-					kParseState_ListAllMyBucketsResult,
-					kParseState_Buckets,
-					kParseState_Bucket,
-					kParseState_Name,
-					kParseState_IgnoredElement
+				enum class ParseState {
+					kNew,
+					kError,
+					kError_Code,
+					kError_Message,
+					kError_StringToSignBytes,
+					kListAllMyBucketsResult,
+					kBuckets,
+					kBucket,
+					kName,
+					kIgnoredElement
 				};
 				
-				//
 				//
 				typedef std::stack<ParseState> ParseStateStack;
 				
 			public:
 				//
-				//
-				ProcessS3CreateBucketXMLClass(const HermitPtr& h_)
-				:
+				ProcessS3CreateBucketXMLClass(const HermitPtr& h_) :
 				mH_(h_),
-				mParseState(kParseState_New),
-				mIsError(false)
-				{
+				mParseState(ParseState::kNew),
+				mIsError(false) {
 				}
 				
 				//
-				//
-				bool GetIsError() const
-				{
+				bool GetIsError() const {
 					return mIsError;
 				}
 								
@@ -125,77 +74,58 @@ namespace hermit {
 				virtual xml::ParseXMLStatus OnStart(const std::string& inStartTag,
 													const std::string& inAttributes,
 													bool inIsEmptyElement) override {
-					if (mParseState == kParseState_New)
-					{
-						if (inStartTag == "ListAllMyBucketsResult")
-						{
-							PushState(kParseState_ListAllMyBucketsResult);
+					if (mParseState == ParseState::kNew) {
+						if (inStartTag == "ListAllMyBucketsResult") {
+							PushState(ParseState::kListAllMyBucketsResult);
 						}
-						else if (inStartTag == "Error")
-						{
+						else if (inStartTag == "Error") {
 							mIsError = true;
-							PushState(kParseState_Error);
+							PushState(ParseState::kError);
 						}
-						else if (inStartTag != "?xml")
-						{
-							PushState(kParseState_IgnoredElement);
-						}
-					}
-					else if (mParseState == kParseState_Error)
-					{
-						if (inStartTag == "Code")
-						{
-							PushState(kParseState_Error_Code);
-						}
-						else if (inStartTag == "Message")
-						{
-							PushState(kParseState_Error_Message);
-						}
-						else if (inStartTag == "StringToSignBytes")
-						{
-							PushState(kParseState_Error_StringToSignBytes);
-						}
-						else
-						{
-							PushState(kParseState_IgnoredElement);
+						else if (inStartTag != "?xml") {
+							PushState(ParseState::kIgnoredElement);
 						}
 					}
-					else if (mParseState == kParseState_ListAllMyBucketsResult)
-					{
-						if (inStartTag == "Buckets")
-						{
-							PushState(kParseState_Buckets);
+					else if (mParseState == ParseState::kError) {
+						if (inStartTag == "Code") {
+							PushState(ParseState::kError_Code);
 						}
-						else
-						{
-							PushState(kParseState_IgnoredElement);
+						else if (inStartTag == "Message") {
+							PushState(ParseState::kError_Message);
 						}
-					}
-					else if (mParseState == kParseState_Buckets)
-					{
-						if (inStartTag == "Bucket")
-						{
-							PushState(kParseState_Bucket);
+						else if (inStartTag == "StringToSignBytes") {
+							PushState(ParseState::kError_StringToSignBytes);
 						}
-						else
-						{
-							PushState(kParseState_IgnoredElement);
+						else {
+							PushState(ParseState::kIgnoredElement);
 						}
 					}
-					else if (mParseState == kParseState_Bucket)
-					{
-						if (inStartTag == "Name")
-						{
-							PushState(kParseState_Name);
+					else if (mParseState == ParseState::kListAllMyBucketsResult) {
+						if (inStartTag == "Buckets") {
+							PushState(ParseState::kBuckets);
 						}
-						else
-						{
-							PushState(kParseState_IgnoredElement);
+						else {
+							PushState(ParseState::kIgnoredElement);
 						}
 					}
-					else
-					{
-						PushState(kParseState_IgnoredElement);
+					else if (mParseState == ParseState::kBuckets) {
+						if (inStartTag == "Bucket") {
+							PushState(ParseState::kBucket);
+						}
+						else {
+							PushState(ParseState::kIgnoredElement);
+						}
+					}
+					else if (mParseState == ParseState::kBucket) {
+						if (inStartTag == "Name") {
+							PushState(ParseState::kName);
+						}
+						else {
+							PushState(ParseState::kIgnoredElement);
+						}
+					}
+					else {
+						PushState(ParseState::kIgnoredElement);
 					}
 					return xml::kParseXMLStatus_OK;
 				}
@@ -212,64 +142,81 @@ namespace hermit {
 				}
 				
 				//
-				//
-				void PushState(ParseState inNewState)
-				{
+				void PushState(ParseState inNewState) {
 					mParseStateStack.push(mParseState);
 					mParseState = inNewState;
 				}
 				
 				//
-				//
-				void PopState()
-				{
+				void PopState() {
 					mParseState = mParseStateStack.top();
 					mParseStateStack.pop();
 				}
 				
-				//
 				//
 				HermitPtr mH_;
 				ParseState mParseState;
 				ParseStateStack mParseStateStack;
 				bool mIsError;
 			};
+						
+			//
+			class CreateBucketClass;
+			typedef std::shared_ptr<CreateBucketClass> CreateBucketClassPtr;
 			
-			// CreateBucket operation class
-			class CreateBucket {
-			private:
-				std::string mBucketName;
-				std::string mRegion;
-				std::string mAWSPublicKey;
-				std::string mAWSPrivateKey;
-				S3Result mResult;
-				int mAccessDeniedRetries;
-				
+			//
+			class CreateBucketCompletion : public SendS3CommandCompletion {
 			public:
-				typedef S3Result ResultType;
-				static const ResultType kDefaultResult = S3Result::kUnknown;
-				static const int kMaxRetries = 5;
-				
 				//
-				const char* OpName() const {
-					return "CreateBucket";
+				CreateBucketCompletion(const CreateBucketClassPtr& createBucketClass) :
+				mCreateBucketClass(createBucketClass) {
 				}
 				
 				//
-				CreateBucket(const std::string& bucketName,
-							 const std::string& region,
-							 const std::string& awsPublicKey,
-							 const std::string& awsPrivateKey) :
+				virtual void Call(const HermitPtr& h_,
+								  const S3Result& result,
+								  const S3ParamVector& params,
+								  const DataBuffer& responseData) override;
+				
+				//
+				CreateBucketClassPtr mCreateBucketClass;
+			};
+			
+			//
+			class CreateBucketClass : public std::enable_shared_from_this<CreateBucketClass> {
+				//
+				static const int kMaxRetries = 5;
+				
+			public:
+				//
+				CreateBucketClass(const std::string& bucketName,
+								  const std::string& region,
+								  const std::string& awsPublicKey,
+								  const std::string& awsPrivateKey,
+								  const S3CompletionBlockPtr& completion) :
 				mBucketName(bucketName),
 				mRegion(region),
 				mAWSPublicKey(awsPublicKey),
 				mAWSPrivateKey(awsPrivateKey),
-				mResult(S3Result::kUnknown),
-				mAccessDeniedRetries(0) {
+				mCompletion(completion),
+				mLatestResult(S3Result::kUnknown),
+				mRetries(0),
+				mAccessDeniedRetries(0),
+				mSleepInterval(1),
+				mSleepIntervalStep(2) {
 				}
 				
 				//
-				ResultType AttemptOnce(const HermitPtr& h_) {
+				void S3CreateBucket(const HermitPtr& h_) {
+					if (CHECK_FOR_ABORT(h_)) {
+						mCompletion->Call(h_, S3Result::kCanceled);
+						return;
+					}
+					
+					if (mRetries > 0) {
+						S3NotificationParams params("GetObject", mRetries, mLatestResult);
+						NOTIFY(h_, kS3RetryNotification, &params);
+					}
 					
 					std::string method("PUT");
 					std::string contentType;
@@ -278,8 +225,7 @@ namespace hermit {
 					urlToSign += "/";
 					
 					SignAWSRequestVersion2CallbackClass authCallback;
-					SignAWSRequestVersion2(
-										   mAWSPublicKey,
+					SignAWSRequestVersion2(mAWSPublicKey,
 										   mAWSPrivateKey,
 										   method,
 										   "",
@@ -290,12 +236,13 @@ namespace hermit {
 					
 					if (!authCallback.mSuccess) {
 						NOTIFY_ERROR(h_, "S3CreateBucket: SignAWSRequestVersion2 failed for URL:", urlToSign);
-						return S3Result::kError;
+						mCompletion->Call(h_, S3Result::kError);
+						return;
 					}
 					
-					StringPairVector params;
-					params.push_back(StringPair("Date", authCallback.mDateString));
-					params.push_back(StringPair("Authorization", authCallback.mAuthorizationString));
+					S3ParamVector params;
+					params.push_back(std::make_pair("Date", authCallback.mDateString));
+					params.push_back(std::make_pair("Authorization", authCallback.mAuthorizationString));
 					
 					std::string url("https://");
 					url += mBucketName;
@@ -309,36 +256,62 @@ namespace hermit {
 						regionBody += "</LocationConstraint></CreateBucketConfiguration>";
 					}
 					
-					EnumerateStringValuesFunctionClass headerParams(params);
-					SendCommandCallback result;
+					auto commandCompletion = std::make_shared<CreateBucketCompletion>(shared_from_this());
 					SendS3CommandWithData(h_,
 										  url,
 										  method,
-										  headerParams,
-										  DataBuffer(regionBody.data(), regionBody.size()),
-										  result);
-					
-					if (result.mStatus == S3Result::kSuccess) {
-						ProcessS3CreateBucketXMLClass pc(h_);
-						pc.Process(result.mResponseData);
-						if (pc.GetIsError())
-						{
-							NOTIFY_ERROR(h_, "S3CreateBucket: Result indicated an error.");
-							return S3Result::kError;
-						}
-					}
-					return result.mStatus;
+										  params,
+										  std::make_shared<SharedBuffer>(regionBody.data(), regionBody.size()),
+										  commandCompletion);
 				}
 				
 				//
-				bool ShouldRetry(const ResultType& result) {
+				void Completion(const HermitPtr& h_,
+								const S3Result& result,
+								const S3ParamVector& params,
+								const DataBuffer& responseData) {
+					mLatestResult = result;
+					
+					if (!ShouldRetry(result)) {
+						if (mRetries > 0) {
+							S3NotificationParams params("GetObject", mRetries, result);
+							NOTIFY(h_, kS3RetryCompleteNotification, &params);
+						}
+						ProcessResult(h_, result, params, responseData);
+						return;
+					}
+					if (++mRetries == kMaxRetries) {
+						S3NotificationParams params("GetObject", mRetries, result);
+						NOTIFY(h_, kS3MaxRetriesExceededNotification, &params);
+						
+						NOTIFY_ERROR(h_, "Maximum retries exceeded, most recent result:", (int)result);
+						mCompletion->Call(h_, result);
+						return;
+					}
+					
+					int fifthSecondIntervals = mSleepInterval * 5;
+					for (int i = 0; i < fifthSecondIntervals; ++i) {
+						if (CHECK_FOR_ABORT(h_)) {
+							mCompletion->Call(h_, S3Result::kCanceled);
+							return;
+						}
+						std::this_thread::sleep_for(std::chrono::milliseconds(200));
+					}
+					mSleepInterval += mSleepIntervalStep;
+					mSleepIntervalStep += 2;
+					
+					S3CreateBucket(h_);
+				}
+				
+				//
+				bool ShouldRetry(const S3Result& result) {
 					if ((result == S3Result::kTimedOut) ||
 						(result == S3Result::kNetworkConnectionLost) ||
-						(result == S3Result::kS3InternalError) ||
 						(result == S3Result::k500InternalServerError) ||
 						(result == S3Result::k503ServiceUnavailable) ||
+						(result == S3Result::kS3InternalError) ||
 						// borderline candidate for retry, but I've seen it recover "in the wild":
-						(result == s3::S3Result::kHostNotFound)) {
+						(result == S3Result::kHostNotFound)) {
 						return true;
 					}
 					// we allow a single retry on PermissionDenied since i've seen this fail due to
@@ -352,49 +325,62 @@ namespace hermit {
 				}
 				
 				//
-				void ProcessResult(const HermitPtr& h_, const ResultType& result) {
-					
+				void ProcessResult(const HermitPtr& h_,
+								   const S3Result& result,
+								   const S3ParamVector& params,
+								   const DataBuffer& responseData) {
 					if (result == S3Result::kCanceled) {
-						mResult = result;
+						mCompletion->Call(h_, result);
 						return;
 					}
 					if (result == S3Result::kSuccess) {
-						mResult = result;
-						return;
+						ProcessS3CreateBucketXMLClass pc(h_);
+						pc.Process(std::string(responseData.first, responseData.second));
+						if (pc.GetIsError()) {
+							NOTIFY_ERROR(h_, "S3CreateBucket: Result indicated an error.");
+							mCompletion->Call(h_, S3Result::kError);
+							return;
+						}
 					}
-					NOTIFY_ERROR(h_, "S3CreateBucket: error result encountered:", (int)result);
-					mResult = result;
+					else {
+						NOTIFY_ERROR(h_, "Error result encountered:", (int)result);
+					}
+					mCompletion->Call(h_, result);
 				}
 				
 				//
-				void RetriesExceeded(const HermitPtr& h_, const ResultType& result) {
-					NOTIFY_ERROR(h_, "S3CreateBucket: maximum retries exceeded, most recent result:", (int)result);
-					mResult = result;
-				}
-				
-				//
-				void Canceled() {
-					mResult = S3Result::kCanceled;
-				}
-				
-				//
-				S3Result GetResult() const {
-					return mResult;
-				}
+				std::string mBucketName;
+				std::string mRegion;
+				std::string mAWSPublicKey;
+				std::string mAWSPrivateKey;
+				S3CompletionBlockPtr mCompletion;
+				S3Result mLatestResult;
+				int mRetries;
+				int mAccessDeniedRetries;
+				int mSleepInterval;
+				int mSleepIntervalStep;
 			};
 			
-		} // private namespace
+			//
+			void CreateBucketCompletion::Call(const HermitPtr& h_,
+											  const S3Result& result,
+											  const S3ParamVector& params,
+											  const DataBuffer& responseData) {
+				mCreateBucketClass->Completion(h_, result, params, responseData);
+			}
+			
+		} // namespace S3CreateBucket_Impl
+		using namespace S3CreateBucket_Impl;
 		
 		//
-		S3Result S3CreateBucket(const HermitPtr& h_,
-								const std::string& inBucketName,
-								const std::string& inRegion,
-								const std::string& inAWSPublicKey,
-								const std::string& inAWSPrivateKey) {
-			CreateBucket create(inBucketName, inRegion, inAWSPublicKey, inAWSPrivateKey);
-			RetryClassT<CreateBucket> retry;
-			retry.AttemptWithRetry(h_, create);
-			return create.GetResult();
+		void S3CreateBucket(const HermitPtr& h_,
+							const std::string& bucketName,
+							const std::string& region,
+							const std::string& awsPublicKey,
+							const std::string& awsPrivateKey,
+							const S3CompletionBlockPtr& completion) {
+			auto creator = std::make_shared<CreateBucketClass>(bucketName, region, awsPublicKey, awsPrivateKey, completion);
+			creator->S3CreateBucket(h_);
 		}
 		
 	} // namespace s3

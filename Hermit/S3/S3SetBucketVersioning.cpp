@@ -28,70 +28,35 @@
 
 namespace hermit {
 	namespace s3 {
-		
-		namespace {
+		namespace S3SetBucketVersioning_Impl {
 
 			//
-			typedef std::pair<std::string, std::string> StringPair;
-			typedef std::vector<StringPair> StringPairVector;
-			
-			//	//
-			//	//
-			//	std::string BytesToString(
-			//		const std::string& inBytes)
-			//	{
-			//		std::string bytesWithoutSpaces;
-			//		for (std::string::size_type n = 0; n < inBytes.size(); ++n)
-			//		{
-			//			if (inBytes[n] != ' ')
-			//			{
-			//				bytesWithoutSpaces += inBytes[n];
-			//			}
-			//		}
-			//		BinaryCallbackClassT<std::string> binaryCallback;
-			//		HexStringToBinary(inHub, bytesWithoutSpaces, binaryCallback);
-			//		return binaryCallback.mValue;
-			//	}
-			
-			//
-			//
-			class ProcessS3SetBucketVersioningXMLClass : xml::ParseXMLClient 
-			{
+			class ProcessS3SetBucketVersioningXMLClass : xml::ParseXMLClient  {
 			private:
 				//
-				//
-				enum ParseState
-				{
-					kParseState_New,
-					kParseState_Error,
-					kParseState_Error_Code,
-					kParseState_Error_Message,
-					kParseState_Error_StringToSignBytes,
-					kParseState_ListAllMyBucketsResult,
-					kParseState_Buckets,
-					kParseState_Bucket,
-					kParseState_Name,
-					kParseState_IgnoredElement
+				enum class ParseState {
+					kNew,
+					kError,
+					kError_Code,
+					kError_Message,
+					kError_StringToSignBytes,
+					kListAllMyBucketsResult,
+					kBuckets,
+					kBucket,
+					kName,
+					kIgnoredElement
 				};
 				
-				//
 				//
 				typedef std::stack<ParseState> ParseStateStack;
 				
 			public:
 				//
-				//
-				ProcessS3SetBucketVersioningXMLClass()
-				:
-				mParseState(kParseState_New),
-				mIsError(false)
-				{
+				ProcessS3SetBucketVersioningXMLClass() : mParseState(ParseState::kNew), mIsError(false) {
 				}
 				
 				//
-				//
-				bool GetIsError() const
-				{
+				bool GetIsError() const {
 					return mIsError;
 				}
 				
@@ -105,97 +70,74 @@ namespace hermit {
 				virtual xml::ParseXMLStatus OnStart(const std::string& inStartTag,
 													const std::string& inAttributes,
 													bool inIsEmptyElement) override {
-					if (mParseState == kParseState_New)
-					{
-						if (inStartTag == "ListAllMyBucketsResult")
-						{
-							PushState(kParseState_ListAllMyBucketsResult);
+					if (mParseState == ParseState::kNew) {
+						if (inStartTag == "ListAllMyBucketsResult") {
+							PushState(ParseState::kListAllMyBucketsResult);
 						}
-						else if (inStartTag == "Error")
-						{
+						else if (inStartTag == "Error") {
 							mIsError = true;
-							PushState(kParseState_Error);
+							PushState(ParseState::kError);
 						}
-						else if (inStartTag != "?xml")
-						{
-							PushState(kParseState_IgnoredElement);
-						}
-					}
-					else if (mParseState == kParseState_Error)
-					{
-						if (inStartTag == "Code")
-						{
-							PushState(kParseState_Error_Code);
-						}
-						else if (inStartTag == "Message")
-						{
-							PushState(kParseState_Error_Message);
-						}
-						else if (inStartTag == "StringToSignBytes")
-						{
-							PushState(kParseState_Error_StringToSignBytes);
-						}
-						else
-						{
-							PushState(kParseState_IgnoredElement);
+						else if (inStartTag != "?xml") {
+							PushState(ParseState::kIgnoredElement);
 						}
 					}
-					else if (mParseState == kParseState_ListAllMyBucketsResult)
-					{
-						if (inStartTag == "Buckets")
-						{
-							PushState(kParseState_Buckets);
+					else if (mParseState == ParseState::kError) {
+						if (inStartTag == "Code") {
+							PushState(ParseState::kError_Code);
 						}
-						else
-						{
-							PushState(kParseState_IgnoredElement);
+						else if (inStartTag == "Message") {
+							PushState(ParseState::kError_Message);
 						}
-					}
-					else if (mParseState == kParseState_Buckets)
-					{
-						if (inStartTag == "Bucket")
-						{
-							PushState(kParseState_Bucket);
+						else if (inStartTag == "StringToSignBytes") {
+							PushState(ParseState::kError_StringToSignBytes);
 						}
-						else
-						{
-							PushState(kParseState_IgnoredElement);
+						else {
+							PushState(ParseState::kIgnoredElement);
 						}
 					}
-					else if (mParseState == kParseState_Bucket)
-					{
-						if (inStartTag == "Name")
-						{
-							PushState(kParseState_Name);
+					else if (mParseState == ParseState::kListAllMyBucketsResult) {
+						if (inStartTag == "Buckets") {
+							PushState(ParseState::kBuckets);
 						}
-						else
-						{
-							PushState(kParseState_IgnoredElement);
+						else {
+							PushState(ParseState::kIgnoredElement);
 						}
 					}
-					else
-					{
-						PushState(kParseState_IgnoredElement);
+					else if (mParseState == ParseState::kBuckets) {
+						if (inStartTag == "Bucket") {
+							PushState(ParseState::kBucket);
+						}
+						else {
+							PushState(ParseState::kIgnoredElement);
+						}
+					}
+					else if (mParseState == ParseState::kBucket) {
+						if (inStartTag == "Name") {
+							PushState(ParseState::kName);
+						}
+						else {
+							PushState(ParseState::kIgnoredElement);
+						}
+					}
+					else {
+						PushState(ParseState::kIgnoredElement);
 					}
 					return xml::kParseXMLStatus_OK;
 				}
 				
 				//
 				virtual xml::ParseXMLStatus OnContent(const std::string& inContent) override {
-					if (mParseState == kParseState_Name)
-					{
+					if (mParseState == ParseState::kName) {
 						//std::cout << inContent << "\n";
 					}
-					else if (mParseState == kParseState_Error_Code)
-					{
+					else if (mParseState == ParseState::kError_Code) {
 						//std::cout << "Error Code: " << inContent << "\n";
 					}
-					else if (mParseState == kParseState_Error_Message)
-					{
+					else if (mParseState == ParseState::kError_Message) {
 						//std::cout << "Error Message: " << inContent << "\n";
 					}
-					else if (mParseState == kParseState_Error_StringToSignBytes)
-					{
+					else if (mParseState == ParseState::kError_StringToSignBytes) {
 						//std::cout << "Error String To Sign Bytes: " << inContent << "\n";
 						//std::cout << "Error String To Sign: " << BytesToString(inHub, inContent) << "\n";
 					}
@@ -210,23 +152,17 @@ namespace hermit {
 				}
 				
 				//
-				//
-				void PushState(
-							   ParseState inNewState)
-				{
+				void PushState(ParseState inNewState) {
 					mParseStateStack.push(mParseState);
 					mParseState = inNewState;
 				}
 				
 				//
-				//
-				void PopState()
-				{
+				void PopState() {
 					mParseState = mParseStateStack.top();
 					mParseStateStack.pop();
 				}
 				
-				//
 				//
 				ParseState mParseState;
 				ParseStateStack mParseStateStack;
@@ -234,59 +170,61 @@ namespace hermit {
 			};
 			
 			//
-			//
-			class SendCommandCallback
-			:
-			public SendS3CommandCallback
-			{
+			class CommandCompletion : public SendS3CommandCompletion {
 			public:
 				//
-				//
-				SendCommandCallback()
-				:
-				mStatus(S3Result::kUnknown)
-				{
+				CommandCompletion(const S3CompletionBlockPtr& completion) : mCompletion(completion) {
 				}
 				
 				//
-				//
-				bool Function(
-							  const S3Result& inStatus,
-							  const EnumerateStringValuesFunctionRef& inParamFunction,
-							  const DataBuffer& inData)
-				{
-					mStatus = inStatus;
-					if (inStatus == S3Result::kSuccess)
-					{
-						mResponseData = std::string(inData.first, inData.second);
+				virtual void Call(const HermitPtr& h_,
+								  const S3Result& result,
+								  const S3ParamVector& params,
+								  const DataBuffer& data) override {
+					if (result == S3Result::kCanceled) {
+						mCompletion->Call(h_, result);
+						return;
 					}
-					return true;
+					if (result != S3Result::kSuccess) {
+						NOTIFY_ERROR(h_, "S3SetBucketVersioning: SendS3CommandWithData failed.");
+						mCompletion->Call(h_, result);
+						return;
+					}
+					
+					ProcessS3SetBucketVersioningXMLClass pc;
+					pc.Process(h_, std::string(data.first, data.second));
+					if (pc.GetIsError()) {
+						NOTIFY_ERROR(h_, "S3SetBucketVersioning: Response indicated an error.");
+						mCompletion->Call(h_, S3Result::kError);
+						return;
+					}
+					mCompletion->Call(h_, S3Result::kSuccess);
 				}
 				
 				//
-				//
-				S3Result mStatus;
-				std::string mResponseData;
+				S3CompletionBlockPtr mCompletion;
 			};
 			
-		} // private namespace
+		} // namespace S3SetBucketVersioning_Impl
+		using namespace S3SetBucketVersioning_Impl;
 		
 		//
-		bool S3SetBucketVersioning(const HermitPtr& h_,
-								   const std::string& inS3PublicKey,
-								   const std::string& inS3PrivateKey,
-								   const std::string& inBucketName,
-								   const bool& inVersioningEnabled) {
-			
+		void S3SetBucketVersioning(const HermitPtr& h_,
+								   const std::string& s3PublicKey,
+								   const std::string& s3PrivateKey,
+								   const std::string& bucketName,
+								   const bool& versioningEnabled,
+								   const S3CompletionBlockPtr& completion) {
+
 			std::string method("PUT");
 			
 			std::string urlToSign("/");
-			urlToSign += inBucketName;
+			urlToSign += bucketName;
 			urlToSign += "/?versioning";
 			
 			SignAWSRequestVersion2CallbackClass authCallback;
-			SignAWSRequestVersion2(inS3PublicKey,
-								   inS3PrivateKey,
+			SignAWSRequestVersion2(s3PublicKey,
+								   s3PrivateKey,
 								   method,
 								   "",
 								   "",
@@ -296,51 +234,37 @@ namespace hermit {
 			
 			if (!authCallback.mSuccess) {
 				NOTIFY_ERROR(h_, "S3SetBucketVersioning: SignAWSRequestVersion2 failed for URL:", urlToSign);
-				return false;
+				completion->Call(h_, S3Result::kError);
+				return;
 			}
 			
 			std::string url("https://");
-			url += inBucketName;
+			url += bucketName;
 			url += ".s3.amazonaws.com/?versioning";
 			
 			std::string body;
 			body += "<VersioningConfiguration xmlns=\"http://s3.amazonaws.com/doc/2006-03-01/\">\n";
 			body += "<Status>";
-			if (inVersioningEnabled) {
+			if (versioningEnabled) {
 				body += "Enabled";
 			}
 			else {
 				body += "Suspended";
 			}
 			body += "</Status>\n";
-			//	  <MfaDelete>MfaDeleteState</MFADelete>
 			body += "</VersioningConfiguration>\n";
 			
-			StringPairVector params;
-			params.push_back(StringPair("Date", authCallback.mDateString));
-			params.push_back(StringPair("Authorization", authCallback.mAuthorizationString));
+			S3ParamVector params;
+			params.push_back(std::make_pair("Date", authCallback.mDateString));
+			params.push_back(std::make_pair("Authorization", authCallback.mAuthorizationString));
 			
-			EnumerateStringValuesFunctionClass paramFunction(params);
-			SendCommandCallback sendCommandCallback;
+			auto commandCompletion = std::make_shared<CommandCompletion>(completion);
 			SendS3CommandWithData(h_,
 								  url,
 								  method,
-								  paramFunction,
-								  DataBuffer(body.data(), body.size()),
-								  sendCommandCallback);
-			
-			if (sendCommandCallback.mStatus != S3Result::kSuccess) {
-				NOTIFY_ERROR(h_, "S3SetBucketVersioning: SendS3CommandWithData failed.");
-				return false;
-			}
-			
-			ProcessS3SetBucketVersioningXMLClass pc;
-			pc.Process(h_, sendCommandCallback.mResponseData);
-			if (pc.GetIsError()) {
-				NOTIFY_ERROR(h_, "S3SetBucketVersioning: Response indicated an error.");
-				return false;
-			}
-			return true;
+								  params,
+								  std::make_shared<SharedBuffer>(body),
+								  commandCompletion);
 		}
 		
 	} // namespace s3

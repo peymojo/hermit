@@ -19,20 +19,21 @@
 #ifndef SendS3CommandWithData_h
 #define SendS3CommandWithData_h
 
-#include "Hermit/Foundation/EnumerateStringValuesFunction.h"
 #include "Hermit/Foundation/Hermit.h"
-#include "SendS3CommandCallback.h"
+#include "Hermit/Foundation/SharedBuffer.h"
+#include "S3ParamVector.h"
+#include "SendS3CommandCompletion.h"
 
 namespace hermit {
 	namespace s3 {
 		
 		//
 		void SendS3CommandWithData(const HermitPtr& h_,
-								   const std::string& inURL,
-								   const std::string& inMethod,
-								   const EnumerateStringValuesFunctionRef& inParamsFunction,
-								   const DataBuffer& inData,
-								   const SendS3CommandCallbackRef& inCallback);
+								   const std::string& url,
+								   const std::string& method,
+								   const S3ParamVector& params,
+								   const SharedBufferPtr& data,
+								   const SendS3CommandCompletionPtr& completion);
 		
 	} // namespace s3
 } // namespace hermit

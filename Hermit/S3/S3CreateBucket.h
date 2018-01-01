@@ -26,11 +26,12 @@
 namespace hermit {
 	namespace s3 {
 		
-		S3Result S3CreateBucket(const HermitPtr& h_,
-								const std::string& inBucketName,
-								const std::string& inRegion,
-								const std::string& inAWSPublicKey,
-								const std::string& inAWSPrivateKey);
+		void S3CreateBucket(const HermitPtr& h_,
+							const std::string& bucketName,
+							const std::string& region,
+							const std::string& awsPublicKey,
+							const std::string& awsPrivateKey,
+							const S3CompletionBlockPtr& completion);
 		
 	} // namespace
 } // namespace

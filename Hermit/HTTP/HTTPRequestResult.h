@@ -20,11 +20,9 @@
 #define HTTPRequestResult_h
 
 #include <memory>
-#include <string>
-#include <utility>
-#include <vector>
 #include "Hermit/Foundation/AsyncFunction.h"
 #include "Hermit/Foundation/DataBuffer.h"
+#include "HTTPParamVector.h"
 
 namespace hermit {
 	namespace http {
@@ -42,26 +40,56 @@ namespace hermit {
 		};
 		
 		//
-		typedef std::vector<std::pair<std::string, std::string>> ParamVector;
-		
-		//
-		DEFINE_ASYNC_FUNCTION_3A(SendHTTPRequestResponseBlock,
+		DEFINE_ASYNC_FUNCTION_3A(HTTPRequestStatusBlock,
+								 HermitPtr,
 								 int,									// statusCode
-								 ParamVector,							// headerParams
+								 HTTPParamVector);						// headerParams
+
+		//
+		DEFINE_ASYNC_FUNCTION_4A(HTTPRequestResponseBlock,
+								 HermitPtr,
+								 int,									// statusCode
+								 HTTPParamVector,						// headerParams
 								 DataBuffer);							// resonseData
 		
 		//
-		DEFINE_ASYNC_FUNCTION_2A(SendHTTPRequestCompletionBlock, HermitPtr, HTTPRequestResult);
+		DEFINE_ASYNC_FUNCTION_2A(HTTPRequestCompletionBlock,
+								 HermitPtr,
+								 HTTPRequestResult);
 		
 		//
-		class SendHTTPRequestResponse : public SendHTTPRequestResponseBlock {
+		class HTTPRequestStatus : public HTTPRequestStatusBlock {
 		public:
 			//
-			SendHTTPRequestResponse() : mStatusCode(0) {
+			HTTPRequestStatus() : mStatusCode(0) {
 			}
 			
 			//
-			virtual void Call(const int& statusCode, const ParamVector& headerParams, const DataBuffer& responseData) override {
+			virtual void Call(const HermitPtr& h_,
+							  const int& statusCode,
+							  const HTTPParamVector& headerParams) override {
+				mStatusCode = statusCode;
+				mHeaderParams = headerParams;
+			}
+			
+			//
+			int mStatusCode;
+			HTTPParamVector mHeaderParams;
+		};
+		typedef std::shared_ptr<HTTPRequestStatus> HTTPRequestStatusPtr;
+
+		//
+		class HTTPRequestResponse : public HTTPRequestResponseBlock {
+		public:
+			//
+			HTTPRequestResponse() : mStatusCode(0) {
+			}
+			
+			//
+			virtual void Call(const HermitPtr& h_,
+							  const int& statusCode,
+							  const HTTPParamVector& headerParams,
+							  const DataBuffer& responseData) override {
 				mStatusCode = statusCode;
 				mHeaderParams = headerParams;
 				if (responseData.second > 0) {
@@ -71,10 +99,10 @@ namespace hermit {
 			
 			//
 			int mStatusCode;
-			ParamVector mHeaderParams;
+			HTTPParamVector mHeaderParams;
 			std::string mResponseData;
 		};
-		typedef std::shared_ptr<SendHTTPRequestResponse> SendHTTPRequestResponsePtr;
+		typedef std::shared_ptr<HTTPRequestResponse> HTTPRequestResponsePtr;
 
 	} // namespace http
 } // namespace hermit

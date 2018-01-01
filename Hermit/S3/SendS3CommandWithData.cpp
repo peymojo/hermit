@@ -23,96 +23,68 @@
 namespace hermit {
 	namespace s3 {
 		
-		namespace
-		{
+		namespace SendS3CommandWithData_Impl {
+
 			//
-			//
-			class StreamInDataHandler
-			:
-			public StreamInS3RequestDataHandlerFunction
-			{
+			class DataHandler : public DataHandlerBlock {
 			public:
 				//
-				//
-				StreamInDataHandler()
-				{
-				}
-				
-				//
-				//
-				bool Function(
-							  const uint64_t& inExpectedDataSize,
-							  const DataBuffer& inDataPart,
-							  const bool& inIsEndOfStream)
-				{
-					if (inDataPart.second > 0)
-					{
-						mResponse += std::string(inDataPart.first, inDataPart.second);
+				virtual void HandleData(const HermitPtr& h_,
+										const DataBuffer& data,
+										bool isEndOfData,
+										const StreamResultBlockPtr& resultBlock) override {
+					if (data.second > 0) {
+						mData.append(data.first, data.second);
 					}
-					return true;
+					resultBlock->Call(h_, StreamDataResult::kSuccess);
 				}
 				
 				//
-				//
-				std::string mResponse;
+				std::string mData;
 			};
+			typedef std::shared_ptr<DataHandler> DataHandlerPtr;
 			
 			//
-			//
-			class StreamInCallback
-			:
-			public StreamInS3RequestCallback
-			{
+			class StreamInCompletion : public StreamInS3RequestCompletion {
 			public:
 				//
-				//
-				StreamInCallback(
-								 const StreamInDataHandler& inDataHandler,
-								 const SendS3CommandCallbackRef& inCallback)
-				:
-				mDataHandler(inDataHandler),
-				mCallback(inCallback)
-				{
+				StreamInCompletion(const DataHandlerPtr& dataHandler, const SendS3CommandCompletionPtr& completion) :
+				mDataHandler(dataHandler),
+				mCompletion(completion) {
 				}
 				
 				//
-				//
-				bool Function(
-							  const S3Result& inResult,
-							  const EnumerateStringValuesFunctionRef& inParamFunction)
-				{
-					return mCallback.Call(
-										  inResult,
-										  inParamFunction,
-										  DataBuffer(mDataHandler.mResponse.data(), mDataHandler.mResponse.size()));
+				virtual void Call(const HermitPtr& h_, const S3Result& result, const S3ParamVector& params) override {
+					mCompletion->Call(h_,
+									  result,
+									  params,
+									  DataBuffer(mDataHandler->mData.data(), mDataHandler->mData.size()));
 				}
 				
 				//
-				//
-				const StreamInDataHandler& mDataHandler;
-				const SendS3CommandCallbackRef& mCallback;
+				DataHandlerPtr mDataHandler;
+				SendS3CommandCompletionPtr mCompletion;
 			};
 			
-		} // private namespace
+		} // namespace SendS3CommandWithData_Impl
+		using namespace SendS3CommandWithData_Impl;
 		
 		//
-		//
 		void SendS3CommandWithData(const HermitPtr& h_,
-								   const std::string& inURL,
-								   const std::string& inMethod,
-								   const EnumerateStringValuesFunctionRef& inParamsFunction,
-								   const DataBuffer& inData,
-								   const SendS3CommandCallbackRef& inCallback)
-		{
-			StreamInDataHandler dataHandler;
-			StreamInCallback callback(dataHandler, inCallback);
+								   const std::string& url,
+								   const std::string& method,
+								   const S3ParamVector& params,
+								   const SharedBufferPtr& data,
+								   const SendS3CommandCompletionPtr& completion) {
+			auto dataHandler = std::make_shared<DataHandler>();
+			auto streamCompletion = std::make_shared<StreamInCompletion>(dataHandler, completion);
 			StreamInS3RequestWithBody(h_,
-									  inURL,
-									  inMethod,
-									  inParamsFunction,
-									  inData,
+									  url,
+									  method,
+									  params,
+									  data,
 									  dataHandler,
-									  callback);
+									  streamCompletion);
 		}
 		
 	} // namespace s3

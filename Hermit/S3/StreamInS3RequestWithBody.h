@@ -19,23 +19,23 @@
 #ifndef StreamInS3RequestWithBody_h
 #define StreamInS3RequestWithBody_h
 
-#include "Hermit/Foundation/EnumerateStringValuesFunction.h"
-#include "Hermit/Foundation/DataBuffer.h"
 #include "Hermit/Foundation/Hermit.h"
-#include "StreamInS3RequestDataHandlerFunction.h"
-#include "StreamInS3RequestCallback.h"
+#include "Hermit/Foundation/SharedBuffer.h"
+#include "Hermit/Foundation/StreamDataFunction.h"
+#include "S3ParamVector.h"
+#include "StreamInS3RequestCompletion.h"
 
 namespace hermit {
 	namespace s3 {
 		
 		//
 		void StreamInS3RequestWithBody(const HermitPtr& h_,
-									   const std::string& inURL,
-									   const std::string& inMethod,
-									   const EnumerateStringValuesFunctionRef& inParamsFunction,
-									   const DataBuffer& inBodyData,
-									   const StreamInS3RequestDataHandlerFunctionRef& inDataHandlerFunction,
-									   const StreamInS3RequestCallbackRef& inCallback);
+									   const std::string& url,
+									   const std::string& method,
+									   const S3ParamVector& params,
+									   const SharedBufferPtr& body,
+									   const DataHandlerBlockPtr& dataHandler,
+									   const StreamInS3RequestCompletionPtr& completion);
 		
 	} // namespace s3
 } // namespace hermit

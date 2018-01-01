@@ -28,47 +28,19 @@
 
 namespace hermit {
 	namespace s3 {
-		
-		namespace {
-
-			//
-			typedef std::pair<std::string, std::string> StringPair;
-			typedef std::vector<StringPair> StringPairVector;
-			
-			//
-			class SendCommandCallback : public SendS3CommandCallback {
-			public:
-				//
-				SendCommandCallback() : mStatus(S3Result::kUnknown) {
-				}
-				
-				//
-				bool Function(const S3Result& inStatus,
-							  const EnumerateStringValuesFunctionRef& inParamFunction,
-							  const DataBuffer& inData) {
-					mStatus = inStatus;
-					if (inStatus == S3Result::kSuccess) {
-						mResponseData = std::string(inData.first, inData.second);
-					}
-					return true;
-				}
-				
-				//
-				S3Result mStatus;
-				std::string mResponseData;
-			};
+		namespace S3ListBuckets_Impl {
 			
 			//
 			class ProcessS3ListBucketsXMLClass : xml::ParseXMLClient {
 			private:
 				//
-				enum ParseState {
-					kParseState_New,
-					kParseState_ListAllMyBucketsResult,
-					kParseState_Buckets,
-					kParseState_Bucket,
-					kParseState_Name,
-					kParseState_IgnoredElement
+				enum class ParseState {
+					kNew,
+					kListAllMyBucketsResult,
+					kBuckets,
+					kBucket,
+					kName,
+					kIgnoredElement
 				};
 				
 				//
@@ -76,10 +48,10 @@ namespace hermit {
 				
 			public:
 				//
-				ProcessS3ListBucketsXMLClass(const HermitPtr& h_, BucketNameReceiver& receiver) :
+				ProcessS3ListBucketsXMLClass(const HermitPtr& h_, const BucketNameReceiverPtr& receiver) :
 				mH_(h_),
 				mReceiver(receiver),
-				mParseState(kParseState_New),
+				mParseState(ParseState::kNew),
 				mProcessedAtLeastOneBucket(false) {
 				}
 								
@@ -92,49 +64,49 @@ namespace hermit {
 				virtual xml::ParseXMLStatus OnStart(const std::string& inStartTag,
 													const std::string& inAttributes,
 													bool inIsEmptyElement) override {
-					if (mParseState == kParseState_New) {
+					if (mParseState == ParseState::kNew) {
 						if (inStartTag == "ListAllMyBucketsResult") {
-							PushState(kParseState_ListAllMyBucketsResult);
+							PushState(ParseState::kListAllMyBucketsResult);
 						}
 						else if (inStartTag != "?xml") {
-							PushState(kParseState_IgnoredElement);
+							PushState(ParseState::kIgnoredElement);
 						}
 					}
-					else if (mParseState == kParseState_ListAllMyBucketsResult) {
+					else if (mParseState == ParseState::kListAllMyBucketsResult) {
 						if (inStartTag == "Buckets") {
-							PushState(kParseState_Buckets);
+							PushState(ParseState::kBuckets);
 						}
 						else {
-							PushState(kParseState_IgnoredElement);
+							PushState(ParseState::kIgnoredElement);
 						}
 					}
-					else if (mParseState == kParseState_Buckets) {
+					else if (mParseState == ParseState::kBuckets) {
 						if (inStartTag == "Bucket") {
-							PushState(kParseState_Bucket);
+							PushState(ParseState::kBucket);
 						}
 						else {
-							PushState(kParseState_IgnoredElement);
+							PushState(ParseState::kIgnoredElement);
 						}
 					}
-					else if (mParseState == kParseState_Bucket) {
+					else if (mParseState == ParseState::kBucket) {
 						if (inStartTag == "Name") {
-							PushState(kParseState_Name);
+							PushState(ParseState::kName);
 						}
 						else {
-							PushState(kParseState_IgnoredElement);
+							PushState(ParseState::kIgnoredElement);
 						}
 					}
 					else {
-						PushState(kParseState_IgnoredElement);
+						PushState(ParseState::kIgnoredElement);
 					}
 					return xml::kParseXMLStatus_OK;
 				}
 				
 				//
 				virtual xml::ParseXMLStatus OnContent(const std::string& inContent) override {
-					if (mParseState == kParseState_Name) {
+					if (mParseState == ParseState::kName) {
 						mProcessedAtLeastOneBucket = true;
-						if (!mReceiver(inContent)) {
+						if (!mReceiver->OnOneBucket(mH_, inContent)) {
 							return xml::kParseXMLStatus_Cancel;
 						}
 					}
@@ -161,41 +133,68 @@ namespace hermit {
 				
 				//
 				HermitPtr mH_;
-				BucketNameReceiver& mReceiver;
+				BucketNameReceiverPtr mReceiver;
 				ParseState mParseState;
 				ParseStateStack mParseStateStack;
 				bool mProcessedAtLeastOneBucket;
 			};
 			
-			// ListBuckets operation class
-			class ListBuckets {
-			private:
-				std::string mAWSPublicKey;
-				std::string mAWSPrivateKey;
-				BucketNameReceiver& mReceiver;
-				S3Result mResult;
-				int mAccessDeniedRetries;
-				
+			//
+			class ListBucketsClass;
+			typedef std::shared_ptr<ListBucketsClass> ListBucketsClassPtr;
+			
+			//
+			class ListBucketsCompletion : public SendS3CommandCompletion {
 			public:
-				typedef S3Result ResultType;
-				static const S3Result kDefaultResult = S3Result::kUnknown;
-				static const int kMaxRetries = 5;
-				
 				//
-				const char* OpName() const {
-					return "ListBuckets";
+				ListBucketsCompletion(const ListBucketsClassPtr& ListBucketsClass) :
+				mListBucketsClass(ListBucketsClass) {
 				}
 				
 				//
-				ListBuckets(const std::string& awsPublicKey, const std::string& awsPrivateKey, BucketNameReceiver& receiver) :
+				virtual void Call(const HermitPtr& h_,
+								  const S3Result& result,
+								  const S3ParamVector& params,
+								  const DataBuffer& responseData) override;
+				
+				//
+				ListBucketsClassPtr mListBucketsClass;
+			};
+			
+			//
+			class ListBucketsClass : public std::enable_shared_from_this<ListBucketsClass> {
+				//
+				static const int kMaxRetries = 5;
+				
+			public:
+				//
+				ListBucketsClass(const std::string& awsPublicKey,
+								 const std::string& awsPrivateKey,
+								 const BucketNameReceiverPtr& receiver,
+								 const S3CompletionBlockPtr& completion) :
 				mAWSPublicKey(awsPublicKey),
 				mAWSPrivateKey(awsPrivateKey),
 				mReceiver(receiver),
-				mResult(S3Result::kUnknown),
-				mAccessDeniedRetries(0) {
+				mCompletion(completion),
+				mLatestResult(S3Result::kUnknown),
+				mRetries(0),
+				mAccessDeniedRetries(0),
+				mSleepInterval(1),
+				mSleepIntervalStep(2) {
 				}
 				
-				ResultType AttemptOnce(const HermitPtr& h_) {
+				//
+				void S3ListBuckets(const HermitPtr& h_) {
+					if (CHECK_FOR_ABORT(h_)) {
+						mCompletion->Call(h_, S3Result::kCanceled);
+						return;
+					}
+					
+					if (mRetries > 0) {
+						S3NotificationParams params("GetObject", mRetries, mLatestResult);
+						NOTIFY(h_, kS3RetryNotification, &params);
+					}
+					
 					std::string method("GET");
 					std::string contentType;
 					std::string urlToSign("/");
@@ -212,34 +211,67 @@ namespace hermit {
 					
 					if (!authCallback.mSuccess) {
 						NOTIFY_ERROR(h_, "S3ListBuckets: SignAWSRequestVersion2 failed");
-						return S3Result::kError;
+						mCompletion->Call(h_, S3Result::kError);
+						return;
 					}
 					
-					StringPairVector params;
-					params.push_back(StringPair("Date", authCallback.mDateString));
-					params.push_back(StringPair("Authorization", authCallback.mAuthorizationString));
+					S3ParamVector params;
+					params.push_back(std::make_pair("Date", authCallback.mDateString));
+					params.push_back(std::make_pair("Authorization", authCallback.mAuthorizationString));
 					
 					std::string url("https://s3.amazonaws.com/");
 					
-					EnumerateStringValuesFunctionClass s3Params(params);
-					SendCommandCallback result;
-					SendS3Command(h_, url, method, s3Params, result);
-					
-					if (result.mStatus == S3Result::kSuccess) {
-						ProcessS3ListBucketsXMLClass pc(h_, mReceiver);
-						pc.Process(result.mResponseData);
-					}
-					return result.mStatus;
+					auto commandCompletion = std::make_shared<ListBucketsCompletion>(shared_from_this());
+					SendS3Command(h_, url, method, params, commandCompletion);
 				}
 				
-				bool ShouldRetry(const ResultType& result) {
+				//
+				void Completion(const HermitPtr& h_,
+								const S3Result& result,
+								const S3ParamVector& params,
+								const DataBuffer& responseData) {
+					mLatestResult = result;
+					
+					if (!ShouldRetry(result)) {
+						if (mRetries > 0) {
+							S3NotificationParams params("GetObject", mRetries, result);
+							NOTIFY(h_, kS3RetryCompleteNotification, &params);
+						}
+						ProcessResult(h_, result, params, responseData);
+						return;
+					}
+					if (++mRetries == kMaxRetries) {
+						S3NotificationParams params("GetObject", mRetries, result);
+						NOTIFY(h_, kS3MaxRetriesExceededNotification, &params);
+						
+						NOTIFY_ERROR(h_, "Maximum retries exceeded, most recent result:", (int)result);
+						mCompletion->Call(h_, result);
+						return;
+					}
+					
+					int fifthSecondIntervals = mSleepInterval * 5;
+					for (int i = 0; i < fifthSecondIntervals; ++i) {
+						if (CHECK_FOR_ABORT(h_)) {
+							mCompletion->Call(h_, S3Result::kCanceled);
+							return;
+						}
+						std::this_thread::sleep_for(std::chrono::milliseconds(200));
+					}
+					mSleepInterval += mSleepIntervalStep;
+					mSleepIntervalStep += 2;
+					
+					S3ListBuckets(h_);
+				}
+				
+				//
+				bool ShouldRetry(const S3Result& result) {
 					if ((result == S3Result::kTimedOut) ||
 						(result == S3Result::kNetworkConnectionLost) ||
-						(result == S3Result::kS3InternalError) ||
 						(result == S3Result::k500InternalServerError) ||
 						(result == S3Result::k503ServiceUnavailable) ||
+						(result == S3Result::kS3InternalError) ||
 						// borderline candidate for retry, but I've seen it recover "in the wild":
-						(result == s3::S3Result::kHostNotFound)) {
+						(result == S3Result::kHostNotFound)) {
 						return true;
 					}
 					// we allow a single retry on PermissionDenied since i've seen this fail due to
@@ -252,45 +284,56 @@ namespace hermit {
 					return false;
 				}
 				
-				void ProcessResult(const HermitPtr& h_, const ResultType& result) {
+				//
+				void ProcessResult(const HermitPtr& h_,
+								   const S3Result& result,
+								   const S3ParamVector& params,
+								   const DataBuffer& responseData) {
 					if (result == S3Result::kCanceled) {
-						mResult = result;
+						mCompletion->Call(h_, result);
 						return;
 					}
 					if (result == S3Result::kSuccess) {
-						mResult = result;
-						return;
+						ProcessS3ListBucketsXMLClass pc(h_, mReceiver);
+						pc.Process(std::string(responseData.first, responseData.second));
 					}
-					NOTIFY_ERROR(h_, "S3ListBuckets: error result encountered:", (int)result);
-					mResult = result;
+					else {
+						NOTIFY_ERROR(h_, "Error result encountered:", (int)result);
+					}
+					mCompletion->Call(h_, result);
 				}
 				
-				void RetriesExceeded(const HermitPtr& h_, const ResultType& result) {
-					NOTIFY_ERROR(h_, "S3ListBuckets: maximum retries exceeded, most recent result:", (int)result);
-					mResult = result;
-				}
-				
-				void Canceled() {
-					mResult = S3Result::kCanceled;
-				}
-				
-				S3Result GetResult() const {
-					return mResult;
-				}
+				//
+				std::string mAWSPublicKey;
+				std::string mAWSPrivateKey;
+				BucketNameReceiverPtr mReceiver;
+				S3CompletionBlockPtr mCompletion;
+				S3Result mLatestResult;
+				int mRetries;
+				int mAccessDeniedRetries;
+				int mSleepInterval;
+				int mSleepIntervalStep;
 			};
 			
-		} // private namespace
+			//
+			void ListBucketsCompletion::Call(const HermitPtr& h_,
+											  const S3Result& result,
+											  const S3ParamVector& params,
+											  const DataBuffer& responseData) {
+				mListBucketsClass->Completion(h_, result, params, responseData);
+			}
+			
+		} // namespace S3ListBuckets_Impl
+		using namespace S3ListBuckets_Impl;
 		
 		//
-		//
-		S3Result S3ListBuckets(const HermitPtr& h_,
-							   const std::string& awsPublicKey,
-							   const std::string& awsPrivateKey,
-							   BucketNameReceiver& receiver) {
-			ListBuckets list(awsPublicKey, awsPrivateKey, receiver);
-			RetryClassT<ListBuckets> retry;
-			retry.AttemptWithRetry(h_, list);
-			return list.GetResult();
+		void S3ListBuckets(const HermitPtr& h_,
+						   const std::string& awsPublicKey,
+						   const std::string& awsPrivateKey,
+						   const BucketNameReceiverPtr& receiver,
+						   const S3CompletionBlockPtr& completion) {
+			auto lister = std::make_shared<ListBucketsClass>(awsPublicKey, awsPrivateKey, receiver, completion);
+			lister->S3ListBuckets(h_);
 		}
 		
 	} // namespace s3

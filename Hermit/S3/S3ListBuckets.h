@@ -19,6 +19,7 @@
 #ifndef S3ListBuckets_h
 #define S3ListBuckets_h
 
+#include <memory>
 #include "Hermit/Foundation/Hermit.h"
 #include "S3Result.h"
 
@@ -28,14 +29,16 @@ namespace hermit {
 		//
 		class BucketNameReceiver {
 		public:
-			virtual bool operator()(const std::string& bucketName) = 0;
+			virtual bool OnOneBucket(const HermitPtr& h_, const std::string& bucketName) = 0;
 		};
+		typedef std::shared_ptr<BucketNameReceiver> BucketNameReceiverPtr;
 		
 		//
-		S3Result S3ListBuckets(const HermitPtr& h_,
-							   const std::string& awsPublicKey,
-							   const std::string& awsPrivateKey,
-							   BucketNameReceiver& receiver);
+		void S3ListBuckets(const HermitPtr& h_,
+						   const std::string& awsPublicKey,
+						   const std::string& awsPrivateKey,
+						   const BucketNameReceiverPtr& receiver,
+						   const S3CompletionBlockPtr& completion);
 		
 	} // namespace s3
 } // namespace hermit

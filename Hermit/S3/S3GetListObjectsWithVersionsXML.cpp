@@ -18,6 +18,7 @@
 
 #include <string>
 #include <vector>
+#include "Hermit/Foundation/Notification.h"
 #include "Hermit/HTTP/URLEncode.h"
 #include "SendS3Command.h"
 #include "SignAWSRequestVersion2.h"
@@ -25,69 +26,50 @@
 
 namespace hermit {
 	namespace s3 {
-		
-		//
-		//
-		namespace
-		{
-			//
-			//
-			typedef std::pair<std::string, std::string> StringPair;
-			typedef std::vector<StringPair> StringPairVector;
+		namespace S3GetListObjectsWithVersionsXML_Impl {
+			
+#if 000 	//	needs to be updated to AWS4 + async processing
 			
 			//
-			//
-			class SendCommandCallback
-			:
-			public SendS3CommandCallback
-			{
+			class SendCommandCallback : public SendS3CommandCallback {
 			public:
 				//
-				//
-				SendCommandCallback()
-				:
-				mStatus(S3Result::kUnknown)
-				{
+				SendCommandCallback() : mStatus(S3Result::kUnknown) {
 				}
 				
 				//
-				//
-				bool Function(
-							  const S3Result& inStatus,
+				bool Function(const S3Result& inStatus,
 							  const EnumerateStringValuesFunctionRef& inParamFunction,
 							  const std::string& inData,
-							  const uint64_t& inDataSize)
-				{
+							  const uint64_t& inDataSize) {
 					mStatus = inStatus;
-					if (inStatus == S3Result::kSuccess)
-					{
+					if (inStatus == S3Result::kSuccess) {
 						mResponseData = std::string(inData, inDataSize);
 					}
 					return true;
 				}
 				
 				//
-				//
 				S3Result mStatus;
 				std::string mResponseData;
 			};
+#endif
 			
-		} // private namespace
+		} // namespace S3GetListObjectsWithVersionsXML_Impl
+		using namespace S3GetListObjectsWithVersionsXML_Impl;
 		
 		//
-		//
 		void S3GetListObjectsWithVersionsXML(const HermitPtr& h_,
-											 const std::string& inAWSPublicKey,
-											 const std::string& inAWSSigningKey,
-											 const uint64_t& inAWSSigningKeySize,
-											 const std::string& inAWSRegion,
-											 const std::string& inBucketName,
-											 const std::string& inBasePath,
-											 const std::string& inMarker,
-											 const S3GetListObjectsWithVersionsXMLCallbackRef& inCallback)
-		{
+											 const std::string& awsPublicKey,
+											 const std::string& awsSigningKey,
+											 const std::string& awsRegion,
+											 const std::string& bucketName,
+											 const std::string& pathPrefix,
+											 const std::string& marker,
+											 const S3GetListObjectsWithVersionsXMLCompletionPtr& completion) {
 			//	needs to be updated to AWS4
-			inCallback.Call(h_, false, "");
+			NOTIFY_ERROR(h_, "S3GetListObjectsWithVersionsXML: not implemented");
+			completion->Call(h_, false, "");
 			
 #if 000
 			std::string bucketName(inBucketName);

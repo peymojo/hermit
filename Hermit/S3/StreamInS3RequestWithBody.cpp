@@ -20,43 +20,32 @@
 #include <string>
 #include <vector>
 #include "Hermit/Foundation/Notification.h"
-#include "Hermit/HTTP/StreamInHTTPRequestWithBody.h"
+#include "Hermit/HTTP/CreateHTTPSession.h"
 #include "Hermit/XML/ParseXMLData.h"
 #include "StreamInS3RequestWithBody.h"
 
 namespace hermit {
 	namespace s3 {
-		
-		namespace
-		{
+		namespace StreamInS3RequestWithBody_Impl {
+
 			//
-			//
-			class ProcessXMLClass : xml::ParseXMLClient
-			{
+			class ProcessXMLClass : xml::ParseXMLClient {
 			private:
 				//
-				//
-				enum ParseState
-				{
-					kParseState_New,
-					kParseState_Error,
-					kParseState_Code,
-					kParseState_Endpoint,
-					kParseState_IgnoredElement
+				enum class ParseState {
+					kNew,
+					kError,
+					kCode,
+					kEndpoint,
+					kIgnoredElement
 				};
 				
-				//
 				//
 				typedef std::stack<ParseState> ParseStateStack;
 				
 			public:
 				//
-				//
-				ProcessXMLClass(const HermitPtr& h_)
-				:
-				mH_(h_),
-				mParseState(kParseState_New)
-				{
+				ProcessXMLClass(const HermitPtr& h_) : mH_(h_), mParseState(ParseState::kNew) {
 				}
 								
 				//
@@ -68,47 +57,37 @@ namespace hermit {
 				virtual xml::ParseXMLStatus OnStart(const std::string& inStartTag,
 													const std::string& inAttributes,
 													bool inIsEmptyElement) override {
-					if (mParseState == kParseState_New)
-					{
-						if (inStartTag == "Error")
-						{
-							PushState(kParseState_Error);
+					if (mParseState == ParseState::kNew) {
+						if (inStartTag == "Error") {
+							PushState(ParseState::kError);
 						}
-						else if (inStartTag != "?xml")
-						{
-							PushState(kParseState_IgnoredElement);
+						else if (inStartTag != "?xml") {
+							PushState(ParseState::kIgnoredElement);
 						}
 					}
-					else if (mParseState == kParseState_Error)
-					{
-						if (inStartTag == "Code")
-						{
-							PushState(kParseState_Code);
+					else if (mParseState == ParseState::kError) {
+						if (inStartTag == "Code") {
+							PushState(ParseState::kCode);
 						}
-						else if (inStartTag == "Endpoint")
-						{
-							PushState(kParseState_Endpoint);
+						else if (inStartTag == "Endpoint") {
+							PushState(ParseState::kEndpoint);
 						}
-						else
-						{
-							PushState(kParseState_IgnoredElement);
+						else {
+							PushState(ParseState::kIgnoredElement);
 						}
 					}
-					else
-					{
-						PushState(kParseState_IgnoredElement);
+					else {
+						PushState(ParseState::kIgnoredElement);
 					}
 					return xml::kParseXMLStatus_OK;
 				}
 				
 				//
 				virtual xml::ParseXMLStatus OnContent(const std::string& inContent) override {
-					if (mParseState == kParseState_Code)
-					{
+					if (mParseState == ParseState::kCode) {
 						mCode = inContent;
 					}
-					else if (mParseState == kParseState_Endpoint)
-					{
+					else if (mParseState == ParseState::kEndpoint) {
 						mEndpoint = inContent;
 					}
 					return xml::kParseXMLStatus_OK;
@@ -121,23 +100,17 @@ namespace hermit {
 				}
 				
 				//
-				//
-				void PushState(
-							   ParseState inNewState)
-				{
+				void PushState(ParseState inNewState) {
 					mParseStateStack.push(mParseState);
 					mParseState = inNewState;
 				}
 				
 				//
-				//
-				void PopState()
-				{
+				void PopState() {
 					mParseState = mParseStateStack.top();
 					mParseStateStack.pop();
 				}
 				
-				//
 				//
 				HermitPtr mH_;
 				ParseState mParseState;
@@ -147,208 +120,220 @@ namespace hermit {
 			};
 			
 			//
-			//
-			class StreamInDataHandler
-			:
-			public http::StreamInHTTPRequestDataHandlerFunction
-			{
+			class DataHandler : public DataHandlerBlock {
 			public:
 				//
-				StreamInDataHandler(const StreamInS3RequestDataHandlerFunctionRef& inDataHandlerFunction) :
-				mDataHandlerFunction(inDataHandlerFunction) {
+				DataHandler(const DataHandlerBlockPtr& dataHandler) :
+				mDataHandler(dataHandler) {
 				}
 				
 				//
-				bool Function(const uint64_t& inExpectedDataSize,
-							  const DataBuffer& inDataPart,
-							  const bool& inIsEndOfStream) {
-					if (inDataPart.second > 0) {
-						mResponse.append(inDataPart.first, inDataPart.second);
+				virtual void HandleData(const HermitPtr& h_,
+										const DataBuffer& data,
+										bool isEndOfData,
+										const StreamResultBlockPtr& resultBlock) override {
+					if (data.second > 0) {
+						mData.append(data.first, data.second);
 					}
-					if (!mDataHandlerFunction.Call(inExpectedDataSize, inDataPart, inIsEndOfStream)) {
-						return false;
-					}
-					return true;
+					mDataHandler->HandleData(h_, data, isEndOfData, resultBlock);
 				}
 				
 				//
-				const StreamInS3RequestDataHandlerFunctionRef& mDataHandlerFunction;
-				std::string mResponse;
+				DataHandlerBlockPtr mDataHandler;
+				std::string mData;
+			};
+			typedef std::shared_ptr<DataHandler> DataHandlerPtr;
+
+			//
+			class HTTPCompletion : public http::HTTPRequestCompletionBlock {
+			public:
+				//
+				HTTPCompletion(const http::HTTPSessionPtr& httpSession,
+							   const std::string& url,
+							   const DataHandlerPtr& dataHandler,
+							   const http::HTTPRequestStatusPtr& httpStatus,
+							   const StreamInS3RequestCompletionPtr& completion) :
+				mHTTPSession(httpSession),
+				mURL(url),
+				mDataHandler(dataHandler),
+				mHTTPStatus(httpStatus),
+				mCompletion(completion) {
+				}
+				
+				//
+				virtual void Call(const HermitPtr& h_, const http::HTTPRequestResult& result) override {
+					if (result != http::HTTPRequestResult::kSuccess) {
+						if (result == http::HTTPRequestResult::kCanceled) {
+							mCompletion->Call(h_, S3Result::kCanceled, S3ParamVector());
+							return;
+						}
+						if (result == http::HTTPRequestResult::kNetworkConnectionLost) {
+							mCompletion->Call(h_, S3Result::kNetworkConnectionLost, S3ParamVector());
+							return;
+						}
+						if (result == http::HTTPRequestResult::kNoNetworkConnection) {
+							mCompletion->Call(h_, S3Result::kNoNetworkConnection, S3ParamVector());
+							return;
+						}
+						if (result == http::HTTPRequestResult::kTimedOut) {
+							mCompletion->Call(h_, S3Result::kTimedOut, S3ParamVector());
+							return;
+						}
+						if (result == http::HTTPRequestResult::kHostNotFound) {
+							NOTIFY_ERROR(h_, "StreamInHTTPRequestWithBody returned host not found for:", mURL);
+						}
+						else {
+							NOTIFY_ERROR(h_, "StreamInHTTPRequestWithBody failed for URL:", mURL);
+						}
+						mCompletion->Call(h_, S3Result::kError, S3ParamVector());
+						return;
+					}
+					if ((mHTTPStatus->mStatusCode < 200) || (mHTTPStatus->mStatusCode >= 300)) {
+						if (mHTTPStatus->mStatusCode == 301) {
+							ProcessXMLClass pc(h_);
+							pc.Process(mDataHandler->mData);
+							if (pc.mCode == "PermanentRedirect") {
+								NOTIFY_ERROR(h_,
+											 "301 Permanent Redirect for URL:", mURL,
+											 "new endpoint:", pc.mEndpoint);
+								http::HTTPParamVector endpointParams;
+								endpointParams.push_back(std::make_pair("Endpoint", pc.mEndpoint));
+								mCompletion->Call(h_, S3Result::k301PermanentRedirect, endpointParams);
+								return;
+							}
+							NOTIFY_ERROR(h_,
+										 "Unparsed 301 Permanent Redirect for URL:", mURL,
+										 "response:", mDataHandler->mData);
+							mCompletion->Call(h_, S3Result::kError, S3ParamVector());
+							return;
+						}
+						if (mHTTPStatus->mStatusCode == 307) {
+							ProcessXMLClass pc(h_);
+							pc.Process(mDataHandler->mData);
+							if (pc.mCode == "TemporaryRedirect") {
+								http::HTTPParamVector endpointParams;
+								endpointParams.push_back(std::make_pair("Endpoint", pc.mEndpoint));
+								mCompletion->Call(h_, S3Result::k307TemporaryRedirect, endpointParams);
+								return;
+							}
+
+							NOTIFY_ERROR(h_,
+										 "Unparsed 307 Temporary Redirect for URL:", mURL,
+										 "response:", mDataHandler->mData);
+							mCompletion->Call(h_, S3Result::kError, S3ParamVector());
+							return;
+						}
+						if (mHTTPStatus->mStatusCode == 400) {
+							ProcessXMLClass pc(h_);
+							pc.Process(mDataHandler->mData);
+							if (pc.mCode == "RequestTimeout") {
+								//	server-side timeout, seen when paused in the debugger so a bit artificial but still
+								//	worth having a special path for so we get a retry out of it.
+								mCompletion->Call(h_, S3Result::kTimedOut, S3ParamVector());
+								return;
+							}
+							if (pc.mCode == "AuthorizationHeaderMalformed") {
+								NOTIFY_ERROR(h_,
+											 "S3Result::kAuthorizationHeaderMalformed; response:",
+											 mDataHandler->mData);
+								mCompletion->Call(h_, S3Result::kAuthorizationHeaderMalformed, S3ParamVector());
+								return;
+							}
+							
+							NOTIFY_ERROR(h_, "400 Bad Request, response:", mDataHandler->mData);
+							mCompletion->Call(h_, S3Result::k400BadRequest, S3ParamVector());
+							return;
+						}
+						if (mHTTPStatus->mStatusCode == 403) {
+							ProcessXMLClass pc(h_);
+							pc.Process(mDataHandler->mData);
+							if (pc.mCode == "SignatureDoesNotMatch") {
+								NOTIFY_ERROR(h_, "403 - SignatureDoesNotMatch");
+							}
+							else {
+								NOTIFY_ERROR(h_, "403, response:", mDataHandler->mData);
+							}
+							mCompletion->Call(h_, S3Result::k403AccessDenied, S3ParamVector());
+							return;
+						}
+						if (mHTTPStatus->mStatusCode == 404) {
+							ProcessXMLClass pc(h_);
+							pc.Process(mDataHandler->mData);
+							if (pc.mCode == "NoSuchBucket") {
+								mCompletion->Call(h_, S3Result::k404NoSuchBucket, S3ParamVector());
+								return;
+							}
+							mCompletion->Call(h_, S3Result::k404EntityNotFound, S3ParamVector());
+							return;
+						}
+						if (mHTTPStatus->mStatusCode == 500) {
+							ProcessXMLClass pc(h_);
+							pc.Process(mDataHandler->mData);
+							if (pc.mCode == "InternalError") {
+								mCompletion->Call(h_, S3Result::kS3InternalError, S3ParamVector());
+								return;
+							}
+							NOTIFY_ERROR(h_,
+										 "Non-standard 500 error for URL:", mURL,
+										 "response:", mDataHandler->mData);
+							mCompletion->Call(h_, S3Result::k500InternalServerError, S3ParamVector());
+							return;
+						}
+						if (mHTTPStatus->mStatusCode == 503) {
+							NOTIFY_ERROR(h_, "503 Service Unavailable for URL:", mURL);
+							mCompletion->Call(h_, S3Result::k503ServiceUnavailable, S3ParamVector());
+							return;
+						}
+						
+						NOTIFY_ERROR(h_,
+									 "Unexpected responseCode for URL:", mURL,
+									 "status code:", mHTTPStatus->mStatusCode,
+									 "response:", mDataHandler->mData);
+							
+						mCompletion->Call(h_, S3Result::kError, S3ParamVector());
+						return;
+					}
+
+					mCompletion->Call(h_, S3Result::kSuccess, mHTTPStatus->mHeaderParams);
+				}
+				
+				//
+				http::HTTPSessionPtr mHTTPSession;
+				std::string mURL;
+				DataHandlerPtr mDataHandler;
+				http::HTTPRequestStatusPtr mHTTPStatus;
+				StreamInS3RequestCompletionPtr mCompletion;
 			};
 			
-			//
-			typedef std::pair<std::string, std::string> HTTPParam;
-			typedef std::vector<HTTPParam> HTTPParamVector;
-			
-		} // private namespace
+		} // namespace StreamInS3RequestWithBody_Impl
+		using namespace StreamInS3RequestWithBody_Impl;
 		
 		//
 		void StreamInS3RequestWithBody(const HermitPtr& h_,
-									   const std::string& inURL,
-									   const std::string& inMethod,
-									   const EnumerateStringValuesFunctionRef& inParamsFunction,
-									   const DataBuffer& inBodyData,
-									   const StreamInS3RequestDataHandlerFunctionRef& inDataHandlerFunction,
-									   const StreamInS3RequestCallbackRef& inCallback) {
-			EnumerateStringValuesCallbackClass paramCallback;
-			if (!inParamsFunction.Call(paramCallback)) {
-				NOTIFY_ERROR(h_, "StreamInS3RequestWithBody: inParamsFunction returned false for URL:", inURL);
-				inCallback.Call(S3Result::kError, nullptr);
-				return;
-			}
+									   const std::string& url,
+									   const std::string& method,
+									   const S3ParamVector& params,
+									   const SharedBufferPtr& body,
+									   const DataHandlerBlockPtr& dataHandler,
+									   const StreamInS3RequestCompletionPtr& completion) {
+			http::HTTPSessionPtr session(http::CreateHTTPSession());
 			
-			EnumerateStringValuesFunctionClass headerParams(paramCallback.mValues);
-			StreamInDataHandler dataHandler(inDataHandlerFunction);
-			http::StreamInHTTPRequestCallbackClassT<HTTPParamVector> result;
-			http::StreamInHTTPRequestWithBody(h_,
-											  inURL,
-											  inMethod,
-											  headerParams,
-											  inBodyData,
-											  dataHandler,
-											  result);
+			auto dataHandlerProxy = std::make_shared<DataHandler>(dataHandler);
+			auto status = std::make_shared<http::HTTPRequestStatus>();
+			auto httpCompletion = std::make_shared<HTTPCompletion>(session,
+																   url,
+																   dataHandlerProxy,
+																   status,
+																   completion);
 			
-			if (result.mResult != http::HTTPRequestResult::kSuccess) {
-				if (result.mResult == http::HTTPRequestResult::kCanceled) {
-					inCallback.Call(S3Result::kCanceled, nullptr);
-				}
-				else if (result.mResult == http::HTTPRequestResult::kNetworkConnectionLost) {
-					inCallback.Call(S3Result::kNetworkConnectionLost, nullptr);
-				}
-				else if (result.mResult == http::HTTPRequestResult::kNoNetworkConnection) {
-					inCallback.Call(S3Result::kNoNetworkConnection, nullptr);
-				}
-				else if (result.mResult == http::HTTPRequestResult::kTimedOut) {
-					inCallback.Call(S3Result::kTimedOut, nullptr);
-				}
-				else {
-					if (result.mResult == http::HTTPRequestResult::kHostNotFound) {
-						NOTIFY_ERROR(h_,
-									 "StreamInS3RequestWithBody: StreamInHTTPRequestWithBody returned host not found for:",
-									 inURL);
-					}
-					else {
-						NOTIFY_ERROR(h_, "StreamInS3RequestWithBody: StreamInHTTPRequestWithBody failed for URL:", inURL);
-					}
-					
-					inCallback.Call(S3Result::kError, nullptr);
-				}
-			}
-			else if ((result.mResponseStatusCode < 200) || (result.mResponseStatusCode >= 300)) {
-				if (result.mResponseStatusCode == 301) {
-					ProcessXMLClass pc(h_);
-					pc.Process(dataHandler.mResponse);
-					if (pc.mCode == "PermanentRedirect") {
-						NOTIFY_ERROR(h_,
-									 "StreamInS3RequestWithBody: 301 Permanent Redirect for URL:", inURL,
-									 "new endpoint:", pc.mEndpoint);
-						
-						HTTPParamVector endpointParams;
-						endpointParams.push_back(HTTPParam("Endpoint", pc.mEndpoint));
-						EnumerateStringValuesFunctionClass resultParams(endpointParams);
-						inCallback.Call(S3Result::k301PermanentRedirect, resultParams);
-					}
-					else {
-						NOTIFY_ERROR(h_,
-									 "StreamInS3RequestWithBody: Unparsed 301 Permanent Redirect for URL:", inURL,
-									 "response:", dataHandler.mResponse);
-						
-						inCallback.Call(S3Result::kError, nullptr);
-					}
-				}
-				else if (result.mResponseStatusCode == 307) {
-					ProcessXMLClass pc(h_);
-					pc.Process(dataHandler.mResponse);
-					if (pc.mCode == "TemporaryRedirect") {
-						HTTPParamVector endpointParams;
-						endpointParams.push_back(HTTPParam("Endpoint", pc.mEndpoint));
-						EnumerateStringValuesFunctionClass resultParams(endpointParams);
-						inCallback.Call(S3Result::k307TemporaryRedirect, resultParams);
-					}
-					else {
-						NOTIFY_ERROR(h_,
-									 "StreamInS3RequestWithBody: Unparsed 307 Temporary Redirect for URL:", inURL,
-									 "response:", dataHandler.mResponse);
-						
-						inCallback.Call(S3Result::kError, nullptr);
-					}
-				}
-				else if (result.mResponseStatusCode == 400) {
-					ProcessXMLClass pc(h_);
-					pc.Process(dataHandler.mResponse);
-					if (pc.mCode == "RequestTimeout") {
-						//	server-side timeout, seen when paused in the debugger so a bit artificial but still
-						//	worth having a special path for so we get a retry out of it.
-						inCallback.Call(S3Result::kTimedOut, nullptr);
-						return;
-					}
-					if (pc.mCode == "AuthorizationHeaderMalformed") {
-						NOTIFY_ERROR(h_,
-									 "StreamInS3RequestWithBody: S3Result::kAuthorizationHeaderMalformed; response:",
-									 dataHandler.mResponse);
-						
-						inCallback.Call(S3Result::kAuthorizationHeaderMalformed, nullptr);
-						return;
-					}
-					
-					NOTIFY_ERROR(h_, "StreamInS3RequestWithBody: 400 Bad Request; response:", dataHandler.mResponse);
-					
-					inCallback.Call(S3Result::k400BadRequest, nullptr);
-				}
-				else if (result.mResponseStatusCode == 403) {
-					ProcessXMLClass pc(h_);
-					pc.Process(dataHandler.mResponse);
-					if (pc.mCode == "SignatureDoesNotMatch") {
-						NOTIFY_ERROR(h_, "StreamInS3RequestWithBody: 403 - SignatureDoesNotMatch");
-					}
-					else {
-						NOTIFY_ERROR(h_, "StreamInS3RequestWithBody: 403, response:", dataHandler.mResponse);
-					}
-					inCallback.Call(S3Result::k403AccessDenied, nullptr);
-				}
-				else if (result.mResponseStatusCode == 404) {
-					ProcessXMLClass pc(h_);
-					pc.Process(dataHandler.mResponse);
-					if (pc.mCode == "NoSuchBucket") {
-						inCallback.Call(S3Result::k404NoSuchBucket, nullptr);
-						return;
-					}
-					inCallback.Call(S3Result::k404EntityNotFound, nullptr);
-				}
-				else if (result.mResponseStatusCode == 500)
-				{
-					ProcessXMLClass pc(h_);
-					pc.Process(dataHandler.mResponse);
-					if (pc.mCode == "InternalError")
-					{
-						inCallback.Call(S3Result::kS3InternalError, nullptr);
-						return;
-					}
-					NOTIFY_ERROR(h_,
-								 "StreamInS3RequestWithBody: Non-standard 500 error for URL:", inURL,
-								 "response:", dataHandler.mResponse);
-					
-					inCallback.Call(S3Result::k500InternalServerError, nullptr);
-				}
-				else if (result.mResponseStatusCode == 503)
-				{
-					NOTIFY_ERROR(h_, "StreamInS3RequestWithBody: 503 Service Unavailable for URL:", inURL);
-					inCallback.Call(S3Result::k503ServiceUnavailable, nullptr);
-				}
-				else
-				{
-					NOTIFY_ERROR(h_,
-								 "StreamInS3RequestWithBody: unexpected responseCode for URL:", inURL,
-								 "responseCode:", result.mResponseStatusCode,
-								 "response:", dataHandler.mResponse);
-					
-					inCallback.Call(S3Result::kError, nullptr);
-				}
-			}
-			else {
-				EnumerateStringValuesFunctionClass resultParams(result.mParams);
-				inCallback.Call(S3Result::kSuccess, resultParams);
-			}
+			session->StreamInRequestWithBody(h_,
+											 url,
+											 method,
+											 params,
+											 body,
+											 dataHandlerProxy,
+											 status,
+											 httpCompletion);
 		}
 		
 	} // namespace s3

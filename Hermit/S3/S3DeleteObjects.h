@@ -19,30 +19,29 @@
 #ifndef S3DeleteObjects_h
 #define S3DeleteObjects_h
 
-#include "Hermit/Foundation/Callback.h"
+#include "Hermit/Foundation/AsyncFunction.h"
 #include "Hermit/Foundation/Hermit.h"
+#include "S3Result.h"
 
 namespace hermit {
 	namespace s3 {
 		
 		//
-		//
-		DEFINE_CALLBACK_4A(S3DeleteObjectsCallback,
-						   std::string,					// inBucketName
-						   std::string,					// inObjectKey
-						   std::string,					// inObjectVersion
-						   bool);							// inSuccess
+		DEFINE_ASYNC_FUNCTION_4A(S3DeletedObjectReporter,
+								 HermitPtr,
+								 std::string,					// inBucketName
+								 std::string,					// inObjectKey
+								 std::string);					// inObjectVersion
 		
 		//
-		//
 		void S3DeleteObjects(const HermitPtr& h_,
-							 const std::string& inAWSPublicKey,
-							 const std::string& inAWSSigningKey,
-							 const uint64_t& inAWSSigningKeySize,
-							 const std::string& inAWSRegion,
-							 const std::string& inBucketName,
-							 const std::string& inPathPrefix,
-							 const S3DeleteObjectsCallbackRef& inCallback);
+							 const std::string& awsPublicKey,
+							 const std::string& awsSigningKey,
+							 const std::string& awsRegion,
+							 const std::string& bucketName,
+							 const std::string& pathPrefix,
+							 const S3DeletedObjectReporterPtr& deletedObjectReporter,
+							 const S3CompletionBlockPtr& completion);
 		
 	} // namespace s3
 } // namespace hermit

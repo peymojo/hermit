@@ -25,249 +25,215 @@
 
 namespace hermit {
 	namespace s3 {
-		
-		//
-		//
-		namespace
-		{
+		namespace S3ListObjectsWithVersions_Impl {
+
 			//
-			//
-			class ProcessS3ListObjectsXMLClass : xml::ParseXMLClient
-			{
-			private:
+			class Lister {
 				//
-				//
-				enum ParseState
-				{
-					kParseState_New,
-					kParseState_ListVersionsResult,
-					kParseState_IsTruncated,
-					kParseState_Version,
-					kParseState_Key,
-					kParseState_VersionId,
-					kParseState_IgnoredElement
+				class ProcessS3ListObjectsXMLClass : xml::ParseXMLClient {
+				private:
+					//
+					enum class ParseState {
+						kNew,
+						kListVersionsResult,
+						kIsTruncated,
+						kVersion,
+						kKey,
+						kVersionId,
+						kIgnoredElement
+					};
+					
+					//
+					typedef std::stack<ParseState> ParseStateStack;
+					
+				public:
+					//
+					ProcessS3ListObjectsXMLClass(const HermitPtr& h_, const S3ObjectEnumeratorPtr& enumerator) :
+					mH_(h_),
+					mEnumerator(enumerator),
+					mParseState(ParseState::kNew),
+					mDeleteMarker(false),
+					mAtLeastOneItemFound(false) {
+					}
+					
+					//
+					xml::ParseXMLStatus Process(const HermitPtr& h_, const std::string& inXMLData) {
+						return xml::ParseXMLData(h_, inXMLData, *this);
+					}
+					
+					//
+					std::string GetIsTruncated() const {
+						return mIsTruncated;
+					}
+					
+					//
+					std::string GetLastKey() const {
+						return mLastKey;
+					}
+					
+					//
+					virtual xml::ParseXMLStatus OnStart(const std::string& inStartTag,
+														const std::string& inAttributes,
+														bool inIsEmptyElement) override {
+						if (mParseState == ParseState::kNew) {
+							if (inStartTag == "ListVersionsResult") {
+								PushState(ParseState::kListVersionsResult);
+							}
+							else if (inStartTag != "?xml") {
+								PushState(ParseState::kIgnoredElement);
+							}
+						}
+						else if (mParseState == ParseState::kListVersionsResult) {
+							if (inStartTag == "Version") {
+								PushState(ParseState::kVersion);
+								mKey.clear();
+								mVersionId.clear();
+								mDeleteMarker = false;
+							}
+							else if (inStartTag == "DeleteMarker") {
+								PushState(ParseState::kVersion);
+								mKey.clear();
+								mVersionId.clear();
+								mDeleteMarker = true;
+							}
+							else if (inStartTag == "IsTruncated") {
+								PushState(ParseState::kIsTruncated);
+							}
+							else {
+								PushState(ParseState::kIgnoredElement);
+							}
+						}
+						else if (mParseState == ParseState::kVersion) {
+							if (inStartTag == "Key") {
+								PushState(ParseState::kKey);
+							}
+							else if (inStartTag == "VersionId") {
+								PushState(ParseState::kVersionId);
+							}
+							else {
+								PushState(ParseState::kIgnoredElement);
+							}
+						}
+						else {
+							PushState(ParseState::kIgnoredElement);
+						}
+						return xml::kParseXMLStatus_OK;
+					}
+					
+					//
+					virtual xml::ParseXMLStatus OnContent(const std::string& inContent) override {
+						if (mParseState == ParseState::kKey) {
+							mKey = inContent;
+							if (mLastKey.empty() || (mKey > mLastKey)) {
+								mLastKey = mKey;
+							}
+						}
+						else if (mParseState == ParseState::kVersionId) {
+							mVersionId = inContent;
+						}
+						else if (mParseState == ParseState::kIsTruncated) {
+							mIsTruncated = inContent;
+						}
+						return xml::kParseXMLStatus_OK;
+					}
+					
+					//
+					virtual xml::ParseXMLStatus OnEnd(const std::string& inEndTag) override {
+						if (mParseState == ParseState::kVersion) {
+							if (!mKey.empty() && !mVersionId.empty()) {
+								mAtLeastOneItemFound = true;
+								if (!mEnumerator->OnOneItem(mH_, mKey, mVersionId, mDeleteMarker)) {
+									return xml::kParseXMLStatus_Cancel;
+								}
+							}
+						}
+						PopState();
+						return xml::kParseXMLStatus_OK;
+					}
+					
+					//
+					void PushState(ParseState inNewState) {
+						mParseStateStack.push(mParseState);
+						mParseState = inNewState;
+					}
+					
+					//
+					void PopState() {
+						mParseState = mParseStateStack.top();
+						mParseStateStack.pop();
+					}
+					
+					//
+					HermitPtr mH_;
+					S3ObjectEnumeratorPtr mEnumerator;
+					ParseState mParseState;
+					ParseStateStack mParseStateStack;
+					std::string mKey;
+					std::string mVersionId;
+					bool mDeleteMarker;
+					std::string mIsTruncated;
+					std::string mLastKey;
+					bool mAtLeastOneItemFound;
 				};
 				
 				//
-				//
-				typedef std::stack<ParseState> ParseStateStack;
-								
-			public:
-				//
-				ProcessS3ListObjectsXMLClass(const S3ListObjectsWithVersionsCallbackRef& inCallback)
-				:
-				mCallback(inCallback),
-				mParseState(kParseState_New),
-				mDeleteMarker(false),
-				mAtLeastOneItemFound(false)
-				{
-				}
-				
-				//
-				xml::ParseXMLStatus Process(const HermitPtr& h_, const std::string& inXMLData) {
-					return xml::ParseXMLData(h_, inXMLData, *this);
-				}
-				
-				//
-				std::string GetIsTruncated() const
-				{
-					return mIsTruncated;
-				}
-				
-				//
-				std::string GetLastKey() const
-				{
-					return mLastKey;
-				}
-				
-				//
-				virtual xml::ParseXMLStatus OnStart(const std::string& inStartTag,
-													const std::string& inAttributes,
-													bool inIsEmptyElement) override {
-					if (mParseState == kParseState_New)
-					{
-						if (inStartTag == "ListVersionsResult")
-						{
-							PushState(kParseState_ListVersionsResult);
-						}
-						else if (inStartTag != "?xml")
-						{
-							PushState(kParseState_IgnoredElement);
+				class OnListObjectsWithVersionsXMLClass : public S3GetListObjectsWithVersionsXMLCompletion {
+				public:
+					//
+					OnListObjectsWithVersionsXMLClass(const S3ObjectEnumeratorPtr& enumerator,
+													  const S3CompletionBlockPtr& completion) :
+					mEnumerator(enumerator),
+					mCompletion(completion),
+					mSuccess(false),
+					mIsTruncated(false),
+					mAtLeastOneItemFound(false) {
+					}
+					
+					//
+					virtual void Call(const HermitPtr& h_, const bool& inSuccess, const std::string& inXML) override {
+						mSuccess = inSuccess;
+						if (inSuccess) {
+							ProcessS3ListObjectsXMLClass pc(h_, mEnumerator);
+							pc.Process(h_, inXML);
+							
+							mIsTruncated = (pc.GetIsTruncated() == "true");
+							if (mIsTruncated) {
+								mLastKey = pc.GetLastKey();
+							}
+							mAtLeastOneItemFound = pc.mAtLeastOneItemFound;
 						}
 					}
-					else if (mParseState == kParseState_ListVersionsResult)
-					{
-						if (inStartTag == "Version")
-						{
-							PushState(kParseState_Version);
-							mKey.clear();
-							mVersionID.clear();
-							mDeleteMarker = false;
-						}
-						else if (inStartTag == "DeleteMarker")
-						{
-							PushState(kParseState_Version);
-							mKey.clear();
-							mVersionID.clear();
-							mDeleteMarker = true;
-						}
-						else if (inStartTag == "IsTruncated")
-						{
-							PushState(kParseState_IsTruncated);
-						}
-						else
-						{
-							PushState(kParseState_IgnoredElement);
-						}
-					}
-					else if (mParseState == kParseState_Version)
-					{
-						if (inStartTag == "Key")
-						{
-							PushState(kParseState_Key);
-						}
-						else if (inStartTag == "VersionId")
-						{
-							PushState(kParseState_VersionId);
-						}
-						else
-						{
-							PushState(kParseState_IgnoredElement);
-						}
-					}
-					else
-					{
-						PushState(kParseState_IgnoredElement);
-					}
-					return xml::kParseXMLStatus_OK;
-				}
-				
-				//
-				virtual xml::ParseXMLStatus OnContent(const std::string& inContent) override {
-					if (mParseState == kParseState_Key)
-					{
-						mKey = inContent;
-						
-						if (mLastKey.empty() || (mKey > mLastKey))
-						{
-							mLastKey = mKey;
-						}
-					}
-					else if (mParseState == kParseState_VersionId)
-					{
-						mVersionID = inContent;
-					}
-					else if (mParseState == kParseState_IsTruncated)
-					{
-						mIsTruncated = inContent;
-					}
-					return xml::kParseXMLStatus_OK;
-				}
-				
-				//
-				virtual xml::ParseXMLStatus OnEnd(const std::string& inEndTag) override {
-					if (mParseState == kParseState_Version)
-					{
-						if (!mKey.empty() && !mVersionID.empty())
-						{
-							mAtLeastOneItemFound = true;
-							mCallback.Call(
-										   kS3ListObjectsWithVersionsStatus_Success,
-										   mKey,
-										   mVersionID,
-										   mDeleteMarker);
-						}
-					}
-					PopState();
-					return xml::kParseXMLStatus_OK;
-				}
-				
-				//
-				//
-				void PushState(
-							   ParseState inNewState)
-				{
-					mParseStateStack.push(mParseState);
-					mParseState = inNewState;
-				}
-				
-				//
-				//
-				void PopState()
-				{
-					mParseState = mParseStateStack.top();
-					mParseStateStack.pop();
-				}
-				
-				//
-				//
-				const S3ListObjectsWithVersionsCallbackRef& mCallback;
-				ParseState mParseState;
-				ParseStateStack mParseStateStack;
-				std::string mKey;
-				std::string mVersionID;
-				bool mDeleteMarker;
-				std::string mIsTruncated;
-				std::string mLastKey;
-				bool mAtLeastOneItemFound;
+					
+					//
+					S3ObjectEnumeratorPtr mEnumerator;
+					S3CompletionBlockPtr mCompletion;
+					bool mSuccess;
+					bool mIsTruncated;
+					std::string mLastKey;
+					bool mAtLeastOneItemFound;
+				};
+
 			};
 			
-			//
-			//
-			class OnListObjectsWithVersionsXMLClass
-			:
-			public S3GetListObjectsWithVersionsXMLCallback
-			{
-			public:
-				//
-				//
-				OnListObjectsWithVersionsXMLClass(const S3ListObjectsWithVersionsCallbackRef& inCallback)
-				:
-				mCallback(inCallback),
-				mSuccess(false),
-				mIsTruncated(false),
-				mAtLeastOneItemFound(false)
-				{
-				}
-				
-				//
-				//
-				bool Function(const HermitPtr& h_, const bool& inSuccess, const std::string& inXML) {
-					mSuccess = inSuccess;
-					if (inSuccess) {
-						ProcessS3ListObjectsXMLClass pc(mCallback);
-						pc.Process(h_, inXML);
-						
-						mIsTruncated = (pc.GetIsTruncated() == "true");
-						if (mIsTruncated) {
-							mLastKey = pc.GetLastKey();
-						}
-						mAtLeastOneItemFound = pc.mAtLeastOneItemFound;
-					}
-					return true;
-				}
-				
-				//
-				//
-				const S3ListObjectsWithVersionsCallbackRef& mCallback;
-				bool mSuccess;
-				bool mIsTruncated;
-				std::string mLastKey;
-				bool mAtLeastOneItemFound;
-			};
-			
-		} // private namespace
+		} // namespace S3ListObjectsWithVersions_Impl
+		using namespace S3ListObjectsWithVersions_Impl;
 		
 		//
 		void S3ListObjectsWithVersions(const HermitPtr& h_,
-									   const std::string& inAWSPublicKey,
-									   const std::string& inAWSSigningKey,
-									   const uint64_t& inAWSSigningKeySize,
-									   const std::string& inAWSRegion,
-									   const std::string& inBucketName,
-									   const std::string& inRootPath,
-									   const S3ListObjectsWithVersionsCallbackRef& inCallback) {
+									   const std::string& awsPublicKey,
+									   const std::string& awsSigningKey,
+									   const std::string& awsRegion,
+									   const std::string& bucketName,
+									   const std::string& pathPrefix,
+									   const S3ObjectEnumeratorPtr& enumerator,
+									   const S3CompletionBlockPtr& completion) {
+
+			//	Needs to be updated to use background tasks & S3GetListObjectsWithVersionsXML
+			// 	needs to be updated.
+			NOTIFY_ERROR(h_, "S3ListObjectsWithVersions: not implemented");
+			completion->Call(h_, S3Result::kError);
 			
+#if 000
 			bool atLeastOneItemFound = false;
 			std::string marker;
 			while (true) {
@@ -302,6 +268,8 @@ namespace hermit {
 			if (!atLeastOneItemFound) {
 				inCallback.Call(kS3ListObjectsWithVersionsStatus_NoObjectsFound, "", "", false);
 			}
+#endif
+			
 		}
 		
 	} // namespace s3

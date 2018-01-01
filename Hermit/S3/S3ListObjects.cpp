@@ -25,38 +25,30 @@
 
 namespace hermit {
 	namespace s3 {
-		
-		namespace
-		{
+		namespace S3ListObjects_Impl {
+
 			//
-			//
-			class ProcessS3ListObjectsXMLClass : xml::ParseXMLClient
-			{
+			class ProcessS3ListObjectsXMLClass : xml::ParseXMLClient {
 			private:
 				//
-				//
-				enum ParseState
-				{
-					kParseState_New,
-					kParseState_ListBucketResult,
-					kParseState_IsTruncated,
-					kParseState_Contents,
-					kParseState_Key,
-					kParseState_IgnoredElement
+				enum class ParseState {
+					kNew,
+					kListBucketResult,
+					kIsTruncated,
+					kContents,
+					kKey,
+					kIgnoredElement
 				};
 				
-				//
 				//
 				typedef std::stack<ParseState> ParseStateStack;
 				
 			public:
 				//
-				//
-				ProcessS3ListObjectsXMLClass(const HermitPtr& h_, ObjectKeyReceiver& receiver)
-				:
+				ProcessS3ListObjectsXMLClass(const HermitPtr& h_, ObjectKeyReceiverPtr receiver) :
 				mH_(h_),
 				mReceiver(receiver),
-				mParseState(kParseState_New),
+				mParseState(ParseState::kNew),
 				mSawListBucketResult(false) {
 				}
 								
@@ -79,70 +71,53 @@ namespace hermit {
 				virtual xml::ParseXMLStatus OnStart(const std::string& inStartTag,
 													const std::string& inAttributes,
 													bool inIsEmptyElement) override {
-					if (mParseState == kParseState_New)
-					{
-						if (inStartTag == "ListBucketResult")
-						{
+					if (mParseState == ParseState::kNew) {
+						if (inStartTag == "ListBucketResult") {
 							mSawListBucketResult = true;
-							PushState(kParseState_ListBucketResult);
+							PushState(ParseState::kListBucketResult);
 						}
-						else if (inStartTag != "?xml")
-						{
-							PushState(kParseState_IgnoredElement);
-						}
-					}
-					else if (mParseState == kParseState_ListBucketResult)
-					{
-						if (inStartTag == "Contents")
-						{
-							PushState(kParseState_Contents);
-						}
-						else if (inStartTag == "IsTruncated")
-						{
-							PushState(kParseState_IsTruncated);
-						}
-						else
-						{
-							PushState(kParseState_IgnoredElement);
+						else if (inStartTag != "?xml") {
+							PushState(ParseState::kIgnoredElement);
 						}
 					}
-					else if (mParseState == kParseState_Contents)
-					{
-						if (inStartTag == "Key")
-						{
-							PushState(kParseState_Key);
+					else if (mParseState == ParseState::kListBucketResult) {
+						if (inStartTag == "Contents") {
+							PushState(ParseState::kContents);
 						}
-						else
-						{
-							PushState(kParseState_IgnoredElement);
+						else if (inStartTag == "IsTruncated") {
+							PushState(ParseState::kIsTruncated);
+						}
+						else {
+							PushState(ParseState::kIgnoredElement);
 						}
 					}
-					else
-					{
-						PushState(kParseState_IgnoredElement);
+					else if (mParseState == ParseState::kContents) {
+						if (inStartTag == "Key") {
+							PushState(ParseState::kKey);
+						}
+						else {
+							PushState(ParseState::kIgnoredElement);
+						}
+					}
+					else {
+						PushState(ParseState::kIgnoredElement);
 					}
 					return xml::kParseXMLStatus_OK;
 				}
 				
 				//
 				virtual xml::ParseXMLStatus OnContent(const std::string& inContent) override {
-					if (mParseState == kParseState_Key)
-					{
-						//				std::cout << "ParseXMLOnContent: inContent=|" << inContent << "|\n";
-						//				std::cout << inContent << "\n";
-						
+					if (mParseState == ParseState::kKey) {
 						std::string key = inContent;
-						if (mLastKey.empty() || (key > mLastKey))
-						{
+						if (mLastKey.empty() || (key > mLastKey)) {
 							mLastKey = key;
 						}
 						
-						if (!mReceiver(inContent)) {
+						if (!mReceiver->OnOneKey(mH_, inContent)) {
 							return xml::kParseXMLStatus_Cancel;
 						}
 					}
-					else if (mParseState == kParseState_IsTruncated)
-					{
+					else if (mParseState == ParseState::kIsTruncated) {
 						mIsTruncated = inContent;
 					}
 					return xml::kParseXMLStatus_OK;
@@ -155,25 +130,20 @@ namespace hermit {
 				}
 				
 				//
-				//
-				void PushState(ParseState inNewState)
-				{
+				void PushState(ParseState inNewState) {
 					mParseStateStack.push(mParseState);
 					mParseState = inNewState;
 				}
 				
 				//
-				//
-				void PopState()
-				{
+				void PopState() {
 					mParseState = mParseStateStack.top();
 					mParseStateStack.pop();
 				}
 				
 				//
-				//
 				HermitPtr mH_;
-				ObjectKeyReceiver& mReceiver;
+				ObjectKeyReceiverPtr mReceiver;
 				ParseState mParseState;
 				ParseStateStack mParseStateStack;
 				std::string mIsTruncated;
@@ -182,94 +152,131 @@ namespace hermit {
 			};
 			
 			//
-			class OnListObjectsXMLClass : public S3GetListObjectsXMLCallback {
+			class Lister {
+				//
+				class ListCompletion : public S3GetListObjectsXMLCompletion {
+				public:
+					//
+					ListCompletion(const std::string& awsPublicKey,
+								   const std::string& awsSigningKey,
+								   const std::string& awsRegion,
+								   const std::string& bucketName,
+								   const std::string& objectPrefix,
+								   const ObjectKeyReceiverPtr& receiver,
+								   const S3CompletionBlockPtr& completion) :
+					mAWSPublicKey(awsPublicKey),
+					mAWSSigningKey(awsSigningKey),
+					mAWSRegion(awsRegion),
+					mBucketName(bucketName),
+					mObjectPrefix(objectPrefix),
+					mReceiver(receiver),
+					mCompletion(completion) {
+					}
+					
+					//
+					virtual void Call(const HermitPtr& h_, const S3Result& result, const std::string& xml) override {
+						if (result == S3Result::kCanceled) {
+							mCompletion->Call(h_, S3Result::kCanceled);
+							return;
+						}
+						if (result == S3Result::kTimedOut) {
+							mCompletion->Call(h_, S3Result::kTimedOut);
+							return;
+						}
+						if (result != S3Result::kSuccess) {
+							NOTIFY_ERROR(h_,
+										 "S3ListObjects: S3GetListObjectsXML failed for path:",
+										 (std::string(mBucketName) + "/" + std::string(mObjectPrefix)));
+							mCompletion->Call(h_, result);
+							return;
+						}
+
+						ProcessS3ListObjectsXMLClass pc(h_, mReceiver);
+						pc.Process(xml);
+						if (!pc.mSawListBucketResult) {
+							NOTIFY_ERROR(h_, "S3ListObjects: Never saw ListBucketResult tag in response for path:",
+											(std::string(mBucketName) + "/" + std::string(mObjectPrefix)));
+							mCompletion->Call(h_, S3Result::kError);
+							return;
+						}
+
+						if (pc.GetIsTruncated() == "true") {
+							S3ListObjects(h_,
+										  mAWSPublicKey,
+										  mAWSSigningKey,
+										  mAWSRegion,
+										  mBucketName,
+										  mObjectPrefix,
+										  pc.GetLastKey(),
+										  mReceiver,
+										  mCompletion);
+							return;
+						}
+						
+						mCompletion->Call(h_, S3Result::kSuccess);
+					}
+					
+					//
+					std::string mAWSPublicKey;
+					std::string mAWSSigningKey;
+					std::string mAWSRegion;
+					std::string mBucketName;
+					std::string mObjectPrefix;
+					ObjectKeyReceiverPtr mReceiver;
+					S3CompletionBlockPtr mCompletion;
+				};
+
 			public:
 				//
-				OnListObjectsXMLClass(const HermitPtr& h_, ObjectKeyReceiver& receiver) :
-				mH_(h_),
-				mReceiver(receiver),
-				mResult(S3Result::kUnknown),
-				mIsTruncated(false),
-				mSawListBucketResult(false) {
+				static void S3ListObjects(const HermitPtr& h_,
+										  const std::string& awsPublicKey,
+										  const std::string& awsSigningKey,
+										  const std::string& awsRegion,
+										  const std::string& bucketName,
+										  const std::string& objectPrefix,
+										  const std::string& marker,
+										  const ObjectKeyReceiverPtr& receiver,
+										  const S3CompletionBlockPtr& completion) {
+					auto listCompletion = std::make_shared<ListCompletion>(awsPublicKey,
+																		   awsSigningKey,
+																		   awsRegion,
+																		   bucketName,
+																		   objectPrefix,
+																		   receiver,
+																		   completion);
+					S3GetListObjectsXML(h_,
+										awsPublicKey,
+										awsSigningKey,
+										awsRegion,
+										bucketName,
+										objectPrefix,
+										marker,
+										listCompletion);
 				}
-				
-				//
-				virtual bool Function(const HermitPtr& h_, const S3Result& inResult, const std::string& inXML) override {
-					mResult = inResult;
-					if (inResult == S3Result::kSuccess) {
-						ProcessS3ListObjectsXMLClass pc(mH_, mReceiver);
-						pc.Process(inXML);
-						
-						mSawListBucketResult = pc.mSawListBucketResult;
-						mIsTruncated = (pc.GetIsTruncated() == "true");
-						if (mIsTruncated)
-						{
-							mLastKey = pc.GetLastKey();
-						}
-					}
-					return true;
-				}
-				
-				//
-				HermitPtr mH_;
-				ObjectKeyReceiver& mReceiver;
-				S3Result mResult;
-				bool mIsTruncated;
-				std::string mLastKey;
-				bool mSawListBucketResult;
 			};
 			
-		} // private namespace
+			
+		} // namespace S3ListObjects_Impl
+		using namespace S3ListObjects_Impl;
 		
 		//
-		S3Result S3ListObjects(const HermitPtr& h_,
-							   const std::string& awsPublicKey,
-							   const std::string& awsSigningKey,
-							   const std::string& awsRegion,
-							   const std::string& bucketName,
-							   const std::string& objectPrefix,
-							   ObjectKeyReceiver& receiver) {
-		
-			std::string marker;
-			while (true) {
-				OnListObjectsXMLClass callback(h_, receiver);
-				S3GetListObjectsXML(h_,
-									awsPublicKey,
-									awsSigningKey,
-									awsRegion,
-									bucketName,
-									objectPrefix,
-									marker,
-									callback);
-				
-				if (callback.mResult == S3Result::kCanceled) {
-					return S3Result::kCanceled;
-				}
-				if (callback.mResult == S3Result::kTimedOut) {
-					return S3Result::kTimedOut;
-				}
-				if (callback.mResult != S3Result::kSuccess) {
-					NOTIFY_ERROR(h_,
-								 "S3ListObjects: S3GetListObjectsXML failed for path:",
-								 (std::string(bucketName) + "/" + std::string(objectPrefix)));
-					
-					return callback.mResult;
-				}
-				
-				if (!callback.mSawListBucketResult) {
-					NOTIFY_ERROR(h_, "S3ListObjects: Never saw ListBucketResult tag in response for path:",
-								 (std::string(bucketName) + "/" + std::string(objectPrefix)));
-					
-					return S3Result::kError;
-				}
-				
-				if (!callback.mIsTruncated) {
-					break;
-				}
-				marker = callback.mLastKey;
-			}
-			
-			return S3Result::kSuccess;
+		void S3ListObjects(const HermitPtr& h_,
+						   const std::string& awsPublicKey,
+						   const std::string& awsSigningKey,
+						   const std::string& awsRegion,
+						   const std::string& bucketName,
+						   const std::string& objectPrefix,
+						   const ObjectKeyReceiverPtr& receiver,
+						   const S3CompletionBlockPtr& completion) {
+			Lister::S3ListObjects(h_,
+								  awsPublicKey,
+								  awsSigningKey,
+								  awsRegion,
+								  bucketName,
+								  objectPrefix,
+								  "",
+								  receiver,
+								  completion);
 		}
 		
 	} // namespace s3

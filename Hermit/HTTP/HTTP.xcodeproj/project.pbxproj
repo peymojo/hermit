@@ -9,22 +9,25 @@
 /* Begin PBXBuildFile section */
 		EF2CF6B11FF24C9800652E69 /* HTTPLib.h in Headers */ = {isa = PBXBuildFile; fileRef = EF2CF6B01FF24C9800652E69 /* HTTPLib.h */; };
 		EF2CF6B31FF24C9800652E69 /* HTTPLib.m in Sources */ = {isa = PBXBuildFile; fileRef = EF2CF6B21FF24C9800652E69 /* HTTPLib.m */; };
-		EF2CF6B71FF24CA600652E69 /* SendHTTPRequest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD57B31D86B1090056E526 /* SendHTTPRequest.cpp */; };
-		EF2CF6B81FF24CA600652E69 /* SendHTTPRequestWithBody.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD57B61D86B10A0056E526 /* SendHTTPRequestWithBody.cpp */; };
-		EF2CF6B91FF24CA600652E69 /* StreamInHTTPRequest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD57B81D86B10A0056E526 /* StreamInHTTPRequest.cpp */; };
 		EF2CF6BA1FF24CA600652E69 /* StreamInHTTPRequestWithBody_Cocoa.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFAD57BC1D86B10A0056E526 /* StreamInHTTPRequestWithBody_Cocoa.mm */; };
 		EF2CF6BB1FF24CA600652E69 /* URLEncode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD57BE1D86B10A0056E526 /* URLEncode.cpp */; };
+		EF3E52251FF66584008610A8 /* HTTPSession.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF3E52231FF66584008610A8 /* HTTPSession.cpp */; };
+		EF3E52261FF66584008610A8 /* HTTPSession.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF3E52231FF66584008610A8 /* HTTPSession.cpp */; };
+		EF3E52271FF66584008610A8 /* HTTPSession.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF3E52231FF66584008610A8 /* HTTPSession.cpp */; };
+		EF3E52281FF66584008610A8 /* HTTPSession.h in Headers */ = {isa = PBXBuildFile; fileRef = EF3E52241FF66584008610A8 /* HTTPSession.h */; };
+		EF3E52291FF66584008610A8 /* HTTPSession.h in Headers */ = {isa = PBXBuildFile; fileRef = EF3E52241FF66584008610A8 /* HTTPSession.h */; };
+		EF3E522A1FF66584008610A8 /* HTTPSession.h in Headers */ = {isa = PBXBuildFile; fileRef = EF3E52241FF66584008610A8 /* HTTPSession.h */; };
+		EF3E522D1FF66929008610A8 /* CreateHTTPSession.mm in Sources */ = {isa = PBXBuildFile; fileRef = EF3E522B1FF66929008610A8 /* CreateHTTPSession.mm */; };
+		EF3E522E1FF66929008610A8 /* CreateHTTPSession.mm in Sources */ = {isa = PBXBuildFile; fileRef = EF3E522B1FF66929008610A8 /* CreateHTTPSession.mm */; };
+		EF3E522F1FF66929008610A8 /* CreateHTTPSession.mm in Sources */ = {isa = PBXBuildFile; fileRef = EF3E522B1FF66929008610A8 /* CreateHTTPSession.mm */; };
+		EF3E52301FF66929008610A8 /* CreateHTTPSession.h in Headers */ = {isa = PBXBuildFile; fileRef = EF3E522C1FF66929008610A8 /* CreateHTTPSession.h */; };
+		EF3E52311FF66929008610A8 /* CreateHTTPSession.h in Headers */ = {isa = PBXBuildFile; fileRef = EF3E522C1FF66929008610A8 /* CreateHTTPSession.h */; };
+		EF3E52321FF66929008610A8 /* CreateHTTPSession.h in Headers */ = {isa = PBXBuildFile; fileRef = EF3E522C1FF66929008610A8 /* CreateHTTPSession.h */; };
 		EF92C20B1F1105360097D708 /* HTTPKit.h in Headers */ = {isa = PBXBuildFile; fileRef = EF92C2091F1105360097D708 /* HTTPKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		EF92C20F1F1105AD0097D708 /* SendHTTPRequest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD57B31D86B1090056E526 /* SendHTTPRequest.cpp */; };
-		EF92C2101F1105AD0097D708 /* SendHTTPRequestWithBody.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD57B61D86B10A0056E526 /* SendHTTPRequestWithBody.cpp */; };
-		EF92C2111F1105AD0097D708 /* StreamInHTTPRequest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD57B81D86B10A0056E526 /* StreamInHTTPRequest.cpp */; };
 		EF92C2121F1105AD0097D708 /* StreamInHTTPRequestWithBody_Cocoa.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFAD57BC1D86B10A0056E526 /* StreamInHTTPRequestWithBody_Cocoa.mm */; };
 		EF92C2131F1105AD0097D708 /* URLEncode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD57BE1D86B10A0056E526 /* URLEncode.cpp */; };
 		EF92C2161F1105FC0097D708 /* FoundationKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF92C2151F1105FC0097D708 /* FoundationKit.framework */; };
 		EFF398361F65539800B1BD33 /* HTTPKit_iOS.h in Headers */ = {isa = PBXBuildFile; fileRef = EFF398341F65539800B1BD33 /* HTTPKit_iOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		EFF3983A1F6553A200B1BD33 /* SendHTTPRequest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD57B31D86B1090056E526 /* SendHTTPRequest.cpp */; };
-		EFF3983B1F6553A200B1BD33 /* SendHTTPRequestWithBody.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD57B61D86B10A0056E526 /* SendHTTPRequestWithBody.cpp */; };
-		EFF3983C1F6553A200B1BD33 /* StreamInHTTPRequest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD57B81D86B10A0056E526 /* StreamInHTTPRequest.cpp */; };
 		EFF3983D1F6553A200B1BD33 /* URLEncode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD57BE1D86B10A0056E526 /* URLEncode.cpp */; };
 		EFF3983E1F6553A600B1BD33 /* StreamInHTTPRequestWithBody_Cocoa.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFAD57BC1D86B10A0056E526 /* StreamInHTTPRequestWithBody_Cocoa.mm */; };
 		EFF398401F6553C300B1BD33 /* FoundationKit_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EFF3983F1F6553C300B1BD33 /* FoundationKit_iOS.framework */; };
@@ -34,6 +37,11 @@
 		EF2CF6AE1FF24C9800652E69 /* libHTTPLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libHTTPLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF2CF6B01FF24C9800652E69 /* HTTPLib.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HTTPLib.h; sourceTree = "<group>"; };
 		EF2CF6B21FF24C9800652E69 /* HTTPLib.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HTTPLib.m; sourceTree = "<group>"; };
+		EF3E52231FF66584008610A8 /* HTTPSession.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = HTTPSession.cpp; sourceTree = "<group>"; };
+		EF3E52241FF66584008610A8 /* HTTPSession.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HTTPSession.h; sourceTree = "<group>"; };
+		EF3E522B1FF66929008610A8 /* CreateHTTPSession.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CreateHTTPSession.mm; sourceTree = "<group>"; };
+		EF3E522C1FF66929008610A8 /* CreateHTTPSession.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CreateHTTPSession.h; sourceTree = "<group>"; };
+		EF3E52331FF734DA008610A8 /* HTTPParamVector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HTTPParamVector.h; sourceTree = "<group>"; };
 		EF92C2071F1105360097D708 /* HTTPKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = HTTPKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF92C2091F1105360097D708 /* HTTPKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HTTPKit.h; sourceTree = "<group>"; };
 		EF92C20A1F1105360097D708 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -41,16 +49,7 @@
 		EFAD57B01D86B1090056E526 /* HTTP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTTP.h; sourceTree = "<group>"; };
 		EFAD57B11D86B1090056E526 /* HTTP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTTP.m; sourceTree = "<group>"; };
 		EFAD57B21D86B1090056E526 /* HTTPRequestResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTTPRequestResult.h; sourceTree = "<group>"; };
-		EFAD57B31D86B1090056E526 /* SendHTTPRequest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SendHTTPRequest.cpp; sourceTree = "<group>"; };
-		EFAD57B41D86B1090056E526 /* SendHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SendHTTPRequest.h; sourceTree = "<group>"; };
-		EFAD57B61D86B10A0056E526 /* SendHTTPRequestWithBody.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SendHTTPRequestWithBody.cpp; sourceTree = "<group>"; };
-		EFAD57B71D86B10A0056E526 /* SendHTTPRequestWithBody.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SendHTTPRequestWithBody.h; sourceTree = "<group>"; };
-		EFAD57B81D86B10A0056E526 /* StreamInHTTPRequest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StreamInHTTPRequest.cpp; sourceTree = "<group>"; };
-		EFAD57B91D86B10A0056E526 /* StreamInHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StreamInHTTPRequest.h; sourceTree = "<group>"; };
-		EFAD57BA1D86B10A0056E526 /* StreamInHTTPRequestCallback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StreamInHTTPRequestCallback.h; sourceTree = "<group>"; };
-		EFAD57BB1D86B10A0056E526 /* StreamInHTTPRequestDataHandlerFunction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StreamInHTTPRequestDataHandlerFunction.h; sourceTree = "<group>"; };
 		EFAD57BC1D86B10A0056E526 /* StreamInHTTPRequestWithBody_Cocoa.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = StreamInHTTPRequestWithBody_Cocoa.mm; sourceTree = "<group>"; };
-		EFAD57BD1D86B10A0056E526 /* StreamInHTTPRequestWithBody.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StreamInHTTPRequestWithBody.h; sourceTree = "<group>"; };
 		EFAD57BE1D86B10A0056E526 /* URLEncode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = URLEncode.cpp; sourceTree = "<group>"; };
 		EFAD57BF1D86B10A0056E526 /* URLEncode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = URLEncode.h; sourceTree = "<group>"; };
 		EFF398321F65539800B1BD33 /* HTTPKit_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = HTTPKit_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -116,26 +115,22 @@
 		EFAD579B1D86B0DB0056E526 = {
 			isa = PBXGroup;
 			children = (
+				EF3E522C1FF66929008610A8 /* CreateHTTPSession.h */,
+				EF3E522B1FF66929008610A8 /* CreateHTTPSession.mm */,
+				EF92C2141F1105FC0097D708 /* Frameworks */,
 				EFAD57B01D86B1090056E526 /* HTTP.h */,
 				EFAD57B11D86B1090056E526 /* HTTP.m */,
-				EFAD57B21D86B1090056E526 /* HTTPRequestResult.h */,
-				EFAD57B31D86B1090056E526 /* SendHTTPRequest.cpp */,
-				EFAD57B41D86B1090056E526 /* SendHTTPRequest.h */,
-				EFAD57B61D86B10A0056E526 /* SendHTTPRequestWithBody.cpp */,
-				EFAD57B71D86B10A0056E526 /* SendHTTPRequestWithBody.h */,
-				EFAD57B81D86B10A0056E526 /* StreamInHTTPRequest.cpp */,
-				EFAD57B91D86B10A0056E526 /* StreamInHTTPRequest.h */,
-				EFAD57BA1D86B10A0056E526 /* StreamInHTTPRequestCallback.h */,
-				EFAD57BB1D86B10A0056E526 /* StreamInHTTPRequestDataHandlerFunction.h */,
-				EFAD57BC1D86B10A0056E526 /* StreamInHTTPRequestWithBody_Cocoa.mm */,
-				EFAD57BD1D86B10A0056E526 /* StreamInHTTPRequestWithBody.h */,
-				EFAD57BE1D86B10A0056E526 /* URLEncode.cpp */,
-				EFAD57BF1D86B10A0056E526 /* URLEncode.h */,
 				EF92C2081F1105360097D708 /* HTTPKit */,
 				EFF398331F65539800B1BD33 /* HTTPKit_iOS */,
 				EF2CF6AF1FF24C9800652E69 /* HTTPLib */,
+				EF3E52331FF734DA008610A8 /* HTTPParamVector.h */,
+				EFAD57B21D86B1090056E526 /* HTTPRequestResult.h */,
+				EF3E52231FF66584008610A8 /* HTTPSession.cpp */,
+				EF3E52241FF66584008610A8 /* HTTPSession.h */,
 				EFAD57A51D86B0DB0056E526 /* Products */,
-				EF92C2141F1105FC0097D708 /* Frameworks */,
+				EFAD57BC1D86B10A0056E526 /* StreamInHTTPRequestWithBody_Cocoa.mm */,
+				EFAD57BE1D86B10A0056E526 /* URLEncode.cpp */,
+				EFAD57BF1D86B10A0056E526 /* URLEncode.h */,
 			);
 			sourceTree = "<group>";
 		};
@@ -166,6 +161,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				EF2CF6B11FF24C9800652E69 /* HTTPLib.h in Headers */,
+				EF3E522A1FF66584008610A8 /* HTTPSession.h in Headers */,
+				EF3E52321FF66929008610A8 /* CreateHTTPSession.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -174,6 +171,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				EF92C20B1F1105360097D708 /* HTTPKit.h in Headers */,
+				EF3E52281FF66584008610A8 /* HTTPSession.h in Headers */,
+				EF3E52301FF66929008610A8 /* CreateHTTPSession.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -182,6 +181,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				EFF398361F65539800B1BD33 /* HTTPKit_iOS.h in Headers */,
+				EF3E52291FF66584008610A8 /* HTTPSession.h in Headers */,
+				EF3E52311FF66929008610A8 /* CreateHTTPSession.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -306,11 +307,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EF2CF6B71FF24CA600652E69 /* SendHTTPRequest.cpp in Sources */,
-				EF2CF6B81FF24CA600652E69 /* SendHTTPRequestWithBody.cpp in Sources */,
-				EF2CF6B91FF24CA600652E69 /* StreamInHTTPRequest.cpp in Sources */,
 				EF2CF6BA1FF24CA600652E69 /* StreamInHTTPRequestWithBody_Cocoa.mm in Sources */,
+				EF3E52271FF66584008610A8 /* HTTPSession.cpp in Sources */,
 				EF2CF6BB1FF24CA600652E69 /* URLEncode.cpp in Sources */,
+				EF3E522F1FF66929008610A8 /* CreateHTTPSession.mm in Sources */,
 				EF2CF6B31FF24C9800652E69 /* HTTPLib.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -319,10 +319,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EF92C20F1F1105AD0097D708 /* SendHTTPRequest.cpp in Sources */,
-				EF92C2101F1105AD0097D708 /* SendHTTPRequestWithBody.cpp in Sources */,
-				EF92C2111F1105AD0097D708 /* StreamInHTTPRequest.cpp in Sources */,
+				EF3E522D1FF66929008610A8 /* CreateHTTPSession.mm in Sources */,
 				EF92C2121F1105AD0097D708 /* StreamInHTTPRequestWithBody_Cocoa.mm in Sources */,
+				EF3E52251FF66584008610A8 /* HTTPSession.cpp in Sources */,
 				EF92C2131F1105AD0097D708 /* URLEncode.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -332,9 +331,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				EFF3983E1F6553A600B1BD33 /* StreamInHTTPRequestWithBody_Cocoa.mm in Sources */,
-				EFF3983A1F6553A200B1BD33 /* SendHTTPRequest.cpp in Sources */,
-				EFF3983B1F6553A200B1BD33 /* SendHTTPRequestWithBody.cpp in Sources */,
-				EFF3983C1F6553A200B1BD33 /* StreamInHTTPRequest.cpp in Sources */,
+				EF3E522E1FF66929008610A8 /* CreateHTTPSession.mm in Sources */,
+				EF3E52261FF66584008610A8 /* HTTPSession.cpp in Sources */,
 				EFF3983D1F6553A200B1BD33 /* URLEncode.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

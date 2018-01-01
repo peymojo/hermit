@@ -16,24 +16,18 @@
 //	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef SendS3CommandCallback_h
-#define SendS3CommandCallback_h
+#ifndef CreateHTTPSession_h
+#define CreateHTTPSession_h
 
-#include "Hermit/Foundation/Callback.h"
-#include "Hermit/Foundation/DataBuffer.h"
-#include "Hermit/Foundation/EnumerateStringValuesFunction.h"
-#include "S3Result.h"
+#include "HTTPSession.h"
 
 namespace hermit {
-namespace s3 {
-
-//
-DEFINE_CALLBACK_3A(SendS3CommandCallback,
-				   S3Result,								// inResult
-				   EnumerateStringValuesFunctionRef,		// inParamFunction
-				   DataBuffer);								// inData
-	
-} // namespace s3
+	namespace http {
+		
+		//
+		HTTPSessionPtr CreateHTTPSession();
+		
+	} // namespace http
 } // namespace hermit
 
-#endif
+#endif /* CreateHTTPSession_h */

@@ -20,29 +20,22 @@
 #define StreamInS3Object_h
 
 #include <string>
-#include "Hermit/Foundation/Callback.h"
-#include "Hermit/Foundation/DataBuffer.h"
 #include "Hermit/Foundation/Hermit.h"
+#include "Hermit/Foundation/StreamDataFunction.h"
 #include "S3Result.h"
 
 namespace hermit {
 	namespace s3 {
 		
 		//
-		DEFINE_CALLBACK_3A(StreamInS3ObjectDataHandlerFunction,
-						   uint64_t,					// inExpectedDataSize
-						   DataBuffer,					// inDataPart
-						   bool);						// inIsEndOfStream
-		
-		//
-		S3Result StreamInS3Object(const HermitPtr& h_,
-								  const std::string& inAWSPublicKey,
-								  const std::string& inAWSSigningKey,
-								  const uint64_t& inAWSSigningKeySize,
-								  const std::string& inAWSRegion,
-								  const std::string& inS3BucketName,
-								  const std::string& inS3ObjectKey,
-								  const StreamInS3ObjectDataHandlerFunctionRef& inDataHandlerFunction);
+		void StreamInS3Object(const HermitPtr& h_,
+							  const std::string& awsPublicKey,
+							  const std::string& awsSigningKey,
+							  const std::string& awsRegion,
+							  const std::string& s3BucketName,
+							  const std::string& s3ObjectKey,
+							  const DataHandlerBlockPtr& dataHandler,
+							  const S3CompletionBlockPtr& completion);
 		
 	} // namespace s3
 } // namespace hermit

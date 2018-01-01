@@ -20,47 +20,48 @@
 #define SharedBuffer_h
 
 namespace hermit {
-
-//
-class SharedBuffer {
-public:
-	//
-	SharedBuffer();
 	
 	//
-	SharedBuffer(const char* inData, uint64_t inDataSize, bool inTakeOwnership = false);
+	class SharedBuffer {
+	public:
+		//
+		SharedBuffer();
+		
+		//
+		SharedBuffer(const char* inData, uint64_t inDataSize, bool inTakeOwnership = false);
+		
+		//
+		template <typename StringT>
+		SharedBuffer(const StringT& inString) : mData(nullptr), mDataSize(0) {
+			Assign(inString.data(), inString.size());
+		}
+		
+		//
+		~SharedBuffer();
+		
+		//
+		void Assign(const char* inData, uint64_t inDataSize);
+		
+		//
+		const char* Data() const {
+			return mData;
+		}
+		
+		//
+		size_t Size() const {
+			return mDataSize;
+		}
+		
+	private:
+		//
+		const char* mData;
+		size_t mDataSize;
+	};
 	
 	//
-	template <typename StringT>
-	SharedBuffer(const StringT& inString) : mData(nullptr), mDataSize(0) {
-		Assign(inString.data(), inString.size());
-	}
+	typedef std::shared_ptr<SharedBuffer> SharedBufferPtr;
 	
-	//
-	~SharedBuffer();
-	
-	//
-	void Assign(const char* inData, uint64_t inDataSize);
-	
-	//
-	const char* Data() const {
-		return mData;
-	}
-	
-	//
-	size_t Size() const {
-		return mDataSize;
-	}
-	
-private:
-	//
-	const char* mData;
-	size_t mDataSize;
-};
-
-//
-typedef std::shared_ptr<SharedBuffer> SharedBufferPtr;
-
 } // namespace hermit
 
 #endif
+

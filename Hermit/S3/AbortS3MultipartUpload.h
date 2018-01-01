@@ -27,13 +27,14 @@ namespace hermit {
 	namespace s3 {
 		
 		//
-		S3Result AbortS3MultipartUpload(const HermitPtr& h_,
-										const std::string& inAWSPublicKey,
-										const std::string& inAWSSigningKey,
-										const std::string& inAWSRegion,
-										const std::string& inS3BucketName,
-										const std::string& inS3ObjectKey,
-										const std::string& inUploadID);
+		void AbortS3MultipartUpload(const HermitPtr& h_,
+									const std::string& awsPublicKey,
+									const std::string& awsSigningKey,
+									const std::string& awsRegion,
+									const std::string& s3BucketName,
+									const std::string& s3ObjectKey,
+									const std::string& uploadId,
+									const S3CompletionBlockPtr& completion);
 		
 	} // namespace s3
 } // namespace hermit

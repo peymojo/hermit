@@ -26,70 +26,59 @@
 
 namespace hermit {
 	namespace s3 {
-		
-		namespace
-		{
-			//
-			//
-			typedef std::pair<std::string, std::string> StringPair;
-			typedef std::vector<StringPair> StringPairVector;
+		namespace GetS3BucketACLXML_Impl {
 			
 			//
-			//
-			class SendCommandCallback
-			:
-			public SendS3CommandCallback
-			{
+			class CommandCompletion : public SendS3CommandCompletion {
 			public:
 				//
-				//
-				SendCommandCallback()
-				:
-				mStatus(S3Result::kUnknown)
-				{
+				CommandCompletion(const std::string& url,
+								  const GetS3BucketACLXMLCompletionPtr& completion) :
+				mURL(url),
+				mCompletion(completion) {
 				}
 				
 				//
-				//
-				bool Function(
-							  const S3Result& inStatus,
-							  const EnumerateStringValuesFunctionRef& inParamFunction,
-							  const DataBuffer& inData)
-				{
-					mStatus = inStatus;
-					if (inStatus == S3Result::kSuccess)
-					{
-						mResponse = std::string(inData.first, inData.second);
+				virtual void Call(const HermitPtr& h_,
+								  const S3Result& result,
+								  const S3ParamVector& params,
+								  const DataBuffer& data) override {
+					if (result != S3Result::kSuccess) {
+						if (result == S3Result::k404EntityNotFound) {
+							mCompletion->Call(h_, GetS3BucketACLXMLResult::kNoSuchBucket, "");
+							return;
+						}
+
+						NOTIFY_ERROR(h_, "GetS3BucketACLXML: SendS3Command failed for URL:", mURL);
+						mCompletion->Call(h_, GetS3BucketACLXMLResult::kError, "");
+						return;
 					}
-					return true;
+					mCompletion->Call(h_, GetS3BucketACLXMLResult::kSuccess, std::string(data.first, data.second));
 				}
 				
 				//
-				//
-				S3Result mStatus;
-				std::string mResponse;
+				std::string mURL;
+				GetS3BucketACLXMLCompletionPtr mCompletion;
 			};
 			
-		} // private namespace
+		} // namespace GetS3BucketACLXML_Impl
+		using namespace GetS3BucketACLXML_Impl;
 		
 		//
-		//
 		void GetS3BucketACLXML(const HermitPtr& h_,
-							   const std::string& inBucketName,
-							   const std::string& inS3PublicKey,
-							   const std::string& inS3PrivateKey,
-							   const GetS3BucketACLXMLCallbackRef& inCallback)
-		{
+							   const std::string& bucketName,
+							   const std::string& s3PublicKey,
+							   const std::string& s3PrivateKey,
+							   const GetS3BucketACLXMLCompletionPtr& completion) {
 			std::string method("GET");
 			std::string contentType;
 			std::string urlToSign("/");
-			urlToSign += inBucketName;
+			urlToSign += bucketName;
 			urlToSign += "/?acl";
 			
 			SignAWSRequestVersion2CallbackClass authCallback;
-			SignAWSRequestVersion2(
-								   inS3PublicKey,
-								   inS3PrivateKey,
+			SignAWSRequestVersion2(s3PublicKey,
+								   s3PrivateKey,
 								   method,
 								   "",
 								   contentType,
@@ -97,40 +86,22 @@ namespace hermit {
 								   urlToSign,
 								   authCallback);
 			
-			if (!authCallback.mSuccess)
-			{
+			if (!authCallback.mSuccess) {
 				NOTIFY_ERROR(h_, "GetS3BucketACLXML: SignAWSRequestVersion2 failed for URL:", urlToSign);
-				inCallback.Call(kGetS3BucketACLXMLResult_Error, "");
+				completion->Call(h_, GetS3BucketACLXMLResult::kError, "");
 				return;
 			}
 			
-			StringPairVector params;
-			params.push_back(StringPair("Date", authCallback.mDateString));
-			params.push_back(StringPair("Authorization", authCallback.mAuthorizationString));
+			S3ParamVector params;
+			params.push_back(std::make_pair("Date", authCallback.mDateString));
+			params.push_back(std::make_pair("Authorization", authCallback.mAuthorizationString));
 			
 			std::string url("https://");
-			url += inBucketName;
+			url += bucketName;
 			url += ".s3.amazonaws.com/?acl";
 			
-			EnumerateStringValuesFunctionClass headerParams(params);
-			SendCommandCallback result;
-			SendS3Command(h_, url, method, headerParams, result);
-			if (result.mStatus != S3Result::kSuccess)
-			{
-				if (result.mStatus == S3Result::k404EntityNotFound)
-				{
-					inCallback.Call(kGetS3BucketACLXMLResult_NoSuchBucket, "");
-				}
-				else
-				{
-					NOTIFY_ERROR(h_, "GetS3BucketACLXML: SendS3Command failed for URL:", url);
-					inCallback.Call(kGetS3BucketACLXMLResult_Error, "");
-				}
-			}
-			else
-			{
-				inCallback.Call(kGetS3BucketACLXMLResult_Success, result.mResponse);
-			}
+			auto commandCompletion = std::make_shared<CommandCompletion>(url, completion);
+			SendS3Command(h_, url, method, params, commandCompletion);
 		}
 		
 	} // namespace s3

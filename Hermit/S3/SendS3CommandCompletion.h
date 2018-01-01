@@ -16,28 +16,26 @@
 //	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#include <stddef.h>
-#include "SendHTTPRequestWithBody.h"
-#include "SendHTTPRequest.h"
+#ifndef SendS3CommandCompletion_h
+#define SendS3CommandCompletion_h
+
+#include "Hermit/Foundation/AsyncFunction.h"
+#include "Hermit/Foundation/DataBuffer.h"
+#include "S3ParamVector.h"
+#include "S3Result.h"
 
 namespace hermit {
-	namespace http {
+	namespace s3 {
 		
 		//
-		void SendHTTPRequest(const HermitPtr& h_,
-							 const std::string& inURL,
-							 const std::string& inMethod,
-							 const EnumerateStringValuesFunctionRef& inHeaderParamsFunction,
-							 const SendHTTPRequestResponseBlockPtr& inResponseBlock,
-							 const SendHTTPRequestCompletionBlockPtr& inCompletion) {
-			SendHTTPRequestWithBody(h_,
-									inURL,
-									inMethod,
-									inHeaderParamsFunction,
-									DataBuffer(),
-									inResponseBlock,
-									inCompletion);
-		}
+		DEFINE_ASYNC_FUNCTION_4A(SendS3CommandCompletion,
+								 HermitPtr,
+								 S3Result,							// result
+								 S3ParamVector,						// params
+								 DataBuffer);						// responseData
 		
-	} // namespace http
+	} // namespace s3
 } // namespace hermit
+
+#endif
+

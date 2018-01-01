@@ -31,78 +31,27 @@
 
 namespace hermit {
 	namespace s3 {
-		
-		namespace
-		{
+		namespace GetS3BucketLocation_Impl {
+
 			//
-			//
-			typedef std::pair<std::string, std::string> StringPair;
-			typedef std::vector<StringPair> StringPairVector;
-			
-			//
-			//
-			class SendCommandCallback
-			:
-			public SendS3CommandCallback
-			{
-			public:
-				//
-				//
-				SendCommandCallback()
-				:
-				mStatus(S3Result::kUnknown)
-				{
-				}
-				
-				//
-				//
-				bool Function(
-							  const S3Result& inStatus,
-							  const EnumerateStringValuesFunctionRef& inParamFunction,
-							  const DataBuffer& inData)
-				{
-					mStatus = inStatus;
-					if ((inData.first != nullptr) && (inData.second > 0))
-					{
-						mResponse.assign(inData.first, inData.second);
-					}
-					return true;
-				}
-				
-				//
-				//
-				S3Result mStatus;
-				std::string mResponse;
-			};
-			
-			//
-			//
-			class ProcessErrorXMLClass : xml::ParseXMLClient
-			{
+			class ProcessErrorXMLClass : xml::ParseXMLClient {
 			private:
 				//
-				//
-				enum ParseState
-				{
-					kParseState_New,
-					kParseState_Error,
-					kParseState_Code,
-					kParseState_Region,
-					kParseState_IgnoredElement
+				enum class ParseState {
+					kNew,
+					kError,
+					kCode,
+					kRegion,
+					kIgnoredElement
 				};
 				
-				//
 				//
 				typedef std::stack<ParseState> ParseStateStack;
 				
 			public:
 				//
-				//
-				ProcessErrorXMLClass(const HermitPtr& h_)
-				:
-				mH_(h_),
-				mParseState(kParseState_New)
-				{
+				ProcessErrorXMLClass(const HermitPtr& h_) : mH_(h_),
+				mParseState(ParseState::kNew) {
 				}
 				
 				//
@@ -114,50 +63,39 @@ namespace hermit {
 				virtual xml::ParseXMLStatus OnStart(const std::string& inStartTag,
 													const std::string& inAttributes,
 													bool inIsEmptyElement) override {
-					if (mParseState == kParseState_New)
-					{
-						if (inStartTag == "Error")
-						{
-							PushState(kParseState_Error);
+					if (mParseState == ParseState::kNew) {
+						if (inStartTag == "Error") {
+							PushState(ParseState::kError);
 						}
 					}
-					else if (mParseState == kParseState_Error)
-					{
-						if (inStartTag == "Region")
-						{
-							if (inIsEmptyElement)
-							{
+					else if (mParseState == ParseState::kError) {
+						if (inStartTag == "Region") {
+							if (inIsEmptyElement) {
 								mLocation = "us-east-1";
 							}
-							else
-							{
-								PushState(kParseState_Region);
+							else {
+								PushState(ParseState::kRegion);
 							}
 						}
-						else if (inStartTag == "Code")
-						{
-							PushState(kParseState_Code);
+						else if (inStartTag == "Code") {
+							PushState(ParseState::kCode);
 						}
-						else if (inStartTag != "?xml")
-						{
-							PushState(kParseState_IgnoredElement);
+						else if (inStartTag != "?xml") {
+							PushState(ParseState::kIgnoredElement);
 						}
 					}
-					else
-					{
-						PushState(kParseState_IgnoredElement);
+					else {
+						PushState(ParseState::kIgnoredElement);
 					}
 					return xml::kParseXMLStatus_OK;
 				}
 				
 				//
 				virtual xml::ParseXMLStatus OnContent(const std::string& inContent) override {
-					if (mParseState == kParseState_Region)
-					{
+					if (mParseState == ParseState::kRegion) {
 						mLocation = inContent;
 					}
-					else if (mParseState == kParseState_Code)
-					{
+					else if (mParseState == ParseState::kCode) {
 						mCode = inContent;
 					}
 					return xml::kParseXMLStatus_OK;
@@ -170,22 +108,17 @@ namespace hermit {
 				}
 				
 				//
-				//
-				void PushState(ParseState inNewState)
-				{
+				void PushState(ParseState inNewState) {
 					mParseStateStack.push(mParseState);
 					mParseState = inNewState;
 				}
 				
 				//
-				//
-				void PopState()
-				{
+				void PopState() {
 					mParseState = mParseStateStack.top();
 					mParseStateStack.pop();
 				}
 				
-				//
 				//
 				HermitPtr mH_;
 				ParseState mParseState;
@@ -195,34 +128,26 @@ namespace hermit {
 			};
 			
 			//
-			//
-			class ProcessXMLClass : xml::ParseXMLClient
-			{
+			class ProcessXMLClass : xml::ParseXMLClient {
 			private:
 				//
-				//
-				enum ParseState
-				{
-					kParseState_New,
-					kParseState_LocationConstraint,
-					kParseState_IgnoredElement
+				enum class ParseState {
+					kNew,
+					kLocationConstraint,
+					kIgnoredElement
 				};
 				
-				//
 				//
 				typedef std::stack<ParseState> ParseStateStack;
 				
 			public:
 				//
-				//
-				ProcessXMLClass(const HermitPtr& h_)
-				:
+				ProcessXMLClass(const HermitPtr& h_) :
 				mH_(h_),
-				mParseState(kParseState_New),
-				mFoundLocation(false)
-				{
+				mParseState(ParseState::kNew),
+				mFoundLocation(false) {
 				}
-								
+				
 				//
 				xml::ParseXMLStatus Process(const std::string& inXMLData) {
 					return xml::ParseXMLData(mH_, inXMLData, *this);
@@ -232,29 +157,29 @@ namespace hermit {
 				virtual xml::ParseXMLStatus OnStart(const std::string& inStartTag,
 													const std::string& inAttributes,
 													bool inIsEmptyElement) override {
-					if (mParseState == kParseState_New) {
+					if (mParseState == ParseState::kNew) {
 						if (inStartTag == "LocationConstraint") {
 							if (inIsEmptyElement) {
 								mLocation = "us-east-1";
 								mFoundLocation = true;
 							}
 							else {
-								PushState(kParseState_LocationConstraint);
+								PushState(ParseState::kLocationConstraint);
 							}
 						}
 						else if (inStartTag != "?xml") {
-							PushState(kParseState_IgnoredElement);
+							PushState(ParseState::kIgnoredElement);
 						}
 					}
 					else {
-						PushState(kParseState_IgnoredElement);
+						PushState(ParseState::kIgnoredElement);
 					}
 					return xml::kParseXMLStatus_OK;
 				}
 				
 				//
 				virtual xml::ParseXMLStatus OnContent(const std::string& inContent) override {
-					if (mParseState == kParseState_LocationConstraint) {
+					if (mParseState == ParseState::kLocationConstraint) {
 						mLocation = inContent;
 						mFoundLocation = true;
 					}
@@ -286,15 +211,127 @@ namespace hermit {
 				bool mFoundLocation;
 				std::string mLocation;
 			};
+
+			//
+			class CommandCompletion : public SendS3CommandCompletion {
+			public:
+				//
+				CommandCompletion(const std::string& bucketName,
+								  const std::string& url,
+								  const GetS3BucketLocationCompletionPtr& completion) :
+				mBucketName(bucketName),
+				mURL(url),
+				mCompletion(completion) {
+				}
+				
+				//
+				virtual void Call(const HermitPtr& h_,
+								  const S3Result& result,
+								  const S3ParamVector& params,
+								  const DataBuffer& data) override {
+					if (result == S3Result::kCanceled) {
+						mCompletion->Call(h_, S3Result::kCanceled, "");
+						return;
+					}
+					std::string response;
+					if ((data.first != nullptr) && (data.second > 0)) {
+						response.assign(data.first, data.second);
+					}
+
+					if (result != S3Result::kSuccess) {
+						//	UPDATE: This code path should no longer be necessary as we've switched to using the
+						//	path-style URL for this request which doesn't forward to the bucket's actual region
+						//	based on advice from the AWS team. Leaving it here just in case though...
+						//
+						//	OK, so this is a bit surreal... but under AWS4 authentication, you need the region
+						//	to sign requests... which we don't know because this is the get location (aka region) call!?
+						//	BUT the error response will tell us which reason to use. So... Um... we'll run with it?
+						if ((result == S3Result::kAuthorizationHeaderMalformed) &&
+							!response.empty()) {
+							ProcessErrorXMLClass pc(h_);
+							pc.Process(response);
+							if (!pc.mLocation.empty()) {
+								mCompletion->Call(h_, S3Result::kSuccess, pc.mLocation);
+							}
+							else {
+								NOTIFY_ERROR(h_,
+											 "GetS3BucketLocation: S3Result::kAuthorizationHeaderMalformed but location couldn't be determined, response:",
+											 response);
+								
+								mCompletion->Call(h_, S3Result::kError, "");
+							}
+							return;
+						}
+						
+						if (result == S3Result::k404NoSuchBucket) {
+							mCompletion->Call(h_, S3Result::k404NoSuchBucket, "");
+						}
+						else if (result == S3Result::kTimedOut) {
+							mCompletion->Call(h_, S3Result::kTimedOut, "");
+						}
+						else if (result == S3Result::kNetworkConnectionLost) {
+							mCompletion->Call(h_, S3Result::kNetworkConnectionLost, "");
+						}
+						else if (result == S3Result::kNoNetworkConnection) {
+							mCompletion->Call(h_, S3Result::kNoNetworkConnection, "");
+						}
+						else if ((result == S3Result::kS3InternalError) ||
+								 (result == S3Result::k500InternalServerError) ||
+								 (result == S3Result::k503ServiceUnavailable)) {
+							mCompletion->Call(h_, result, "");
+						}
+						else {
+							ProcessErrorXMLClass pc(h_);
+							pc.Process(response);
+							if (pc.mCode == "InvalidAccessKeyId") {
+								NOTIFY_ERROR(h_, "GetS3BucketLocation: InvalidAccessKeyId");
+								mCompletion->Call(h_, S3Result::kInvalidAccessKey, "");
+							}
+							else if (pc.mCode == "SignatureDoesNotMatch") {
+								NOTIFY_ERROR(h_, "GetS3BucketLocation: SignatureDoesNotMatch");
+								//				NOTIFY_ERROR("-- response:", response);
+								mCompletion->Call(h_, S3Result::kSignatureDoesNotMatch, "");
+							}
+							else if (pc.mCode == "AccessDenied") {
+								NOTIFY_ERROR(h_, "GetS3BucketLocation: AccessDenied");
+								mCompletion->Call(h_, S3Result::k403AccessDenied, "");
+							}
+							else {
+								NOTIFY_ERROR(h_, "GetS3BucketLocation: SendS3Command failed for URL:", mURL);
+								NOTIFY_ERROR(h_, "-- response:", response);
+								mCompletion->Call(h_, S3Result::kError, "");
+							}
+						}
+					}
+					else {
+						ProcessXMLClass pc(h_);
+						pc.Process(response);
+						if (!pc.mFoundLocation) {
+							NOTIFY_ERROR(h_, "GetS3BucketLocation: couldn't find location in XML response for bucket:", mBucketName);
+							NOTIFY_ERROR(h_, "-- response:", response);
+							mCompletion->Call(h_, S3Result::kError, "");
+						}
+						else {
+							mCompletion->Call(h_, S3Result::kSuccess, pc.mLocation);
+						}
+					}
+				}
+				
+				//
+				std::string mBucketName;
+				std::string mURL;
+				GetS3BucketLocationCompletionPtr mCompletion;
+			};
 			
-		} // private namespace
+		} // namespace GetS3BucketLocation_Impl
+		using namespace GetS3BucketLocation_Impl;
 		
 		//
 		void GetS3BucketLocation(const HermitPtr& h_,
-								 const std::string& inBucketName,
-								 const std::string& inAWSPublicKey,
-								 const std::string& inAWSPrivateKey,
-								 const GetS3BucketLocationCallbackRef& inCallback) {
+								 const std::string& bucketName,
+								 const std::string& awsPublicKey,
+								 const std::string& awsPrivateKey,
+								 const GetS3BucketLocationCompletionPtr& completion) {
 			//	Default to us-east-1 for the region since we don't know the region. See the
 			//	comment in the error handling case below...
 			std::string region("us-east-1");
@@ -302,7 +339,7 @@ namespace hermit {
 			
 			std::string host("s3.amazonaws.com");
 			std::string s3Path("/");
-			s3Path += inBucketName;
+			s3Path += bucketName;
 			
 			time_t now;
 			time(&now);
@@ -314,7 +351,7 @@ namespace hermit {
 			std::string date(dateTime.substr(0, 8));
 			
 			GenerateAWS4SigningKeyCallbackClass keyCallback;
-			GenerateAWS4SigningKey(inAWSPrivateKey, region, keyCallback);
+			GenerateAWS4SigningKey(awsPrivateKey, region, keyCallback);
 			std::string signingKey(keyCallback.mKey);
 			
 			std::string contentSHA256("e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855");
@@ -361,7 +398,7 @@ namespace hermit {
 			string::BinaryStringToHex(stringToSignSHA256, stringToSignSHA256Hex);
 			
 			std::string authorization("AWS4-HMAC-SHA256 Credential=");
-			authorization += inAWSPublicKey;
+			authorization += awsPublicKey;
 			authorization += "/";
 			authorization += date;
 			authorization += "/";
@@ -373,102 +410,18 @@ namespace hermit {
 			authorization += "Signature=";
 			authorization += stringToSignSHA256Hex;
 			
-			StringPairVector params;
-			params.push_back(StringPair("x-amz-date", dateTime));
-			params.push_back(StringPair("x-amz-content-sha256", contentSHA256));
-			params.push_back(StringPair("Authorization", authorization));
+			S3ParamVector params;
+			params.push_back(std::make_pair("x-amz-date", dateTime));
+			params.push_back(std::make_pair("x-amz-content-sha256", contentSHA256));
+			params.push_back(std::make_pair("Authorization", authorization));
 			
 			std::string url("https://");
 			url += host;
 			url += s3Path;
 			url += "?location";
 			
-			EnumerateStringValuesFunctionClass headerParams(params);
-			SendCommandCallback result;
-			SendS3Command(h_, url, method, headerParams, result);
-			if (result.mStatus == S3Result::kCanceled) {
-				inCallback.Call(S3Result::kCanceled, "");
-				return;
-			}
-			if (result.mStatus != S3Result::kSuccess) {
-				//	UPDATE: This code path should no longer be necessary as we've switched to using the
-				//	path-style URL for this request which doesn't forward to the bucket's actual region
-				//	based on advice from the AWS team. Leaving it here just in case though...
-				//
-				//	OK, so this is a bit surreal... but under AWS4 authentication, you need the region
-				//	to sign requests... which we don't know because this is the get location (aka region) call!?
-				//	BUT the error response will tell us which reason to use. So... Um... we'll run with it?
-				if ((result.mStatus == S3Result::kAuthorizationHeaderMalformed) &&
-					!result.mResponse.empty()) {
-					ProcessErrorXMLClass pc(h_);
-					pc.Process(result.mResponse);
-					if (!pc.mLocation.empty()) {
-						inCallback.Call(S3Result::kSuccess, pc.mLocation);
-					}
-					else {
-						NOTIFY_ERROR(h_,
-									 "GetS3BucketLocation: S3Result::kAuthorizationHeaderMalformed but location couldn't be determined, response:",
-									 result.mResponse);
-						
-						inCallback.Call(S3Result::kError, "");
-					}
-					return;
-				}
-				
-				if (result.mStatus == S3Result::k404NoSuchBucket) {
-					inCallback.Call(S3Result::k404NoSuchBucket, "");
-				}
-				else if (result.mStatus == S3Result::kTimedOut) {
-					inCallback.Call(S3Result::kTimedOut, "");
-				}
-				else if (result.mStatus == S3Result::kNetworkConnectionLost) {
-					inCallback.Call(S3Result::kNetworkConnectionLost, "");
-				}
-				else if (result.mStatus == S3Result::kNoNetworkConnection) {
-					inCallback.Call(S3Result::kNoNetworkConnection, "");
-				}
-				else if ((result.mStatus == S3Result::kS3InternalError) ||
-						 (result.mStatus == S3Result::k500InternalServerError) ||
-						 (result.mStatus == S3Result::k503ServiceUnavailable)) {
-					inCallback.Call(result.mStatus, "");
-				}
-				else {
-					ProcessErrorXMLClass pc(h_);
-					pc.Process(result.mResponse);
-					if (pc.mCode == "InvalidAccessKeyId") {
-						NOTIFY_ERROR(h_, "GetS3BucketLocation: InvalidAccessKeyId");
-						inCallback.Call(S3Result::kInvalidAccessKey, "");
-					}
-					else if (pc.mCode == "SignatureDoesNotMatch") {
-						NOTIFY_ERROR(h_, "GetS3BucketLocation: SignatureDoesNotMatch");
-						//				NOTIFY_ERROR("-- response:", result.mResponse);
-						inCallback.Call(S3Result::kSignatureDoesNotMatch, "");
-					}
-					else if (pc.mCode == "AccessDenied") {
-						NOTIFY_ERROR(h_, "GetS3BucketLocation: AccessDenied");
-						inCallback.Call(S3Result::k403AccessDenied, "");
-					}
-					else {
-						NOTIFY_ERROR(h_, "GetS3BucketLocation: SendS3Command failed for URL:", url);
-						NOTIFY_ERROR(h_, "-- response:", result.mResponse);
-						inCallback.Call(S3Result::kError, "");
-					}
-				}
-			}
-			else {
-				//		Log(kLogLevel_Error, result.mResponse);
-				
-				ProcessXMLClass pc(h_);
-				pc.Process(result.mResponse);
-				if (!pc.mFoundLocation) {
-					NOTIFY_ERROR(h_, "GetS3BucketLocation: couldn't find location in XML response for bucket:", inBucketName);
-					NOTIFY_ERROR(h_, "-- response:", result.mResponse);
-					inCallback.Call(S3Result::kError, "");
-				}
-				else {
-					inCallback.Call(S3Result::kSuccess, pc.mLocation);
-				}
-			}
+			auto commandCompletion = std::make_shared<CommandCompletion>(bucketName, url, completion);
+			SendS3Command(h_, url, method, params, commandCompletion);
 		}
 		
 	} // namespace s3

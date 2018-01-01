@@ -19,7 +19,7 @@
 #ifndef InitiateS3MultipartUpload_h
 #define InitiateS3MultipartUpload_h
 
-#include "Hermit/Foundation/Callback.h"
+#include "Hermit/Foundation/AsyncFunction.h"
 #include "Hermit/Foundation/Hermit.h"
 #include "S3Result.h"
 
@@ -27,54 +27,20 @@ namespace hermit {
 	namespace s3 {
 		
 		//
-		//
-		DEFINE_CALLBACK_2A(
-						   InitiateS3MultipartUploadCallback,
-						   S3Result,								// inResult
-						   std::string);							// inUploadID
+		DEFINE_ASYNC_FUNCTION_3A(InitiateS3MultipartUploadCompletion,
+								 HermitPtr,
+								 S3Result,								// result
+								 std::string);							// uploadId
 		
-		//
-		//
-		class InitiateS3MultipartUploadCallbackClass
-		:
-		public InitiateS3MultipartUploadCallback {
-		public:
-			//
-			//
-			InitiateS3MultipartUploadCallbackClass()
-			:
-			mResult(S3Result::kUnknown) {
-			}
-			
-			//
-			//
-			bool Function(
-						  const S3Result& inResult,
-						  const std::string& inUploadID) {
-				mResult = inResult;
-				if (inResult == S3Result::kSuccess) {
-					mUploadID = inUploadID;
-				}
-				return true;
-			}
-			
-			//
-			//
-			S3Result mResult;
-			std::string mUploadID;
-		};
-		
-		//
 		//
 		void InitiateS3MultipartUpload(const HermitPtr& h_,
-									   const std::string& inAWSPublicKey,
-									   const std::string& inAWSSigningKey,
-									   const uint64_t& inAWSSigningKeySize,
-									   const std::string& inAWSRegion,
-									   const std::string& inS3BucketName,
-									   const std::string& inS3ObjectKey,
-									   const std::string& inDataSHA256Hex,
-									   const InitiateS3MultipartUploadCallbackRef& inCallback);
+									   const std::string& awsPublicKey,
+									   const std::string& awsSigningKey,
+									   const std::string& awsRegion,
+									   const std::string& s3BucketName,
+									   const std::string& s3ObjectKey,
+									   const std::string& dataSHA256Hex,
+									   const InitiateS3MultipartUploadCompletionPtr& completion);
 		
 	} // namespace s3
 } // namespace hermit

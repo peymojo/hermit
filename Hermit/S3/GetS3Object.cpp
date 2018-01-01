@@ -22,65 +22,75 @@
 
 namespace hermit {
 	namespace s3 {
-		
-		namespace
-		{
+		namespace GetS3Object_Impl {
+
 			//
-			//
-			class StreamInDataHandler
-			:
-			public StreamInS3ObjectDataHandlerFunction
-			{
+			class DataHandler : public DataHandlerBlock {
 			public:
 				//
-				//
-				StreamInDataHandler()
-				{
-				}
-				
-				//
-				//
-				bool Function(const uint64_t& inExpectedDataSize,
-							  const DataBuffer& inDataPart,
-							  const bool& inIsEndOfStream)
-				{
-					if (inDataPart.second > 0)
-					{
-						mData += std::string(inDataPart.first, inDataPart.second);
+				virtual void HandleData(const HermitPtr& h_,
+										const DataBuffer& data,
+										bool isEndOfData,
+										const StreamResultBlockPtr& resultBlock) override {
+					if (data.second > 0) {
+						mData.append(data.first, data.second);
 					}
-					return true;
+					resultBlock->Call(h_, StreamDataResult::kSuccess);
 				}
 				
-				//
 				//
 				std::string mData;
 			};
+			typedef std::shared_ptr<DataHandler> DataHandlerPtr;
+
+			//
+			class StreamCompletion : public S3CompletionBlock {
+			public:
+				//
+				StreamCompletion(const DataHandlerPtr& dataHandler,
+								 const GetS3ObjectResponseBlockPtr& response,
+								 const S3CompletionBlockPtr& completion) :
+				mDataHandler(dataHandler),
+				mResponse(response),
+				mCompletion(completion) {
+				}
+				
+				//
+				virtual void Call(const HermitPtr& h_, const S3Result& result) override {
+					if (result == S3Result::kSuccess) {
+						mResponse->Call(DataBuffer(mDataHandler->mData.data(), mDataHandler->mData.size()));
+					}
+					mCompletion->Call(h_, result);
+				}
+				
+				//
+				DataHandlerPtr mDataHandler;
+				GetS3ObjectResponseBlockPtr mResponse;
+				S3CompletionBlockPtr mCompletion;
+			};
 			
-		} // private namespace
+		} // namespace GetS3Object_Impl
+		using namespace GetS3Object_Impl;
 		
 		//
 		void GetS3Object(const HermitPtr& h_,
-						 const std::string& inAWSPublicKey,
-						 const std::string& inAWSSigningKey,
-						 const uint64_t& inAWSSigningKeySize,
-						 const std::string& inAWSRegion,
-						 const std::string& inS3BucketName,
-						 const std::string& inS3ObjectKey,
-						 const GetS3ObjectResponseBlockPtr& inResponseBlock,
-						 const S3CompletionBlockPtr& inCompletion) {
-			StreamInDataHandler dataHandler;
-			auto result = StreamInS3Object(h_,
-										   inAWSPublicKey,
-										   inAWSSigningKey,
-										   inAWSSigningKeySize,
-										   inAWSRegion,
-										   inS3BucketName,
-										   inS3ObjectKey,
-										   dataHandler);
-			if (result == S3Result::kSuccess) {
-				inResponseBlock->Call(DataBuffer(dataHandler.mData.data(), dataHandler.mData.size()));
-			}
-			inCompletion->Call(h_, result);
+						 const std::string& awsPublicKey,
+						 const std::string& awsSigningKey,
+						 const std::string& awsRegion,
+						 const std::string& s3BucketName,
+						 const std::string& s3ObjectKey,
+						 const GetS3ObjectResponseBlockPtr& response,
+						 const S3CompletionBlockPtr& completion) {
+			auto dataHandler = std::make_shared<DataHandler>();
+			auto streamCompletion = std::make_shared<StreamCompletion>(dataHandler, response, completion);
+			StreamInS3Object(h_,
+							 awsPublicKey,
+							 awsSigningKey,
+							 awsRegion,
+							 s3BucketName,
+							 s3ObjectKey,
+							 dataHandler,
+							 streamCompletion);
 		}
 		
 	} // namespace s3

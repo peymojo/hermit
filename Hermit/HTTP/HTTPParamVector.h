@@ -16,28 +16,20 @@
 //	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef StreamInHTTPRequestWithBody_h
-#define StreamInHTTPRequestWithBody_h
+#ifndef HTTPParamVector_h
+#define HTTPParamVector_h
 
-#include "Hermit/Foundation/EnumerateStringValuesFunction.h"
-#include "Hermit/Foundation/DataBuffer.h"
-#include "Hermit/Foundation/Hermit.h"
-#include "StreamInHTTPRequestCallback.h"
-#include "StreamInHTTPRequestDataHandlerFunction.h"
+#include <string>
+#include <utility>
+#include <vector>
 
 namespace hermit {
 	namespace http {
 		
 		//
-		void StreamInHTTPRequestWithBody(const HermitPtr& h_,
-										 const std::string& inURL,
-										 const std::string& inMethod,
-										 const EnumerateStringValuesFunctionRef& inHeaderParamsFunction,
-										 const DataBuffer& inBodyData,
-										 const StreamInHTTPRequestDataHandlerFunctionRef& inDataHandlerFunction,
-										 const StreamInHTTPRequestCallbackRef& inCallback);
+		typedef std::vector<std::pair<std::string, std::string>> HTTPParamVector;
 		
 	} // namespace http
 } // namespace hermit
 
-#endif 
+#endif /* HTTPParamVector_h */

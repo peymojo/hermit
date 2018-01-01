@@ -19,6 +19,7 @@
 #ifndef S3ListObjects_h
 #define S3ListObjects_h
 
+#include <memory>
 #include "Hermit/Foundation/Hermit.h"
 #include "S3Result.h"
 
@@ -27,18 +28,25 @@ namespace hermit {
 		
 		//
 		class ObjectKeyReceiver {
+		protected:
+			//
+			~ObjectKeyReceiver() = default;
+			
 		public:
-			virtual bool operator()(const std::string& objectKey) = 0;
+			//
+			virtual bool OnOneKey(const HermitPtr& h_, const std::string& objectKey) = 0;
 		};
+		typedef std::shared_ptr<ObjectKeyReceiver> ObjectKeyReceiverPtr;
 		
 		//
-		S3Result S3ListObjects(const HermitPtr& h_,
-							   const std::string& awsPublicKey,
-							   const std::string& awsSigningKey,
-							   const std::string& awsRegion,
-							   const std::string& bucketName,
-							   const std::string& objectPrefix,
-							   ObjectKeyReceiver& receiver);
+		void S3ListObjects(const HermitPtr& h_,
+						   const std::string& awsPublicKey,
+						   const std::string& awsSigningKey,
+						   const std::string& awsRegion,
+						   const std::string& bucketName,
+						   const std::string& objectPrefix,
+						   const ObjectKeyReceiverPtr& receiver,
+						   const S3CompletionBlockPtr& completion);
 		
 	} // namespace s3
 } // namespace hermit

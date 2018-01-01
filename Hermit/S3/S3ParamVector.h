@@ -16,25 +16,20 @@
 //	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef SendHTTPRequest_h
-#define SendHTTPRequest_h
+#ifndef S3ParamVector_h
+#define S3ParamVector_h
 
-#include "Hermit/Foundation/EnumerateStringValuesFunction.h"
-#include "Hermit/Foundation/Hermit.h"
-#include "HTTPRequestResult.h"
+#include <string>
+#include <utility>
+#include <vector>
 
 namespace hermit {
-	namespace http {
+	namespace s3 {
 		
 		//
-		void SendHTTPRequest(const HermitPtr& h_,
-							 const std::string& inURL,
-							 const std::string& inMethod,
-							 const EnumerateStringValuesFunctionRef& inHeaderParamsFunction,
-							 const SendHTTPRequestResponseBlockPtr& inResponseBlock,
-							 const SendHTTPRequestCompletionBlockPtr& inCompletion);
+		typedef std::vector<std::pair<std::string, std::string>> S3ParamVector;
 		
-	} // namespace http
+	} // namespace s3
 } // namespace hermit
 
-#endif
+#endif /* S3ParamVector_h */

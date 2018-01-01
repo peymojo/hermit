@@ -20,8 +20,8 @@
 #define PutS3Object_h
 
 #include <string>
-#include "Hermit/Foundation/Callback.h"
-#include "Hermit/Foundation/DataBuffer.h"
+#include "Hermit/Foundation/AsyncFunction.h"
+#include "Hermit/Foundation/SharedBuffer.h"
 #include "Hermit/Foundation/Hermit.h"
 #include "S3Result.h"
 
@@ -29,59 +29,23 @@ namespace hermit {
 	namespace s3 {
 		
 		//
-		//
-		DEFINE_CALLBACK_2A(
-						   PutS3ObjectCallback,
-						   S3Result,				// result
-						   std::string);			// version (blank if versioning not enabled on the bucket)
+		DEFINE_ASYNC_FUNCTION_3A(PutS3ObjectCompletion,
+								 HermitPtr,
+								 S3Result,				// result
+								 std::string);			// version (blank if versioning not enabled on the bucket)
 		
-		//
-		//
-		class PutS3ObjectCallbackClass
-		:
-		public PutS3ObjectCallback
-		{
-		public:
-			//
-			//
-			PutS3ObjectCallbackClass()
-			:
-			mResult(S3Result::kUnknown) {
-			}
-			
-			//
-			//
-			bool Function(
-						  const S3Result& inResult,
-						  const std::string& inVersion) {
-				mResult = inResult;
-				if (inResult == S3Result::kSuccess) {
-					mVersion = inVersion;
-				}
-				return true;
-			}
-			
-			//
-			//
-			S3Result mResult;
-			std::string mVersion;
-		};
-		
-		//
 		//
 		void PutS3Object(const HermitPtr& h_,
-						 const std::string& inAWSPublicKey,
-						 const std::string& inAWSSigningKey,
-						 const std::string& inAWSRegion,
-						 const std::string& inS3BucketName,
-						 const std::string& inS3ObjectKey,
-						 const DataBuffer& inData,
-						 const bool& inUseReducedRedundancyStorage,
-						 const PutS3ObjectCallbackRef& inCallback);
+						 const std::string& awsPublicKey,
+						 const std::string& awsSigningKey,
+						 const std::string& awsRegion,
+						 const std::string& s3BucketName,
+						 const std::string& s3ObjectKey,
+						 const SharedBufferPtr& data,
+						 const bool& useReducedRedundancyStorage,
+						 const PutS3ObjectCompletionPtr& completion);
 		
 	} // namespace s3
 } // namespace hermit
 
 #endif
-
-

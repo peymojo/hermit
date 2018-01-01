@@ -17,12 +17,12 @@
 //
 
 #include <iostream>
+#include <thread>
 #include "Hermit/S3/S3ListBuckets.h"
 #include "ListBucketsTool.h"
 #include "ReadKeyFile.h"
 
 namespace hermit {
-
 	namespace ListBucketsTool_Impl {
 
 		//
@@ -41,19 +41,39 @@ namespace hermit {
 			}
 			
 			//
-			virtual bool operator()(const std::string& bucketName) {
+			virtual bool OnOneBucket(const HermitPtr& h_, const std::string& bucketName) override {
 				std::cout << bucketName << "\n";
 				return true;
 			}
 		};
 		
 		//
+		class S3Completion : public s3::S3CompletionBlock {
+		public:
+			//
+			S3Completion() : mResult(s3::S3Result::kUnknown) {
+			}
+			
+			//
+			virtual void Call(const HermitPtr& h_, const s3::S3Result& result) override {
+				mResult = result;
+			}
+			
+			//
+			std::atomic<s3::S3Result> mResult;
+		};
+		
+		//
 		int list_buckets(const HermitPtr& h_, const std::string& s3PublicKey, const std::string& pathToS3PrivateKeyFileUTF8) {
 			std::string s3PrivateKey;
 			if (ReadKeyFile(h_, pathToS3PrivateKeyFileUTF8.c_str(), s3PrivateKey)) {
-				BucketNameReceiver bucketNameReceiver;
-				auto result = s3::S3ListBuckets(h_, s3PublicKey, s3PrivateKey, bucketNameReceiver);
-				if (result != s3::S3Result::kSuccess) {
+				auto bucketNameReceiver = std::make_shared<BucketNameReceiver>();
+				auto completion = std::make_shared<S3Completion>();
+				s3::S3ListBuckets(h_, s3PublicKey, s3PrivateKey, bucketNameReceiver, completion);
+				while (completion->mResult == s3::S3Result::kUnknown) {
+					std::this_thread::sleep_for(std::chrono::milliseconds(10));
+				}
+				if (completion->mResult != s3::S3Result::kSuccess) {
 					std::cout << "list_buckets(): S3ListBuckets() failed.\n";
 					return EXIT_FAILURE;
 				}

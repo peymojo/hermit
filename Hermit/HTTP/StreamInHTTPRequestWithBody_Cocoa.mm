@@ -1,3 +1,5 @@
+#if 0
+
 //
 //	Hermit
 //	Copyright (C) 2017 Paul Young (aka peymojo)
@@ -28,7 +30,7 @@
 // I can justify diving into at this time. Defect added in cloudforge in the Vault Browser
 // project.
 #pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+//#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 #if !__has_feature(objc_arc)
 
@@ -47,8 +49,7 @@
 
 namespace hermit {
 	namespace http {
-		
-		namespace {
+		namespace StreamInHTTPRequestWithBody_Cocoa_Impl {
 			
 			//
 			typedef std::pair<std::string, std::string> HTTPParam;
@@ -87,7 +88,24 @@ namespace hermit {
 				NSDictionary* mParams;
 			};
 			
-		} // private namespace
+			//
+			class StreamResult : public StreamResultBlock {
+			public:
+				//
+				StreamResult() : mResult(StreamDataResult::kUnknown) {
+				}
+				
+				//
+				virtual void Call(const HermitPtr& h_, StreamDataResult result) override {
+					mResult = result;
+				}
+
+				//
+				StreamDataResult mResult;
+			};
+			
+		} // namespace StreamInHTTPRequestWithBody_Cocoa_Impl
+		using namespace StreamInHTTPRequestWithBody_Cocoa_Impl;
 		
 	} // namespace http
 } // namespace hermit
@@ -95,7 +113,7 @@ namespace hermit {
 
 @interface StreamInHTTPRequestWithBody_Cocoa : NSObject<NSURLConnectionDelegate> {
 	hermit::HermitPtr _hermit;
-	hermit::http::StreamInHTTPRequestDataHandlerFunctionRef _dataHandlerFunction;
+	hermit::DataHandlerBlockPtr _dataHandler;
 }
 
 @property (nonatomic, copy) NSString* address;
@@ -126,12 +144,12 @@ namespace hermit {
 			 address:(NSString*)address
 			   method:(NSString*)method
 				 body:(NSData*)body
-  dataHandlerFunction:(const hermit::http::StreamInHTTPRequestDataHandlerFunctionRef&)dataHandlerFunction {
+		 dataHandler:(const hermit::DataHandlerBlockPtr&)dataHandler {
 	
 	self = [super init];
 	if (self != nil) {
 		_hermit = hermit;
-		_dataHandlerFunction = dataHandlerFunction;
+		_dataHandler = dataHandler;
 		
 		self.address = address;
 		self.method = method;
@@ -227,7 +245,8 @@ namespace hermit {
 
 - (void)connection:(NSURLConnection*)connection didReceiveData:(NSData*)data {
 	[data enumerateByteRangesUsingBlock:^(const void *bytes, NSRange byteRange, BOOL *stop) {
-		_dataHandlerFunction.Call(_expectedContentLength, hermit::DataBuffer((const char*)bytes, byteRange.length), false);
+		auto completion = std::make_shared<hermit::http::StreamResult>();
+		_dataHandler->HandleData(_hermit, hermit::DataBuffer((const char*)bytes, byteRange.length), false, );
 	}];
 }
 
@@ -341,3 +360,6 @@ namespace hermit {
 } // namespace hermit
 
 #pragma GCC diagnostic pop
+
+#endif
+

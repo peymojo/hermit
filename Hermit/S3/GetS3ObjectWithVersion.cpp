@@ -20,61 +20,35 @@
 #include <vector>
 #include "Hermit/Encoding/CalculateMD5.h"
 #include "Hermit/Foundation/Notification.h"
-#include "Hermit/HTTP/SendHTTPRequest.h"
+#include "Hermit/HTTP/CreateHTTPSession.h"
 #include "SignAWSRequestVersion2.h"
 #include "GetS3ObjectWithVersion.h"
 
 namespace hermit {
 	namespace s3 {
-		
-		namespace {
-
-			//
-			typedef std::pair<std::string, std::string> HTTPParam;
-			typedef std::vector<HTTPParam> HTTPParamVector;
+		namespace GetS3ObjectWithVersion_Impl {
 			
 			//
-			class HeaderParams : public EnumerateStringValuesFunction {
+			class CompletionBlock : public http::HTTPRequestCompletionBlock {
 			public:
 				//
-				HeaderParams(const HTTPParamVector& inParams) : mParams(inParams) {
-				}
-				
-				//
-				bool Function(const EnumerateStringValuesCallbackRef& inCallback) {
-					auto end = mParams.end();
-					for (auto it = mParams.begin(); it != end; ++it) {
-						if (!inCallback.Call((*it).first, (*it).second)) {
-							return false;
-						}
-					}
-					return true;
-				}
-				
-			private:
-				//
-				const HTTPParamVector& mParams;
-			};
-			
-			//
-			class CompletionBlock : public http::SendHTTPRequestCompletionBlock {
-			public:
-				//
-				CompletionBlock(const std::string& url,
-								const http::SendHTTPRequestResponsePtr& response,
-								const GetS3ObjectResponseBlockPtr& inResponseBlock,
-								const S3CompletionBlockPtr& inCompletion) :
+				CompletionBlock(const http::HTTPSessionPtr& httpSession,
+								const std::string& url,
+								const http::HTTPRequestResponsePtr& httpResponse,
+								const GetS3ObjectResponseBlockPtr& s3Response,
+								const S3CompletionBlockPtr& s3Completion) :
+				mHTTPSession(httpSession),
 				mURL(url),
-				mResponse(response),
-				mResponseBlock(inResponseBlock),
-				mCompletion(inCompletion) {
+				mHTTPResponse(httpResponse),
+				mS3Response(s3Response),
+				mS3Completion(s3Completion) {
 				}
 				
 				//
 				virtual void Call(const HermitPtr& h_, const http::HTTPRequestResult& result) override {
 					if (result != http::HTTPRequestResult::kSuccess) {
 						if (result == http::HTTPRequestResult::kCanceled) {
-							mCompletion->Call(h_, S3Result::kCanceled);
+							mS3Completion->Call(h_, S3Result::kCanceled);
 							return;
 						}
 						if (result == http::HTTPRequestResult::kTimedOut) {
@@ -83,21 +57,21 @@ namespace hermit {
 						else {
 							NOTIFY_ERROR(h_, "GetS3ObjectWithVersion: SendHTTPRequest failed for URL:", mURL);
 						}
-						mCompletion->Call(h_, S3Result::kError);
+						mS3Completion->Call(h_, S3Result::kError);
 						return;
 					}
-					if (mResponse->mStatusCode != 200) {
+					if (mHTTPResponse->mStatusCode != 200) {
 						NOTIFY_ERROR(h_,
 									 "GetS3ObjectWithVersion: responseCode != 200 for URL:", mURL,
-									 "responseCode:", mResponse->mStatusCode,
-									 "response:", mResponse->mResponseData);
-						mCompletion->Call(h_, S3Result::kError);
+									 "responseCode:", mHTTPResponse->mStatusCode,
+									 "response:", mHTTPResponse->mResponseData);
+						mS3Completion->Call(h_, S3Result::kError);
 						return;
 					}
 					
 					//	??? this code needs to be updated to use x-amz-meta sha256 if available?
 					NOTIFY_ERROR(h_, "GetS3ObjectWithVersion: Etag as proxy for checksum is unreliable, URL:", mURL);
-					mCompletion->Call(h_, S3Result::kError);
+					mS3Completion->Call(h_, S3Result::kError);
 					return;
 					
 					
@@ -155,18 +129,18 @@ namespace hermit {
 					
 					inCallback.Call(S3Result::kSuccess, result.mResponse.data(), result.mResponse.size());
 #endif
-				
-				
 				}
 				
 				//
+				http::HTTPSessionPtr mHTTPSession;
 				std::string mURL;
-				http::SendHTTPRequestResponsePtr mResponse;
-				GetS3ObjectResponseBlockPtr mResponseBlock;
-				S3CompletionBlockPtr mCompletion;
+				http::HTTPRequestResponsePtr mHTTPResponse;
+				GetS3ObjectResponseBlockPtr mS3Response;
+				S3CompletionBlockPtr mS3Completion;
 			};
 			
-		} // private namespace
+		} // namespace GetS3ObjectWithVersion_Impl
+		using namespace GetS3ObjectWithVersion_Impl;
 		
 		//
 		void GetS3ObjectWithVersion(const HermitPtr& h_,
@@ -207,9 +181,9 @@ namespace hermit {
 				return;
 			}
 			
-			HTTPParamVector params;
-			params.push_back(HTTPParam("Date", authCallback.mDateString));
-			params.push_back(HTTPParam("Authorization", authCallback.mAuthorizationString));
+			http::HTTPParamVector params;
+			params.push_back(std::make_pair("Date", authCallback.mDateString));
+			params.push_back(std::make_pair("Authorization", authCallback.mAuthorizationString));
 			
 			std::string url("https://");
 			url += inS3BucketName;
@@ -218,10 +192,10 @@ namespace hermit {
 			url += "?versionId=";
 			url += inVersion;
 			
-			HeaderParams headerParams(params);
-			auto response = std::make_shared<http::SendHTTPRequestResponse>();
-			auto completion = std::make_shared<CompletionBlock>(url, response, inResponseBlock, inCompletion);
-			http::SendHTTPRequest(h_, url, method, headerParams, response, completion);
+			http::HTTPSessionPtr httpSession(http::CreateHTTPSession());
+			auto response = std::make_shared<http::HTTPRequestResponse>();
+			auto completion = std::make_shared<CompletionBlock>(httpSession, url, response, inResponseBlock, inCompletion);
+			httpSession->SendRequest(h_, url, method, params, response, completion);
 		}
 		
 	} // namespace s3

@@ -58,7 +58,7 @@ namespace hermit {
 						 const std::string& inAWSRegion,
 						 const std::string& inS3BucketName,
 						 const std::string& inS3ObjectKey,
-						 const GetS3ObjectResponseBlockPtr& inResponseBlock,
+						 const GetS3ObjectResponseBlockPtr& inResponse,
 						 const S3CompletionBlockPtr& inCompletion);
 		
 	} // namespace s3

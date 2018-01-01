@@ -27,18 +27,25 @@ namespace hermit {
 	namespace s3 {
 		
 		//
-		DEFINE_CALLBACK_3A(S3ListObjectsWithSizeCallback,
-						   S3Result,						// inResult
-						   std::string,						// inPath
-						   uint64_t);						// inSize
+		class ObjectKeyAndSizeReceiver {
+		protected:
+			//
+			ObjectKeyAndSizeReceiver() = default;
+			
+		public:
+			//
+			virtual bool OnOneKeyAndSize(const HermitPtr& h_, const std::string& key, uint64_t size) = 0;
+		};
+		typedef std::shared_ptr<ObjectKeyAndSizeReceiver> ObjectKeyAndSizeReceiverPtr;
 		
 		//
 		void S3ListObjectsWithSize(const HermitPtr& h_,
-								   const std::string& inAWSPublicKey,
-								   const std::string& inAWSSigningKey,
-								   const std::string& inAWSRegion,
-								   const std::string& inBucketName,
-								   const S3ListObjectsWithSizeCallbackRef& inCallback);
+								   const std::string& awsPublicKey,
+								   const std::string& awsSigningKey,
+								   const std::string& awsRegion,
+								   const std::string& bucketName,
+								   const ObjectKeyAndSizeReceiverPtr& receiver,
+								   const S3CompletionBlockPtr& completion);
 		
 	} // namespace s3
 } // namespace hermit

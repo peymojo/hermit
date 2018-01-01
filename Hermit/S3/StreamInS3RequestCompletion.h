@@ -16,24 +16,24 @@
 //	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef StreamInS3RequestCallback_h
-#define StreamInS3RequestCallback_h
+#ifndef StreamInS3RequestCompletion_h
+#define StreamInS3RequestCompletion_h
 
-#include "Hermit/Foundation/Callback.h"
-#include "Hermit/Foundation/EnumerateStringValuesFunction.h"
+#include "Hermit/Foundation/AsyncFunction.h"
+#include "S3ParamVector.h"
 #include "S3Result.h"
 
 namespace hermit {
-namespace s3 {
-
-//
-//
-DEFINE_CALLBACK_2A(
-	StreamInS3RequestCallback,
-	S3Result,								// inResult
-	EnumerateStringValuesFunctionRef);		// inParamFunction
-
-} // namespace s3
+	namespace s3 {
+		
+		//
+		DEFINE_ASYNC_FUNCTION_3A(StreamInS3RequestCompletion,
+								 HermitPtr,
+								 S3Result,						// result
+								 S3ParamVector);				// params
+		
+	} // namespace s3
 } // namespace hermit
 
 #endif
+

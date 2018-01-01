@@ -19,7 +19,7 @@
 #ifndef S3GetListObjectsXML_h
 #define S3GetListObjectsXML_h
 
-#include "Hermit/Foundation/Callback.h"
+#include "Hermit/Foundation/AsyncFunction.h"
 #include "Hermit/Foundation/Hermit.h"
 #include "S3Result.h"
 
@@ -27,20 +27,20 @@ namespace hermit {
 	namespace s3 {
 		
 		//
-		DEFINE_CALLBACK_3A(S3GetListObjectsXMLCallback,
-						   HermitPtr,
-						   S3Result,							// inResult
-						   std::string);						// inXML
+		DEFINE_ASYNC_FUNCTION_3A(S3GetListObjectsXMLCompletion,
+								 HermitPtr,
+								 S3Result,						// result
+								 std::string);					// xml
 		
 		//
 		void S3GetListObjectsXML(const HermitPtr& h_,
-								 const std::string& inAWSPublicKey,
-								 const std::string& inAWSSigningKey,
-								 const std::string& inAWSRegion,
-								 const std::string& inBucketName,
-								 const std::string& inObjectPrefix,
-								 const std::string& inMarker,
-								 const S3GetListObjectsXMLCallbackRef& inCallback);
+								 const std::string& awsPublicKey,
+								 const std::string& awsSigningKey,
+								 const std::string& awsRegion,
+								 const std::string& bucketName,
+								 const std::string& objectPrefix,
+								 const std::string& marker,
+								 const S3GetListObjectsXMLCompletionPtr& completion);
 		
 	} // namespace s3
 } // namespace hermit

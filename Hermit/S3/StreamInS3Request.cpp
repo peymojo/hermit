@@ -16,7 +16,6 @@
 //	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#include <stddef.h>
 #include "StreamInS3RequestWithBody.h"
 #include "StreamInS3Request.h"
 
@@ -25,19 +24,18 @@ namespace hermit {
 		
 		//
 		void StreamInS3Request(const HermitPtr& h_,							   
-							   const std::string& inURL,
-							   const std::string& inMethod,
-							   const EnumerateStringValuesFunctionRef& inParamsFunction,
-							   const StreamInS3RequestDataHandlerFunctionRef& inDataHandlerFunction,
-							   const StreamInS3RequestCallbackRef& inCallback)
-		{
+							   const std::string& url,
+							   const std::string& method,
+							   const S3ParamVector& params,
+							   const DataHandlerBlockPtr& dataHandler,
+							   const StreamInS3RequestCompletionPtr& completion) {
 			StreamInS3RequestWithBody(h_,
-									  inURL,
-									  inMethod,
-									  inParamsFunction,
-									  DataBuffer(),
-									  inDataHandlerFunction,
-									  inCallback);
+									  url,
+									  method,
+									  params,
+									  SharedBufferPtr(),
+									  dataHandler,
+									  completion);
 		}
 		
 	} // namespace s3

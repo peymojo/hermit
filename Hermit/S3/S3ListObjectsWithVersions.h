@@ -19,41 +19,37 @@
 #ifndef S3ListObjectsWithVersions_h
 #define S3ListObjectsWithVersions_h
 
-#include "Hermit/Foundation/Callback.h"
+#include <memory>
 #include "Hermit/Foundation/Hermit.h"
+#include "S3Result.h"
 
 namespace hermit {
 	namespace s3 {
 		
 		//
-		//
-		enum S3ListObjectsWithVersionsStatus
-		{
-			kS3ListObjectsWithVersionsStatus_Unknwon,
-			kS3ListObjectsWithVersionsStatus_Success,
-			kS3ListObjectsWithVersionsStatus_NoObjectsFound,
-			kS3ListObjectsWithVersionsStatus_Error
+		class S3ObjectEnumerator {
+		protected:
+			//
+			~S3ObjectEnumerator() = default;
+			
+		public:
+			//
+			virtual bool OnOneItem(const HermitPtr& h_,
+								   const std::string& objectKey,
+								   const std::string& version,
+								   bool isDeleteMarker) = 0;
 		};
+		typedef std::shared_ptr<S3ObjectEnumerator> S3ObjectEnumeratorPtr;
 		
-		//
-		//
-		DEFINE_CALLBACK_4A(
-						   S3ListObjectsWithVersionsCallback,
-						   S3ListObjectsWithVersionsStatus,		// inStatus
-						   std::string,							// inObjectKey
-						   std::string,							// inVersion
-						   bool);									// inIsDeleteMarker
-		
-		//
 		//
 		void S3ListObjectsWithVersions(const HermitPtr& h_,
-									   const std::string& inAWSPublicKey,
-									   const std::string& inAWSSigningKey,
-									   const uint64_t& inAWSSigningKeySize,
-									   const std::string& inAWSRegion,
-									   const std::string& inBucketName,
-									   const std::string& inRootPath,
-									   const S3ListObjectsWithVersionsCallbackRef& inCallback);
+									   const std::string& awsPublicKey,
+									   const std::string& awsSigningKey,
+									   const std::string& awsRegion,
+									   const std::string& bucketName,
+									   const std::string& pathPrefix,
+									   const S3ObjectEnumeratorPtr& enumerator,
+									   const S3CompletionBlockPtr& completion);
 		
 	} // namespace s3
 } // namespace hermit
