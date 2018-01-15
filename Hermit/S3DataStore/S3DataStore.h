@@ -19,6 +19,7 @@
 #ifndef S3DataStore_h
 #define S3DataStore_h
 
+#include <memory>
 #include "Hermit/DataStore/DataStore.h"
 #include "Hermit/S3Bucket/S3Bucket.h"
 
@@ -26,52 +27,51 @@ namespace hermit {
 	namespace s3datastore {
 		
 		//
-		//
 		class S3DataStore : public datastore::DataStore, public std::enable_shared_from_this<S3DataStore> {
 		public:
 			//
-			S3DataStore(const s3bucket::S3BucketPtr& inBucket, bool inUseReducedRedundancyStorage);
+			S3DataStore(const s3bucket::S3BucketPtr& bucket, bool useReducedRedundancyStorage);
 			
 			//
-			virtual datastore::ListDataStoreContentsResult
-			ListContents(const HermitPtr& h_,
-						 const datastore::DataPathPtr& inRootPath,
-						 const datastore::ListDataStoreContentsItemCallbackRef& inItemCallback) override;
+			virtual void ListContents(const HermitPtr& h_,
+                                      const datastore::DataPathPtr& rootPath,
+                                      const datastore::ListDataStoreContentsItemCallbackPtr& itemCallback,
+                                      const datastore::ListDataStoreContentsCompletionPtr& completion) override;
 			
 			//
 			virtual void ItemExists(const HermitPtr& h_,
-									const datastore::DataPathPtr& inItemPath,
-									const datastore::ItemExistsInDataStoreCallbackRef& inCallback) override;
-			
+									const datastore::DataPathPtr& itemPath,
+									const datastore::ItemExistsInDataStoreCompletionPtr& completion) override;
 			
 			//
-			virtual datastore::CreateDataStoreLocationIfNeededStatus
-			CreateLocationIfNeeded(const HermitPtr& h_, const datastore::DataPathPtr& inPath) override;
+			virtual void CreateLocationIfNeeded(const HermitPtr& h_,
+                                                const datastore::DataPathPtr& inPath,
+                                                const datastore::CreateDataStoreLocationIfNeededCompletionPtr& completion) override;
 			
 			//
 			virtual void LoadData(const HermitPtr& h_,
-								  const datastore::DataPathPtr& inPath,
-								  const datastore::EncryptionSetting& inEncryptionSetting,
-								  const datastore::LoadDataStoreDataDataBlockPtr& inDataBlock,
-								  const datastore::LoadDataStoreDataCompletionBlockPtr& inCompletion) override;
+								  const datastore::DataPathPtr& path,
+								  const datastore::EncryptionSetting& encryptionSetting,
+								  const datastore::LoadDataStoreDataDataBlockPtr& dataBlock,
+								  const datastore::LoadDataStoreDataCompletionBlockPtr& completion) override;
 			
 			//
 			virtual void WriteData(const HermitPtr& h_,
-								   const datastore::DataPathPtr& inPath,
-								   const SharedBufferPtr& inData,
-								   const datastore::EncryptionSetting& inEncryptionSetting,
-								   const datastore::WriteDataStoreDataCompletionFunctionPtr& inCompletionFunction) override;
+								   const datastore::DataPathPtr& path,
+								   const SharedBufferPtr& data,
+								   const datastore::EncryptionSetting& encryptionSetting,
+								   const datastore::WriteDataStoreDataCompletionFunctionPtr& completion) override;
 			
 			//
-			virtual bool DeleteItem(const HermitPtr& h_, const datastore::DataPathPtr& inPath) override;
+			virtual void DeleteItem(const HermitPtr& h_,
+                                    const datastore::DataPathPtr& path,
+                                    const datastore::DeleteDataStoreItemCompletionPtr& completion) override;
 			
-			//
 			//
 			s3bucket::S3BucketPtr mBucket;
 			bool mUseReducedRedundancyStorage;
 		};
 		
-		//
 		//
 		typedef std::shared_ptr<S3DataStore> S3DataStorePtr;
 		

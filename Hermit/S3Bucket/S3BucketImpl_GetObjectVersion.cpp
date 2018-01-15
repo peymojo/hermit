@@ -25,8 +25,7 @@
 namespace hermit {
 	namespace s3bucket {
 		namespace impl {
-			
-			namespace {
+			namespace S3BucketImpl_GetObjectVersion_Impl {
 				
 				//
 				typedef std::shared_ptr<S3BucketImpl> S3BucketImplPtr;
@@ -50,7 +49,38 @@ namespace hermit {
 					GetObjectVersionClassPtr mGetObjectVersionClass;
 				};
 				
-				//
+                //
+                class GetBucketLocationCompletion : public s3::GetS3BucketLocationCompletion {
+                public:
+                    //
+                    GetBucketLocationCompletion(const s3::S3Result& originalResult,
+                                                const s3::S3CompletionBlockPtr& completion) :
+                    mOriginalResult(originalResult),
+                    mCompletion(completion) {
+                    }
+                    
+                    //
+                    virtual void Call(const HermitPtr& h_, const s3::S3Result& result, const std::string& location) override {
+                        if (result == s3::S3Result::kCanceled) {
+                            mCompletion->Call(h_, s3::S3Result::kCanceled);
+                            return;
+                        }
+                        if (result == s3::S3Result::k404NoSuchBucket) {
+                            NOTIFY_ERROR(h_, "Treating AuthorizationHeaderMalformed as NoSuchBucket");
+                            mCompletion->Call(h_, s3::S3Result::k404NoSuchBucket);
+                            return;
+                        }
+                        // we only care about the above responses from GetS3BucketLocation, otherwise
+                        // we fall through to reporting the original error on the get object call.
+                        mCompletion->Call(h_, mOriginalResult);
+                    }
+                    
+                    //
+                    s3::S3Result mOriginalResult;
+                    s3::S3CompletionBlockPtr mCompletion;
+                };
+
+                //
 				class GetObjectVersionClass : public std::enable_shared_from_this<GetObjectVersionClass> {
 				public:
 					//
@@ -88,8 +118,7 @@ namespace hermit {
 						auto completion = std::make_shared<GetObjectVersionCompletion>(shared_from_this());
 						s3::GetS3Object(h_,
 										mBucket->mAWSPublicKey,
-										mBucket->mAWSSigningKey.data(),
-										mBucket->mAWSSigningKey.size(),
+										mBucket->mAWSSigningKey,
 										mBucket->mAWSRegion,
 										mBucket->mBucketName,
 										mObjectKey,
@@ -173,24 +202,13 @@ namespace hermit {
 							// this *might* actually be caused by the bucket being deleted. sometimes S3 gives us
 							// 404 and sometimes it gives us this unhelpful response about the region being wrong in
 							// the auth info.
-							s3::GetS3BucketLocationCallbackClass location;
+                            auto locationCompletion = std::make_shared<GetBucketLocationCompletion>(result, mCompletion);
 							GetS3BucketLocation(h_,
 												mBucket->mBucketName,
 												mBucket->mAWSPublicKey,
 												mBucket->mAWSPrivateKey,
-												location);
-							
-							if (location.mResult == s3::S3Result::kCanceled) {
-								mCompletion->Call(h_, s3::S3Result::kCanceled);
-								return;
-							}
-							if (location.mResult == s3::S3Result::k404NoSuchBucket) {
-								NOTIFY_ERROR(h_, "GetObjectVersionFromS3Bucket: treating AuthorizationHeaderMalformed as NoSuchBucket");
-								mCompletion->Call(h_, s3::S3Result::k404NoSuchBucket);
-								return;
-							}
-							// we only care about the above responses from GetS3BucketLocation, otherwise
-							// we fall through to reporting the original error on the get object call.
+												locationCompletion);
+                            return;
 						}
 						mCompletion->Call(h_, result);
 					}
@@ -213,7 +231,8 @@ namespace hermit {
 					mGetObjectVersionClass->Completion(h_, result);
 				}
 				
-			} // namespace
+			} // namespace S3BucketImpl_GetObjectVersion_Impl
+            using namespace S3BucketImpl_GetObjectVersion_Impl;
 			
 			//
 			void S3BucketImpl::GetObjectVersion(const HermitPtr& h_,

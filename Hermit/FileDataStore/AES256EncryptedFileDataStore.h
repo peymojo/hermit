@@ -29,23 +29,30 @@ namespace hermit {
 		class AES256EncryptedFileDataStore : public FileDataStore {
 		public:
 			//
-			AES256EncryptedFileDataStore(const std::string& inAESKey);
+			AES256EncryptedFileDataStore(const std::string& aesKey);
 			
 			//
 			virtual void LoadData(const HermitPtr& h_,
-								  const datastore::DataPathPtr& inPath,
-								  const datastore::EncryptionSetting& inEncryptionSetting,
-								  const datastore::LoadDataStoreDataDataBlockPtr& inDataBlock,
-								  const datastore::LoadDataStoreDataCompletionBlockPtr& inCompletion) override;
+								  const datastore::DataPathPtr& path,
+								  const datastore::EncryptionSetting& encryptionSetting,
+								  const datastore::LoadDataStoreDataDataBlockPtr& dataBlock,
+								  const datastore::LoadDataStoreDataCompletionBlockPtr& completion) override;
 			
 			//
 			virtual void WriteData(const HermitPtr& h_,
-								   const datastore::DataPathPtr& inPath,
-								   const SharedBufferPtr& inData,
-								   const datastore::EncryptionSetting& inEncryptionSetting,
-								   const datastore::WriteDataStoreDataCompletionFunctionPtr& inCompletionFunction) override;
+								   const datastore::DataPathPtr& path,
+								   const SharedBufferPtr& data,
+								   const datastore::EncryptionSetting& encryptionSetting,
+								   const datastore::WriteDataStoreDataCompletionFunctionPtr& completion) override;
 
-			//
+            //
+            void DoWriteData(const HermitPtr& h_,
+                             const datastore::DataPathPtr& path,
+                             const SharedBufferPtr& data,
+                             const datastore::EncryptionSetting& encryptionSetting,
+                             const datastore::WriteDataStoreDataCompletionFunctionPtr& completion);
+
+            //
 			std::string mAESKey;
 		};
 		typedef std::shared_ptr<AES256EncryptedFileDataStore> AES256EncryptedFileDataStorePtr;

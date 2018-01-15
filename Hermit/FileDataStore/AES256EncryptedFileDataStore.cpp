@@ -17,8 +17,6 @@
 //
 
 #include "AES256EncryptedFileDataStore.h"
-#include "LoadAES256EncryptedFileDataStoreData.h"
-#include "WriteAES256EncryptedFileDataStoreData.h"
 
 namespace hermit {
 	namespace filedatastore {
@@ -27,29 +25,6 @@ namespace hermit {
 		AES256EncryptedFileDataStore::AES256EncryptedFileDataStore(const std::string& inAESKey) :
 			mAESKey(inAESKey) {
 		}
-		
-		//
-		void AES256EncryptedFileDataStore::LoadData(const HermitPtr& h_,
-													const datastore::DataPathPtr& inPath,
-													const datastore::EncryptionSetting& inEncryptionSetting,
-													const datastore::LoadDataStoreDataDataBlockPtr& inDataBlock,
-													const datastore::LoadDataStoreDataCompletionBlockPtr& inCompletion) {
-			LoadAES256EncryptedFileDataStoreData(h_, shared_from_this(), inPath, inEncryptionSetting, inDataBlock, inCompletion);
-		}
-		
-		//
-		void AES256EncryptedFileDataStore::WriteData(const HermitPtr& h_,
-													 const datastore::DataPathPtr& inPath,
-													 const SharedBufferPtr& inData,
-													 const datastore::EncryptionSetting& inEncryptionSetting,
-													 const datastore::WriteDataStoreDataCompletionFunctionPtr& inCompletionFunction) {
-			WriteAES256EncryptedFileDataStoreData(h_,
-												  shared_from_this(),
-												  inPath,
-												  inData,
-												  inEncryptionSetting,
-												  inCompletionFunction);
-		}
-		
+				
 	} // namespace filedatastore
 } // namespace hermit

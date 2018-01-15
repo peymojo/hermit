@@ -18,13 +18,12 @@
 
 #include "Hermit/File/LoadFileData.h"
 #include "Hermit/Foundation/Notification.h"
+#include "FileDataStore.h"
 #include "FilePathDataPath.h"
-#include "LoadFileDataStoreData.h"
 
 namespace hermit {
 	namespace filedatastore {
-		
-		namespace {
+		namespace FileDataStore_LoadData_Impl {
 			
 			//
 			class DataBlock : public hermit::DataHandlerBlock {
@@ -49,29 +48,29 @@ namespace hermit {
 			class LoadDataCompletion : public file::LoadFileDataCompletion {
 			public:
 				//
-				LoadDataCompletion(const file::FilePathPtr& inFilePath,
+				LoadDataCompletion(const file::FilePathPtr& filePath,
 								   const DataBlockPtr& data,
-								   const datastore::LoadDataStoreDataDataBlockPtr& inDataBlock,
-								   const datastore::LoadDataStoreDataCompletionBlockPtr& inCompletion) :
-				mFilePath(inFilePath),
+								   const datastore::LoadDataStoreDataDataBlockPtr& dataBlock,
+								   const datastore::LoadDataStoreDataCompletionBlockPtr& completion) :
+				mFilePath(filePath),
 				mData(data),
-				mDataBlock(inDataBlock),
-				mCompletion(inCompletion) {
+				mDataBlock(dataBlock),
+				mCompletion(completion) {
 				}
 				
 				//
 				virtual void Call(const HermitPtr& h_, const file::LoadFileDataResult& result) override {
 					if (result == file::LoadFileDataResult::kFileNotFound) {
-						mCompletion->Call(h_, datastore::LoadDataStoreDataStatus::kItemNotFound);
+						mCompletion->Call(h_, datastore::LoadDataStoreDataResult::kItemNotFound);
 						return;
 					}
 					if (result != file::LoadFileDataResult::kSuccess) {
 						NOTIFY_ERROR(h_, "LoadFileDataStoreData: LoadFileData failed for path:", mFilePath);
-						mCompletion->Call(h_, datastore::LoadDataStoreDataStatus::kError);
+						mCompletion->Call(h_, datastore::LoadDataStoreDataResult::kError);
 						return;
 					}
-					mDataBlock->Call(DataBuffer(mData->mData.data(), mData->mData.size()));
-					mCompletion->Call(h_, datastore::LoadDataStoreDataStatus::kSuccess);
+					mDataBlock->Call(h_, DataBuffer(mData->mData.data(), mData->mData.size()));
+					mCompletion->Call(h_, datastore::LoadDataStoreDataResult::kSuccess);
 					return;
 				}
 				
@@ -82,22 +81,22 @@ namespace hermit {
 				datastore::LoadDataStoreDataCompletionBlockPtr mCompletion;
 			};
 			
-		} // private namespace
+		} // namespace FileDataStore_LoadData_Impl
+        using namespace FileDataStore_LoadData_Impl;
 		
 		//
-		void LoadFileDataStoreData(const HermitPtr& h_,
-								   const datastore::DataStorePtr& inDataStore,
-								   const datastore::DataPathPtr& inPath,
-								   const datastore::EncryptionSetting& inEncryptionSetting,
-								   const datastore::LoadDataStoreDataDataBlockPtr& inDataBlock,
-								   const datastore::LoadDataStoreDataCompletionBlockPtr& inCompletion) {
-			FilePathDataPath& filePath = static_cast<FilePathDataPath&>(*inPath);
-			auto dataBlock = std::make_shared<DataBlock>();
-			auto loadCompletion = std::make_shared<LoadDataCompletion>(filePath.mFilePath,
+        void FileDataStore::LoadData(const HermitPtr& h_,
+                                     const datastore::DataPathPtr& path,
+                                     const datastore::EncryptionSetting& encryptionSetting,
+                                     const datastore::LoadDataStoreDataDataBlockPtr& dataBlock,
+                                     const datastore::LoadDataStoreDataCompletionBlockPtr& completion) {
+			FilePathDataPath& filePath = static_cast<FilePathDataPath&>(*path);
+			auto fileDataBlock = std::make_shared<DataBlock>();
+			auto fileCompletion = std::make_shared<LoadDataCompletion>(filePath.mFilePath,
+																	   fileDataBlock,
 																	   dataBlock,
-																	   inDataBlock,
-																	   inCompletion);
-			file::LoadFileData(h_, filePath.mFilePath, dataBlock, loadCompletion);
+																	   completion);
+			file::LoadFileData(h_, filePath.mFilePath, fileDataBlock, fileCompletion);
 		}
 		
 	} // namespace filedatastore

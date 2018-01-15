@@ -23,11 +23,12 @@ namespace hermit {
 	namespace s3bucket {
 		
 		//
-		s3::S3Result S3Bucket::ListObjects(const HermitPtr& h_,
-										   const std::string& prefix,
-										   s3::ObjectKeyReceiver& receiver) {
+		void S3Bucket::ListObjects(const HermitPtr& h_,
+                                   const std::string& prefix,
+                                   const s3::ObjectKeyReceiverPtr& receiver,
+                                   const s3::S3CompletionBlockPtr& completion) {
 			NOTIFY_ERROR(h_, "S3Bucket::ListObjects unimplemented");
-			return s3::S3Result::kError;
+            completion->Call(h_, s3::S3Result::kError);
 		}
 		
 		//
@@ -52,24 +53,24 @@ namespace hermit {
 		//
 		void S3Bucket::PutObject(const HermitPtr& h_,
 								 const std::string& inS3ObjectKey,
-								 const DataBuffer& inData,
+								 const SharedBufferPtr& inData,
 								 const bool& inUseReducedRedundancyStorage,
-								 const s3::PutS3ObjectCallbackRef& inCallback) {
+								 const s3::PutS3ObjectCompletionPtr& inCompletion) {
 			NOTIFY_ERROR(h_, "S3Bucket::PutObject unimplemented");
-			inCallback.Call(s3::S3Result::kError, nullptr);
+			inCompletion->Call(h_, s3::S3Result::kError, "");
 		}
 		
 		//
-		s3::S3Result S3Bucket::DeleteObject(const HermitPtr& h_, const std::string& inObjectKey) {
+        void S3Bucket::DeleteObject(const HermitPtr& h_, const std::string& inObjectKey, const s3::S3CompletionBlockPtr& completion) {
 			NOTIFY_ERROR(h_, "S3Bucket::DeleteObject unimplemented");
-			return s3::S3Result::kError;
+            completion->Call(h_, s3::S3Result::kError);
 		}
 		
 		//
 		void S3Bucket::IsVersioningEnabled(const HermitPtr& h_,
-										   const s3::S3GetBucketVersioningCallbackRef& inCallback) {
+										   const s3::S3GetBucketVersioningCompletionPtr& inCompletion) {
 			NOTIFY_ERROR(h_, "S3Bucket::IsVersioningEnabled unimplemented");
-			inCallback.Call(s3::S3Result::kError, s3::S3BucketVersioningStatus::kUnknown);
+			inCompletion->Call(h_, s3::S3Result::kError, s3::S3BucketVersioningStatus::kUnknown);
 		}
 		
 	} // namespace s3bucket

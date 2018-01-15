@@ -20,13 +20,12 @@
 #include "Hermit/File/WriteFileData.h"
 #include "Hermit/Foundation/AsyncTaskQueue.h"
 #include "Hermit/Foundation/Notification.h"
+#include "FileDataStore.h"
 #include "FilePathDataPath.h"
-#include "WriteFileDataStoreData.h"
 
 namespace hermit {
 	namespace filedatastore {
-		
-		namespace {
+		namespace FileDataStore_WriteData_Impl {
 			
 			//
 			class Completion : public file::WriteFileDataCompletion {
@@ -39,14 +38,14 @@ namespace hermit {
 				//
 				virtual void Call(const HermitPtr& h_, const file::WriteFileDataResult& result) override {
 					if (result == file::WriteFileDataResult::kDiskFull) {
-						mCompletion->Call(h_, datastore::kWriteDataStoreDataStatus_StorageFull);
+                        mCompletion->Call(h_, datastore::WriteDataStoreDataResult::kStorageFull);
 						return;
 					}
 					if (result != file::WriteFileDataResult::kSuccess) {
-						mCompletion->Call(h_, datastore::kWriteDataStoreDataStatus_Error);
+						mCompletion->Call(h_, datastore::WriteDataStoreDataResult::kError);
 						return;
 					}
-					mCompletion->Call(h_, datastore::kWriteDataStoreDataStatus_Success);
+					mCompletion->Call(h_, datastore::WriteDataStoreDataResult::kSuccess);
 				}
 				
 				//
@@ -61,7 +60,7 @@ namespace hermit {
 							 const datastore::EncryptionSetting& inEncryptionSetting,
 							 const datastore::WriteDataStoreDataCompletionFunctionPtr& inCompletionFunction) {
 				if (CHECK_FOR_ABORT(h_)) {
-					inCompletionFunction->Call(h_, datastore::kWriteDataStoreDataStatus_Canceled);
+					inCompletionFunction->Call(h_, datastore::WriteDataStoreDataResult::kCanceled);
 					return;
 				}
 				
@@ -75,27 +74,27 @@ namespace hermit {
 			public:
 				//
 				Task(const HermitPtr& h_,
-					 const datastore::DataStorePtr& inDataStore,
-					 const datastore::DataPathPtr& inPath,
-					 const SharedBufferPtr& inData,
-					 const datastore::EncryptionSetting& inEncryptionSetting,
-					 const datastore::WriteDataStoreDataCompletionFunctionPtr& inCompletionFunction) :
+					 const datastore::DataStorePtr& dataStore,
+					 const datastore::DataPathPtr& path,
+					 const SharedBufferPtr& data,
+					 const datastore::EncryptionSetting& encryptionSetting,
+					 const datastore::WriteDataStoreDataCompletionFunctionPtr& completion) :
 				mH_(h_),
-				mDataStore(inDataStore),
-				mPath(inPath),
-				mData(inData),
-				mEncryptionSetting(inEncryptionSetting),
-				mCompletionFunction(inCompletionFunction) {
+				mDataStore(dataStore),
+				mPath(path),
+				mData(data),
+				mEncryptionSetting(encryptionSetting),
+				mCompletion(completion) {
 				}
 				
 				//
-				void PerformTask(const int32_t& inTaskID) {
+				void PerformTask(const int32_t& inTaskId) {
 					PerformWork(mH_,
 								mDataStore,
 								mPath,
 								mData,
 								mEncryptionSetting,
-								mCompletionFunction);
+								mCompletion);
 				}
 				
 				//
@@ -104,27 +103,27 @@ namespace hermit {
 				datastore::DataPathPtr mPath;
 				SharedBufferPtr mData;
 				datastore::EncryptionSetting mEncryptionSetting;
-				datastore::WriteDataStoreDataCompletionFunctionPtr mCompletionFunction;
+				datastore::WriteDataStoreDataCompletionFunctionPtr mCompletion;
 			};
 			
-		} // private namespace
+		} // namespace FileDataStore_WriteData_Impl
+        using namespace FileDataStore_WriteData_Impl;
 		
 		//
-		void WriteFileDataStoreData(const HermitPtr& h_,
-									const datastore::DataStorePtr& inDataStore,
-									const datastore::DataPathPtr& inPath,
-									const SharedBufferPtr& inData,
-									const datastore::EncryptionSetting& inEncryptionSetting,
-									const datastore::WriteDataStoreDataCompletionFunctionPtr& inCompletionFunction) {
+        void FileDataStore::WriteData(const HermitPtr& h_,
+                                      const datastore::DataPathPtr& path,
+                                      const SharedBufferPtr& data,
+                                      const datastore::EncryptionSetting& encryptionSetting,
+                                      const datastore::WriteDataStoreDataCompletionFunctionPtr& completion) {
 			auto task = std::make_shared<Task>(h_,
-											   inDataStore,
-											   inPath,
-											   inData,
-											   inEncryptionSetting,
-											   inCompletionFunction);
+											   shared_from_this(),
+											   path,
+											   data,
+											   encryptionSetting,
+											   completion);
 			if (!QueueAsyncTask(task, 15)) {
 				NOTIFY_ERROR(h_, "QueueAsyncTask failed.");
-				inCompletionFunction->Call(h_, datastore::kWriteDataStoreDataStatus_Error);
+				completion->Call(h_, datastore::WriteDataStoreDataResult::kError);
 			}
 		}
 		

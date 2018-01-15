@@ -22,33 +22,58 @@
 
 namespace hermit {
 	namespace s3bucket {
+        namespace WithS3Bucket_Impl {
+            
+            //
+            typedef std::shared_ptr<impl::S3BucketImpl> S3BucketImplPtr;
+
+            //
+            class InitCompletion : public impl::InitS3BucketCompletion {
+            public:
+                //
+                InitCompletion(const S3BucketImplPtr& bucket, const WithS3BucketCompletionPtr& completion) :
+                mBucket(bucket),
+                mCompletion(completion) {
+                }
+                
+                //
+                virtual void Call(const HermitPtr& h_, const WithS3BucketStatus& status) override {
+                    if (status == WithS3BucketStatus::kCancel) {
+                        mCompletion->Call(h_, WithS3BucketStatus::kCancel, nullptr);
+                        return;
+                    }
+                    if (status != WithS3BucketStatus::kSuccess) {
+                        if (status == WithS3BucketStatus::kError) {
+                            NOTIFY_ERROR(h_, "WithS3Bucket: bucket->Init returned WithS3BucketStatus::kError.");
+                        }
+                        mCompletion->Call(h_, status, nullptr);
+                    }
+                    mCompletion->Call(h_, status, mBucket);
+                }
+                
+                //
+                S3BucketImplPtr mBucket;
+                WithS3BucketCompletionPtr mCompletion;
+            };
+        
+        } // namespace WithS3Bucket_Impl
+        using namespace WithS3Bucket_Impl;
 		
 		//
 		void WithS3Bucket(const HermitPtr& h_,
-						  const std::string& inBucketName,
-						  const std::string& inAWSPublicKey,
-						  const std::string& inAWSPrivateKey,
-						  const WithS3BucketCallbackRef& inCallback) {
-			if (inBucketName.empty()) {
-				NOTIFY_ERROR(h_, "WithS3Bucket: inBucketName is empty.");
-				inCallback.Call(WithS3BucketStatus::kError, 0);
+                          const std::string& bucketName,
+                          const std::string& awsPublicKey,
+                          const std::string& awsPrivateKey,
+                          const WithS3BucketCompletionPtr& completion) {
+			if (bucketName.empty()) {
+				NOTIFY_ERROR(h_, "WithS3Bucket: bucketName is empty.");
+				completion->Call(h_, WithS3BucketStatus::kError, nullptr);
 				return;
 			}
 			
-			auto bucket = std::make_shared<impl::S3BucketImpl>(inAWSPublicKey, inAWSPrivateKey, inBucketName);
-			
-			WithS3BucketStatus status = bucket->Init(h_);
-			if (status == WithS3BucketStatus::kCancel) {
-				inCallback.Call(WithS3BucketStatus::kCancel, nullptr);
-				return;
-			}
-			if (status != WithS3BucketStatus::kSuccess) {
-				if (status == WithS3BucketStatus::kError) {
-					NOTIFY_ERROR(h_, "WithS3Bucket: bucket->Init returned WithS3BucketStatus::kError.");
-				}
-				bucket = nullptr;
-			}
-			inCallback.Call(status, bucket);
+			auto bucket = std::make_shared<impl::S3BucketImpl>(awsPublicKey, awsPrivateKey, bucketName);
+            auto initCompletion = std::make_shared<InitCompletion>(bucket, completion);
+            bucket->Init(h_, initCompletion);
 		}
 		
 	} // namespace s3bucket

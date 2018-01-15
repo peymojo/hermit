@@ -17,42 +17,17 @@
 //
 
 #include "AES256EncryptedS3DataStore.h"
-#include "LoadAES256EncryptedS3DataStoreData.h"
-#include "WriteAES256EncryptedS3DataStoreData.h"
 
 namespace hermit {
 	namespace s3datastore {
 		
 		//
-		AES256EncryptedS3DataStore::AES256EncryptedS3DataStore(s3bucket::S3BucketPtr inBucket,
-															   bool inUseReducedRedundancyStorage,
-															   const std::string& inAESKey) :
-		S3DataStore(inBucket, inUseReducedRedundancyStorage),
-		mAESKey(inAESKey) {
+		AES256EncryptedS3DataStore::AES256EncryptedS3DataStore(s3bucket::S3BucketPtr bucket,
+															   bool useReducedRedundancyStorage,
+															   const std::string& aesKey) :
+		S3DataStore(bucket, useReducedRedundancyStorage),
+		mAESKey(aesKey) {
 		}
-		
-		//
-		void AES256EncryptedS3DataStore::LoadData(const HermitPtr& h_,
-												  const datastore::DataPathPtr& inPath,
-												  const datastore::EncryptionSetting& inEncryptionSetting,
-												  const datastore::LoadDataStoreDataDataBlockPtr& inDataBlock,
-												  const datastore::LoadDataStoreDataCompletionBlockPtr& inCompletion) {
-			LoadAES256EncryptedS3DataStoreData(h_, shared_from_this(), inPath, inEncryptionSetting, inDataBlock, inCompletion);
-		}
-		
-		//
-		void AES256EncryptedS3DataStore::WriteData(const HermitPtr& h_,
-												   const datastore::DataPathPtr& inPath,
-												   const SharedBufferPtr& inData,
-												   const datastore::EncryptionSetting& inEncryptionSetting,
-												   const datastore::WriteDataStoreDataCompletionFunctionPtr& inCompletionFunction) {
-			WriteAES256EncryptedS3DataStoreData(h_,
-												shared_from_this(),
-												inPath,
-												inData,
-												inEncryptionSetting,
-												inCompletionFunction);
-		}
-		
+				
 	} // namespace s3datastore
 } // namespace hermit

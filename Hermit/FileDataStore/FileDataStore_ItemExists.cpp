@@ -18,33 +18,27 @@
 
 #include "Hermit/File/FileExists.h"
 #include "Hermit/Foundation/Notification.h"
+#include "FileDataStore.h"
 #include "FilePathDataPath.h"
-#include "ItemExistsInFileDataStore.h"
 
 namespace hermit {
 	namespace filedatastore {
 		
 		//
-		void ItemExistsInFileDataStore(const HermitPtr& h_,
-									   const datastore::DataStorePtr& inDataStore,
-									   const datastore::DataPathPtr& inItemPath,
-									   const datastore::ItemExistsInDataStoreCallbackRef& inCallback) {
-			FilePathDataPath& filePath = static_cast<FilePathDataPath&>(*inItemPath);
+        void FileDataStore::ItemExists(const HermitPtr& h_,
+									   const datastore::DataPathPtr& itemPath,
+									   const datastore::ItemExistsInDataStoreCompletionPtr& completion) {
+			FilePathDataPath& filePath = static_cast<FilePathDataPath&>(*itemPath);
 			
 			file::FileExistsCallbackClass fileExistsCallback;
 			file::FileExists(h_, filePath.mFilePath, fileExistsCallback);
 			if (!fileExistsCallback.mSuccess) {
 				NOTIFY_ERROR(h_, "ItemExistsInFileDataStore: FileExists failed for:", filePath.mFilePath);
-				inCallback.Call(datastore::ItemExistsInDataStoreStatus::kError, false);
+				completion->Call(h_, datastore::ItemExistsInDataStoreResult::kError, false);
 				return;
 			}
 			
-			if (fileExistsCallback.mExists) {
-				inCallback.Call(datastore::ItemExistsInDataStoreStatus::kSuccess, true);
-			}
-			else {
-				inCallback.Call(datastore::ItemExistsInDataStoreStatus::kSuccess, false);
-			}
+            completion->Call(h_, datastore::ItemExistsInDataStoreResult::kSuccess, fileExistsCallback.mExists);
 		}
 		
 	} // namespace filedatastore

@@ -16,24 +16,24 @@
 //	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#include <string>
-#include "S3DataPath.h"
-#include "S3DataStore.h"
-#include "DeleteS3DataStoreItem.h"
+#include "Hermit/File/DeleteFile.h"
+#include "FilePathDataPath.h"
+#include "FileDataStore.h"
 
 namespace hermit {
-	namespace s3datastore {
+	namespace filedatastore {
 		
 		//
-		bool DeleteS3DataStoreItem(const HermitPtr& h_,
-								   const datastore::DataStorePtr& inDataStore,
-								   const datastore::DataPathPtr& inPath) {
-			S3DataStore& dataStore = static_cast<S3DataStore&>(*inDataStore);
-			S3DataPath& dataPath = static_cast<S3DataPath&>(*inPath);
-			
-			auto result = dataStore.mBucket->DeleteObject(h_, dataPath.mPath);
-			return (result == s3::S3Result::kSuccess);
+        void FileDataStore::DeleteItem(const HermitPtr& h_,
+                                       const datastore::DataPathPtr& path,
+                                       const datastore::DeleteDataStoreItemCompletionPtr& completion) {
+			FilePathDataPath& filePath = static_cast<FilePathDataPath&>(*path);
+            if (!file::DeleteFile(h_, filePath.mFilePath)) {
+                completion->Call(h_, datastore::DeleteDataStoreItemResult::kError);
+                return;
+            }
+            completion->Call(h_, datastore::DeleteDataStoreItemResult::kSuccess);
 		}
 		
-	} // namespace s3datastore
+	} // namespace filedatastore
 } // namespace hermit

@@ -5,10 +5,28 @@
       location = "group:s3util/s3util.xcodeproj">
    </FileRef>
    <FileRef
+      location = "group:../../Hermit/DataStore/DataStore.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:../../Hermit/DataStorePageStore/DataStorePageStore.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:../../Hermit/DataStoreStringMap/DataStoreStringMap.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:../../Hermit/Encoding/Encoding.xcodeproj">
    </FileRef>
    <FileRef
+      location = "group:../../Hermit/Encoding+File/Encoding+File.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:../../Hermit/Encoding+S3Bucket/Encoding+S3Bucket.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:../../Hermit/File/File.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:../../Hermit/FileDataStore/FileDataStore.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:../../Hermit/Foundation/Foundation.xcodeproj">
@@ -17,10 +35,31 @@
       location = "group:../../Hermit/HTTP/HTTP.xcodeproj">
    </FileRef>
    <FileRef
+      location = "group:../../Hermit/JSON/JSON.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:../../Hermit/PageStore/PageStore.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:../../Hermit/PageStoreStringMap/PageStoreStringMap.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:../../Hermit/S3/S3.xcodeproj">
    </FileRef>
    <FileRef
+      location = "group:../../Hermit/S3Bucket/S3Bucket.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:../../Hermit/S3DataStore/S3DataStore.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:../../Hermit/SQLiteStringMap/SQLiteStringMapKit.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:../../Hermit/String/String.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:../../Hermit/StringMap/StringMap.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:../../Hermit/Value/Value.xcodeproj">

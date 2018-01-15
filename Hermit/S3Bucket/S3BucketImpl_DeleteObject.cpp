@@ -24,109 +24,156 @@
 namespace hermit {
 	namespace s3bucket {
 		namespace impl {
-			
-			namespace {
+			namespace S3BucketImpl_DeleteObject_Impl {
 				
-				// DeleteObject operation class
-				class DeleteObjectOp {
-				private:
-					S3BucketImpl& mBucket;
-					std::string mObjectKey;
-					std::string mVersion;
-					s3::S3Result mResult;
-					int mAccessDeniedRetries;
-					
-				public:
-					typedef s3::S3Result ResultType;
-					static const s3::S3Result kDefaultResult = s3::S3Result::kUnknown;
-					static const int kMaxRetries = S3BucketImpl::kMaxRetries;
-					
-					//
-					const char* OpName() const {
-						return "DeleteObject";
-					}
-					
-					//
-					DeleteObjectOp(S3BucketImpl& bucket, const std::string& objectKey)
-					:
-					mBucket(bucket),
-					mObjectKey(objectKey),
-					mResult(s3::S3Result::kUnknown),
-					mAccessDeniedRetries(0) {
-					}
-					
-					//
-					ResultType AttemptOnce(const HermitPtr& h_) {
-						mBucket.RefreshSigningKeyIfNeeded();
-						
-						return s3::S3DeleteObject(h_,
-												  mBucket.mAWSPublicKey,
-												  mBucket.mAWSSigningKey,
-												  mBucket.mAWSRegion,
-												  mBucket.mBucketName,
-												  mObjectKey);
-					}
-					
-					bool ShouldRetry(const ResultType& result) {
-						if ((result == s3::S3Result::kTimedOut) ||
-							(result == s3::S3Result::kNetworkConnectionLost) ||
-							(result == s3::S3Result::kS3InternalError) ||
-							(result == s3::S3Result::k500InternalServerError) ||
-							(result == s3::S3Result::k503ServiceUnavailable) ||
-							// borderline candidate for retry, but I've seen it recover "in the wild":
-							(result == s3::S3Result::kHostNotFound)) {
-							return true;
-						}
-						// we allow a single retry on PermissionDenied since i've seen this fail due to
-						// flaky network behavior in the wild. (but we don't want to spam the server in
-						// cases where access is indeed denied so we only do it once.)
-						if ((result == s3::S3Result::k403AccessDenied) && (mAccessDeniedRetries == 0)) {
-							++mAccessDeniedRetries;
-							return true;
-						}
-						return false;
-					}
-					
-					//
-					void ProcessResult(const HermitPtr& h_, const ResultType& result) {
-						
-						if (result == s3::S3Result::kCanceled) {
-							mResult = result;
-							return;
-						}
-						if (result == s3::S3Result::kSuccess) {
-							mResult = result;
-							return;
-						}
-						NOTIFY_ERROR(h_, "DeleteObject: error result encountered:", (int)result);
-						mResult = result;
-					}
-					
-					//
-					void RetriesExceeded(const HermitPtr& h_, const ResultType& result) {
-						NOTIFY_ERROR(h_, "DeleteObject: maximum retries exceeded, most recent result:", (int)result);
-						mResult = result;
-					}
-					
-					//
-					void Canceled() {
-						mResult = s3::S3Result::kCanceled;
-					}
-					
-					//
-					s3::S3Result GetResult() const {
-						return mResult;
-					}
-				};
-				
-			} // namespace
+                //
+                typedef std::shared_ptr<S3BucketImpl> S3BucketImplPtr;
+                
+                //
+                class DeleteObjectClass;
+                typedef std::shared_ptr<DeleteObjectClass> DeleteObjectClassPtr;
+                
+                //
+                class DeleteObjectCompletion : public s3::S3CompletionBlock {
+                public:
+                    //
+                    DeleteObjectCompletion(const DeleteObjectClassPtr& deleteObjectClass) :
+                    mDeleteObjectClass(deleteObjectClass) {
+                    }
+                    
+                    //
+                    virtual void Call(const HermitPtr& h_, const s3::S3Result& result) override;
+                    
+                    //
+                    DeleteObjectClassPtr mDeleteObjectClass;
+                };
+                
+                //
+                class DeleteObjectClass : public std::enable_shared_from_this<DeleteObjectClass> {
+                public:
+                    //
+                    DeleteObjectClass(const S3BucketImplPtr& bucket,
+                                      const std::string& objectKey,
+                                      const s3::S3CompletionBlockPtr& completion) :
+                    mBucket(bucket),
+                    mObjectKey(objectKey),
+                    mCompletion(completion),
+                    mLatestResult(s3::S3Result::kUnknown),
+                    mRetries(0),
+                    mAccessDeniedRetries(0),
+                    mSleepInterval(1),
+                    mSleepIntervalStep(2) {
+                    }
+                    
+                    //
+                    void DeleteObjectWithRetry(const HermitPtr& h_) {
+                        if (CHECK_FOR_ABORT(h_)) {
+                            mCompletion->Call(h_, s3::S3Result::kCanceled);
+                            return;
+                        }
+                        
+                        if (mRetries > 0) {
+                            s3::S3NotificationParams params("DeleteObject", mRetries, mLatestResult);
+                            NOTIFY(h_, s3::kS3RetryNotification, &params);
+                        }
+                        
+                        mBucket->RefreshSigningKeyIfNeeded();
+                        
+                        auto completion = std::make_shared<DeleteObjectCompletion>(shared_from_this());
+                        s3::S3DeleteObject(h_,
+                                           mBucket->mAWSPublicKey,
+                                           mBucket->mAWSSigningKey,
+                                           mBucket->mAWSRegion,
+                                           mBucket->mBucketName,
+                                           mObjectKey,
+                                           completion);
+                    }
+                    
+                    //
+                    void Completion(const HermitPtr& h_, const s3::S3Result& result) {
+                        mLatestResult = result;
+                        
+                        if (!ShouldRetry(result)) {
+                            if (mRetries > 0) {
+                                s3::S3NotificationParams params("DeleteObject", mRetries, result);
+                                NOTIFY(h_, s3::kS3RetryCompleteNotification, &params);
+                            }
+                            ProcessResult(h_, result);
+                            return;
+                        }
+                        if (++mRetries == S3BucketImpl::kMaxRetries) {
+                            s3::S3NotificationParams params("DeleteObject", mRetries, result);
+                            NOTIFY(h_, s3::kS3MaxRetriesExceededNotification, &params);
+                            
+                            NOTIFY_ERROR(h_, "DeleteObjectFromS3Bucket: maximum retries exceeded, most recent result:", (int)result);
+                            mCompletion->Call(h_, result);
+                            return;
+                        }
+                        
+                        int fifthSecondIntervals = mSleepInterval * 5;
+                        for (int i = 0; i < fifthSecondIntervals; ++i) {
+                            if (CHECK_FOR_ABORT(h_)) {
+                                mCompletion->Call(h_, s3::S3Result::kCanceled);
+                                return;
+                            }
+                            std::this_thread::sleep_for(std::chrono::milliseconds(200));
+                        }
+                        mSleepInterval += mSleepIntervalStep;
+                        mSleepIntervalStep += 2;
+                        
+                        DeleteObjectWithRetry(h_);
+                    }
+                    
+                    //
+                    bool ShouldRetry(const s3::S3Result& result) {
+                        if ((result == s3::S3Result::kTimedOut) ||
+                            (result == s3::S3Result::kNetworkConnectionLost) ||
+                            (result == s3::S3Result::kChecksumMismatch) ||
+                            (result == s3::S3Result::k500InternalServerError) ||
+                            (result == s3::S3Result::k503ServiceUnavailable) ||
+                            (result == s3::S3Result::kS3InternalError) ||
+                            // borderline candidate for retry, but I've seen it recover "in the wild":
+                            (result == s3::S3Result::kHostNotFound)) {
+                            return true;
+                        }
+                        // we allow a single retry on PermissionDenied since i've seen this fail due to
+                        // flaky network behavior in the wild. (but we don't want to spam the server in
+                        // cases where access is indeed denied so we only do it once.)
+                        if ((result == s3::S3Result::k403AccessDenied) && (mAccessDeniedRetries == 0)) {
+                            ++mAccessDeniedRetries;
+                            return true;
+                        }
+                        return false;
+                    }
+                    
+                    //
+                    void ProcessResult(const HermitPtr& h_, const s3::S3Result& result) {
+                        mCompletion->Call(h_, result);
+                    }
+                    
+                    //
+                    S3BucketImplPtr mBucket;
+                    std::string mObjectKey;
+                    s3::S3CompletionBlockPtr mCompletion;
+                    s3::S3Result mLatestResult;
+                    int mRetries;
+                    int mAccessDeniedRetries;
+                    int mSleepInterval;
+                    int mSleepIntervalStep;
+                };
+                
+                //
+                void DeleteObjectCompletion::Call(const HermitPtr& h_, const s3::S3Result& result) {
+                    mDeleteObjectClass->Completion(h_, result);
+                }
+
+			} // namespace S3BucketImpl_DeleteObject_Impl
+			using namespace S3BucketImpl_DeleteObject_Impl;
 			
 			//
-			s3::S3Result S3BucketImpl::DeleteObject(const HermitPtr& h_, const std::string& inObjectKey) {
-				DeleteObjectOp deleteObject(*this, inObjectKey);
-				s3::RetryClassT<DeleteObjectOp> retry;
-				retry.AttemptWithRetry(h_, deleteObject);
-				return deleteObject.GetResult();
+            void S3BucketImpl::DeleteObject(const HermitPtr& h_, const std::string& objectKey, const s3::S3CompletionBlockPtr& completion) {
+                auto deleteObject = std::make_shared<DeleteObjectClass>(shared_from_this(), objectKey, completion);
+                deleteObject->DeleteObjectWithRetry(h_);
 			}
 			
 		} // namespace impl

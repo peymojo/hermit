@@ -19,7 +19,7 @@
 #ifndef WithS3Bucket_h
 #define WithS3Bucket_h
 
-#include "Hermit/Foundation/Callback.h"
+#include "Hermit/Foundation/AsyncFunction.h"
 #include "Hermit/Foundation/Hermit.h"
 #include "S3Bucket.h"
 
@@ -42,42 +42,14 @@ namespace hermit {
 		};
 		
 		//
-		DEFINE_CALLBACK_2A(
-						   WithS3BucketCallback,
-						   WithS3BucketStatus,
-						   S3BucketPtr);
-		
-		//
-		class WithS3BucketCallbackClass
-		:
-		public WithS3BucketCallback {
-		public:
-			//
-			WithS3BucketCallbackClass()
-			:
-			mStatus(WithS3BucketStatus::kUnknown) {
-			}
-			
-			//
-			bool Function(const WithS3BucketStatus& inStatus, const S3BucketPtr& inS3Bucket) {
-				mStatus = inStatus;
-				if (inStatus == WithS3BucketStatus::kSuccess) {
-					mS3Bucket = inS3Bucket;
-				}
-				return true;
-			}
-			
-			//
-			WithS3BucketStatus mStatus;
-			S3BucketPtr mS3Bucket;
-		};
-		
+		DEFINE_ASYNC_FUNCTION_3A(WithS3BucketCompletion, HermitPtr, WithS3BucketStatus, S3BucketPtr);
+				
 		//
 		void WithS3Bucket(const HermitPtr& h_,
-						  const std::string& inBucketName,
-						  const std::string& inAWSPublicKey,
-						  const std::string& inAWSPrivateKey,
-						  const WithS3BucketCallbackRef& inCallback);
+						  const std::string& bucketName,
+						  const std::string& awsPublicKey,
+						  const std::string& awsPrivateKey,
+						  const WithS3BucketCompletionPtr& completion);
 		
 	} // namespace s3bucket
 } // namespace hermit

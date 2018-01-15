@@ -147,8 +147,8 @@ namespace hermit {
 			class ListBucketsCompletion : public SendS3CommandCompletion {
 			public:
 				//
-				ListBucketsCompletion(const ListBucketsClassPtr& ListBucketsClass) :
-				mListBucketsClass(ListBucketsClass) {
+				ListBucketsCompletion(const ListBucketsClassPtr& listBucketsClass) :
+				mListBucketsClass(listBucketsClass) {
 				}
 				
 				//

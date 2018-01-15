@@ -28,57 +28,79 @@
 
 namespace hermit {
 	namespace encoding_s3bucket {
-		
+        namespace KeyPhraseToKeyWithS3JSON_Impl {
+        
+            //
+            class PutObjectCompletion : public s3::PutS3ObjectCompletion {
+            public:
+                //
+                PutObjectCompletion(const std::string& aesKey,
+                                    const KeyPhraseToKeyWithS3JSONCompletionPtr& completion) :
+                mAESKey(aesKey),
+                mCompletion(completion) {
+                }
+                
+                //
+                virtual void Call(const HermitPtr& h_, const s3::S3Result& result, const std::string& version) {
+                    if (result == s3::S3Result::kCanceled) {
+                        mCompletion->Call(h_, KeyPhraseToKeyWithS3JSONStatus::kCanceled, "");
+                        return;
+                    }
+                    if (result != s3::S3Result::kSuccess) {
+                        NOTIFY_ERROR(h_, "PutObjectToS3Bucket failed.");
+                        mCompletion->Call(h_, KeyPhraseToKeyWithS3JSONStatus::kError, "");
+                        return;
+                    }
+                    mCompletion->Call(h_, KeyPhraseToKeyWithS3JSONStatus::kSuccess, mAESKey);
+                }
+                
+                //
+                std::string mAESKey;
+                KeyPhraseToKeyWithS3JSONCompletionPtr mCompletion;
+            };
+            
+        } // namespace KeyPhraseToKeyWithS3JSON_Impl
+        using namespace KeyPhraseToKeyWithS3JSON_Impl;
+        
 		//
 		void KeyPhraseToKeyWithS3JSON(const HermitPtr& h_,
-									  const std::string& inKeyPhrase,
-									  const s3bucket::S3BucketPtr& inS3Bucket,
-									  const std::string& inS3BasePath,
-									  const std::string& inKeyJSONName,
-									  const KeyPhraseToKeyWithS3JSONCallbackRef& inCallback) {
+                                      const std::string& keyPhrase,
+                                      const s3bucket::S3BucketPtr& s3Bucket,
+                                      const std::string& s3BasePath,
+                                      const std::string& keyJSONName,
+                                      const KeyPhraseToKeyWithS3JSONCompletionPtr& completion) {
 			std::string basePathWithTrailingSlash;
-			string::AddTrailingSlash(inS3BasePath, basePathWithTrailingSlash);
+			string::AddTrailingSlash(s3BasePath, basePathWithTrailingSlash);
 			std::string keyStorePath(basePathWithTrailingSlash);
-			keyStorePath += inKeyJSONName;
+			keyStorePath += keyJSONName;
 			
 			std::string aesKey;
 			value::ObjectValuePtr keyValues;
-			auto status = encoding::KeyPhraseToKeyWithValues(h_, inKeyPhrase, aesKey, keyValues);
+			auto status = encoding::KeyPhraseToKeyWithValues(h_, keyPhrase, aesKey, keyValues);
 			if (status == encoding::KeyPhraseToKeyStatus::kCanceled) {
-				inCallback.Call(kKeyPhraseToKeyWithS3JSONStatus_Canceled, "");
+                completion->Call(h_, KeyPhraseToKeyWithS3JSONStatus::kCanceled, "");
 				return;
 			}
 			if (status != encoding::KeyPhraseToKeyStatus::kSuccess) {
-				NOTIFY_ERROR(h_, "KeyPhraseToKeyWithS3Properties: KeyPhraseToKeyWithValues failed.");
-				inCallback.Call(kKeyPhraseToKeyWithS3JSONStatus_Error, "");
+				NOTIFY_ERROR(h_, "KeyPhraseToKeyWithValues failed.");
+                completion->Call(h_, KeyPhraseToKeyWithS3JSONStatus::kError, "");
 				return;
 			}
 			
 			std::string jsonString;
 			json::DataValueToJSON(h_, keyValues, jsonString);
 			if (jsonString.empty()) {
-				NOTIFY_ERROR(h_, "KeyPhraseToKeyWithS3Properties: DataValueToJSON failed.");
-				inCallback.Call(kKeyPhraseToKeyWithS3JSONStatus_Error, "");
+				NOTIFY_ERROR(h_, "DataValueToJSON failed.");
+                completion->Call(h_, KeyPhraseToKeyWithS3JSONStatus::kError, "");
 				return;
 			}
-			
-			s3::PutS3ObjectCallbackClass putCallback;
-			inS3Bucket->PutObject(h_,
-								  keyStorePath,
-								  DataBuffer(jsonString.data(), jsonString.size()),
-								  false,
-								  putCallback);
-			
-			if (putCallback.mResult == s3::S3Result::kCanceled) {
-				inCallback.Call(kKeyPhraseToKeyWithS3JSONStatus_Canceled, "");
-				return;
-			}
-			if (putCallback.mResult != s3::S3Result::kSuccess) {
-				NOTIFY_ERROR(h_, "KeyPhraseToKeyWithS3Properties: PutObjectToS3Bucket failed.");
-				inCallback.Call(kKeyPhraseToKeyWithS3JSONStatus_Error, "");
-				return;
-			}
-			inCallback.Call(kKeyPhraseToKeyWithS3JSONStatus_Success, aesKey);
+            
+            auto putCompletion = std::make_shared<PutObjectCompletion>(aesKey, completion);
+			s3Bucket->PutObject(h_,
+                                keyStorePath,
+                                std::make_shared<SharedBuffer>(jsonString),
+                                false,
+                                putCompletion);
 		}
 		
 	} // namespace encoding_s3bucket

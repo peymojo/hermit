@@ -50,7 +50,6 @@
 		EFAD59C01D86B74B0056E526 /* LibS3Bucket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LibS3Bucket.h; sourceTree = "<group>"; };
 		EFAD59C11D86B74B0056E526 /* LibS3Bucket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LibS3Bucket.m; sourceTree = "<group>"; };
 		EFAD59C21D86B74B0056E526 /* PutMultipartObjectToS3Bucket.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PutMultipartObjectToS3Bucket.cpp; sourceTree = "<group>"; };
-		EFAD59C31D86B74B0056E526 /* PutMultipartObjectToS3Bucket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PutMultipartObjectToS3Bucket.h; sourceTree = "<group>"; };
 		EFAD59C41D86B74B0056E526 /* S3Bucket.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = S3Bucket.cpp; sourceTree = "<group>"; };
 		EFAD59C51D86B74B0056E526 /* S3Bucket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = S3Bucket.h; sourceTree = "<group>"; };
 		EFAD59C61D86B74B0056E526 /* S3BucketImpl_DeleteObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = S3BucketImpl_DeleteObject.cpp; sourceTree = "<group>"; };
@@ -130,7 +129,6 @@
 				EFAD59C01D86B74B0056E526 /* LibS3Bucket.h */,
 				EFAD59C11D86B74B0056E526 /* LibS3Bucket.m */,
 				EFAD59C21D86B74B0056E526 /* PutMultipartObjectToS3Bucket.cpp */,
-				EFAD59C31D86B74B0056E526 /* PutMultipartObjectToS3Bucket.h */,
 				EFAD59C41D86B74B0056E526 /* S3Bucket.cpp */,
 				EFAD59C51D86B74B0056E526 /* S3Bucket.h */,
 				EFAD59C61D86B74B0056E526 /* S3BucketImpl_DeleteObject.cpp */,

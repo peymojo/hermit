@@ -32,39 +32,41 @@ namespace hermit {
 			FileDataStore();
 
 			//
-			virtual datastore::ListDataStoreContentsResult ListContents(const HermitPtr& h_,
-																		const datastore::DataPathPtr& inRootPath,
-																		const datastore::ListDataStoreContentsItemCallbackRef& inItemCallback) override;
+			virtual void ListContents(const HermitPtr& h_,
+                                      const datastore::DataPathPtr& rootPath,
+                                      const datastore::ListDataStoreContentsItemCallbackPtr& itemCallback,
+                                      const datastore::ListDataStoreContentsCompletionPtr& completion) override;
 			
 			//
 			virtual void ItemExists(const HermitPtr& h_,
-									const datastore::DataPathPtr& inItemPath,
-									const datastore::ItemExistsInDataStoreCallbackRef& inCallback) override;
+									const datastore::DataPathPtr& itemPath,
+									const datastore::ItemExistsInDataStoreCompletionPtr& completion) override;
 			
 			
 			//
-			virtual datastore::CreateDataStoreLocationIfNeededStatus CreateLocationIfNeeded(const HermitPtr& h_,
-																							const datastore::DataPathPtr& inPath) override;
+			virtual void CreateLocationIfNeeded(const HermitPtr& h_,
+                                                const datastore::DataPathPtr& path,
+                                                const datastore::CreateDataStoreLocationIfNeededCompletionPtr& completion) override;
 			
 			//
 			virtual void LoadData(const HermitPtr& h_,
-								  const datastore::DataPathPtr& inPath,
-								  const datastore::EncryptionSetting& inEncryptionSetting,
-								  const datastore::LoadDataStoreDataDataBlockPtr& inDataBlock,
-								  const datastore::LoadDataStoreDataCompletionBlockPtr& inCompletion) override;
+								  const datastore::DataPathPtr& path,
+								  const datastore::EncryptionSetting& encryptionSetting,
+								  const datastore::LoadDataStoreDataDataBlockPtr& dataBlock,
+								  const datastore::LoadDataStoreDataCompletionBlockPtr& completion) override;
 			
 			//
 			virtual void WriteData(const HermitPtr& h_,
-								   const datastore::DataPathPtr& inPath,
-								   const SharedBufferPtr& inData,
-								   const datastore::EncryptionSetting& inEncryptionSetting,
-								   const datastore::WriteDataStoreDataCompletionFunctionPtr& inCompletionFunction) override;
+								   const datastore::DataPathPtr& path,
+								   const SharedBufferPtr& data,
+								   const datastore::EncryptionSetting& encryptionSetting,
+								   const datastore::WriteDataStoreDataCompletionFunctionPtr& completion) override;
 			
 			//
-			virtual bool DeleteItem(const HermitPtr& h_, const datastore::DataPathPtr& inPath) override;
+			virtual void DeleteItem(const HermitPtr& h_,
+                                    const datastore::DataPathPtr& path,
+                                    const datastore::DeleteDataStoreItemCompletionPtr& completion) override;
 		};
-		
-		//
 		typedef std::shared_ptr<FileDataStore> FileDataStorePtr;
 
 	} // namespace filedatastore

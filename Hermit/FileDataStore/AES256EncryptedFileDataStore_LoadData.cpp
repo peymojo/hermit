@@ -21,13 +21,10 @@
 #include "Hermit/Encoding/AES256DecryptCBC.h"
 #include "Hermit/Foundation/Notification.h"
 #include "AES256EncryptedFileDataStore.h"
-#include "LoadFileDataStoreData.h"
-#include "LoadAES256EncryptedFileDataStoreData.h"
 
 namespace hermit {
 	namespace filedatastore {
-		
-		namespace {
+		namespace AES256EncryptedFileDataStore_LoadData_Impl {
 			
 			//
 			class CompletionBlock : public datastore::LoadDataStoreDataCompletionBlock {
@@ -48,29 +45,29 @@ namespace hermit {
 				}
 				
 				//
-				virtual void Call(const HermitPtr& h_, const datastore::LoadDataStoreDataStatus& status) override {
-					if (status == datastore::LoadDataStoreDataStatus::kCanceled) {
-						mCompletion->Call(h_, datastore::LoadDataStoreDataStatus::kCanceled);
+				virtual void Call(const HermitPtr& h_, const datastore::LoadDataStoreDataResult& result) override {
+					if (result == datastore::LoadDataStoreDataResult::kCanceled) {
+						mCompletion->Call(h_, datastore::LoadDataStoreDataResult::kCanceled);
 						return;
 					}
-					if (status == datastore::LoadDataStoreDataStatus::kItemNotFound) {
-						mCompletion->Call(h_, datastore::LoadDataStoreDataStatus::kItemNotFound);
+					if (result == datastore::LoadDataStoreDataResult::kItemNotFound) {
+						mCompletion->Call(h_, datastore::LoadDataStoreDataResult::kItemNotFound);
 						return;
 					}
-					if (status != datastore::LoadDataStoreDataStatus::kSuccess) {
-						mCompletion->Call(h_, datastore::LoadDataStoreDataStatus::kError);
+					if (result != datastore::LoadDataStoreDataResult::kSuccess) {
+						mCompletion->Call(h_, datastore::LoadDataStoreDataResult::kError);
 						return;
 					}
 					
 					if (mEncryptionSetting == datastore::EncryptionSetting::kUnencrypted) {
-						mDataBlock->Call(DataBuffer(mData->mData.data(), mData->mData.size()));
-						mCompletion->Call(h_, datastore::LoadDataStoreDataStatus::kSuccess);
+						mDataBlock->Call(h_, DataBuffer(mData->mData.data(), mData->mData.size()));
+						mCompletion->Call(h_, datastore::LoadDataStoreDataResult::kSuccess);
 						return;
 					}
 					
 					if (mData->mData.size() < 16) {
 						NOTIFY_ERROR(h_, "LoadAES256EncryptedFileDataStoreData: dataSize < 16 for item at path:", mPath);
-						mCompletion->Call(h_, datastore::LoadDataStoreDataStatus::kError);
+						mCompletion->Call(h_, datastore::LoadDataStoreDataResult::kError);
 						return;
 					}
 					
@@ -85,11 +82,11 @@ namespace hermit {
 					encoding::AES256DecryptCBC(h_, DataBuffer(p, size), mAESKey, inputVector, callback);
 					if (!callback.mSuccess) {
 						NOTIFY_ERROR(h_, "LoadAES256EncryptedFileDataStoreData: AES256DecryptCBC failed for item at path:", mPath);
-						mCompletion->Call(h_, datastore::LoadDataStoreDataStatus::kError);
+						mCompletion->Call(h_, datastore::LoadDataStoreDataResult::kError);
 						return;
 					}
-					mDataBlock->Call(DataBuffer(callback.mData.data(), callback.mData.size()));
-					mCompletion->Call(h_, datastore::LoadDataStoreDataStatus::kSuccess);
+					mDataBlock->Call(h_, DataBuffer(callback.mData.data(), callback.mData.size()));
+					mCompletion->Call(h_, datastore::LoadDataStoreDataResult::kSuccess);
 				}
 
 				//
@@ -101,24 +98,23 @@ namespace hermit {
 				datastore::LoadDataStoreDataCompletionBlockPtr mCompletion;
 			};
 			
-		} // private namespace
+		} // namespace AES256EncryptedFileDataStore_LoadData_Impl
+        using namespace AES256EncryptedFileDataStore_LoadData_Impl;
 		
 		//
-		void LoadAES256EncryptedFileDataStoreData(const HermitPtr& h_,
-												  const datastore::DataStorePtr& inDataStore,
-												  const datastore::DataPathPtr& inPath,
-												  const datastore::EncryptionSetting& inEncryptionSetting,
-												  const datastore::LoadDataStoreDataDataBlockPtr& inDataBlock,
-												  const datastore::LoadDataStoreDataCompletionBlockPtr& inCompletion) {
-			AES256EncryptedFileDataStore& dataStore = static_cast<AES256EncryptedFileDataStore&>(*inDataStore);
-			auto dataBlock = std::make_shared<datastore::LoadDataStoreDataData>();
-			auto completion = std::make_shared<CompletionBlock>(inPath,
-																inEncryptionSetting,
-																dataStore.mAESKey,
-																dataBlock,
-																inDataBlock,
-																inCompletion);
-			LoadFileDataStoreData(h_, inDataStore, inPath, inEncryptionSetting, dataBlock, completion);
+        void AES256EncryptedFileDataStore::LoadData(const HermitPtr& h_,
+                                                    const datastore::DataPathPtr& path,
+                                                    const datastore::EncryptionSetting& encryptionSetting,
+                                                    const datastore::LoadDataStoreDataDataBlockPtr& dataBlock,
+                                                    const datastore::LoadDataStoreDataCompletionBlockPtr& completion) {
+			auto fileDataBlock = std::make_shared<datastore::LoadDataStoreDataData>();
+			auto fileCompletion = std::make_shared<CompletionBlock>(path,
+                                                                    encryptionSetting,
+                                                                    mAESKey,
+                                                                    fileDataBlock,
+                                                                    dataBlock,
+                                                                    completion);
+            FileDataStore::LoadData(h_, path, encryptionSetting, fileDataBlock, fileCompletion);
 		}
 		
 	} // namespace filedatastore

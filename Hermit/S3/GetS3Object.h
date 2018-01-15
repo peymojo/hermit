@@ -52,14 +52,13 @@ namespace hermit {
 		
 		//
 		void GetS3Object(const HermitPtr& h_,
-						 const std::string& inAWSPublicKey,
-						 const std::string& inAWSSigningKey,
-						 const uint64_t& inAWSSigningKeySize,
-						 const std::string& inAWSRegion,
-						 const std::string& inS3BucketName,
-						 const std::string& inS3ObjectKey,
-						 const GetS3ObjectResponseBlockPtr& inResponse,
-						 const S3CompletionBlockPtr& inCompletion);
+                         const std::string& awsPublicKey,
+                         const std::string& awsSigningKey,
+                         const std::string& awsRegion,
+                         const std::string& s3BucketName,
+                         const std::string& s3ObjectKey,
+                         const GetS3ObjectResponseBlockPtr& response,
+                         const S3CompletionBlockPtr& completion);
 		
 	} // namespace s3
 } // namespace hermit

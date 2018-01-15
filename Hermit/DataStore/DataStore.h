@@ -22,7 +22,6 @@
 #include <memory>
 #include <string>
 #include "Hermit/Foundation/AsyncFunction.h"
-#include "Hermit/Foundation/Callback.h"
 #include "Hermit/Foundation/DataBuffer.h"
 #include "Hermit/Foundation/SharedBuffer.h"
 #include "DataPath.h"
@@ -31,9 +30,18 @@
 namespace hermit {
 	namespace datastore {
 
-		// parentPath, itemName
-		DEFINE_CALLBACK_2A(ListDataStoreContentsItemCallback, DataPathPtr, std::string);
-		
+        //
+        class ListDataStoreContentsItemCallback {
+        protected:
+            //
+            ~ListDataStoreContentsItemCallback() = default;
+            
+        public:
+            //
+            virtual bool OnOneItem(const HermitPtr& h_, const DataPathPtr& parentPath, const std::string& itemName) = 0;
+        };
+        typedef std::shared_ptr<ListDataStoreContentsItemCallback> ListDataStoreContentsItemCallbackPtr;
+
 		//
 		enum class ListDataStoreContentsResult {
 			kUnknown,
@@ -44,8 +52,13 @@ namespace hermit {
 			kError
 		};
 		
-		//
-		enum class ItemExistsInDataStoreStatus {
+        //
+        DEFINE_ASYNC_FUNCTION_2A(ListDataStoreContentsCompletion,
+                                 HermitPtr,
+                                 ListDataStoreContentsResult);
+        
+        //
+		enum class ItemExistsInDataStoreResult {
 			kUnknown,
 			kSuccess,
 			kDataStoreMissing,
@@ -55,49 +68,51 @@ namespace hermit {
 		};
 		
 		//
-		//
-		DEFINE_CALLBACK_2A(ItemExistsInDataStoreCallback,
-						   ItemExistsInDataStoreStatus,		// inStatus
-						   bool);							// inExists
+		DEFINE_ASYNC_FUNCTION_3A(ItemExistsInDataStoreCompletion,
+                                 HermitPtr,
+                                 ItemExistsInDataStoreResult,		// inResult
+                                 bool);						    	// inExists
 		
 		//
-		//
-		class ItemExistsInDataStoreCallbackClass
-		:
-		public ItemExistsInDataStoreCallback {
-		public:
-			//
-			ItemExistsInDataStoreCallbackClass()
-			:
-			mStatus(ItemExistsInDataStoreStatus::kUnknown),
-			mExists(false) {
-			}
-			
-			//
-			bool Function(const ItemExistsInDataStoreStatus& inStatus, const bool& inExists) {
-				mStatus = inStatus;
-				mExists = inExists;
-				return true;
-			}
-			
-			//
-			ItemExistsInDataStoreStatus mStatus;
-			bool mExists;
+		enum class CreateDataStoreLocationIfNeededResult {
+			kUnknown,
+			kSuccess,
+			kConflictAtPath,
+			kStorageFull,
+			kError
 		};
-		
-		
-		//
-		enum CreateDataStoreLocationIfNeededStatus {
-			kCreateDataStoreLocationIfNeededStatus_Unknown,
-			kCreateDataStoreLocationIfNeededStatus_Success,
-			kCreateDataStoreLocationIfNeededStatus_ConflictAtPath,
-			kCreateDataStoreLocationIfNeededStatus_StorageFull,
-			kCreateDataStoreLocationIfNeededStatus_Error
-		};
-		
-		
-		//
-		enum class LoadDataStoreDataStatus {
+
+        //
+        DEFINE_ASYNC_FUNCTION_2A(CreateDataStoreLocationIfNeededCompletion,
+                                 HermitPtr,
+                                 CreateDataStoreLocationIfNeededResult);
+
+        //
+        DEFINE_ASYNC_FUNCTION_2A(LoadDataStoreDataDataBlock,
+                                 HermitPtr,
+                                 DataBuffer);
+        
+        //
+        class LoadDataStoreDataData : public LoadDataStoreDataDataBlock {
+        public:
+            //
+            LoadDataStoreDataData() {
+            }
+            
+            //
+            virtual void Call(const HermitPtr& h_, const DataBuffer& inData) override {
+                if ((inData.first != nullptr) && (inData.second > 0)) {
+                    mData.assign(inData.first, inData.second);
+                }
+            }
+            
+            //
+            std::string mData;
+        };
+        typedef std::shared_ptr<LoadDataStoreDataData> LoadDataStoreDataDataPtr;
+
+        //
+		enum class LoadDataStoreDataResult {
 			kUnknown,
 			kSuccess,
 			kItemNotFound,
@@ -109,75 +124,75 @@ namespace hermit {
 		};
 		
 		//
-		DEFINE_ASYNC_FUNCTION_2A(LoadDataStoreDataCompletionBlock, HermitPtr, LoadDataStoreDataStatus);
-
-		//
-		DEFINE_ASYNC_FUNCTION_1A(LoadDataStoreDataDataBlock, DataBuffer);
+		DEFINE_ASYNC_FUNCTION_2A(LoadDataStoreDataCompletionBlock,
+                                 HermitPtr,
+                                 LoadDataStoreDataResult);
 		
 		//
-		class LoadDataStoreDataData : public LoadDataStoreDataDataBlock {
-		public:
-			//
-			LoadDataStoreDataData() {
-			}
-			
-			//
-			virtual void Call(const DataBuffer& inData) override {
-				if ((inData.first != nullptr) && (inData.second > 0)) {
-					mData.assign(inData.first, inData.second);
-				}
-			}
-			
-			//
-			std::string mData;
-		};
-		typedef std::shared_ptr<LoadDataStoreDataData> LoadDataStoreDataDataPtr;
-		
-		//
-		enum WriteDataStoreDataStatus {
-			kWriteDataStoreDataStatus_Unknown,
-			kWriteDataStoreDataStatus_Success,
-			kWriteDataStoreDataStatus_AccessDenied,
-			kWriteDataStoreDataStatus_TimedOut,
-			kWriteDataStoreDataStatus_StorageFull,
-			kWriteDataStoreDataStatus_Canceled,
-			kWriteDataStoreDataStatus_Error
+		enum class WriteDataStoreDataResult {
+			kUnknown,
+			kSuccess,
+			kAccessDenied,
+			kTimedOut,
+			kStorageFull,
+			kCanceled,
+			kError
 		};
 		
 		//
-		DEFINE_ASYNC_FUNCTION_2A(WriteDataStoreDataCompletionFunction, HermitPtr, WriteDataStoreDataStatus);
+		DEFINE_ASYNC_FUNCTION_2A(WriteDataStoreDataCompletionFunction,
+                                 HermitPtr,
+                                 WriteDataStoreDataResult);
 		
+        //
+        enum class DeleteDataStoreItemResult {
+            kUnknown,
+            kSuccess,
+            kCanceled,
+            kError
+        };
+        
+        //
+        DEFINE_ASYNC_FUNCTION_2A(DeleteDataStoreItemCompletion,
+                                 HermitPtr,
+                                 DeleteDataStoreItemResult);
+        
 		//
 		struct DataStore {
 			//
-			virtual ListDataStoreContentsResult ListContents(const HermitPtr& h_,
-															 const DataPathPtr& inRootPath,
-															 const ListDataStoreContentsItemCallbackRef& inItemCallback);
+			virtual void ListContents(const HermitPtr& h_,
+                                      const DataPathPtr& rootPath,
+                                      const ListDataStoreContentsItemCallbackPtr& itemCallback,
+                                      const ListDataStoreContentsCompletionPtr& completion);
 			
 			//
 			virtual void ItemExists(const HermitPtr& h_,
-									const DataPathPtr& inItemPath,
-									const ItemExistsInDataStoreCallbackRef& inCallback);
+									const DataPathPtr& itemPath,
+									const ItemExistsInDataStoreCompletionPtr& completion);
 			
 			//
-			virtual CreateDataStoreLocationIfNeededStatus CreateLocationIfNeeded(const HermitPtr& h_, const DataPathPtr& inPath);
+			virtual void CreateLocationIfNeeded(const HermitPtr& h_,
+                                                const DataPathPtr& path,
+                                                const CreateDataStoreLocationIfNeededCompletionPtr& completion);
 
 			//
 			virtual void LoadData(const HermitPtr& h_,
-								  const DataPathPtr& inPath,
-								  const EncryptionSetting& inEncryptionSetting,
-								  const LoadDataStoreDataDataBlockPtr& inDataBlock,
-								  const LoadDataStoreDataCompletionBlockPtr& inCompletion);
+								  const DataPathPtr& path,
+								  const EncryptionSetting& encryptionSetting,
+								  const LoadDataStoreDataDataBlockPtr& dataBlock,
+								  const LoadDataStoreDataCompletionBlockPtr& completion);
 
 			//
 			virtual void WriteData(const HermitPtr& h_,
-								   const DataPathPtr& inPath,
-								   const SharedBufferPtr& inData,
-								   const EncryptionSetting& inEncryptionSetting,
-								   const WriteDataStoreDataCompletionFunctionPtr& inCompletionFunction);
+								   const DataPathPtr& path,
+								   const SharedBufferPtr& data,
+								   const EncryptionSetting& encryptionSetting,
+								   const WriteDataStoreDataCompletionFunctionPtr& completion);
 
 			//
-			virtual bool DeleteItem(const HermitPtr& h_, const DataPathPtr& inPath);
+			virtual void DeleteItem(const HermitPtr& h_,
+                                    const DataPathPtr& inPath,
+                                    const DeleteDataStoreItemCompletionPtr& completion);
 
 		protected:
 			//

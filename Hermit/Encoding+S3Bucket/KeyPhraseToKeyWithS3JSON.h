@@ -19,7 +19,7 @@
 #ifndef KeyPhraseToKeyWithS3JSON_h
 #define KeyPhraseToKeyWithS3JSON_h
 
-#include "Hermit/Foundation/Callback.h"
+#include "Hermit/Foundation/AsyncFunction.h"
 #include "Hermit/Foundation/Hermit.h"
 #include "Hermit/S3Bucket/S3Bucket.h"
 
@@ -27,64 +27,26 @@ namespace hermit {
 	namespace encoding_s3bucket {
 		
 		//
-		//
-		enum KeyPhraseToKeyWithS3JSONStatus
-		{
-			kKeyPhraseToKeyWithS3JSONStatus_Unknown,
-			kKeyPhraseToKeyWithS3JSONStatus_Success,
-			kKeyPhraseToKeyWithS3JSONStatus_Canceled,
-			kKeyPhraseToKeyWithS3JSONStatus_Error
+		enum class KeyPhraseToKeyWithS3JSONStatus {
+			kUnknown,
+			kSuccess,
+			kCanceled,
+			kError
 		};
 		
 		//
-		//
-		DEFINE_CALLBACK_2A(KeyPhraseToKeyWithS3JSONCallback,
-						   KeyPhraseToKeyWithS3JSONStatus,		// inStatus
-						   std::string);						// inAESKey
-		
-		//
-		//
-		class KeyPhraseToKeyWithS3JSONCallbackClass
-		:
-		public KeyPhraseToKeyWithS3JSONCallback
-		{
-		public:
-			//
-			//
-			KeyPhraseToKeyWithS3JSONCallbackClass()
-			:
-			mStatus(kKeyPhraseToKeyWithS3JSONStatus_Unknown)
-			{
-			}
-			
-			//
-			//
-			bool Function(
-						  const KeyPhraseToKeyWithS3JSONStatus& inStatus,
-						  const std::string& inAESKey)
-			{
-				mStatus = inStatus;
-				if (inStatus == kKeyPhraseToKeyWithS3JSONStatus_Success)
-				{
-					mAESKey = inAESKey;
-				}
-				return true;
-			}
-			
-			//
-			//
-			KeyPhraseToKeyWithS3JSONStatus mStatus;
-			std::string mAESKey;
-		};
-		
-		//
+		DEFINE_ASYNC_FUNCTION_3A(KeyPhraseToKeyWithS3JSONCompletion,
+                                 HermitPtr,
+                                 KeyPhraseToKeyWithS3JSONStatus,		// inStatus
+                                 std::string);					    	// inAESKey
+				
 		//
 		void KeyPhraseToKeyWithS3JSON(const HermitPtr& h_,
-									  const std::string& inKeyPhrase,
-									  const s3bucket::S3BucketPtr& inS3Bucket,
-									  const std::string& inS3BasePath,
-									  const std::string& inKeyJSONName,
-									  const KeyPhraseToKeyWithS3JSONCallbackRef& inCallback);
+									  const std::string& keyPhrase,
+									  const s3bucket::S3BucketPtr& s3Bucket,
+									  const std::string& s3BasePath,
+									  const std::string& keyJSONName,
+									  const KeyPhraseToKeyWithS3JSONCompletionPtr& completion);
 		
 	} // namespace encoding_s3bucket
 } // namespace hermit

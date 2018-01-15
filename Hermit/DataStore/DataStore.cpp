@@ -23,48 +23,56 @@ namespace hermit {
 	namespace datastore {
 		
 		//
-		ListDataStoreContentsResult DataStore::ListContents(const HermitPtr& h_,
-															const DataPathPtr& inRootPath,
-															const ListDataStoreContentsItemCallbackRef& inItemCallback) {
+		void DataStore::ListContents(const HermitPtr& h_,
+                                     const DataPathPtr& rootPath,
+                                     const ListDataStoreContentsItemCallbackPtr& itemCallback,
+                                     const ListDataStoreContentsCompletionPtr& completion) {
 			NOTIFY_ERROR(h_, "unimplemented");
-			return ListDataStoreContentsResult::kError;
+            completion->Call(h_, ListDataStoreContentsResult::kError);
 		}
 		
 		//
 		void DataStore::ItemExists(const HermitPtr& h_,
-								   const DataPathPtr& inItemPath,
-								   const ItemExistsInDataStoreCallbackRef& inCallback) {
+								   const DataPathPtr& itemPath,
+								   const ItemExistsInDataStoreCompletionPtr& completion) {
 			NOTIFY_ERROR(h_, "unimplemented");
+            completion->Call(h_, ItemExistsInDataStoreResult::kError, false);
 		}
 		
 		//
-		CreateDataStoreLocationIfNeededStatus DataStore::CreateLocationIfNeeded(const HermitPtr& h_, const DataPathPtr& inPath) {
+		void DataStore::CreateLocationIfNeeded(const HermitPtr& h_,
+                                               const DataPathPtr& path,
+                                               const CreateDataStoreLocationIfNeededCompletionPtr& completion) {
 			NOTIFY_ERROR(h_, "unimplemented");
-			return kCreateDataStoreLocationIfNeededStatus_Error;
+            completion->Call(h_, CreateDataStoreLocationIfNeededResult::kError);
 		}
 		
 		//
 		void DataStore::LoadData(const HermitPtr& h_,
-								 const DataPathPtr& inPath,
-								 const EncryptionSetting& inEncryptionSetting,
-								 const LoadDataStoreDataDataBlockPtr& inDataBlock,
-								 const LoadDataStoreDataCompletionBlockPtr& inCompletion) {
+								 const DataPathPtr& path,
+								 const EncryptionSetting& encryptionSetting,
+								 const LoadDataStoreDataDataBlockPtr& dataBlock,
+								 const LoadDataStoreDataCompletionBlockPtr& completion) {
 			NOTIFY_ERROR(h_, "unimplemented");
+            completion->Call(h_, LoadDataStoreDataResult::kError);
 		}
 		
 		//
 		void DataStore::WriteData(const HermitPtr& h_,
-								  const DataPathPtr& inPath,
-								  const SharedBufferPtr& inData,
-								  const EncryptionSetting& inEncryptionSetting,
-								  const WriteDataStoreDataCompletionFunctionPtr& inCompletionFunction) {
+								  const DataPathPtr& path,
+								  const SharedBufferPtr& data,
+								  const EncryptionSetting& encryptionSetting,
+								  const WriteDataStoreDataCompletionFunctionPtr& completion) {
 			NOTIFY_ERROR(h_, "unimplemented");
+            completion->Call(h_, WriteDataStoreDataResult::kError);
 		}
 		
 		//
-		bool DataStore::DeleteItem(const HermitPtr& h_, const DataPathPtr& inPath) {
+		void DataStore::DeleteItem(const HermitPtr& h_,
+                                   const DataPathPtr& path,
+                                   const DeleteDataStoreItemCompletionPtr& completion) {
 			NOTIFY_ERROR(h_, "unimplemented");
-			return false;
+            completion->Call(h_, DeleteDataStoreItemResult::kError);
 		}
 		
 	} // namespace datastore

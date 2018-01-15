@@ -20,6 +20,7 @@
 #define S3BucketImpl_h
 
 #include <string>
+#include "Hermit/Foundation/AsyncFunction.h"
 #include "Hermit/Foundation/Hermit.h"
 #include "Hermit/Foundation/ThreadLock.h"
 #include "S3Bucket.h"
@@ -29,6 +30,9 @@ namespace hermit {
 	namespace s3bucket {
 		namespace impl {
 			
+            //
+            DEFINE_ASYNC_FUNCTION_2A(InitS3BucketCompletion, HermitPtr, WithS3BucketStatus);
+            
 			//
 			class S3BucketImpl : public S3Bucket, public std::enable_shared_from_this<S3BucketImpl> {
 			public:
@@ -42,8 +46,14 @@ namespace hermit {
 				mBucketName(inBucketName) {
 				}
 				
-				//
-				virtual s3::S3Result ListObjects(const HermitPtr& h_, const std::string& prefix, s3::ObjectKeyReceiver& receiver) override;
+                //
+                void Init(const HermitPtr& h_, const InitS3BucketCompletionPtr& completion);
+
+                //
+				virtual void ListObjects(const HermitPtr& h_,
+                                         const std::string& prefix,
+                                         const s3::ObjectKeyReceiverPtr& receiver,
+                                         const s3::S3CompletionBlockPtr& completion) override;
 				
 				//
 				virtual void GetObject(const HermitPtr& h_,
@@ -61,19 +71,25 @@ namespace hermit {
 				//
 				virtual void PutObject(const HermitPtr& h_,
 									   const std::string& inS3ObjectKey,
-									   const DataBuffer& inData,
+									   const SharedBufferPtr& inData,
 									   const bool& inUseReducedRedundancyStorage,
-									   const s3::PutS3ObjectCallbackRef& inCallback) override;
+									   const s3::PutS3ObjectCompletionPtr& inCompletion) override;
 				
 				//
-				virtual s3::S3Result DeleteObject(const HermitPtr& h_, const std::string& inObjectKey) override;
+				virtual void DeleteObject(const HermitPtr& h_,
+                                          const std::string& objectKey,
+                                          const s3::S3CompletionBlockPtr& completion) override;
 				
 				//
-				virtual void IsVersioningEnabled(const HermitPtr& h_, const s3::S3GetBucketVersioningCallbackRef& inCallback) override;
+				virtual void IsVersioningEnabled(const HermitPtr& h_, const s3::S3GetBucketVersioningCompletionPtr& inCompletion) override;
 				
-				//
-				WithS3BucketStatus Init(const HermitPtr& h_);
-				
+                //
+                void PutMultipartObjectToS3Bucket(const HermitPtr& h_,
+                                                  const std::string& s3ObjectKey,
+                                                  const SharedBufferPtr& data,
+                                                  const bool& useReducedRedundancyStorage, // TODO: currently ignored
+                                                  const s3::PutS3ObjectCompletionPtr& completion);
+                
 				//
 				void RefreshSigningKeyIfNeeded();
 				

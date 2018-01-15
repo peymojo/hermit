@@ -34,9 +34,10 @@ namespace hermit {
 		class S3Bucket {
 		public:
 			//
-			virtual s3::S3Result ListObjects(const HermitPtr& h_,
-											 const std::string& prefix,
-											 s3::ObjectKeyReceiver& receiver);
+			virtual void ListObjects(const HermitPtr& h_,
+                                     const std::string& prefix,
+                                     const s3::ObjectKeyReceiverPtr& receiver,
+                                     const s3::S3CompletionBlockPtr& completion);
 			
 			//
 			virtual void GetObject(const HermitPtr& h_,
@@ -54,16 +55,18 @@ namespace hermit {
 			//
 			virtual void PutObject(const HermitPtr& h_,
 								   const std::string& inS3ObjectKey,
-								   const DataBuffer& inData,
+								   const SharedBufferPtr& inData,
 								   const bool& inUseReducedRedundancyStorage,
-								   const s3::PutS3ObjectCallbackRef& inCallback);
+								   const s3::PutS3ObjectCompletionPtr& inCompletion);
 			
 			//
-			virtual s3::S3Result DeleteObject(const HermitPtr& h_, const std::string& inObjectKey);
+			virtual void DeleteObject(const HermitPtr& h_,
+                                      const std::string& objectKey,
+                                      const s3::S3CompletionBlockPtr& completion);
 			
 			//
 			virtual void IsVersioningEnabled(const HermitPtr& h_,
-											 const s3::S3GetBucketVersioningCallbackRef& inCallback);
+											 const s3::S3GetBucketVersioningCompletionPtr& inCompletion);
 			
 		protected:
 			//

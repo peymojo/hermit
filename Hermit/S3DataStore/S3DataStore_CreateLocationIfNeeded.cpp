@@ -16,21 +16,18 @@
 //	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef CreateS3DataStoreLocationIfNeeded_h
-#define CreateS3DataStoreLocationIfNeeded_h
-
-#include "Hermit/DataStore/DataStore.h"
+#include "S3DataStore.h"
 
 namespace hermit {
 	namespace s3datastore {
 		
 		//
-		datastore::CreateDataStoreLocationIfNeededStatus
-		CreateS3DataStoreLocationIfNeeded(const HermitPtr& h_,
-										  const datastore::DataStorePtr& inDataStore,
-										  const datastore::DataPathPtr& inPath);
+		void S3DataStore::CreateLocationIfNeeded(const HermitPtr& h_,
+                                                 const datastore::DataPathPtr& path,
+                                                 const datastore::CreateDataStoreLocationIfNeededCompletionPtr& completion) {
+			//	we don't have to create anything for S3, since "folders" are just path-like strings in an object key.
+            completion->Call(h_, datastore::CreateDataStoreLocationIfNeededResult::kSuccess);
+		}
 		
 	} // namespace s3datastore
 } // namespace hermit
-
-#endif 
