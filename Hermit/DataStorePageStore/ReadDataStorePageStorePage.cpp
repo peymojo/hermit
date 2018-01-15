@@ -39,17 +39,17 @@ namespace hermit {
 			}
 				
 			//
-			virtual void Call(const HermitPtr& h_, const datastore::LoadDataStoreDataStatus& status) override {
-				if (status == datastore::LoadDataStoreDataStatus::kCanceled) {
+			virtual void Call(const HermitPtr& h_, const datastore::LoadDataStoreDataResult& result) override {
+				if (result == datastore::LoadDataStoreDataResult::kCanceled) {
 					mCompletion->Call(h_, pagestore::ReadPageStorePageResult::kCanceled, DataBuffer());
 					return;
 				}
-				if (status == datastore::LoadDataStoreDataStatus::kItemNotFound) {
+				if (result == datastore::LoadDataStoreDataResult::kItemNotFound) {
 					NOTIFY_ERROR(h_, "ReadPageData: Page missing? name:", mPageFileName);
 					mCompletion->Call(h_, pagestore::ReadPageStorePageResult::kPageNotFound, DataBuffer());
 					return;
 				}
-				if (status != datastore::LoadDataStoreDataStatus::kSuccess) {
+				if (result != datastore::LoadDataStoreDataResult::kSuccess) {
 					NOTIFY_ERROR(h_, "ReadPageData: LoadDataStoreData failed, pageFileName:", mPageFileName);
 					mCompletion->Call(h_, pagestore::ReadPageStorePageResult::kError, DataBuffer());
 					return;

@@ -81,7 +81,7 @@ namespace hermit {
 		};
 		
 		//
-		DEFINE_ASYNC_FUNCTION_1A(LockPageStoreCompletionFunction, LockPageStoreStatus);
+		DEFINE_ASYNC_FUNCTION_2A(LockPageStoreCompletionFunction, HermitPtr, LockPageStoreStatus);
 		
 		
 		//

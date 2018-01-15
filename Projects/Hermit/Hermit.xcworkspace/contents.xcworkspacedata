@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:hermit_test/hermit_test.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:s3util/s3util.xcodeproj">
    </FileRef>
    <FileRef

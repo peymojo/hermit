@@ -1,0 +1,364 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 48;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		EF120168200C49860087E968 /* DataStoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF12017D200C49860087E968 /* DataStoreKit.framework */; };
+		EF120169200C49860087E968 /* DataStorePageStoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF12017E200C49860087E968 /* DataStorePageStoreKit.framework */; };
+		EF12016A200C49860087E968 /* DataStoreStringMapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF12017F200C49860087E968 /* DataStoreStringMapKit.framework */; };
+		EF12016B200C49860087E968 /* EncodingFileKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF120180200C49860087E968 /* EncodingFileKit.framework */; };
+		EF12016C200C49860087E968 /* EncodingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF120181200C49860087E968 /* EncodingKit.framework */; };
+		EF12016D200C49860087E968 /* EncodingS3BucketKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF120182200C49860087E968 /* EncodingS3BucketKit.framework */; };
+		EF12016E200C49860087E968 /* FileDataStoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF120183200C49860087E968 /* FileDataStoreKit.framework */; };
+		EF12016F200C49860087E968 /* FileKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF120184200C49860087E968 /* FileKit.framework */; };
+		EF120170200C49860087E968 /* FoundationKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF120185200C49860087E968 /* FoundationKit.framework */; };
+		EF120171200C49860087E968 /* HTTPKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF120186200C49860087E968 /* HTTPKit.framework */; };
+		EF120172200C49860087E968 /* JSONKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF120187200C49860087E968 /* JSONKit.framework */; };
+		EF120173200C49860087E968 /* PageStoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF120188200C49860087E968 /* PageStoreKit.framework */; };
+		EF120174200C49860087E968 /* PageStoreStringMapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF120189200C49860087E968 /* PageStoreStringMapKit.framework */; };
+		EF120175200C49860087E968 /* S3BucketKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF12018A200C49860087E968 /* S3BucketKit.framework */; };
+		EF120176200C49860087E968 /* S3DataStoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF12018B200C49860087E968 /* S3DataStoreKit.framework */; };
+		EF120177200C49860087E968 /* S3Kit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF12018C200C49860087E968 /* S3Kit.framework */; };
+		EF120178200C49860087E968 /* SQLiteStringMapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF12018D200C49860087E968 /* SQLiteStringMapKit.framework */; };
+		EF120179200C49860087E968 /* StringKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF12018E200C49860087E968 /* StringKit.framework */; };
+		EF12017A200C49860087E968 /* StringMapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF12018F200C49860087E968 /* StringMapKit.framework */; };
+		EF12017B200C49860087E968 /* ValueKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF120190200C49860087E968 /* ValueKit.framework */; };
+		EF12017C200C49860087E968 /* XMLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF120191200C49860087E968 /* XMLKit.framework */; };
+		EF67A197200C43C10035C6E9 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF67A196200C43C10035C6E9 /* main.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		EF67A191200C43C10035C6E9 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		EF12017D200C49860087E968 /* DataStoreKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = DataStoreKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF12017E200C49860087E968 /* DataStorePageStoreKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = DataStorePageStoreKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF12017F200C49860087E968 /* DataStoreStringMapKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = DataStoreStringMapKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF120180200C49860087E968 /* EncodingFileKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = EncodingFileKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF120181200C49860087E968 /* EncodingKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = EncodingKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF120182200C49860087E968 /* EncodingS3BucketKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = EncodingS3BucketKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF120183200C49860087E968 /* FileDataStoreKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FileDataStoreKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF120184200C49860087E968 /* FileKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FileKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF120185200C49860087E968 /* FoundationKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FoundationKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF120186200C49860087E968 /* HTTPKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = HTTPKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF120187200C49860087E968 /* JSONKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = JSONKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF120188200C49860087E968 /* PageStoreKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PageStoreKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF120189200C49860087E968 /* PageStoreStringMapKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PageStoreStringMapKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF12018A200C49860087E968 /* S3BucketKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = S3BucketKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF12018B200C49860087E968 /* S3DataStoreKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = S3DataStoreKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF12018C200C49860087E968 /* S3Kit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = S3Kit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF12018D200C49860087E968 /* SQLiteStringMapKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SQLiteStringMapKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF12018E200C49860087E968 /* StringKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StringKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF12018F200C49860087E968 /* StringMapKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StringMapKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF120190200C49860087E968 /* ValueKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ValueKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF120191200C49860087E968 /* XMLKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = XMLKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF67A193200C43C10035C6E9 /* hermit_test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = hermit_test; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF67A196200C43C10035C6E9 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		EF67A190200C43C10035C6E9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF120168200C49860087E968 /* DataStoreKit.framework in Frameworks */,
+				EF120169200C49860087E968 /* DataStorePageStoreKit.framework in Frameworks */,
+				EF12016A200C49860087E968 /* DataStoreStringMapKit.framework in Frameworks */,
+				EF12016B200C49860087E968 /* EncodingFileKit.framework in Frameworks */,
+				EF12016C200C49860087E968 /* EncodingKit.framework in Frameworks */,
+				EF12016D200C49860087E968 /* EncodingS3BucketKit.framework in Frameworks */,
+				EF12016E200C49860087E968 /* FileDataStoreKit.framework in Frameworks */,
+				EF12016F200C49860087E968 /* FileKit.framework in Frameworks */,
+				EF120170200C49860087E968 /* FoundationKit.framework in Frameworks */,
+				EF120171200C49860087E968 /* HTTPKit.framework in Frameworks */,
+				EF120172200C49860087E968 /* JSONKit.framework in Frameworks */,
+				EF120173200C49860087E968 /* PageStoreKit.framework in Frameworks */,
+				EF120174200C49860087E968 /* PageStoreStringMapKit.framework in Frameworks */,
+				EF120175200C49860087E968 /* S3BucketKit.framework in Frameworks */,
+				EF120176200C49860087E968 /* S3DataStoreKit.framework in Frameworks */,
+				EF120177200C49860087E968 /* S3Kit.framework in Frameworks */,
+				EF120178200C49860087E968 /* SQLiteStringMapKit.framework in Frameworks */,
+				EF120179200C49860087E968 /* StringKit.framework in Frameworks */,
+				EF12017A200C49860087E968 /* StringMapKit.framework in Frameworks */,
+				EF12017B200C49860087E968 /* ValueKit.framework in Frameworks */,
+				EF12017C200C49860087E968 /* XMLKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		EF120167200C49860087E968 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				EF12017D200C49860087E968 /* DataStoreKit.framework */,
+				EF12017E200C49860087E968 /* DataStorePageStoreKit.framework */,
+				EF12017F200C49860087E968 /* DataStoreStringMapKit.framework */,
+				EF120180200C49860087E968 /* EncodingFileKit.framework */,
+				EF120181200C49860087E968 /* EncodingKit.framework */,
+				EF120182200C49860087E968 /* EncodingS3BucketKit.framework */,
+				EF120183200C49860087E968 /* FileDataStoreKit.framework */,
+				EF120184200C49860087E968 /* FileKit.framework */,
+				EF120185200C49860087E968 /* FoundationKit.framework */,
+				EF120186200C49860087E968 /* HTTPKit.framework */,
+				EF120187200C49860087E968 /* JSONKit.framework */,
+				EF120188200C49860087E968 /* PageStoreKit.framework */,
+				EF120189200C49860087E968 /* PageStoreStringMapKit.framework */,
+				EF12018A200C49860087E968 /* S3BucketKit.framework */,
+				EF12018B200C49860087E968 /* S3DataStoreKit.framework */,
+				EF12018C200C49860087E968 /* S3Kit.framework */,
+				EF12018D200C49860087E968 /* SQLiteStringMapKit.framework */,
+				EF12018E200C49860087E968 /* StringKit.framework */,
+				EF12018F200C49860087E968 /* StringMapKit.framework */,
+				EF120190200C49860087E968 /* ValueKit.framework */,
+				EF120191200C49860087E968 /* XMLKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		EF67A18A200C43C10035C6E9 = {
+			isa = PBXGroup;
+			children = (
+				EF67A195200C43C10035C6E9 /* hermit_test */,
+				EF67A194200C43C10035C6E9 /* Products */,
+				EF120167200C49860087E968 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		EF67A194200C43C10035C6E9 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				EF67A193200C43C10035C6E9 /* hermit_test */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		EF67A195200C43C10035C6E9 /* hermit_test */ = {
+			isa = PBXGroup;
+			children = (
+				EF67A196200C43C10035C6E9 /* main.cpp */,
+			);
+			path = hermit_test;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		EF67A192200C43C10035C6E9 /* hermit_test */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EF67A19A200C43C10035C6E9 /* Build configuration list for PBXNativeTarget "hermit_test" */;
+			buildPhases = (
+				EF67A18F200C43C10035C6E9 /* Sources */,
+				EF67A190200C43C10035C6E9 /* Frameworks */,
+				EF67A191200C43C10035C6E9 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = hermit_test;
+			productName = hermit_test;
+			productReference = EF67A193200C43C10035C6E9 /* hermit_test */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		EF67A18B200C43C10035C6E9 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0920;
+				ORGANIZATIONNAME = "Paul Young";
+				TargetAttributes = {
+					EF67A192200C43C10035C6E9 = {
+						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = EF67A18E200C43C10035C6E9 /* Build configuration list for PBXProject "hermit_test" */;
+			compatibilityVersion = "Xcode 8.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = EF67A18A200C43C10035C6E9;
+			productRefGroup = EF67A194200C43C10035C6E9 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				EF67A192200C43C10035C6E9 /* hermit_test */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		EF67A18F200C43C10035C6E9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF67A197200C43C10035C6E9 /* main.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		EF67A198200C43C10035C6E9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		EF67A199200C43C10035C6E9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		EF67A19B200C43C10035C6E9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		EF67A19C200C43C10035C6E9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		EF67A18E200C43C10035C6E9 /* Build configuration list for PBXProject "hermit_test" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EF67A198200C43C10035C6E9 /* Debug */,
+				EF67A199200C43C10035C6E9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EF67A19A200C43C10035C6E9 /* Build configuration list for PBXNativeTarget "hermit_test" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EF67A19B200C43C10035C6E9 /* Debug */,
+				EF67A19C200C43C10035C6E9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = EF67A18B200C43C10035C6E9 /* Project object */;
+}

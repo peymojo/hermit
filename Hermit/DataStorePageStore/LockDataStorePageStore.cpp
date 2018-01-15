@@ -47,16 +47,16 @@ namespace hermit {
 				{
 					if (inStatus == kTaskQueueLockStatus_Cancel)
 					{
-						mCompletionFunction->Call(pagestore::kLockPageStoreStatus_Canceled);
+						mCompletionFunction->Call(h_, pagestore::kLockPageStoreStatus_Canceled);
 						return;
 					}
 					if (inStatus != kTaskQueueLockStatus_Success)
 					{
 						NOTIFY_ERROR(h_, "LockDataStorePageStore: pageStore.Lock failed.");
-						mCompletionFunction->Call(pagestore::kLockPageStoreStatus_Canceled);
+						mCompletionFunction->Call(h_, pagestore::kLockPageStoreStatus_Canceled);
 						return;
 					}
-					mCompletionFunction->Call(pagestore::kLockPageStoreStatus_Success);
+					mCompletionFunction->Call(h_, pagestore::kLockPageStoreStatus_Success);
 				}
 				
 				//
