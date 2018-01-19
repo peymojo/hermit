@@ -43,12 +43,12 @@ namespace hermit {
 		//	It's called for all sub-files & nested sub-files if inFilePath1 & inFilePath2 are directories.
 		//
 		void CompareFiles(const HermitPtr& h_,
-						  const FilePathPtr& inFilePath1,
-						  const FilePathPtr& inFilePath2,
-						  const bool& inIgnoreDates,
-						  const bool& inIgnoreFinderInfo,
-						  const PreprocessFileFunctionPtr& inPreprocessFunction,
-						  const CompareFilesCompletionPtr& inCompletion);
+						  const FilePathPtr& filePath1,
+						  const FilePathPtr& filePath2,
+						  const bool& ignoreDates,
+						  const bool& ignoreFinderInfo,
+						  const PreprocessFileFunctionPtr& preprocessFunction,
+						  const CompareFilesCompletionPtr& completion);
 		
 	} // namespace file
 } // namespace hermit

@@ -19,7 +19,7 @@
 #include <set>
 #include <string>
 #include <vector>
-#include "Hermit/Foundation/QueueAsyncTask.h"
+#include "Hermit/Foundation/AsyncTaskQueue.h"
 #include "Hermit/Foundation/Notification.h"
 #include "AppendToFilePath.h"
 #include "CompareFiles.h"
@@ -36,8 +36,7 @@
 
 namespace hermit {
 	namespace file {
-		
-		namespace {
+		namespace CompareDirectories_Impl {
 			
 			//
 			typedef std::pair<std::string, std::string> StringPair;
@@ -639,7 +638,8 @@ namespace hermit {
 				CompareDirectoriesCompletionPtr mCompletion;
 			};
 			
-		} // private namespace
+		} // namespace CompareDirectories_Impl
+        using namespace CompareDirectories_Impl;
 		
 		void CompareDirectories(const HermitPtr& h_,
 								const FilePathPtr& inFilePath1,

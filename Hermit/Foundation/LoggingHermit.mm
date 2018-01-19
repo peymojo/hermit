@@ -27,8 +27,7 @@
 #include "LoggingHermit.h"
 
 namespace hermit {
-	
-	namespace {
+	namespace LoggingHermit_Impl {
 		
 		// Returns true if the current process is being debugged (either
 		// running under the debugger or has a debugger attached post facto).
@@ -63,7 +62,8 @@ namespace hermit {
 #endif
 		}
 		
-	} // private namespace
+	} // namespace LoggingHermit_Impl
+    using namespace LoggingHermit_Impl;
 	
 	//
 	class LoggingHermit::impl {

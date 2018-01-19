@@ -30,12 +30,12 @@
 #import "GetFileACL.h"
 #import "GetFileBSDFlags.h"
 #import "GetFileDates.h"
-#import "GetFileForkSize.h"
 #import "GetFileIsDevice.h"
 #import "GetFileIsLocked.h"
 #import "GetFilePathParent.h"
 #import "GetFilePosixOwnership.h"
 #import "GetFilePosixPermissions.h"
+#import "GetFileTotalSize.h"
 #import "GetFileType.h"
 #import "GetFileXAttrs.h"
 #import "GetRelativeFilePath.h"
@@ -589,22 +589,22 @@ namespace hermit {
 				}
 				
 				if (compareBits) {
-					GetFileForkSizeCallbackClass sizeCallback;
-					GetFileForkSize(h_, inFilePath1, "", sizeCallback);
+					GetFileTotalSizeCallbackClass sizeCallback;
+					GetFileTotalSize(h_, inFilePath1, sizeCallback);
 					if (!sizeCallback.mSuccess) {
 						NOTIFY_ERROR(h_, "CompareFiles: GetFileForkSize failed for: ", inFilePath1);
 						inCompletion->Call(CompareFilesStatus::kError);
 						return;
 					}
-					uint64_t fileSize1 = sizeCallback.mSize;
+					uint64_t fileSize1 = sizeCallback.mTotalSize;
 					
-					GetFileForkSize(h_, inFilePath2, "", sizeCallback);
+					GetFileTotalSize(h_, inFilePath2, sizeCallback);
 					if (!sizeCallback.mSuccess) {
 						NOTIFY_ERROR(h_, "CompareFiles: GetFileForkSize failed for: ", inFilePath2);
 						inCompletion->Call(CompareFilesStatus::kError);
 						return;
 					}
-					uint64_t fileSize2 = sizeCallback.mSize;
+					uint64_t fileSize2 = sizeCallback.mTotalSize;
 					
 					if (fileSize1 != fileSize2) {
 						match = false;
