@@ -24,12 +24,12 @@
 #include "AppendToFilePath.h"
 #include "CompareFiles.h"
 #include "CompareFinderInfo.h"
+#include "CompareXAttrs.h"
 #include "FileNotification.h"
 #include "GetFileDates.h"
 #include "GetFilePosixOwnership.h"
 #include "GetFilePosixPermissions.h"
 #include "GetFileType.h"
-#include "GetFileXAttrs.h"
 #include "ListDirectoryContents.h"
 #include "PathIsPackage.h"
 #include "CompareDirectories.h"
@@ -97,33 +97,18 @@ namespace hermit {
 						notifiedPackageStateDifference = true;
 					}
 					
-					GetFileXAttrsCallbackClassT<StringPairVector> xattrs1;
-					GetFileXAttrs(mH_, mFilePath1, xattrs1);
-					if (xattrs1.mResult != kGetFileXAttrsResult_Success) {
-						NOTIFY_ERROR(mH_, "CompareDirectories: GetFileXAttrs failed for:", mFilePath1);
-						FileNotificationParams params(kErrorReadingXAttrs, mFilePath1);
-						NOTIFY(mH_, kFileErrorNotification, &params);
-						mCompletion->Call(CompareDirectoriesStatus::kError);
-						return;
-					}
-					
-					GetFileXAttrsCallbackClassT<StringPairVector> xattrs2;
-					GetFileXAttrs(mH_, mFilePath2, xattrs2);
-					if (xattrs2.mResult != kGetFileXAttrsResult_Success) {
-						NOTIFY_ERROR(mH_, "CompareDirectories: GetFileXAttrs failed for:", mFilePath2);
-						FileNotificationParams params(kErrorReadingXAttrs, mFilePath2);
-						NOTIFY(mH_, kFileErrorNotification, &params);
-						mCompletion->Call(CompareDirectoriesStatus::kError);
-						return;
-					}
-					
-					if (xattrs1.mXAttrs != xattrs2.mXAttrs) {
-						attributesMatch = false;
-						FileNotificationParams params(kXAttrsDiffer, mFilePath1, mFilePath2);
-						NOTIFY(mH_, kFilesDifferNotification, &params);
-					}
-					
-					GetFilePosixPermissionsCallbackClass permissions1;
+                    bool xattrsMatch = false;
+                    auto result = CompareXAttrs(mH_, mFilePath1, mFilePath2, xattrsMatch);
+                    if (result != CompareXAttrsResult::kSuccess) {
+                        NOTIFY_ERROR(mH_, "CompareXAttrs failed for:", mFilePath1);
+                        mCompletion->Call(CompareDirectoriesStatus::kError);
+                        return;
+                    }
+                    if (!xattrsMatch) {
+                        attributesMatch = false;
+                    }
+
+                    GetFilePosixPermissionsCallbackClass permissions1;
 					GetFilePosixPermissions(mH_, mFilePath1, permissions1);
 					if (!permissions1.mSuccess) {
 						NOTIFY_ERROR(mH_, "CompareDirectories: GetFilePosixPermissions failed for path 1:", mFilePath1);

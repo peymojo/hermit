@@ -95,63 +95,43 @@ typedef struct ExtendedFolderInfo       ExtendedFolderInfo;
 
 namespace hermit {
 	namespace file {
-		
-		namespace {
+		namespace CompareFinderInfo_Impl {
 			
 			//
-			//
-			class GetFileXAttrsCallbackClass
-			:
-			public GetFileXAttrsCallback
-			{
+			class GetFinderInfoCallbackClass : public GetFileXAttrsCallback {
 			public:
 				//
-				//
-				GetFileXAttrsCallbackClass()
-				:
-				mResult(kGetFileXAttrsResult_Unknown)
-				{
+                GetFinderInfoCallbackClass() {
 				}
 				
 				//
-				//
-				bool Function(
-							  const GetFileXAttrsResult& inResult,
-							  const std::string& inOneXAttrName,
-							  const std::string& inOneXAttrData)
-				{
-					mResult = inResult;
-					if (inResult == kGetFileXAttrsResult_Success)
-					{
-						if (inOneXAttrName == "com.apple.FinderInfo")
-						{
-							mFinderInfo.assign(inOneXAttrData);
-							return false;
-						}
+				bool Function(const HermitPtr& h_, const std::string& xAttrName, const std::string& xAttrData) {
+                    if (xAttrName == "com.apple.FinderInfo") {
+                        mFinderInfo.assign(xAttrData);
+                        return false;
 					}
 					return true;
 				}
 				
 				//
-				//
-				GetFileXAttrsResult mResult;
 				std::string mFinderInfo;
 			};
 			
-		} // private namespace
+		} // namespace CompareFinderInfo_Impl
+        using namespace CompareFinderInfo_Impl;
 		
 		//
 		CompareFinderInfoStatus CompareFinderInfo(const HermitPtr& h_, const FilePathPtr& inFilePath1, const FilePathPtr& inFilePath2) {
-			GetFileXAttrsCallbackClass xattrs1;
-			GetFileXAttrs(h_, inFilePath1, xattrs1);
-			if (xattrs1.mResult != kGetFileXAttrsResult_Success) {
+			GetFinderInfoCallbackClass info1;
+			auto result1 = GetFileXAttrs(h_, inFilePath1, info1);
+            if (result1 != GetFileXAttrsResult::kSuccess) {
 				NOTIFY_ERROR(h_, "CompareFinderInfo: GetFileXAttrs failed for:", inFilePath1);
 				return kCompareFinderInfoStatus_Error;
 			}
 			
-			GetFileXAttrsCallbackClass xattrs2;
-			GetFileXAttrs(h_, inFilePath2, xattrs2);
-			if (xattrs2.mResult != kGetFileXAttrsResult_Success) {
+			GetFinderInfoCallbackClass info2;
+			auto result2 = GetFileXAttrs(h_, inFilePath2, info2);
+            if (result2 != GetFileXAttrsResult::kSuccess) {
 				NOTIFY_ERROR(h_, "CompareFinderInfo: GetFileXAttrs failed for:", inFilePath2);
 				return kCompareFinderInfoStatus_Error;
 			}
@@ -176,19 +156,19 @@ namespace hermit {
 				return kCompareFinderInfoStatus_Error;
 			}
 			
-			if (xattrs1.mFinderInfo.size() != xattrs2.mFinderInfo.size()) {
-				if (xattrs1.mFinderInfo.size() == 0) {
-					if (path2IsDirectory && (xattrs2.mFinderInfo.size() == 32)) {
-						FolderInfo* folder2Info = (FolderInfo*)&xattrs2.mFinderInfo.at(0);
+			if (info1.mFinderInfo.size() != info2.mFinderInfo.size()) {
+				if (info1.mFinderInfo.size() == 0) {
+					if (path2IsDirectory && (info2.mFinderInfo.size() == 32)) {
+						FolderInfo* folder2Info = (FolderInfo*)&info2.mFinderInfo.at(0);
 						//	fields are big-endian!
 						if ((htons(folder2Info->finderFlags) ^ kHasBundle) == 0) {
 							return kCompareFinderInfoStatus_FolderPackageStatesDiffer;
 						}
 					}
 				}
-				else if (xattrs2.mFinderInfo.size() == 0) {
-					if (path1IsDirectory && (xattrs1.mFinderInfo.size() == 32)) {
-						FolderInfo* folder1Info = (FolderInfo*)&xattrs1.mFinderInfo.at(0);
+				else if (info2.mFinderInfo.size() == 0) {
+					if (path1IsDirectory && (info1.mFinderInfo.size() == 32)) {
+						FolderInfo* folder1Info = (FolderInfo*)&info1.mFinderInfo.at(0);
 						//	fields are big-endian!
 						if ((htons(folder1Info->finderFlags) ^ kHasBundle) == 0) {
 							return kCompareFinderInfoStatus_FolderPackageStatesDiffer;
@@ -197,11 +177,11 @@ namespace hermit {
 				}
 				return kCompareFinderInfoStatus_FinderInfosDiffer;
 			}
-			if (xattrs1.mFinderInfo.size() == 0) {
+			if (info1.mFinderInfo.size() == 0) {
 				return kCompareFinderInfoStatus_Match;
 			}
 			
-			if (xattrs1.mFinderInfo.size() != 32) {
+			if (info1.mFinderInfo.size() != 32) {
 				NOTIFY_ERROR(h_, "CompareFinderInfo: Unexpected finder info size for: ", inFilePath1);
 				return kCompareFinderInfoStatus_Error;
 			}
@@ -215,8 +195,8 @@ namespace hermit {
 			//	and of course any "reserved" fields, which should be 0 anyway
 			
 			if (path1IsDirectory) {
-				FolderInfo* folder1Info = (FolderInfo*)&xattrs1.mFinderInfo.at(0);
-				FolderInfo* folder2Info = (FolderInfo*)&xattrs2.mFinderInfo.at(0);
+				FolderInfo* folder1Info = (FolderInfo*)&info1.mFinderInfo.at(0);
+				FolderInfo* folder2Info = (FolderInfo*)&info2.mFinderInfo.at(0);
 				if (folder1Info->finderFlags != folder2Info->finderFlags) {
 					//	fields are big-endian!
 					if ((htons(folder1Info->finderFlags) | kHasBundle) == (htons(folder2Info->finderFlags) | kHasBundle)) {
@@ -230,8 +210,8 @@ namespace hermit {
 					
 					return kCompareFinderInfoStatus_FinderInfosDiffer;
 				}
-				ExtendedFolderInfo* folder1ExtInfo = (ExtendedFolderInfo*)&xattrs1.mFinderInfo.at(16);
-				ExtendedFolderInfo* folder2ExtInfo = (ExtendedFolderInfo*)&xattrs2.mFinderInfo.at(16);
+				ExtendedFolderInfo* folder1ExtInfo = (ExtendedFolderInfo*)&info1.mFinderInfo.at(16);
+				ExtendedFolderInfo* folder2ExtInfo = (ExtendedFolderInfo*)&info2.mFinderInfo.at(16);
 				if (folder1ExtInfo->extendedFinderFlags != folder2ExtInfo->extendedFinderFlags) {
 					//			NOTIFY_ERROR("CompareFinderInfo: folderExtInfos differ for path 1: ", inFilePath1);
 					//			NOTIFY_ERROR("-- path 2: ", inFilePath2);
@@ -243,8 +223,8 @@ namespace hermit {
 			}
 			else
 			{
-				FileInfo* file1FileInfo = (FileInfo*)&xattrs1.mFinderInfo.at(0);
-				FileInfo* file2FileInfo = (FileInfo*)&xattrs2.mFinderInfo.at(0);
+				FileInfo* file1FileInfo = (FileInfo*)&info1.mFinderInfo.at(0);
+				FileInfo* file2FileInfo = (FileInfo*)&info2.mFinderInfo.at(0);
 				if ((file1FileInfo->fileType != file2FileInfo->fileType) ||
 					(file1FileInfo->fileCreator != file2FileInfo->fileCreator) ||
 					(file1FileInfo->finderFlags != file2FileInfo->finderFlags))
@@ -260,8 +240,8 @@ namespace hermit {
 					
 					return kCompareFinderInfoStatus_FinderInfosDiffer;
 				}
-				ExtendedFileInfo* file1ExtInfo = (ExtendedFileInfo*)&xattrs1.mFinderInfo.at(16);
-				ExtendedFileInfo* file2ExtInfo = (ExtendedFileInfo*)&xattrs2.mFinderInfo.at(16);
+				ExtendedFileInfo* file1ExtInfo = (ExtendedFileInfo*)&info1.mFinderInfo.at(16);
+				ExtendedFileInfo* file2ExtInfo = (ExtendedFileInfo*)&info2.mFinderInfo.at(16);
 				if (file1ExtInfo->extendedFinderFlags != file2ExtInfo->extendedFinderFlags)
 				{
 					//			NOTIFY_ERROR("CompareFinderInfo: fileExtInfos differ for path 1: ", inFilePath1);

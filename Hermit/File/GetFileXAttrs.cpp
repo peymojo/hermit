@@ -28,94 +28,76 @@ namespace hermit {
 	namespace file {
 		
 		//
-		//
-		void GetFileXAttrs(const HermitPtr& h_,
-						   const FilePathPtr& inFilePath,
-						   const GetFileXAttrsCallbackRef& inCallback) {
+		GetFileXAttrsResult GetFileXAttrs(const HermitPtr& h_, const FilePathPtr& filePath, const GetFileXAttrsCallbackRef& callback) {
 			std::string pathUTF8;
-			FilePathToCocoaPathString(h_, inFilePath, pathUTF8);
+			FilePathToCocoaPathString(h_, filePath, pathUTF8);
 			
 			ssize_t namesBufActualSize = listxattr(pathUTF8.c_str(), nullptr, 0, XATTR_NOFOLLOW);
-			if (namesBufActualSize == -1)
-			{
-				if (errno == EACCES)
-				{
-					inCallback.Call(kGetFileXAttrsResult_AccessDenied, "", "");
-					return;
+			if (namesBufActualSize == -1) {
+				if (errno == EACCES) {
+                    return GetFileXAttrsResult::kAccessDenied;
 				}
 				
-				NOTIFY_ERROR(h_, "GetFileXAttrs: listxattr (1) failed for path:", inFilePath, "errno:", errno);
-				inCallback.Call(kGetFileXAttrsResult_Error, "", "");
-				return;
+				NOTIFY_ERROR(h_, "GetFileXAttrs: listxattr (1) failed for path:", filePath, "errno:", errno);
+                return GetFileXAttrsResult::kError;
 			}
-			if (namesBufActualSize == 0)
-			{
-				inCallback.Call(kGetFileXAttrsResult_Success, "", "");
-				return;
+			if (namesBufActualSize == 0) {
+                // Success; file has no xattrs.
+                return GetFileXAttrsResult::kSuccess;
 			}
 			
 			std::vector<char> attrNamesBuf(namesBufActualSize);
 			namesBufActualSize = listxattr(pathUTF8.c_str(), &attrNamesBuf.at(0), attrNamesBuf.size(), XATTR_NOFOLLOW);
-			if (namesBufActualSize == -1)
-			{
-				NOTIFY_ERROR(h_, "GetFileXAttrs: listxattr (2) failed for path:", inFilePath, "errno:", errno);
-				inCallback.Call(kGetFileXAttrsResult_Error, "", "");
-				return;
+			if (namesBufActualSize == -1) {
+				NOTIFY_ERROR(h_, "GetFileXAttrs: listxattr (2) failed for path:", filePath, "errno:", errno);
+                return GetFileXAttrsResult::kError;
 			}
 			
 			const char* p = &attrNamesBuf.at(0);
 			ssize_t offset = 0;
-			while (offset < namesBufActualSize)
-			{
+			while (offset < namesBufActualSize) {
 				ssize_t end = strlen(p);
 				std::string oneXAttrName(p, end);
 				
-				ssize_t valueActualSize = getxattr(
-												   pathUTF8.c_str(),
+				ssize_t valueActualSize = getxattr(pathUTF8.c_str(),
 												   oneXAttrName.c_str(),
 												   nullptr,
 												   0,
 												   0,
 												   XATTR_NOFOLLOW);
 				
-				if (valueActualSize == -1)
-				{
-					NOTIFY_ERROR(h_, "GetFileXAttrs: getxattr (1) failed for path:", inFilePath);
-					NOTIFY_ERROR(h_, "-- xattr name:", pathUTF8);
-					NOTIFY_ERROR(h_, "-- errno:", errno);
-					inCallback.Call(kGetFileXAttrsResult_Error, "", "");
-					return;
+				if (valueActualSize == -1) {
+					NOTIFY_ERROR(h_, "GetFileXAttrs: getxattr (1) failed for path:", filePath,
+                                 "xattr name:", oneXAttrName,
+                                 "errno:", errno);
+                    return GetFileXAttrsResult::kError;
 				}
 				
 				std::string value;
-				if (valueActualSize > 0)
-				{
+				if (valueActualSize > 0) {
 					value.resize(valueActualSize);
-					valueActualSize = getxattr(
-											   pathUTF8.c_str(),
+					valueActualSize = getxattr(pathUTF8.c_str(),
 											   oneXAttrName.c_str(),
 											   &value.at(0),
 											   value.size(),
 											   0,
 											   XATTR_NOFOLLOW);
 					
-					if (valueActualSize == -1)
-					{
-						NOTIFY_ERROR(h_, "GetFileXAttrs: getxattr (2) failed for path:", inFilePath);
-						NOTIFY_ERROR(h_, "-- xattr name:", pathUTF8);
-						NOTIFY_ERROR(h_, "-- errno:", errno);
-						inCallback.Call(kGetFileXAttrsResult_Error, "", "");
-						return;
+					if (valueActualSize == -1) {
+						NOTIFY_ERROR(h_, "GetFileXAttrs: getxattr (2) failed for path:", filePath,
+                                     "xattr name:", oneXAttrName,
+                                     "errno:", errno);
+                        return GetFileXAttrsResult::kError;
 					}
 				}
-				if (!inCallback.Call(kGetFileXAttrsResult_Success, oneXAttrName, value))
-				{
+                if (!callback.Call(h_, oneXAttrName, value)) {
 					break;
 				}
 				
 				offset += (end + 1);
 				p += (end + 1);
 			}
+            return GetFileXAttrsResult::kSuccess;
 		}
 		
 	} // namespace file

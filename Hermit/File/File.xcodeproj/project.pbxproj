@@ -231,6 +231,10 @@
 		EF92C1C21F10FF510097D708 /* StreamOutFileData_Cocoa.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5FC61D878B840056E526 /* StreamOutFileData_Cocoa.mm */; };
 		EF92C1C51F10FF990097D708 /* FoundationKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF92C1C41F10FF990097D708 /* FoundationKit.framework */; };
 		EF92C1C71F10FF9E0097D708 /* StringKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF92C1C61F10FF9E0097D708 /* StringKit.framework */; };
+		EFCA3CEA2015DEDC00801984 /* CompareXAttrs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFCA3CE82015DEDC00801984 /* CompareXAttrs.cpp */; };
+		EFCA3CEB2015DEDC00801984 /* CompareXAttrs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFCA3CE82015DEDC00801984 /* CompareXAttrs.cpp */; };
+		EFCA3CEC2015DEDC00801984 /* CompareXAttrs.h in Headers */ = {isa = PBXBuildFile; fileRef = EFCA3CE92015DEDC00801984 /* CompareXAttrs.h */; };
+		EFCA3CED2015DEDC00801984 /* CompareXAttrs.h in Headers */ = {isa = PBXBuildFile; fileRef = EFCA3CE92015DEDC00801984 /* CompareXAttrs.h */; };
 		EFEAC6141F6763C3004B8151 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EFEAC6131F6763C3004B8151 /* AppKit.framework */; };
 /* End PBXBuildFile section */
 
@@ -406,6 +410,8 @@
 		EFAD5FCB1D878B840056E526 /* ValidateDirectory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ValidateDirectory.h; sourceTree = "<group>"; };
 		EFAD5FCC1D878B840056E526 /* WriteFileData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WriteFileData.cpp; sourceTree = "<group>"; };
 		EFAD5FCD1D878B840056E526 /* WriteFileData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WriteFileData.h; sourceTree = "<group>"; };
+		EFCA3CE82015DEDC00801984 /* CompareXAttrs.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CompareXAttrs.cpp; sourceTree = "<group>"; };
+		EFCA3CE92015DEDC00801984 /* CompareXAttrs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CompareXAttrs.h; sourceTree = "<group>"; };
 		EFEAC6131F6763C3004B8151 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -486,6 +492,8 @@
 				EF55F57F20121CE40087BEA3 /* CompareFinderInfo.h */,
 				EF55F57A20121CCC0087BEA3 /* CompareLinks.cpp */,
 				EF55F57B20121CCC0087BEA3 /* CompareLinks.h */,
+				EFCA3CE82015DEDC00801984 /* CompareXAttrs.cpp */,
+				EFCA3CE92015DEDC00801984 /* CompareXAttrs.h */,
 				EFAD5F2D1D878B840056E526 /* CopyFinderInfo_Mac.cpp */,
 				EFAD5F2E1D878B840056E526 /* CopyFinderInfo.h */,
 				EFAD5F2F1D878B840056E526 /* CopySymbolicLink_Cocoa.mm */,
@@ -662,6 +670,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EFCA3CED2015DEDC00801984 /* CompareXAttrs.h in Headers */,
 				EF2CF5C81FF24A0000652E69 /* FileLib.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -680,6 +689,7 @@
 			files = (
 				EF55F57D20121CCD0087BEA3 /* CompareLinks.h in Headers */,
 				EF55F56F2012183C0087BEA3 /* CompareFiles.h in Headers */,
+				EFCA3CEC2015DEDC00801984 /* CompareXAttrs.h in Headers */,
 				EF92C1701F10FF180097D708 /* FileKit.h in Headers */,
 				EF55F57820121C630087BEA3 /* CompareDirectories.h in Headers */,
 				EF55F58120121CE40087BEA3 /* CompareFinderInfo.h in Headers */,
@@ -828,6 +838,7 @@
 				EF2CF6061FF24A2400652E69 /* GetFilePosixPermissions_Cocoa.mm in Sources */,
 				EF2CF6071FF24A2400652E69 /* GetFileResourceValues_Cocoa.mm in Sources */,
 				EF2CF6081FF24A2400652E69 /* GetSymbolicLinkTarget_Cocoa.mm in Sources */,
+				EFCA3CEB2015DEDC00801984 /* CompareXAttrs.cpp in Sources */,
 				EF2CF6091FF24A2400652E69 /* ListDirectoryContents_Cocoa.mm in Sources */,
 				EF2CF60A1FF24A2400652E69 /* ListDirectoryContentsWithType_Cocoa.mm in Sources */,
 				EF2CF60B1FF24A2400652E69 /* PathIsAlias_Cocoa.mm in Sources */,
@@ -978,6 +989,7 @@
 				EF92C1AD1F10FF510097D708 /* GetFileDates_Cocoa.mm in Sources */,
 				EF92C1AE1F10FF510097D708 /* GetFileDataSize_Cocoa.mm in Sources */,
 				EF92C1AF1F10FF510097D708 /* GetFileIsLocked_Cocoa.mm in Sources */,
+				EFCA3CEA2015DEDC00801984 /* CompareXAttrs.cpp in Sources */,
 				EF92C1B01F10FF510097D708 /* GetFilePosixOwnership_Cocoa.mm in Sources */,
 				EF92C1B11F10FF510097D708 /* GetFilePosixPermissions_Cocoa.mm in Sources */,
 				EF92C1B21F10FF510097D708 /* GetFileResourceValues_Cocoa.mm in Sources */,

@@ -27,73 +27,66 @@
 
 namespace hermit {
 	namespace file {
-		
-		namespace {
+		namespace SetDirectoryIsPackage_Impl {
 			
 			//
-			class GetFileXAttrsCallbackClass : public GetFileXAttrsCallback {
+			class GetFinderInfoCallbackClass : public GetFileXAttrsCallback {
 			public:
 				//
-				GetFileXAttrsCallbackClass() :
-				mResult(kGetFileXAttrsResult_Unknown) {
+				GetFinderInfoCallbackClass() {
 				}
 				
 				//
-				bool Function(const GetFileXAttrsResult& inResult,
-							  const std::string& inOneXAttrName,
-							  const std::string& inOneXAttrData) {
-					mResult = inResult;
-					if (inResult == kGetFileXAttrsResult_Success) {
-						if (inOneXAttrName == "com.apple.FinderInfo") {
-							mFinderInfo.assign(inOneXAttrData);
-							return false;
-						}
+				bool Function(const HermitPtr& h_, const std::string& xAttrName, const std::string& xAttrData) {
+                    if (xAttrName == "com.apple.FinderInfo") {
+                        mFinderInfo.assign(xAttrData);
+                        return false;
 					}
 					return true;
 				}
 				
 				//
-				GetFileXAttrsResult mResult;
 				std::string mFinderInfo;
 			};
 			
-		} // private namespace
+		} // namespace SetDirectoryIsPackage_Impl
+        using namespace SetDirectoryIsPackage_Impl;
 		
 		//
-		bool SetDirectoryIsPackage(const HermitPtr& h_, const FilePathPtr& inFilePath, const bool& inIsPackage) {
+		bool SetDirectoryIsPackage(const HermitPtr& h_, const FilePathPtr& filePath, const bool& isPackage) {
 			bool isDirectory = false;
-			auto status = PathIsDirectory(h_, inFilePath, isDirectory);
+			auto status = PathIsDirectory(h_, filePath, isDirectory);
 			if (status != PathIsDirectoryStatus::kSuccess) {
-				NOTIFY_ERROR(h_, "SetDirectoryIsPackage: PathIsDirectory failed for:", inFilePath);
+				NOTIFY_ERROR(h_, "SetDirectoryIsPackage: PathIsDirectory failed for:", filePath);
 				return false;
 			}
 			if (!isDirectory) {
-				NOTIFY_ERROR(h_, "SetDirectoryIsPackage: path is not a directory:", inFilePath);
+				NOTIFY_ERROR(h_, "SetDirectoryIsPackage: path is not a directory:", filePath);
 				return false;
 			}
 			
-			GetFileXAttrsCallbackClass xattrs;
-			GetFileXAttrs(h_, inFilePath, xattrs);
-			if (xattrs.mResult != kGetFileXAttrsResult_Success) {
-				NOTIFY_ERROR(h_, "SetDirectoryIsPackage: GetFileXAttrs failed for:", inFilePath);
+			GetFinderInfoCallbackClass info;
+			auto result = GetFileXAttrs(h_, filePath, info);
+            if (result != GetFileXAttrsResult::kSuccess) {
+				NOTIFY_ERROR(h_, "SetDirectoryIsPackage: GetFileXAttrs failed for:", filePath);
 				return false;
 			}
-			if (xattrs.mFinderInfo.empty()) {
+			if (info.mFinderInfo.empty()) {
 				// no finder info there yet, we'll make some
-				xattrs.mFinderInfo.resize(32);
+				info.mFinderInfo.resize(32);
 			}
-			else if (xattrs.mFinderInfo.size() != 32) {
-				NOTIFY_ERROR(h_, "SetDirectoryIsPackage: mFinderInfo has unexpected size:", xattrs.mFinderInfo.size());
+			else if (info.mFinderInfo.size() != 32) {
+				NOTIFY_ERROR(h_, "SetDirectoryIsPackage: mFinderInfo has unexpected size:", info.mFinderInfo.size());
 				return false;
 			}
 			
-			FolderInfo* folder2Info = (FolderInfo*)&xattrs.mFinderInfo.at(0);
+			FolderInfo* folder2Info = (FolderInfo*)&info.mFinderInfo.at(0);
 			auto nsFlags = htons(folder2Info->finderFlags);
 			nsFlags |= kHasBundle;
 			folder2Info->finderFlags = ntohs(nsFlags);
 			
-			if (!SetFileXAttr(h_, inFilePath, "com.apple.FinderInfo", xattrs.mFinderInfo)) {
-				NOTIFY_ERROR(h_, "SetDirectoryIsPackage: SetFileXAttr failed for:", inFilePath);
+			if (!SetFileXAttr(h_, filePath, "com.apple.FinderInfo", info.mFinderInfo)) {
+				NOTIFY_ERROR(h_, "SetDirectoryIsPackage: SetFileXAttr failed for:", filePath);
 				return false;
 			}
 			return true;

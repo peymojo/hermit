@@ -19,6 +19,8 @@
 #ifndef GetFileXAttrs_h
 #define GetFileXAttrs_h
 
+#include <map>
+#include <string>
 #include "Hermit/Foundation/Callback.h"
 #include "Hermit/Foundation/Hermit.h"
 #include "FilePath.h"
@@ -27,56 +29,41 @@ namespace hermit {
 	namespace file {
 		
 		//
-		//
-		enum GetFileXAttrsResult
-		{
-			kGetFileXAttrsResult_Unknown,
-			kGetFileXAttrsResult_Success,
-			kGetFileXAttrsResult_AccessDenied,
-			kGetFileXAttrsResult_Error
+		enum class GetFileXAttrsResult {
+			kUnknown,
+			kSuccess,
+			kAccessDenied,
+			kError
 		};
 		
 		//
-		//
 		DEFINE_CALLBACK_3A(GetFileXAttrsCallback,
-						   GetFileXAttrsResult,			// inResult
-						   std::string,					// inOneXAttrName
-						   std::string);				// inOneXAttrData
+                           HermitPtr,
+						   std::string,					// xAttrName
+						   std::string);				// xAttrData
 		
+        //
+        typedef std::map<std::string, std::string> XAttrMap;
+        
 		//
-		//
-		template <class StringPairVectorT>
-		class GetFileXAttrsCallbackClassT : public GetFileXAttrsCallback {
+		class GetFileXAttrsCallbackClass : public GetFileXAttrsCallback {
 		public:
 			//
-			//
-			GetFileXAttrsCallbackClassT() : mResult(kGetFileXAttrsResult_Unknown) {
+            GetFileXAttrsCallbackClass() {
 			}
 			
 			//
-			//
-			bool Function(const GetFileXAttrsResult& inResult,
-						  const std::string& inOneXAttrName,
-						  const std::string& inOneXAttrData) {
-				mResult = inResult;
-				if (inResult == kGetFileXAttrsResult_Success) {
-					auto value = std::make_pair(inOneXAttrName, inOneXAttrData);
-					mXAttrs.push_back(value);
-				}
-				return true;
+			bool Function(const HermitPtr& h_, const std::string& xAttrName, const std::string& xAttrData) {
+                mXAttrs.insert(XAttrMap::value_type(xAttrName, xAttrData));
+                return true;
 			}
 			
 			//
-			//
-			GetFileXAttrsResult mResult;
-			StringPairVectorT mXAttrs;
+			XAttrMap mXAttrs;
 		};
 
 		//
-		//
-		void GetFileXAttrs(const HermitPtr& h_,
-						   const FilePathPtr& inFilePath,
-						   const GetFileXAttrsCallbackRef& inCallback);
+		GetFileXAttrsResult GetFileXAttrs(const HermitPtr& h_, const FilePathPtr& filePath, const GetFileXAttrsCallbackRef& callback);
 		
 	} // namespace file
 } // namespace hermit

@@ -18,11 +18,11 @@
 
 #import <Cocoa/Cocoa.h>
 #import <string>
-#import <vector>
 #import "Hermit/Foundation/CompareMemory.h"
 #import "Hermit/Foundation/Notification.h"
 #import "CompareFinderInfo.h"
 #import "CompareLinks.h"
+#import "CompareXAttrs.h"
 #import "FileNotification.h"
 #import "FilePathToCocoaPathString.h"
 #import "GetAliasTarget.h"
@@ -37,7 +37,6 @@
 #import "GetFilePosixPermissions.h"
 #import "GetFileTotalSize.h"
 #import "GetFileType.h"
-#import "GetFileXAttrs.h"
 #import "GetRelativeFilePath.h"
 #import "PathIsAlias.h"
 #import "PathIsHardLink.h"
@@ -48,52 +47,6 @@ namespace hermit {
 	namespace file {
 		
 		namespace {
-			
-			//	//
-			//	//
-			//	class NotificationFunction
-			//		:
-			//		public NotificationFunction
-			//	{
-			//	public:
-			//		//
-			//		//
-			//		NotificationFunction(
-			//			const HermitPtr& h_)
-			//			:
-			//			mH_(h_),
-			//			mFilesMatch(false)
-			//		{
-			//		}
-			//
-			//		//
-			//		//
-			//		bool Call(
-			//			const std::string& h_Name,
-			//			const GetNotificationValueFunctionRef& inGetValueFunction)
-			//		{
-			//			std::string name(h_Name);
-			//			if (name == kFilesMatchNotification)
-			//			{
-			//				mFilesMatch = true;
-			//			}
-			//			else if (name == kFilesDifferNotification)
-			//			{
-			//				mFilesMatch = false;
-			//			}
-			//			return mH_->Call(h_Name, inGetValueFunction);
-			//		}
-			//
-			//		//
-			//		//
-			//		HermitPtr mH_;
-			//		bool mFilesMatch;
-			//	};
-			
-			//
-			//
-			typedef std::pair<std::string, std::string> StringPair;
-			typedef std::vector<StringPair> StringPairVector;
 			
 			//
 			bool CompareData(const HermitPtr& h_,
@@ -697,31 +650,16 @@ namespace hermit {
 			}
 			
 			if (!isDevicePath) {
-				GetFileXAttrsCallbackClassT<StringPairVector> xattrs1;
-				GetFileXAttrs(h_, inFilePath1, xattrs1);
-				if (xattrs1.mResult != kGetFileXAttrsResult_Success) {
-					NOTIFY_ERROR(h_, "CompareFiles: GetFileXAttrs failed for: ", inFilePath1);
-					FileNotificationParams params(kErrorReadingXAttrs, inFilePath1);
-					NOTIFY(h_, kFileErrorNotification, &params);
-					inCompletion->Call(CompareFilesStatus::kError);
-					return;
-				}
-				
-				GetFileXAttrsCallbackClassT<StringPairVector> xattrs2;
-				GetFileXAttrs(h_, inFilePath2, xattrs2);
-				if (xattrs2.mResult != kGetFileXAttrsResult_Success) {
-					NOTIFY_ERROR(h_, "CompareFiles: GetFileXAttrs failed for: ", inFilePath2);
-					FileNotificationParams params(kErrorReadingXAttrs, inFilePath2);
-					NOTIFY(h_, kFileErrorNotification, &params);
-					inCompletion->Call(CompareFilesStatus::kError);
-					return;
-				}
-				
-				if (xattrs1.mXAttrs != xattrs2.mXAttrs) {
-					match = false;
-					FileNotificationParams params(kXAttrsDiffer, inFilePath1, inFilePath2);
-					NOTIFY(h_, kFilesDifferNotification, &params);
-				}
+                bool xattrsMatch = false;
+                auto result = CompareXAttrs(h_, inFilePath1, inFilePath2, xattrsMatch);
+                if (result != CompareXAttrsResult::kSuccess) {
+                    NOTIFY_ERROR(h_, "CompareXAttrs failed for:", inFilePath1);
+                    inCompletion->Call(CompareFilesStatus::kError);
+                    return;
+                }
+                if (!xattrsMatch) {
+                    match = false;
+                }
 			}
 			
 			GetFilePosixPermissionsCallbackClass permissions1;

@@ -20,12 +20,12 @@
 #include <vector>
 #include "Hermit/Foundation/Notification.h"
 #include "Hermit/String/GetRelativePath.h"
+#include "CompareXAttrs.h"
 #include "FileNotification.h"
 #include "GetFileDates.h"
 #include "GetFilePathUTF8String.h"
 #include "GetFilePosixOwnership.h"
 #include "GetFilePosixPermissions.h"
-#include "GetFileXAttrs.h"
 #include "GetSymbolicLinkTarget.h"
 #include "CompareLinks.h"
 
@@ -111,31 +111,17 @@ namespace hermit {
 				FileNotificationParams params(kLinkTargetsDiffer, inFilePath1, inFilePath2);
 				NOTIFY(h_, kFilesDifferNotification, &params);
 			}
-			
-			GetFileXAttrsCallbackClassT<StringPairVector> xattrs1;
-			GetFileXAttrs(h_, inFilePath1, xattrs1);
-			if (xattrs1.mResult != kGetFileXAttrsResult_Success) {
-				NOTIFY_ERROR(h_, "CompareLinks: GetFileXAttrs failed for: ", inFilePath1);
-				FileNotificationParams params(kErrorReadingXAttrs, inFilePath1);
-				NOTIFY(h_, kFileErrorNotification, &params);
-				return kCompareLinksStatus_Error;
-			}
-			
-			GetFileXAttrsCallbackClassT<StringPairVector> xattrs2;
-			GetFileXAttrs(h_, inFilePath2, xattrs2);
-			if (xattrs2.mResult != kGetFileXAttrsResult_Success) {
-				NOTIFY_ERROR(h_, "CompareLinks: GetFileXAttrs failed for: ", inFilePath2);
-				FileNotificationParams params(kErrorReadingXAttrs, inFilePath2);
-				NOTIFY(h_, kFileErrorNotification, &params);
-				return kCompareLinksStatus_Error;
-			}
-			
-			if (xattrs1.mXAttrs != xattrs2.mXAttrs) {
-				match = false;
-				FileNotificationParams params(kXAttrsDiffer, inFilePath1, inFilePath2);
-				NOTIFY(h_, kFilesDifferNotification, &params);
-			}
-			
+						
+            bool xattrsMatch = false;
+            auto result = CompareXAttrs(h_, inFilePath1, inFilePath2, xattrsMatch);
+            if (result != CompareXAttrsResult::kSuccess) {
+                NOTIFY_ERROR(h_, "CompareXAttrs failed for:", inFilePath1);
+                return kCompareLinksStatus_Error;
+            }
+            if (!xattrsMatch) {
+                match = false;
+            }
+
 			GetFilePosixPermissionsCallbackClass permissions1;
 			GetFilePosixPermissions(h_, inFilePath1, permissions1);
 			if (!permissions1.mSuccess) {

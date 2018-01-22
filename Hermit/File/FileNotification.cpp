@@ -48,8 +48,9 @@ namespace hermit {
 		const char* kACLsDiffer = "aclsdiffer";
 		const char* kPackageStatesDiffer = "packagestatesdiffer";
 		const char* kFinderInfosDiffer = "finderinfosdiffer";
-		const char* kXAttrsDiffer = "xattrsdiffer";
-		const char* kPermissionsDiffer = "permissionsdiffer";
+        const char* kXAttrPresenceMismatch = "xattr-presence-mismatch";
+        const char* kXAttrValuesDiffer = "xattr-values-differ";
+        const char* kPermissionsDiffer = "permissionsdiffer";
 		const char* kUserOwnersDiffer = "userownersdiffer";
 		const char* kGroupOwnersDiffer = "groupownersdiffer";
 		const char* kLinkTargetsDiffer = "linktargetsdiffer";

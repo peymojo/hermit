@@ -52,7 +52,8 @@ namespace hermit {
 		extern const char* kACLsDiffer;
 		extern const char* kPackageStatesDiffer;
 		extern const char* kFinderInfosDiffer;
-		extern const char* kXAttrsDiffer;
+        extern const char* kXAttrPresenceMismatch;
+        extern const char* kXAttrValuesDiffer;
 		extern const char* kPermissionsDiffer;
 		extern const char* kUserOwnersDiffer;
 		extern const char* kGroupOwnersDiffer;
