@@ -20,14 +20,14 @@
 #include <map>
 #include <vector>
 #include "Hermit/Foundation/Notification.h"
-#include "CommandLineTool.h"
+#include "Hermit/Utility/CommandLineTool.h"
+#include "Hermit/Utility/OperationTimer.h"
 #include "ListBucketsTool.h"
-#include "OperationTimer.h"
 
-namespace hermit {
+namespace s3util {
 
 	//
-	typedef std::map<std::string, hermit::CommandLineToolPtr> CommandLineToolMap;
+    typedef std::map<std::string, hermit::utility::CommandLineToolPtr> CommandLineToolMap;
 
 	//
 	static void usage(const CommandLineToolMap& inTools) {
@@ -44,7 +44,7 @@ namespace hermit {
 	}
 
 	//
-	class HermitImpl : public hermit::Hermit {
+    class HermitImpl : public hermit::Hermit {
 	public:
 		//
 		HermitImpl() {
@@ -57,11 +57,11 @@ namespace hermit {
 		
 		//
 		virtual void Notify(const char* name, const void* param) override {
-			if (strcmp(name, hermit::kMessageNotification) == 0) {
+            if (strcmp(name, hermit::kMessageNotification) == 0) {
 				auto p = (hermit::MessageParams*)param;
 				
 				std::stringstream strm;
-				if (p->severity == hermit::MessageSeverity::kWarning) {
+                if (p->severity == hermit::MessageSeverity::kWarning) {
 					strm << "Warning: ";
 				}
 				else if (p->severity == hermit::MessageSeverity::kError) {
@@ -185,7 +185,7 @@ namespace hermit {
 	};
 
 	//
-	typedef OperationTimer<CoutReporter> Timer;
+    typedef hermit::utility::OperationTimer<CoutReporter> Timer;
 
 	//
 	int main(std::list<std::string> args) {
@@ -237,7 +237,7 @@ namespace hermit {
 		return result;
 	}
 	
-} // namespace hermit
+} // namespace s3util
 
 //
 int main(int argc, const char * argv[]) {
@@ -245,5 +245,5 @@ int main(int argc, const char * argv[]) {
 	for (int n = 1; n < argc; ++n) {
 		args.push_back(argv[n]);
 	}
-	return hermit::main(args);
+    return s3util::main(args);
 }

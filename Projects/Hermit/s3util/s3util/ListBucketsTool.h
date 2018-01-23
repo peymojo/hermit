@@ -19,19 +19,19 @@
 #ifndef ListBucketsTool_h
 #define ListBucketsTool_h
 
-#include "CommandLineTool.h"
+#include "Hermit/Utility/CommandLineTool.h"
 
-namespace hermit {
+namespace s3util {
 	
 	//
-	class ListBucketsTool : public CommandLineTool {
+    class ListBucketsTool : public hermit::utility::CommandLineTool {
 		//
 		virtual void Usage() const;
 		
 		//
-		virtual int Run(const HermitPtr& h_, const std::list<std::string>& args);
+        virtual int Run(const hermit::HermitPtr& h_, const std::list<std::string>& args);
 	};
 	
-} // namespace hermit
+} // namespace s3util
 
 #endif /* ListBucketsTool_h */

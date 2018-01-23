@@ -19,10 +19,12 @@
 #include "CommandLineTool.h"
 
 namespace hermit {
+    namespace utility {
 	
-	//
-	CommandLineTool::~CommandLineTool() {
-	}
+        //
+        CommandLineTool::~CommandLineTool() {
+        }
 	
+    } // namespace utility
 } // namespace hermit
 

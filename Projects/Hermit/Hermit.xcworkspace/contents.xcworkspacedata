@@ -65,6 +65,9 @@
       location = "group:../../Hermit/StringMap/StringMap.xcodeproj">
    </FileRef>
    <FileRef
+      location = "group:../../Hermit/Utility/Utility.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:../../Hermit/Value/Value.xcodeproj">
    </FileRef>
    <FileRef

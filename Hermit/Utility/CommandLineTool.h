@@ -16,56 +16,32 @@
 //	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef OperationTimer_h
-#define OperationTimer_h
+#ifndef CommandLineTool_h
+#define CommandLineTool_h
 
+#include <list>
 #include <string>
-#include <time.h>
+#include <memory>
+#include "Hermit/Foundation/Hermit.h"
 
 namespace hermit {
-	
-	//
-	template <typename Reporter> class OperationTimer {
-	public:
-		//
-		OperationTimer(Reporter& reporter) :
-		mReporter(reporter),
-		mStart(0),
-		mSuppressOutput(false) {
-			time(&mStart);
-		}
-		
-		//
-		OperationTimer(Reporter& reporter, const std::string& tag) :
-		mReporter(reporter),
-		mStart(0),
-		mTag(tag),
-		mSuppressOutput(false) {
-			time(&mStart);
-		}
-		
-		//
-		~OperationTimer() {
-			time_t end = 0;
-			time(&end);
-			if (!mSuppressOutput) {
-				mReporter.Report(mTag, end - mStart);
-			}
-		}
-		
-		//
-		void SuppressOutput() {
-			mSuppressOutput = true;
-		}
-		
-	private:
-		//
-		Reporter& mReporter;
-		time_t mStart;
-		std::string mTag;
-		bool mSuppressOutput;
-	};
-	
+    namespace utility {
+
+        //
+        class CommandLineTool {
+        public:
+            //
+            virtual ~CommandLineTool();
+            
+            //
+            virtual void Usage() const = 0;
+            
+            //
+            virtual int Run(const HermitPtr& h_, const std::list<std::string>& args) = 0;
+        };
+        typedef std::shared_ptr<CommandLineTool> CommandLineToolPtr;
+
+    } // namespace utility
 } // namespace hermit
 
 #endif

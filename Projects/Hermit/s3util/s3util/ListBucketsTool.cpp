@@ -22,7 +22,7 @@
 #include "ListBucketsTool.h"
 #include "ReadKeyFile.h"
 
-namespace hermit {
+namespace s3util {
 	namespace ListBucketsTool_Impl {
 
 		//
@@ -34,46 +34,46 @@ namespace hermit {
 		}
 		
 		//
-		class BucketNameReceiver : public s3::BucketNameReceiver {
+        class BucketNameReceiver : public hermit::s3::BucketNameReceiver {
 		public:
 			//
 			BucketNameReceiver() {
 			}
 			
 			//
-			virtual bool OnOneBucket(const HermitPtr& h_, const std::string& bucketName) override {
+			virtual bool OnOneBucket(const hermit::HermitPtr& h_, const std::string& bucketName) override {
 				std::cout << bucketName << "\n";
 				return true;
 			}
 		};
 		
 		//
-		class S3Completion : public s3::S3CompletionBlock {
+		class S3Completion : public hermit::s3::S3CompletionBlock {
 		public:
 			//
-			S3Completion() : mResult(s3::S3Result::kUnknown) {
+			S3Completion() : mResult(hermit::s3::S3Result::kUnknown) {
 			}
 			
 			//
-			virtual void Call(const HermitPtr& h_, const s3::S3Result& result) override {
+			virtual void Call(const hermit::HermitPtr& h_, const hermit::s3::S3Result& result) override {
 				mResult = result;
 			}
 			
 			//
-			std::atomic<s3::S3Result> mResult;
+			std::atomic<hermit::s3::S3Result> mResult;
 		};
 		
 		//
-		int list_buckets(const HermitPtr& h_, const std::string& s3PublicKey, const std::string& pathToS3PrivateKeyFileUTF8) {
+		int list_buckets(const hermit::HermitPtr& h_, const std::string& s3PublicKey, const std::string& pathToS3PrivateKeyFileUTF8) {
 			std::string s3PrivateKey;
 			if (ReadKeyFile(h_, pathToS3PrivateKeyFileUTF8.c_str(), s3PrivateKey)) {
 				auto bucketNameReceiver = std::make_shared<BucketNameReceiver>();
 				auto completion = std::make_shared<S3Completion>();
-				s3::S3ListBuckets(h_, s3PublicKey, s3PrivateKey, bucketNameReceiver, completion);
-				while (completion->mResult == s3::S3Result::kUnknown) {
+				hermit::s3::S3ListBuckets(h_, s3PublicKey, s3PrivateKey, bucketNameReceiver, completion);
+				while (completion->mResult == hermit::s3::S3Result::kUnknown) {
 					std::this_thread::sleep_for(std::chrono::milliseconds(10));
 				}
-				if (completion->mResult != s3::S3Result::kSuccess) {
+				if (completion->mResult != hermit::s3::S3Result::kSuccess) {
 					std::cout << "list_buckets(): S3ListBuckets() failed.\n";
 					return EXIT_FAILURE;
 				}
@@ -82,7 +82,7 @@ namespace hermit {
 		}
 		
 		//
-		int list_buckets(const HermitPtr& h_, const std::list<std::string>& inArgs) {
+		int list_buckets(const hermit::HermitPtr& h_, const std::list<std::string>& inArgs) {
 			bool gotS3PublicKey = false;
 			std::string s3PublicKey;
 			bool gotPathToS3PrivateKeyFileUTF8 = false;
@@ -124,8 +124,8 @@ namespace hermit {
 	}
 	
 	//
-	int ListBucketsTool::Run(const HermitPtr& h_, const std::list<std::string>& args) {
+	int ListBucketsTool::Run(const hermit::HermitPtr& h_, const std::list<std::string>& args) {
 		return list_buckets(h_, args);
 	}
 
-} // namespace hermit
+} // namespace s3util
