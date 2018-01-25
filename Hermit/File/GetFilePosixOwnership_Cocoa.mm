@@ -26,7 +26,6 @@ namespace hermit {
 	namespace file {
 		
 		//
-		//
 		void GetFilePosixOwnership(const HermitPtr& h_,
 								   const file::FilePathPtr& inFilePath,
 								   const file::GetFilePosixOwnershipCallbackRef& inCallback) {
@@ -47,8 +46,16 @@ namespace hermit {
 				}
 				else {
 					NSString* userOwner = [dict fileOwnerAccountName];
+					std::string userName;
+					if (userOwner != nil) {
+						userName = [userOwner UTF8String];
+					}
 					NSString* groupOwner = [dict fileGroupOwnerAccountName];
-					inCallback.Call(true, [userOwner UTF8String], [groupOwner UTF8String]);
+					std::string groupName;
+					if (groupOwner != nil) {
+						groupName = [groupOwner UTF8String];
+					}
+					inCallback.Call(true, userName, groupName);
 				}
 			}
 		}
