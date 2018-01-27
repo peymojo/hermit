@@ -26,29 +26,24 @@ namespace hermit {
 	namespace file {
 		
 		//
-		void GetFilePosixPermissions(const HermitPtr& h_,
-									 const FilePathPtr& inFilePath,
-									 const GetFilePosixPermissionsCallbackRef& inCallback)
-		{
-			@autoreleasepool
-			{
+		bool GetFilePosixPermissions(const HermitPtr& h_, const FilePathPtr& filePath, uint32_t& outPermissions) {
+			@autoreleasepool {
 				std::string pathUTF8;
-				FilePathToCocoaPathString(h_, inFilePath, pathUTF8);
+				FilePathToCocoaPathString(h_, filePath, pathUTF8);
 				NSString* pathString = [NSString stringWithUTF8String:pathUTF8.c_str()];
 				
 				NSError* error = nil;
 				NSDictionary* dict = [[NSFileManager defaultManager] attributesOfItemAtPath:pathString error:&error];
 				if (dict == nil) {
-					NOTIFY_ERROR(h_, "GetFilePosixPermissions: attributesOfItemAtPath failed for path:", inFilePath);
+					NOTIFY_ERROR(h_, "GetFilePosixPermissions: attributesOfItemAtPath failed for path:", filePath);
 					if (error != nil) {
 						NOTIFY_ERROR(h_, "error:", [[error localizedDescription] UTF8String]);
 					}
-					inCallback.Call(false, 0);
+					return false;
 				}
-				else {
-					uint32_t permissions = (uint32_t)[dict filePosixPermissions];
-					inCallback.Call(true, permissions);
-				}
+
+				outPermissions = (uint32_t)[dict filePosixPermissions];
+				return true;
 			}
 		}
 		

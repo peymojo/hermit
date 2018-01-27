@@ -108,62 +108,50 @@ namespace hermit {
                         attributesMatch = false;
                     }
 
-                    GetFilePosixPermissionsCallbackClass permissions1;
-					GetFilePosixPermissions(mH_, mFilePath1, permissions1);
-					if (!permissions1.mSuccess) {
+                    uint32_t permissions1 = 0;
+					if (!GetFilePosixPermissions(mH_, mFilePath1, permissions1)) {
 						NOTIFY_ERROR(mH_, "CompareDirectories: GetFilePosixPermissions failed for path 1:", mFilePath1);
 						mCompletion->Call(CompareDirectoriesStatus::kError);
 						return;
 					}
 					
-					GetFilePosixPermissionsCallbackClass permissions2;
-					GetFilePosixPermissions(mH_, mFilePath2, permissions2);
-					if (!permissions2.mSuccess) {
+					uint32_t permissions2 = 0;
+					if (!GetFilePosixPermissions(mH_, mFilePath2, permissions2)) {
 						NOTIFY_ERROR(mH_, "CompareDirectories: GetFilePosixPermissions failed for path 2:", mFilePath2);
 						mCompletion->Call(CompareDirectoriesStatus::kError);
 						return;
 					}
 					
-					if (permissions1.mPermissions != permissions2.mPermissions) {
+					if (permissions1 != permissions2) {
 						attributesMatch = false;
 						FileNotificationParams params(kPermissionsDiffer, mFilePath1, mFilePath2);
 						NOTIFY(mH_, kFilesDifferNotification, &params);
 					}
 					
-					GetFilePosixOwnershipCallbackClassT<std::string> ownership1;
-					GetFilePosixOwnership(mH_, mFilePath1, ownership1);
-					if (!ownership1.mSuccess) {
+					std::string userOwner1;
+					std::string groupOwner1;
+					if (!GetFilePosixOwnership(mH_, mFilePath1, userOwner1, groupOwner1)) {
 						NOTIFY_ERROR(mH_, "CompareDirectories: GetFilePosixOwnership failed for path 1:", mFilePath1);
 						mCompletion->Call(CompareDirectoriesStatus::kError);
 						return;
 					}
 					
-					GetFilePosixOwnershipCallbackClassT<std::string> ownership2;
-					GetFilePosixOwnership(mH_, mFilePath2, ownership2);
-					if (!ownership2.mSuccess) {
+					std::string userOwner2;
+					std::string groupOwner2;
+					if (!GetFilePosixOwnership(mH_, mFilePath2, userOwner2, groupOwner2)) {
 						NOTIFY_ERROR(mH_, "CompareDirectories: GetFilePosixOwnership failed for path 2:", mFilePath2);
 						mCompletion->Call(CompareDirectoriesStatus::kError);
 						return;
 					}
 					
-					if (ownership1.mUserOwner != ownership2.mUserOwner) {
+					if (userOwner1 != userOwner2) {
 						attributesMatch = false;
-						FileNotificationParams params(
-													  kUserOwnersDiffer,
-													  mFilePath1,
-													  mFilePath2,
-													  ownership1.mUserOwner,
-													  ownership2.mUserOwner);
+						FileNotificationParams params(kUserOwnersDiffer, mFilePath1, mFilePath2, userOwner1, userOwner2);
 						NOTIFY(mH_, kFilesDifferNotification, &params);
 					}
-					if (ownership1.mGroupOwner != ownership2.mGroupOwner) {
+					if (groupOwner1 != groupOwner2) {
 						attributesMatch = false;
-						FileNotificationParams params(
-													  kGroupOwnersDiffer,
-													  mFilePath1,
-													  mFilePath2,
-													  ownership1.mGroupOwner,
-													  ownership2.mGroupOwner);
+						FileNotificationParams params(kGroupOwnersDiffer, mFilePath1, mFilePath2, groupOwner1, groupOwner2);
 						NOTIFY(mH_, kFilesDifferNotification, &params);
 					}
 					

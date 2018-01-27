@@ -32,19 +32,8 @@
 namespace hermit {
 	namespace file {
 		
-		namespace {
-			
-			//
-			typedef std::pair<std::string, std::string> StringPair;
-			typedef std::vector<StringPair> StringPairVector;
-			
-		} // private namespace
-
 		//
-		CompareLinksStatus CompareLinks(const HermitPtr& h_,
-										const FilePathPtr& inFilePath1,
-										const FilePathPtr& inFilePath2,
-										const bool& inIgnoreDates) {
+		CompareLinksStatus CompareLinks(const HermitPtr& h_, const FilePathPtr& inFilePath1, const FilePathPtr& inFilePath2, const bool& inIgnoreDates) {
 			std::string link1PathUTF8;
 			GetFilePathUTF8String(h_, inFilePath1, link1PathUTF8);
 			
@@ -122,56 +111,44 @@ namespace hermit {
                 match = false;
             }
 
-			GetFilePosixPermissionsCallbackClass permissions1;
-			GetFilePosixPermissions(h_, inFilePath1, permissions1);
-			if (!permissions1.mSuccess) {
-				NOTIFY_ERROR(h_, "CompareLinks: GetFilePosixPermissions failed for path 1: ", inFilePath1);
+			uint32_t permissions1 = 0;
+			if (!GetFilePosixPermissions(h_, inFilePath1, permissions1)) {
+				NOTIFY_ERROR(h_, "CompareLinks: GetFilePosixPermissions failed for path 1:", inFilePath1);
 				return kCompareLinksStatus_Error;
 			}
-			
-			GetFilePosixPermissionsCallbackClass permissions2;
-			GetFilePosixPermissions(h_, inFilePath2, permissions2);
-			if (!permissions2.mSuccess) {
-				NOTIFY_ERROR(h_, "CompareLinks: GetFilePosixPermissions failed for path 2: ", inFilePath2);
+			uint32_t permissions2 = 0;
+			if (!GetFilePosixPermissions(h_, inFilePath2, permissions2)) {
+				NOTIFY_ERROR(h_, "CompareLinks: GetFilePosixPermissions failed for path 2:", inFilePath2);
 				return kCompareLinksStatus_Error;
 			}
-			
-			if (permissions1.mPermissions != permissions2.mPermissions) {
+			if (permissions1 != permissions2) {
 				match = false;
 				FileNotificationParams params(kPermissionsDiffer, inFilePath1, inFilePath2);
 				NOTIFY(h_, kFilesDifferNotification, &params);
 			}
 			
-			GetFilePosixOwnershipCallbackClassT<std::string> ownership1;
-			GetFilePosixOwnership(h_, inFilePath1, ownership1);
-			if (!ownership1.mSuccess) {
-				NOTIFY_ERROR(h_, "CompareLinks: GetFilePosixOwnership failed for path 1: ", inFilePath1);
+			std::string userOwner1;
+			std::string groupOwner1;
+			if (!GetFilePosixOwnership(h_, inFilePath1, userOwner1, groupOwner1)) {
+				NOTIFY_ERROR(h_, "CompareLinks: GetFilePosixOwnership failed for path 1:", inFilePath1);
 				return kCompareLinksStatus_Error;
 			}
 			
-			GetFilePosixOwnershipCallbackClassT<std::string> ownership2;
-			GetFilePosixOwnership(h_, inFilePath2, ownership2);
-			if (!ownership2.mSuccess) {
-				NOTIFY_ERROR(h_, "CompareLinks: GetFilePosixOwnership failed for path 2: ", inFilePath2);
+			std::string userOwner2;
+			std::string groupOwner2;
+			if (!GetFilePosixOwnership(h_, inFilePath1, userOwner2, groupOwner2)) {
+				NOTIFY_ERROR(h_, "CompareLinks: GetFilePosixOwnership failed for path 2:", inFilePath2);
 				return kCompareLinksStatus_Error;
 			}
 			
-			if (ownership1.mUserOwner != ownership2.mUserOwner) {
+			if (userOwner1 != userOwner2) {
 				match = false;
-				FileNotificationParams params(kUserOwnersDiffer,
-											  inFilePath1,
-											  inFilePath2,
-											  ownership1.mUserOwner,
-											  ownership2.mUserOwner);
+				FileNotificationParams params(kUserOwnersDiffer, inFilePath1, inFilePath2, userOwner1, userOwner2);
 				NOTIFY(h_, kFilesDifferNotification, &params);
 			}
-			if (ownership1.mGroupOwner != ownership2.mGroupOwner) {
+			if (groupOwner1 != groupOwner2) {
 				match = false;
-				FileNotificationParams params(kGroupOwnersDiffer,
-											  inFilePath1,
-											  inFilePath2,
-											  ownership1.mGroupOwner,
-											  ownership2.mGroupOwner);
+				FileNotificationParams params(kGroupOwnersDiffer, inFilePath1, inFilePath2, groupOwner1, groupOwner2);
 				NOTIFY(h_, kFilesDifferNotification, &params);
 			}
 			

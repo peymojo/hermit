@@ -1,6 +1,6 @@
 //
 //	Hermit
-//	Copyright (C) 2017 Paul Young (aka peymojo)
+//	Copyright (C) 2018 Paul Young (aka peymojo)
 //
 //	This program is free software: you can redistribute it and/or modify
 //	it under the terms of the GNU General Public License as published by
@@ -16,20 +16,26 @@
 //	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef FileType_h
-#define FileType_h
+#ifndef CopyXAttrs_h
+#define CopyXAttrs_h
+
+#include "Hermit/Foundation/Hermit.h"
+#include "FilePath.h"
 
 namespace hermit {
 	namespace file {
 		
-		enum class FileType {
+		//
+		enum class CopyXAttrsResult {
 			kUnknown,
-			kFile,
-			kDirectory,
-			kSymbolicLink
+			kSuccess,
+			kError
 		};
 		
-	} // namespace
-} // namespace
+		//
+		CopyXAttrsResult CopyXAttrs(const HermitPtr& h_, const FilePathPtr& source, const FilePathPtr& dest);
+		
+	} // namespace file
+} // namespace hermit
 
-#endif
+#endif /* CopyXAttrs_h */

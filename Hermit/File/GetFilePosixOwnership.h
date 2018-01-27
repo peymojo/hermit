@@ -19,7 +19,7 @@
 #ifndef GetFilePosixOwnership_h
 #define GetFilePosixOwnership_h
 
-#include "Hermit/Foundation/Callback.h"
+#include <string>
 #include "Hermit/Foundation/Hermit.h"
 #include "FilePath.h"
 
@@ -27,57 +27,7 @@ namespace hermit {
 	namespace file {
 		
 		//
-		//
-		DEFINE_CALLBACK_3A(
-						   GetFilePosixOwnershipCallback,
-						   bool,							// inSuccess
-						   std::string,					// inUserOwner
-						   std::string);					// inGroupOwner
-		
-		//
-		//
-		template <class StringT>
-		class GetFilePosixOwnershipCallbackClassT
-		:
-		public GetFilePosixOwnershipCallback
-		{
-		public:
-			//
-			//
-			GetFilePosixOwnershipCallbackClassT()
-			:
-			mSuccess(false)
-			{
-			}
-			
-			//
-			//
-			bool Function(
-						  const bool& inSuccess,
-						  const std::string& inUserOwner,
-						  const std::string& inGroupOwner)
-			{
-				mSuccess = inSuccess;
-				if (inSuccess)
-				{
-					mUserOwner = inUserOwner;
-					mGroupOwner = inGroupOwner;
-				}
-				return true;
-			}
-			
-			//
-			//
-			bool mSuccess;
-			StringT mUserOwner;
-			StringT mGroupOwner;
-		};
-		
-		//
-		//
-		void GetFilePosixOwnership(const HermitPtr& h_,
-								   const FilePathPtr& inFilePath,
-								   const GetFilePosixOwnershipCallbackRef& inCallback);
+		bool GetFilePosixOwnership(const HermitPtr& h_, const FilePathPtr& filePath, std::string& outUserOwner, std::string& outGroupOwner);
 		
 	} // namespace file
 } // namespace hermit

@@ -19,7 +19,6 @@
 #ifndef GetFilePosixPermissions_h
 #define GetFilePosixPermissions_h
 
-#include "Hermit/Foundation/Callback.h"
 #include "Hermit/Foundation/Hermit.h"
 #include "FilePath.h"
 
@@ -27,53 +26,7 @@ namespace hermit {
 	namespace file {
 		
 		//
-		//
-		DEFINE_CALLBACK_2A(
-						   GetFilePosixPermissionsCallback,
-						   bool,					// inSuccess
-						   uint32_t);				// inPosixPermissions
-		
-		//
-		//
-		class GetFilePosixPermissionsCallbackClass
-		:
-		public GetFilePosixPermissionsCallback
-		{
-		public:
-			//
-			//
-			GetFilePosixPermissionsCallbackClass()
-			:
-			mSuccess(false),
-			mPermissions(0)
-			{
-			}
-			
-			//
-			//
-			bool Function(
-						  const bool& inSuccess,
-						  const uint32_t& inPosixPermissions)
-			{
-				mSuccess = inSuccess;
-				if (inSuccess)
-				{
-					mPermissions = inPosixPermissions;
-				}
-				return true;
-			}
-			
-			//
-			//
-			bool mSuccess;
-			uint32_t mPermissions;
-		};
-		
-		//
-		//
-		void GetFilePosixPermissions(const HermitPtr& h_,
-									 const FilePathPtr& inFilePath,
-									 const GetFilePosixPermissionsCallbackRef& inCallback);
+		bool GetFilePosixPermissions(const HermitPtr& h_, const FilePathPtr& filePath, uint32_t& outPermissions);
 		
 	} // namespace file
 } // namespace hermit

@@ -26,16 +26,11 @@ namespace hermit {
 	namespace file {
 		
 		//
-		//
-		void GetFilePosixOwnership(const HermitPtr& h_,
-								   const file::FilePathPtr& inFilePath,
-								   const file::GetFilePosixOwnershipCallbackRef& inCallback) {
+		bool GetFilePosixOwnership(const HermitPtr& h_, const file::FilePathPtr& inFilePath, std::string& outUserOwner, std::string& outGroupOwner) {
 			@autoreleasepool {
 				std::string pathUTF8;
 				FilePathToCocoaPathString(h_, inFilePath, pathUTF8);
-				
 				NSString* pathString = [NSString stringWithUTF8String:pathUTF8.c_str()];
-				
 				NSError* error = nil;
 				NSDictionary* dict = [[NSFileManager defaultManager] attributesOfItemAtPath:pathString error:&error];
 				if (dict == nil) {
@@ -43,13 +38,21 @@ namespace hermit {
 					if (error != nil) {
 						NOTIFY_ERROR(h_, "-- error:", [[error localizedDescription] UTF8String]);
 					}
-					inCallback.Call(false, "", "");
+					return false;
 				}
-				else {
-					NSString* userOwner = [dict fileOwnerAccountName];
-					NSString* groupOwner = [dict fileGroupOwnerAccountName];
-					inCallback.Call(true, [userOwner UTF8String], [groupOwner UTF8String]);
+				NSString* userOwner = [dict fileOwnerAccountName];
+				std::string userOwnerStr;
+				if (userOwner != nil) {
+					userOwnerStr = [userOwner UTF8String];
 				}
+				NSString* groupOwner = [dict fileGroupOwnerAccountName];
+				std::string groupOwnerStr;
+				if (groupOwner != nil) {
+					groupOwnerStr = [groupOwner UTF8String];
+				}
+				outUserOwner = userOwnerStr;
+				outGroupOwner = groupOwnerStr;
+				return true;
 			}
 		}
 		

@@ -662,60 +662,58 @@ namespace hermit {
                 }
 			}
 			
-			GetFilePosixPermissionsCallbackClass permissions1;
-			GetFilePosixPermissions(h_, inFilePath1, permissions1);
-			if (!permissions1.mSuccess) {
+			uint32_t permissions1 = 0;
+			if (!GetFilePosixPermissions(h_, inFilePath1, permissions1)) {
 				NOTIFY_ERROR(h_, "CompareFiles: GetFilePosixPermissions failed for path 1: ", inFilePath1);
 				inCompletion->Call(CompareFilesStatus::kError);
 				return;
 			}
 			
-			GetFilePosixPermissionsCallbackClass permissions2;
-			GetFilePosixPermissions(h_, inFilePath2, permissions2);
-			if (!permissions2.mSuccess) {
+			uint32_t permissions2 = 0;
+			if (!GetFilePosixPermissions(h_, inFilePath2, permissions2)) {
 				NOTIFY_ERROR(h_, "CompareFiles: GetFilePosixPermissions failed for path 2: ", inFilePath2);
 				inCompletion->Call(CompareFilesStatus::kError);
 				return;
 			}
 			
-			if (permissions1.mPermissions != permissions2.mPermissions) {
+			if (permissions1 != permissions2) {
 				match = false;
 				FileNotificationParams params(kPermissionsDiffer, inFilePath1, inFilePath2);
 				NOTIFY(h_, kFilesDifferNotification, &params);
 			}
 			
-			GetFilePosixOwnershipCallbackClassT<std::string> ownership1;
-			GetFilePosixOwnership(h_, inFilePath1, ownership1);
-			if (!ownership1.mSuccess) {
+			std::string userOwner1;
+			std::string groupOwner1;
+			if (!GetFilePosixOwnership(h_, inFilePath1, userOwner1, groupOwner1)) {
 				NOTIFY_ERROR(h_, "CompareFiles: GetFilePosixOwnership failed for path 1: ", inFilePath1);
 				inCompletion->Call(CompareFilesStatus::kError);
 				return;
 			}
 			
-			GetFilePosixOwnershipCallbackClassT<std::string> ownership2;
-			GetFilePosixOwnership(h_, inFilePath2, ownership2);
-			if (!ownership2.mSuccess) {
+			std::string userOwner2;
+			std::string groupOwner2;
+			if (!GetFilePosixOwnership(h_, inFilePath2, userOwner2, groupOwner2)) {
 				NOTIFY_ERROR(h_, "CompareFiles: GetFilePosixOwnership failed for path 2: ", inFilePath2);
 				inCompletion->Call(CompareFilesStatus::kError);
 				return;
 			}
 			
-			if (ownership1.mUserOwner != ownership2.mUserOwner) {
+			if (userOwner1 != userOwner2) {
 				match = false;
 				FileNotificationParams params(kUserOwnersDiffer,
 											  inFilePath1,
 											  inFilePath2,
-											  ownership1.mUserOwner,
-											  ownership2.mUserOwner);
+											  userOwner1,
+											  userOwner2);
 				NOTIFY(h_, kFilesDifferNotification, &params);
 			}
-			if (ownership1.mGroupOwner != ownership2.mGroupOwner) {
+			if (groupOwner1 != groupOwner2) {
 				match = false;
 				FileNotificationParams params(kGroupOwnersDiffer,
 											  inFilePath1,
 											  inFilePath2,
-											  ownership1.mGroupOwner,
-											  ownership2.mGroupOwner);
+											  groupOwner1,
+											  groupOwner2);
 				NOTIFY(h_, kFilesDifferNotification, &params);
 			}
 			

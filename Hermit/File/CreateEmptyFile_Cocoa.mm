@@ -20,37 +20,25 @@
 #import <string>
 #import "Hermit/Foundation/Notification.h"
 #import "FilePathToCocoaPathString.h"
-#import "CreateEmptyFileFork.h"
+#import "CreateEmptyFile.h"
 
 namespace hermit {
 	namespace file {
 		
 		//
-		bool CreateEmptyFileFork(const HermitPtr& h_, const FilePathPtr& filePath, const std::string& forkName) {
+		bool CreateEmptyFile(const HermitPtr& h_, const FilePathPtr& filePath) {
 			@autoreleasepool {
 				std::string pathUTF8;
 				FilePathToCocoaPathString(h_, filePath, pathUTF8);
-				if (!forkName.empty()) {
-					pathUTF8 += "/..namedfork/";
-					if (forkName == "RESOURCE_FORK") {
-						pathUTF8 += "rsrc";
-					}
-					else {
-						pathUTF8 += forkName;
-					}
-				}
-				
 				bool success = true;
 				NSString* pathString = [NSString stringWithUTF8String:pathUTF8.c_str()];
 				NSData* data = [NSData data];
-				
 				@try {
 					[[NSFileManager defaultManager] createFileAtPath:pathString contents:data attributes:nil];
 				}
 				@catch (NSException* exception) {
 					NOTIFY_ERROR(h_,
-								 "CreateEmptyFileFork: createFileAtPath failed for path:", filePath,
-								 "fork name:", forkName,
+								 "CreateEmptyFile: createFileAtPath failed for path:", filePath,
 								 "exception.name:", [exception.name UTF8String],
 								 "exception.reason:", [exception.reason UTF8String]);
 					success = false;

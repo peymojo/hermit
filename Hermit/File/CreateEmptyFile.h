@@ -16,18 +16,20 @@
 //	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef CopyFinderInfo_h
-#define CopyFinderInfo_h
+#ifndef CreateEmptyFileFork_h
+#define CreateEmptyFileFork_h
 
+#include "Hermit/Foundation/Hermit.h"
 #include "FilePath.h"
 
 namespace hermit {
 	namespace file {
 		
 		//
-		void CopyFinderInfo(const FilePathPtr& sourcePath, const FilePathPtr& destPath);
+		bool CreateEmptyFile(const HermitPtr& h_, const FilePathPtr& filePath);
 		
 	} // namespace file
 } // namespace hermit
 
-#endif 
+#endif
+

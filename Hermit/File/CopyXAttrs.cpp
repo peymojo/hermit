@@ -1,6 +1,6 @@
 //
 //	Hermit
-//	Copyright (C) 2017 Paul Young (aka peymojo)
+//	Copyright (C) 2018 Paul Young (aka peymojo)
 //
 //	This program is free software: you can redistribute it and/or modify
 //	it under the terms of the GNU General Public License as published by
@@ -16,20 +16,17 @@
 //	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef CreateEmptyFileFork_h
-#define CreateEmptyFileFork_h
-
-#include "Hermit/Foundation/Hermit.h"
-#include "FilePath.h"
+#include "Hermit/Foundation/Notification.h"
+#include "CopyXAttrs.h"
 
 namespace hermit {
 	namespace file {
 		
 		//
-		bool CreateEmptyFileFork(const HermitPtr& h_, const FilePathPtr& filePath, const std::string& forkName);
+		CopyXAttrsResult CopyXAttrs(const HermitPtr& h_, const FilePathPtr& source, const FilePathPtr& dest) {
+			NOTIFY_ERROR(h_, "CopyXAttrs unimplemented");
+			return CopyXAttrsResult::kError;
+		}
 		
 	} // namespace file
 } // namespace hermit
-
-#endif
-

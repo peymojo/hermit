@@ -25,6 +25,7 @@
 namespace hermit {
 	namespace file {
 		
+		//
 		enum class SetFilePosixOwnershipResult {
 			kUnknown,
 			kSuccess,
@@ -32,6 +33,7 @@ namespace hermit {
 			kError
 		};
 		
+		//
 		SetFilePosixOwnershipResult SetFilePosixOwnership(const HermitPtr& h_,
 														  const FilePathPtr& filePath,
 														  const std::string& userOwner,
