@@ -17,6 +17,8 @@
 //
 
 #include "Hermit/Foundation/Notification.h"
+#include "GetFileXAttrs.h"
+#include "SetFileXAttr.h"
 #include "CopyXAttrs.h"
 
 namespace hermit {
@@ -24,8 +26,19 @@ namespace hermit {
 		
 		//
 		CopyXAttrsResult CopyXAttrs(const HermitPtr& h_, const FilePathPtr& source, const FilePathPtr& dest) {
-			NOTIFY_ERROR(h_, "CopyXAttrs unimplemented");
-			return CopyXAttrsResult::kError;
+			GetFileXAttrsCallbackClass xattrs;
+			auto result = GetFileXAttrs(h_, source, xattrs);
+			if (result != GetFileXAttrsResult::kSuccess) {
+				NOTIFY_ERROR(h_, "GetFileXAttrs failed for: ", source);
+				return CopyXAttrsResult::kError;
+			}
+			for (auto it = begin(xattrs.mXAttrs); it != end(xattrs.mXAttrs); ++it) {
+				if (!SetFileXAttr(h_, dest, (*it).first, (*it).second)) {
+					NOTIFY_ERROR(h_, "SetFileXAttr failed for: ", dest, "attr:", (*it).first);
+					return CopyXAttrsResult::kError;
+				}
+			}
+			return CopyXAttrsResult::kSuccess;
 		}
 		
 	} // namespace file

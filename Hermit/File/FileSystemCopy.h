@@ -27,17 +27,6 @@ namespace hermit {
 	namespace file {
 		
 		//
-		class FileSystemCopyIntermediateUpdateCallback {
-		public:
-			//
-			virtual ~FileSystemCopyIntermediateUpdateCallback() = default;
-			
-			//
-			virtual bool OnUpdate(const HermitPtr& h_, bool success, const FilePathPtr& source, const FilePathPtr& dest) = 0;
-		};
-		typedef std::shared_ptr<FileSystemCopyIntermediateUpdateCallback> FileSystemCopyIntermediateUpdateCallbackPtr;
-
-		//
 		enum class FileSystemCopyResult {
 			kUnknown,
 			kSuccess,
@@ -45,10 +34,19 @@ namespace hermit {
 			kStoppedViaUpdateCallback,
 			kSourceNotFound,
 			kTargetAlreadyExists,
-			kError,
-			kVerifyFailed,
-			kVerifyError
+			kError
 		};
+
+		//
+		class FileSystemCopyIntermediateUpdateCallback {
+		public:
+			//
+			virtual ~FileSystemCopyIntermediateUpdateCallback() = default;
+			
+			//
+			virtual bool OnUpdate(const HermitPtr& h_, const FileSystemCopyResult& result, const FilePathPtr& source, const FilePathPtr& dest) = 0;
+		};
+		typedef std::shared_ptr<FileSystemCopyIntermediateUpdateCallback> FileSystemCopyIntermediateUpdateCallbackPtr;
 		
 		//
 		DEFINE_ASYNC_FUNCTION_2A(FileSystemCopyCompletion,

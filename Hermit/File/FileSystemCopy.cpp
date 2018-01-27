@@ -421,7 +421,7 @@ namespace hermit {
 								  const FileSystemCopyResult& result,
 								  const FilePathPtr& sourcePath,
 								  const FilePathPtr& destPath) {
-					if (!mUpdateCallback->OnUpdate(h_, (result == FileSystemCopyResult::kSuccess), sourcePath, destPath)) {
+					if (!mUpdateCallback->OnUpdate(h_, result, sourcePath, destPath)) {
 						mCompletion->Call(h_, FileSystemCopyResult::kStoppedViaUpdateCallback);
 						return;
 					}
@@ -547,7 +547,7 @@ namespace hermit {
 								  const FileSystemCopyResult& result,
 								  const FilePathPtr& sourcePath,
 								  const FilePathPtr& destPath) {
-					if (!mUpdateCallback->OnUpdate(h_, (result == FileSystemCopyResult::kSuccess), sourcePath, destPath)) {
+					if (!mUpdateCallback->OnUpdate(h_, result, sourcePath, destPath)) {
 						mCompletion->Call(h_, FileSystemCopyResult::kStoppedViaUpdateCallback);
 						return;
 					}
@@ -666,7 +666,7 @@ namespace hermit {
 								  const FileSystemCopyResult& result,
 								  const FilePathPtr& sourcePath,
 								  const FilePathPtr& destPath) {
-					if (!mUpdateCallback->OnUpdate(h_, (result == FileSystemCopyResult::kSuccess), sourcePath, destPath)) {
+					if (!mUpdateCallback->OnUpdate(h_, result, sourcePath, destPath)) {
 						mCompletion->Call(h_, FileSystemCopyResult::kStoppedViaUpdateCallback);
 						return;
 					}
