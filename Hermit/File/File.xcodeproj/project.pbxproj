@@ -20,7 +20,6 @@
 		EF2CF5D91FF24A1C00652E69 /* FilePathsAreEqual.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F531D878B840056E526 /* FilePathsAreEqual.cpp */; };
 		EF2CF5DA1FF24A1C00652E69 /* FilePathToCocoaPathString.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F551D878B840056E526 /* FilePathToCocoaPathString.cpp */; };
 		EF2CF5DB1FF24A1C00652E69 /* FileSystemCopy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F571D878B840056E526 /* FileSystemCopy.cpp */; };
-		EF2CF5DC1FF24A1C00652E69 /* FileSystemCopyWithVerify.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F591D878B840056E526 /* FileSystemCopyWithVerify.cpp */; };
 		EF2CF5DD1FF24A1C00652E69 /* GetAliasTarget_Mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F5E1D878B840056E526 /* GetAliasTarget_Mac.cpp */; };
 		EF2CF5DE1FF24A1C00652E69 /* GetFileACL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F641D878B840056E526 /* GetFileACL.cpp */; };
 		EF2CF5DF1FF24A1C00652E69 /* GetFileBSDFlags.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F661D878B840056E526 /* GetFileBSDFlags.cpp */; };
@@ -104,7 +103,6 @@
 		EF65113B1F656EE2002D8065 /* FilePathsAreEqual.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F531D878B840056E526 /* FilePathsAreEqual.cpp */; };
 		EF65113C1F656EE2002D8065 /* FilePathToCocoaPathString.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F551D878B840056E526 /* FilePathToCocoaPathString.cpp */; };
 		EF65113D1F656EE2002D8065 /* FileSystemCopy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F571D878B840056E526 /* FileSystemCopy.cpp */; };
-		EF65113E1F656EE2002D8065 /* FileSystemCopyWithVerify.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F591D878B840056E526 /* FileSystemCopyWithVerify.cpp */; };
 		EF65113F1F656EE2002D8065 /* GetAliasTarget_Mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F5E1D878B840056E526 /* GetAliasTarget_Mac.cpp */; };
 		EF6511401F656EE2002D8065 /* GetFileACL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F641D878B840056E526 /* GetFileACL.cpp */; };
 		EF6511411F656EE2002D8065 /* GetFileBSDFlags.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F661D878B840056E526 /* GetFileBSDFlags.cpp */; };
@@ -174,7 +172,6 @@
 		EF92C1811F10FF330097D708 /* FilePathsAreEqual.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F531D878B840056E526 /* FilePathsAreEqual.cpp */; };
 		EF92C1821F10FF330097D708 /* FilePathToCocoaPathString.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F551D878B840056E526 /* FilePathToCocoaPathString.cpp */; };
 		EF92C1831F10FF330097D708 /* FileSystemCopy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F571D878B840056E526 /* FileSystemCopy.cpp */; };
-		EF92C1841F10FF330097D708 /* FileSystemCopyWithVerify.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F591D878B840056E526 /* FileSystemCopyWithVerify.cpp */; };
 		EF92C1851F10FF330097D708 /* GetAliasTarget_Mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F5E1D878B840056E526 /* GetAliasTarget_Mac.cpp */; };
 		EF92C1861F10FF330097D708 /* GetFileACL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F641D878B840056E526 /* GetFileACL.cpp */; };
 		EF92C1871F10FF330097D708 /* GetFileBSDFlags.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F661D878B840056E526 /* GetFileBSDFlags.cpp */; };
@@ -303,8 +300,6 @@
 		EFAD5F561D878B840056E526 /* FilePathToCocoaPathString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FilePathToCocoaPathString.h; sourceTree = "<group>"; };
 		EFAD5F571D878B840056E526 /* FileSystemCopy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileSystemCopy.cpp; sourceTree = "<group>"; };
 		EFAD5F581D878B840056E526 /* FileSystemCopy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileSystemCopy.h; sourceTree = "<group>"; };
-		EFAD5F591D878B840056E526 /* FileSystemCopyWithVerify.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileSystemCopyWithVerify.cpp; sourceTree = "<group>"; };
-		EFAD5F5A1D878B840056E526 /* FileSystemCopyWithVerify.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileSystemCopyWithVerify.h; sourceTree = "<group>"; };
 		EFAD5F5B1D878B840056E526 /* FileSystemRename_Cocoa.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FileSystemRename_Cocoa.mm; sourceTree = "<group>"; };
 		EFAD5F5C1D878B840056E526 /* FileSystemRename.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileSystemRename.h; sourceTree = "<group>"; };
 		EFAD5F5D1D878B840056E526 /* FileType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileType.h; sourceTree = "<group>"; };
@@ -541,8 +536,6 @@
 				EFAD5F561D878B840056E526 /* FilePathToCocoaPathString.h */,
 				EFAD5F571D878B840056E526 /* FileSystemCopy.cpp */,
 				EFAD5F581D878B840056E526 /* FileSystemCopy.h */,
-				EFAD5F591D878B840056E526 /* FileSystemCopyWithVerify.cpp */,
-				EFAD5F5A1D878B840056E526 /* FileSystemCopyWithVerify.h */,
 				EFAD5F5B1D878B840056E526 /* FileSystemRename_Cocoa.mm */,
 				EFAD5F5C1D878B840056E526 /* FileSystemRename.h */,
 				EFAD5F5D1D878B840056E526 /* FileType.h */,
@@ -867,7 +860,6 @@
 				EF2CF5D91FF24A1C00652E69 /* FilePathsAreEqual.cpp in Sources */,
 				EF2CF5DA1FF24A1C00652E69 /* FilePathToCocoaPathString.cpp in Sources */,
 				EF2CF5DB1FF24A1C00652E69 /* FileSystemCopy.cpp in Sources */,
-				EF2CF5DC1FF24A1C00652E69 /* FileSystemCopyWithVerify.cpp in Sources */,
 				EF2CF5DD1FF24A1C00652E69 /* GetAliasTarget_Mac.cpp in Sources */,
 				EF2CF5DE1FF24A1C00652E69 /* GetFileACL.cpp in Sources */,
 				EF2CF5DF1FF24A1C00652E69 /* GetFileBSDFlags.cpp in Sources */,
@@ -943,7 +935,6 @@
 				EF65113B1F656EE2002D8065 /* FilePathsAreEqual.cpp in Sources */,
 				EF65113C1F656EE2002D8065 /* FilePathToCocoaPathString.cpp in Sources */,
 				EF65113D1F656EE2002D8065 /* FileSystemCopy.cpp in Sources */,
-				EF65113E1F656EE2002D8065 /* FileSystemCopyWithVerify.cpp in Sources */,
 				EF65113F1F656EE2002D8065 /* GetAliasTarget_Mac.cpp in Sources */,
 				EF6511401F656EE2002D8065 /* GetFileACL.cpp in Sources */,
 				EF6511411F656EE2002D8065 /* GetFileBSDFlags.cpp in Sources */,
@@ -1021,7 +1012,6 @@
 				EF92C1811F10FF330097D708 /* FilePathsAreEqual.cpp in Sources */,
 				EF92C1821F10FF330097D708 /* FilePathToCocoaPathString.cpp in Sources */,
 				EF92C1831F10FF330097D708 /* FileSystemCopy.cpp in Sources */,
-				EF92C1841F10FF330097D708 /* FileSystemCopyWithVerify.cpp in Sources */,
 				EF92C1851F10FF330097D708 /* GetAliasTarget_Mac.cpp in Sources */,
 				EF92C1861F10FF330097D708 /* GetFileACL.cpp in Sources */,
 				EF92C1871F10FF330097D708 /* GetFileBSDFlags.cpp in Sources */,
