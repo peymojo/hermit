@@ -22,8 +22,7 @@
 
 namespace hermit {
 	namespace pagestorestringmap {
-		
-		namespace {
+		namespace GetPageStoreStringMapValue_Impl {
 			
 			//
 			void GetValue(const hermit::HermitPtr& h_,
@@ -143,25 +142,22 @@ namespace hermit {
 			class Task : public AsyncTask {
 			public:
 				//
-				Task(const HermitPtr& h_,
-					 const stringmap::StringMapPtr& inStringMap,
+				Task(const stringmap::StringMapPtr& inStringMap,
 					 const std::string& inKey,
 					 const stringmap::GetStringMapValueCompletionFunctionPtr& inCompletionFunction) :
-				mH_(h_),
 				mStringMap(inStringMap),
 				mKey(inKey),
 				mCompletionFunction(inCompletionFunction) {
 				}
 				
 				//
-				virtual void PerformTask(const int32_t& inTaskID) {
+				virtual void PerformTask(const HermitPtr& h_) override {
 					PageStoreStringMap& stringMap = static_cast<PageStoreStringMap&>(*mStringMap);
 					auto completion = std::make_shared<InitCallback>(mStringMap, mKey, mCompletionFunction);
-					stringMap.Init(mH_, completion);
+					stringMap.Init(h_, completion);
 				}
 				
 				//
-				HermitPtr mH_;
 				stringmap::StringMapPtr mStringMap;
 				std::string mKey;
 				stringmap::GetStringMapValueCompletionFunctionPtr mCompletionFunction;
@@ -191,19 +187,18 @@ namespace hermit {
 				stringmap::GetStringMapValueCompletionFunctionPtr mCompletionFunction;
 			};
 			
-		} // private namespace
+		} // namespace GetPageStoreStringMapValue_Impl
+		using namespace GetPageStoreStringMapValue_Impl;
 		
-		//
 		//
 		void GetPageStoreStringMapValue(const HermitPtr& h_,
 										const stringmap::StringMapPtr& inStringMap,
 										const std::string& inKey,
-										const stringmap::GetStringMapValueCompletionFunctionPtr& inCompletionFunction)
-		{
+										const stringmap::GetStringMapValueCompletionFunctionPtr& inCompletionFunction) {
 			auto completion = std::make_shared<CompletionProxy>(inStringMap, inCompletionFunction);
-			auto task = std::make_shared<Task>(h_, inStringMap, inKey, completion);
+			auto task = std::make_shared<Task>(inStringMap, inKey, completion);
 			PageStoreStringMap& stringMap = static_cast<PageStoreStringMap&>(*inStringMap);
-			if (!stringMap.QueueTask(task)) {
+			if (!stringMap.QueueTask(h_, task)) {
 				NOTIFY_ERROR(h_, "stringMap.QueueTask failed");
 				inCompletionFunction->Call(h_, stringmap::GetStringMapValueResult::kError, "");
 			}

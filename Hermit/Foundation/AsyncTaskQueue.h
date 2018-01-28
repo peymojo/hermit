@@ -20,6 +20,7 @@
 #define AsyncTaskQueue_h
 
 #include <memory>
+#include "Hermit.h"
 
 namespace hermit {
 
@@ -35,18 +36,12 @@ namespace hermit {
 		}
 		
 		//
-		virtual void PerformTask(const int32_t& taskId) = 0;
+		virtual void PerformTask(const HermitPtr& h_) = 0;
 	};
 	typedef std::shared_ptr<AsyncTask> AsyncTaskPtr;
-	
+		
 	//
-	int32_t GetNextTaskId();
-	
-	//
-	bool QueueAsyncTask(const AsyncTaskPtr& task, const int32_t& priority);
-
-	//
-	bool CancelAsyncTask(const std::int32_t& taskID);
+	bool QueueAsyncTask(const HermitPtr& h_, const AsyncTaskPtr& task, const int32_t& priority);
 
 	//
 	void ShutdownAsyncTaskQueue();

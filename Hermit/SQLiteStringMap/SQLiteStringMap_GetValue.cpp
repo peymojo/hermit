@@ -78,24 +78,20 @@ namespace hermit {
 			class Task : public AsyncTask {
 			public:
 				//
-				Task(const HermitPtr& h_,
-					 const SQLiteStringMapImplPtr& impl,
+				Task(const SQLiteStringMapImplPtr& impl,
 					 const std::string& key,
 					 const stringmap::GetStringMapValueCompletionFunctionPtr& completion) :
-				mH_(h_),
 				mImpl(impl),
 				mKey(key),
 				mCompletion(completion) {
 				}
 				
 				//
-				virtual void PerformTask(const int32_t& inTaskId) {
-					PerformWork(mH_, mImpl, mKey, mCompletion);
+				virtual void PerformTask(const HermitPtr& h_) override {
+					PerformWork(h_, mImpl, mKey, mCompletion);
 				}
 				
 				//
-				//
-				HermitPtr mH_;
 				SQLiteStringMapImplPtr mImpl;
 				std::string mKey;
 				stringmap::GetStringMapValueCompletionFunctionPtr mCompletion;
@@ -133,8 +129,8 @@ namespace hermit {
 									   const std::string& key,
 									   const stringmap::GetStringMapValueCompletionFunctionPtr& completion) {
 			auto completionProxy = std::make_shared<CompletionProxy>(mImpl, completion);
-			auto task = std::make_shared<Task>(h_, mImpl, key, completionProxy);
-			if (!mImpl->QueueTask(task)) {
+			auto task = std::make_shared<Task>(mImpl, key, completionProxy);
+			if (!mImpl->QueueTask(h_, task)) {
 				NOTIFY_ERROR(h_, "mImpl->QueueTask failed");
 				completion->Call(h_, stringmap::GetStringMapValueResult::kError, "");
 			}

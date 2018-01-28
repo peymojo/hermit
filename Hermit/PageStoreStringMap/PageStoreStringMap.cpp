@@ -110,25 +110,22 @@ namespace hermit {
 			class LoadPageTask : public AsyncTask {
 			public:
 				//
-				LoadPageTask(const HermitPtr& h_,
-							 const stringmap::StringMapPtr& inStringMap,
+				LoadPageTask(const stringmap::StringMapPtr& inStringMap,
 							 const std::string& inKey,
 							 const LoadStringMapPageCompletionFunctionPtr& inCompletionFunction) :
-				mH_(h_),
 				mStringMap(inStringMap),
 				mKey(inKey),
 				mCompletionFunction(inCompletionFunction) {
 				}
 				
 				//
-				void PerformTask(const int32_t& inTaskID) {
+				virtual void PerformTask(const HermitPtr& h_) override {
 					auto completion = std::make_shared<ReadPageCompletion>(mStringMap, mKey, mCompletionFunction);
 					PageStoreStringMap& stringMap = static_cast<PageStoreStringMap&>(*mStringMap);
-					stringMap.mPageStore->ReadPage(mH_, mKey, completion);
+					stringMap.mPageStore->ReadPage(h_, mKey, completion);
 				}
 				
 				//
-				HermitPtr mH_;
 				stringmap::StringMapPtr mStringMap;
 				std::string mKey;
 				LoadStringMapPageCompletionFunctionPtr mCompletionFunction;
@@ -195,30 +192,26 @@ namespace hermit {
 			class InitTask : public AsyncTask {
 			public:
 				//
-				InitTask(const HermitPtr& h_,
-						 const stringmap::StringMapPtr& inStringMap,
+				InitTask(const stringmap::StringMapPtr& inStringMap,
 						 const InitPageStoreStringMapCompletionFunctionPtr& inCompletionFunction) :
-				mH_(h_),
 				mStringMap(inStringMap),
 				mCompletionFunction(inCompletionFunction) {
 				}
 				
 				//
-				void PerformTask(const int32_t& inTaskID) {
+				virtual void PerformTask(const HermitPtr& h_) override {
 					PageStoreStringMap& stringMap = static_cast<PageStoreStringMap&>(*mStringMap);
 					if (stringMap.mInitStatus != kInitPageStoreStringMapStatus_Unknown) {
-						mCompletionFunction->Call(mH_, stringMap.mInitStatus);
+						mCompletionFunction->Call(h_, stringMap.mInitStatus);
 						return;
 					}
 					
 					auto enumeration = std::make_shared<PageEnumeration>(mStringMap);
 					auto completion = std::make_shared<PageCompletion>(mStringMap, mCompletionFunction);
-					stringMap.mPageStore->EnumeratePages(mH_, enumeration, completion);
+					stringMap.mPageStore->EnumeratePages(h_, enumeration, completion);
 				}
 				
 				//
-				//
-				HermitPtr mH_;
 				stringmap::StringMapPtr mStringMap;
 				InitPageStoreStringMapCompletionFunctionPtr mCompletionFunction;
 			};
@@ -234,8 +227,8 @@ namespace hermit {
 		//
 		void PageStoreStringMap::Init(const HermitPtr& h_,
 									  const InitPageStoreStringMapCompletionFunctionPtr& inCompletionFunction) {
-			auto task = std::make_shared<InitTask>(h_, shared_from_this(), inCompletionFunction);
-			if (!QueueAsyncTask(task, 20)) {
+			auto task = std::make_shared<InitTask>(shared_from_this(), inCompletionFunction);
+			if (!QueueAsyncTask(h_, task, 20)) {
 				NOTIFY_ERROR(h_, "QueueAsyncTask failed");
 				inCompletionFunction->Call(h_, kInitPageStoreStringMapStatus_Error);
 			}
@@ -245,8 +238,8 @@ namespace hermit {
 		void PageStoreStringMap::LoadPage(const HermitPtr& h_,
 										  const std::string& inKey,
 										  const LoadStringMapPageCompletionFunctionPtr& inCompletionFunction) {
-			auto task = std::make_shared<LoadPageTask>(h_, shared_from_this(), inKey, inCompletionFunction);
-			if (!QueueAsyncTask(task, 20)) {
+			auto task = std::make_shared<LoadPageTask>(shared_from_this(), inKey, inCompletionFunction);
+			if (!QueueAsyncTask(h_, task, 20)) {
 				NOTIFY_ERROR(h_, "QueueAsyncTask failed");
 				inCompletionFunction->Call(h_, LoadStringMapPageResult::kError, nullptr);
 			}

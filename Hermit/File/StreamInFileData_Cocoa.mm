@@ -70,23 +70,22 @@ namespace hermit {
 				class StreamTask : public AsyncTask {
 				public:
 					//
-					StreamTask(const HermitPtr& h_, const FileStreamerPtr& streamer) : mH_(h_), mStreamer(streamer) {
+					StreamTask(const FileStreamerPtr& streamer) : mStreamer(streamer) {
 					}
 					
 					//
-					virtual void PerformTask(const int32_t& taskId) override {
-						mStreamer->PerformStreamTask(mH_);
+					virtual void PerformTask(const HermitPtr& h_) override {
+						mStreamer->PerformStreamTask(h_);
 					}
 					
 					//
-					HermitPtr mH_;
 					FileStreamerPtr mStreamer;
 				};
 				
 				//
 				void StreamNextChunk(const HermitPtr& h_) {
-					auto task = std::make_shared<StreamTask>(h_, shared_from_this());
-					if (!QueueAsyncTask(task, 1)) {
+					auto task = std::make_shared<StreamTask>(shared_from_this());
+					if (!QueueAsyncTask(h_, task, 1)) {
 						NOTIFY_ERROR(h_, "StreamInFileData: QueueAsyncTask failed.");
 						mCompletion->Call(h_, StreamDataResult::kError);
 						return;

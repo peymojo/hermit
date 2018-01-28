@@ -22,54 +22,43 @@
 
 namespace hermit {
 	namespace pagestorestringmap {
-		
-		namespace {
+		namespace LockPageStoreStringMap_Impl {
 			
 			//
-			//
-			class LockCallback
-			:
-			public TaskQueueLockCallback
-			{
+			class LockCallback : public LockTaskQueueCompletion {
 			public:
 				//
-				//
-				LockCallback(const stringmap::LockStringMapCompletionFunctionPtr& inCompletionFunction)
-				:
-				mCompletionFunction(inCompletionFunction)
-				{
+				LockCallback(const stringmap::LockStringMapCompletionFunctionPtr& completion) : mCompletion(completion) {
 				}
 				
 				//
-				//
-				virtual void Call(const HermitPtr& h_, const TaskQueueLockStatus& inStatus) override {
-					if (inStatus == kTaskQueueLockStatus_Cancel) {
-						mCompletionFunction->Call(h_, stringmap::LockStringMapResult::kCanceled);
+				virtual void Call(const HermitPtr& h_, const LockTaskQueueResult& result) override {
+					if (result == LockTaskQueueResult::kCancel) {
+						mCompletion->Call(h_, stringmap::LockStringMapResult::kCanceled);
 						return;
 					}
-					if (inStatus != kTaskQueueLockStatus_Success) {
+					if (result != LockTaskQueueResult::kSuccess) {
 						NOTIFY_ERROR(h_, "LockPageStoreStringMap: stringMap.Lock failed.");
-						mCompletionFunction->Call(h_, stringmap::LockStringMapResult::kError);
+						mCompletion->Call(h_, stringmap::LockStringMapResult::kError);
 						return;
 					}
-					mCompletionFunction->Call(h_, stringmap::LockStringMapResult::kSuccess);
+					mCompletion->Call(h_, stringmap::LockStringMapResult::kSuccess);
 				}
 				
 				//
-				//
-				stringmap::LockStringMapCompletionFunctionPtr mCompletionFunction;
+				stringmap::LockStringMapCompletionFunctionPtr mCompletion;
 			};
 			
-		} // private namespace
+		} // namespace LockPageStoreStringMap_Impl
+		using namespace LockPageStoreStringMap_Impl;
 		
-		//
 		//
 		void LockPageStoreStringMap(const HermitPtr& h_,
 									const stringmap::StringMapPtr& inStringMap,
-									const stringmap::LockStringMapCompletionFunctionPtr& inCompletionFunction) {
+									const stringmap::LockStringMapCompletionFunctionPtr& inCompletion) {
 			PageStoreStringMap& stringMap = static_cast<PageStoreStringMap&>(*inStringMap);
 			TaskQueue& taskQueue = stringMap;
-			auto lockCallback = std::make_shared<LockCallback>(inCompletionFunction);
+			auto lockCallback = std::make_shared<LockCallback>(inCompletion);
 			taskQueue.Lock(h_, lockCallback);
 		}
 		

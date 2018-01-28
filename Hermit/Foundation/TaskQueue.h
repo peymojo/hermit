@@ -33,15 +33,15 @@ namespace hermit {
 	typedef std::shared_ptr<QueueInfo> QueueInfoPtr;
 	
 	//
-	enum TaskQueueLockStatus {
-		kTaskQueueLockStatus_Unknown,
-		kTaskQueueLockStatus_Success,
-		kTaskQueueLockStatus_Cancel,
-		kTaskQueueLockStatus_Error
+	enum class LockTaskQueueResult {
+		kUnknown,
+		kSuccess,
+		kCancel,
+		kError
 	};
 	
 	//
-	DEFINE_ASYNC_FUNCTION_2A(TaskQueueLockCallback, HermitPtr, TaskQueueLockStatus);
+	DEFINE_ASYNC_FUNCTION_2A(LockTaskQueueCompletion, HermitPtr, LockTaskQueueResult);
 	
 	//
 	class TaskQueue {
@@ -53,13 +53,13 @@ namespace hermit {
 		~TaskQueue();
 		
 		//
-		bool QueueTask(const AsyncTaskPtr& inTask);
+		bool QueueTask(const HermitPtr& h_, const AsyncTaskPtr& inTask);
 		
 		//
 		void TaskComplete();
 		
 		//
-		void Lock(const HermitPtr& h_, const TaskQueueLockCallbackPtr& inCallback);
+		void Lock(const HermitPtr& h_, const LockTaskQueueCompletionPtr& completion);
 		
 		//
 		void Unlock(const HermitPtr& h_);

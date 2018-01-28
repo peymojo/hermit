@@ -167,37 +167,28 @@ namespace hermit {
 			};
 			
 			//
-			//
-			class Task
-			:
-			public AsyncTask
-			{
+			class Task : public AsyncTask {
 			public:
 				//
-				//
-				Task(const HermitPtr& h_,
-					 const stringmap::StringMapPtr& inStringMap,
+				Task(const stringmap::StringMapPtr& inStringMap,
 					 const std::string& inKey,
 					 const std::string& inValue,
 					 const stringmap::SetStringMapValueCompletionFunctionPtr& inCompletionFunction) :
-				mH_(h_),
 				mStringMap(inStringMap),
 				mKey(inKey),
 				mValue(inValue),
-				mCompletionFunction(inCompletionFunction)
-				{
+				mCompletionFunction(inCompletionFunction) {
 				}
 				
 				//
-				virtual void PerformTask(const int32_t& inTaskID) {
+				virtual void PerformTask(const HermitPtr& h_) override {
 					PageStoreStringMap& stringMap = static_cast<PageStoreStringMap&>(*mStringMap);
 					auto completion = std::make_shared<InitCallback>(mStringMap, mKey, mValue, mCompletionFunction);
-					stringMap.Init(mH_, completion);
+					stringMap.Init(h_, completion);
 				}
 				
 				//
 				//
-				HermitPtr mH_;
 				stringmap::StringMapPtr mStringMap;
 				std::string mKey;
 				std::string mValue;
@@ -205,32 +196,23 @@ namespace hermit {
 			};
 			
 			//
-			//
-			class CompletionProxy
-			:
-			public stringmap::SetStringMapValueCompletionFunction
-			{
+			class CompletionProxy : public stringmap::SetStringMapValueCompletionFunction {
 			public:
 				//
-				//
 				CompletionProxy(const stringmap::StringMapPtr& inStringMap,
-								const stringmap::SetStringMapValueCompletionFunctionPtr& inCompletionFunction)
-				:
+								const stringmap::SetStringMapValueCompletionFunctionPtr& inCompletionFunction) :
 				mStringMap(inStringMap),
-				mCompletionFunction(inCompletionFunction)
-				{
+				mCompletionFunction(inCompletionFunction) {
 				}
 				
 				//
 				//
 				virtual void Call(const HermitPtr& h_, const stringmap::SetStringMapValueResult& inResult) override {
 					mCompletionFunction->Call(h_, inResult);
-					
 					PageStoreStringMap& stringMap = static_cast<PageStoreStringMap&>(*mStringMap);
 					stringMap.TaskComplete();
 				}
 				
-				//
 				//
 				stringmap::StringMapPtr mStringMap;
 				stringmap::SetStringMapValueCompletionFunctionPtr mCompletionFunction;
@@ -239,36 +221,31 @@ namespace hermit {
 		} // private namespace
 		
 		//
-		//
 		void SetPageStoreStringMapValue(const HermitPtr& h_,
 										const stringmap::StringMapPtr& inStringMap,
 										const std::string& inKey,
 										const std::string& inValue,
-										const stringmap::SetStringMapValueCompletionFunctionPtr& inCompletionFunction)
-		{
-			if (inStringMap == nullptr)
-			{
+										const stringmap::SetStringMapValueCompletionFunctionPtr& inCompletionFunction) {
+			if (inStringMap == nullptr) {
 				NOTIFY_ERROR(h_, "SetPageStoreStringMapValue: inStringMap == null.");
 				inCompletionFunction->Call(h_, stringmap::SetStringMapValueResult::kError);
 				return;
 			}
-			if (inKey.empty())
-			{
+			if (inKey.empty()) {
 				NOTIFY_ERROR(h_, "SetPageStoreStringMapValue: null key.");
 				inCompletionFunction->Call(h_, stringmap::SetStringMapValueResult::kError);
 				return;
 			}
-			if (inKey[0] < ' ')
-			{
+			if (inKey[0] < ' ') {
 				NOTIFY_ERROR(h_, "SetPageStoreStringMapValue: invalid key.");
 				inCompletionFunction->Call(h_, stringmap::SetStringMapValueResult::kError);
 				return;
 			}
 			
 			stringmap::SetStringMapValueCompletionFunctionPtr completion(new CompletionProxy(inStringMap, inCompletionFunction));
-			auto task = std::make_shared<Task>(h_, inStringMap, inKey, inValue, completion);
+			auto task = std::make_shared<Task>(inStringMap, inKey, inValue, completion);
 			PageStoreStringMap& stringMap = static_cast<PageStoreStringMap&>(*inStringMap);
-			if (!stringMap.QueueTask(task)) {
+			if (!stringMap.QueueTask(h_, task)) {
 				NOTIFY_ERROR(h_, "SetPageStoreStringMapValue: QueueTask failed.");
 				inCompletionFunction->Call(h_, stringmap::SetStringMapValueResult::kError);
 			}

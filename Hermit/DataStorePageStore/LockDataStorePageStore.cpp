@@ -22,58 +22,44 @@
 
 namespace hermit {
 	namespace datastorepagestore {
-		
-		namespace {
+		namespace LockDataStorePageStore_Impl {
 			
 			//
-			//
-			class LockCallback
-			:
-			public TaskQueueLockCallback
-			{
+			class LockCallback : public LockTaskQueueCompletion {
 			public:
 				//
-				//
-				LockCallback(
-							 const pagestore::LockPageStoreCompletionFunctionPtr& inCompletionFunction)
-				:
-				mCompletionFunction(inCompletionFunction)
-				{
+				LockCallback(const pagestore::LockPageStoreCompletionFunctionPtr& completion) :
+				mCompletion(completion) {
 				}
 				
 				//
-				//
-				virtual void Call(const HermitPtr& h_, const TaskQueueLockStatus& inStatus) override
-				{
-					if (inStatus == kTaskQueueLockStatus_Cancel)
-					{
-						mCompletionFunction->Call(h_, pagestore::kLockPageStoreStatus_Canceled);
+				virtual void Call(const HermitPtr& h_, const LockTaskQueueResult& result) override {
+					if (result == LockTaskQueueResult::kCancel) {
+						mCompletion->Call(h_, pagestore::kLockPageStoreStatus_Canceled);
 						return;
 					}
-					if (inStatus != kTaskQueueLockStatus_Success)
-					{
+					if (result != LockTaskQueueResult::kSuccess) {
 						NOTIFY_ERROR(h_, "LockDataStorePageStore: pageStore.Lock failed.");
-						mCompletionFunction->Call(h_, pagestore::kLockPageStoreStatus_Canceled);
+						mCompletion->Call(h_, pagestore::kLockPageStoreStatus_Canceled);
 						return;
 					}
-					mCompletionFunction->Call(h_, pagestore::kLockPageStoreStatus_Success);
+					mCompletion->Call(h_, pagestore::kLockPageStoreStatus_Success);
 				}
 				
 				//
-				//
-				pagestore::LockPageStoreCompletionFunctionPtr mCompletionFunction;
+				pagestore::LockPageStoreCompletionFunctionPtr mCompletion;
 			};
 			
-		} // private namespace
+		} // namespace LockDataStorePageStore_Impl
+		using namespace LockDataStorePageStore_Impl;
 		
 		//
 		void LockDataStorePageStore(const HermitPtr& h_,
 									const pagestore::PageStorePtr& inPageStore,
-									const pagestore::LockPageStoreCompletionFunctionPtr& inCompletionFunction)
-		{
+									const pagestore::LockPageStoreCompletionFunctionPtr& inCompletionFunction) {
 			DataStorePageStore& pageStore = static_cast<DataStorePageStore&>(*inPageStore);
 			TaskQueue& taskQueue = pageStore;
-			TaskQueueLockCallbackPtr lockCallback(new LockCallback(inCompletionFunction));
+			auto lockCallback = std::make_shared<LockCallback>(inCompletionFunction);
 			taskQueue.Lock(h_, lockCallback);
 		}
 		

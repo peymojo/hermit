@@ -22,11 +22,10 @@
 
 namespace hermit {
 	namespace sqlitestringmap {
-		
 		namespace SQLiteStringMap_Lock_Impl {
 			
 			//
-			class LockCallback : public hermit::TaskQueueLockCallback {
+			class LockCallback : public LockTaskQueueCompletion {
 			public:
 				//
 				LockCallback(const stringmap::LockStringMapCompletionFunctionPtr& completion) :
@@ -34,13 +33,13 @@ namespace hermit {
 				}
 				
 				//
-				void Call(const hermit::HermitPtr& h_, const hermit::TaskQueueLockStatus& status) override {
-					if (status == hermit::kTaskQueueLockStatus_Cancel) {
+				void Call(const HermitPtr& h_, const LockTaskQueueResult& result) override {
+					if (result == LockTaskQueueResult::kCancel) {
 						mCompletion->Call(h_, stringmap::LockStringMapResult::kCanceled);
 						return;
 					}
-					if (status != hermit::kTaskQueueLockStatus_Success) {
-						NOTIFY_ERROR(h_, "inStatus != hermit::kTaskQueueLockStatus_Success.");
+					if (result != LockTaskQueueResult::kSuccess) {
+						NOTIFY_ERROR(h_, "result != LockTaskQueueResult::kSuccess.");
 						mCompletion->Call(h_, stringmap::LockStringMapResult::kError);
 						return;
 					}

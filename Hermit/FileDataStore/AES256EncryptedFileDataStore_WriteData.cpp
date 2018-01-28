@@ -31,13 +31,11 @@ namespace hermit {
             class Task : public AsyncTask {
             public:
                 //
-                Task(const HermitPtr& h_,
-                     const datastore::DataStorePtr& dataStore,
+                Task(const datastore::DataStorePtr& dataStore,
                      const datastore::DataPathPtr& path,
                      const SharedBufferPtr& data,
                      const datastore::EncryptionSetting& encryptionSetting,
                      const datastore::WriteDataStoreDataCompletionFunctionPtr& completion) :
-                mH_(h_),
                 mDataStore(dataStore),
                 mPath(path),
                 mData(data),
@@ -46,9 +44,9 @@ namespace hermit {
                 }
                 
                 //
-                void PerformTask(const int32_t& inTaskId) {
+				virtual void PerformTask(const HermitPtr& h_) override {
                     AES256EncryptedFileDataStore& dataStore = static_cast<AES256EncryptedFileDataStore&>(*mDataStore);
-                    dataStore.DoWriteData(mH_,
+                    dataStore.DoWriteData(h_,
                                           mPath,
                                           mData,
                                           mEncryptionSetting,
@@ -56,7 +54,6 @@ namespace hermit {
                 }
                 
                 //
-                HermitPtr mH_;
                 datastore::DataStorePtr mDataStore;
                 datastore::DataPathPtr mPath;
                 SharedBufferPtr mData;
@@ -72,13 +69,12 @@ namespace hermit {
                                                      const SharedBufferPtr& data,
                                                      const datastore::EncryptionSetting& encryptionSetting,
                                                      const datastore::WriteDataStoreDataCompletionFunctionPtr& completion) {
-            auto task = std::make_shared<Task>(h_,
-                                               shared_from_this(),
+            auto task = std::make_shared<Task>(shared_from_this(),
                                                path,
                                                data,
                                                encryptionSetting,
                                                completion);
-            if (!QueueAsyncTask(task, 15)) {
+            if (!QueueAsyncTask(h_, task, 15)) {
                 NOTIFY_ERROR(h_, "QueueAsyncTask failed.");
                 completion->Call(h_, datastore::WriteDataStoreDataResult::kError);
             }

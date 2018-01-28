@@ -17,75 +17,58 @@
 //
 
 #include "Hermit/Foundation/Notification.h"
-#include "Hermit/Foundation/ParamBlock.h"
 #include "PageStoreStringMap.h"
 #include "ValidatePageStoreStringMap.h"
 
 namespace hermit {
 	namespace pagestorestringmap {
-		
-		namespace {
-			
-			//
-			//
-			DEFINE_PARAMBLOCK_3(Params,
-								HermitPtr, h_,
-								stringmap::StringMapPtr, stringMap,
-								stringmap::ValidateStringMapCompletionFunctionPtr, completion);
+		namespace ValidatePageStoreStringMap_Impl {
 			
 			//
 			class ValidatePageStoreCompletion : public pagestore::ValidatePageStoreCompletionFunction {
 			public:
 				//
-				ValidatePageStoreCompletion(const Params& inParams) : mParams(inParams) {
+				ValidatePageStoreCompletion(const stringmap::ValidateStringMapCompletionFunctionPtr& completion) :
+				mCompletion(completion) {
 				}
 				
 				//
 				virtual void Call(const HermitPtr& h_, const pagestore::ValidatePageStoreResult& inResult) override {
 					if (inResult == pagestore::ValidatePageStoreResult::kCanceled) {
-						mParams.completion->Call(h_, stringmap::ValidateStringMapResult::kCanceled);
+						mCompletion->Call(h_, stringmap::ValidateStringMapResult::kCanceled);
 					}
 					if (inResult != pagestore::ValidatePageStoreResult::kSuccess) {
-						NOTIFY_ERROR(mParams.h_, "ValidatePageStoreStringMap: ValidatePageStore failed.");
-						mParams.completion->Call(h_, stringmap::ValidateStringMapResult::kError);
+						NOTIFY_ERROR(h_, "ValidatePageStoreStringMap: ValidatePageStore failed.");
+						mCompletion->Call(h_, stringmap::ValidateStringMapResult::kError);
 						return;
 					}
-					
-					mParams.completion->Call(h_, stringmap::ValidateStringMapResult::kSuccess);
+					mCompletion->Call(h_, stringmap::ValidateStringMapResult::kSuccess);
 				}
 				
 				//
-				Params mParams;
+				stringmap::ValidateStringMapCompletionFunctionPtr mCompletion;
 			};
 			
 			//
-			//
-			class Task
-			:
-			public AsyncTask
-			{
+			class Task : public AsyncTask {
 			public:
 				//
-				//
-				Task(const Params& inParams)
-				:
-				mParams(inParams)
-				{
+				Task(const stringmap::StringMapPtr& stringMap,
+					 const stringmap::ValidateStringMapCompletionFunctionPtr& completion) :
+				mStringMap(stringMap),
+				mCompletion(completion) {
 				}
 				
 				//
-				//
-				virtual void PerformTask(const int32_t& inTaskID)
-				{
-					PageStoreStringMap& stringMap = static_cast<PageStoreStringMap&>(*mParams.stringMap);
-					
-					pagestore::ValidatePageStoreCompletionFunctionPtr completion(new ValidatePageStoreCompletion(mParams));
-					stringMap.mPageStore->Validate(mParams.h_, completion);
+				virtual void PerformTask(const HermitPtr& h_) override {
+					PageStoreStringMap& stringMap = static_cast<PageStoreStringMap&>(*mStringMap);
+					auto completion = std::make_shared<ValidatePageStoreCompletion>(mCompletion);
+					stringMap.mPageStore->Validate(h_, completion);
 				}
 				
 				//
-				//
-				Params mParams;
+				stringmap::StringMapPtr mStringMap;
+				stringmap::ValidateStringMapCompletionFunctionPtr mCompletion;
 			};
 			
 			//
@@ -110,19 +93,19 @@ namespace hermit {
 				stringmap::ValidateStringMapCompletionFunctionPtr mCompletionFunction;
 			};
 			
-		} // private namespace
+		} // namespace ValidatePageStoreStringMap_Impl
+		using namespace ValidatePageStoreStringMap_Impl;
 		
 		//
 		void ValidatePageStoreStringMap(const HermitPtr& h_,
-										const stringmap::StringMapPtr& inStringMap,
-										const stringmap::ValidateStringMapCompletionFunctionPtr& inCompletionFunction) {
-			PageStoreStringMap& stringMap = static_cast<PageStoreStringMap&>(*inStringMap);
-			
-			auto completion = std::make_shared<CompletionProxy>(inStringMap, inCompletionFunction);
-			auto task = std::make_shared<Task>(Params(h_, inStringMap, completion));
-			if (!stringMap.QueueTask(task)) {
+										const stringmap::StringMapPtr& stringMap,
+										const stringmap::ValidateStringMapCompletionFunctionPtr& completion) {
+			PageStoreStringMap& pageStoreStringMap = static_cast<PageStoreStringMap&>(*stringMap);
+			auto completionProxy = std::make_shared<CompletionProxy>(stringMap, completion);
+			auto task = std::make_shared<Task>(stringMap, completionProxy);
+			if (!pageStoreStringMap.QueueTask(h_, task)) {
 				NOTIFY_ERROR(h_, "stringMap.QueueTask failed");
-				inCompletionFunction->Call(h_, stringmap::ValidateStringMapResult::kError);
+				completion->Call(h_, stringmap::ValidateStringMapResult::kError);
 			}
 		}
 		

@@ -51,12 +51,10 @@ namespace hermit {
 			class Task : public AsyncTask {
 			public:
 				//
-				Task(const HermitPtr& h_,
-					 const pagestore::PageStorePtr& inPageStore,
+				Task(const pagestore::PageStorePtr& inPageStore,
 					 const std::string& inPageName,
 					 const DataBuffer& inPageData,
 					 const pagestore::WritePageStorePageCompletionFunctionPtr& inCompletionFunction) :
-				mH_(h_),
 				mPageStore(inPageStore),
 				mPageName(inPageName),
 				mPageData(std::make_shared<SharedBuffer>(inPageData.first, inPageData.second)),
@@ -64,12 +62,11 @@ namespace hermit {
 				}
 				
 				//
-				void PerformTask(const int32_t& inTaskID) {
-					PerformWork(mH_, mPageStore, mPageName, mPageData, mCompletionFunction);
+				virtual void PerformTask(const HermitPtr& h_) override {
+					PerformWork(h_, mPageStore, mPageName, mPageData, mCompletionFunction);
 				}
 				
 				//
-				HermitPtr mH_;
 				pagestore::PageStorePtr mPageStore;
 				std::string mPageName;
 				SharedBufferPtr mPageData;
@@ -108,12 +105,8 @@ namespace hermit {
 										 const pagestore::WritePageStorePageCompletionFunctionPtr& inCompletionFunction) {
 			DataStorePageStore& pageStore = static_cast<DataStorePageStore&>(*inPageStore);
 			pagestore::WritePageStorePageCompletionFunctionPtr proxy(new CompletionProxy(inPageStore, inCompletionFunction));
-			auto task = std::make_shared<Task>(h_,
-											   inPageStore,
-											   inPageName,
-											   inPageData,
-											   proxy);
-			if (!pageStore.QueueTask(task)) {
+			auto task = std::make_shared<Task>(inPageStore,  inPageName, inPageData, proxy);
+			if (!pageStore.QueueTask(h_, task)) {
 				NOTIFY_ERROR(h_, "pageStore.QueueTask failed");
 				inCompletionFunction->Call(pagestore::WritePageStorePageResult::kWritePageStorePageResult_Error);
 			}

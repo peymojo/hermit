@@ -182,23 +182,20 @@ namespace hermit {
 		class Task : public AsyncTask {
 		public:
 			//
-			Task(const HermitPtr& h_,
-				 const pagestore::PageStorePtr& inPageStore,
+			Task(const pagestore::PageStorePtr& inPageStore,
 				 const std::string& inPageName,
 				 const pagestore::ReadPageStorePageCompletionFunctionPtr& inCompletionFunction) :
-			mH_(h_),
 			mPageStore(inPageStore),
 			mPageName(inPageName),
 			mCompletionFunction(inCompletionFunction) {
 			}
 				
 			//
-			void PerformTask(const int32_t& inTaskID) {
-				PerformWork(mH_, mPageStore, mPageName, mCompletionFunction);
+			virtual void PerformTask(const HermitPtr& h_) override {
+				PerformWork(h_, mPageStore, mPageName, mCompletionFunction);
 			}
 				
 			//
-			HermitPtr mH_;
 			pagestore::PageStorePtr mPageStore;
 			std::string mPageName;
 			pagestore::ReadPageStorePageCompletionFunctionPtr mCompletionFunction;
@@ -235,8 +232,8 @@ namespace hermit {
 										const pagestore::ReadPageStorePageCompletionFunctionPtr& inCompletionFunction) {
 			DataStorePageStore& pageStore = static_cast<DataStorePageStore&>(*inPageStore);
 			auto proxy = std::make_shared<CompletionProxy>(inPageStore, inCompletionFunction);
-			auto task = std::make_shared<Task>(h_, inPageStore, inPageName, proxy);
-			if (!pageStore.QueueTask(task)) {
+			auto task = std::make_shared<Task>(inPageStore, inPageName, proxy);
+			if (!pageStore.QueueTask(h_, task)) {
 				NOTIFY_ERROR(h_, "pageStore.QueueTask failed");
 				inCompletionFunction->Call(h_, pagestore::ReadPageStorePageResult::kError, DataBuffer());
 			}

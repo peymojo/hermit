@@ -333,13 +333,11 @@ namespace hermit {
 			class CopyDirectoryLinks : public std::enable_shared_from_this<CopyDirectoryLinks> {
 			public:
 				//
-				CopyDirectoryLinks(const HermitPtr& h_,
-								   const DirectoryPtr& directory,
+				CopyDirectoryLinks(const DirectoryPtr& directory,
 								   const FilePathPtr& sourcePath,
 								   const FilePathPtr& destPath,
 								   const FileSystemCopyIntermediateUpdateCallbackPtr& updateCallback,
 								   const FileSystemCopyCompletionPtr& completion) :
-				mH_(h_),
 				mDirectory(directory),
 				mSourcePath(sourcePath),
 				mDestPath(destPath),
@@ -358,8 +356,8 @@ namespace hermit {
 					}
 					
 					//
-					virtual void PerformTask(const int32_t& taskId) override {
-						mOwner->PerformTask(mFileInfo);
+					virtual void PerformTask(const HermitPtr& h_) override {
+						mOwner->PerformTask(h_, mFileInfo);
 					}
 					
 					//
@@ -368,16 +366,16 @@ namespace hermit {
 				};
 				
 				//
-				void ProcessNextItem() {
+				void ProcessNextItem(const HermitPtr& h_) {
 					if (mIt == end(mDirectory->mSymbolicLinks)) {
-						CopyAttributes(mH_, mSourcePath, mDestPath, mCompletion);
+						CopyAttributes(h_, mSourcePath, mDestPath, mCompletion);
 						return;
 					}
 					auto fileInfo = *mIt++;
 					auto task = std::make_shared<Task>(shared_from_this(), fileInfo);
-					if (!QueueAsyncTask(task, 10)) {
-						NOTIFY_ERROR(mH_, "CopyDirectoryLinks: QueueAsyncTask failed.");
-						mCompletion->Call(mH_, FileSystemCopyResult::kError);
+					if (!QueueAsyncTask(h_, task, 10)) {
+						NOTIFY_ERROR(h_, "CopyDirectoryLinks: QueueAsyncTask failed.");
+						mCompletion->Call(h_, FileSystemCopyResult::kError);
 					}
 				}
 				
@@ -403,17 +401,17 @@ namespace hermit {
 				};
 				
 				//
-				void PerformTask(const FileInfoPtr& fileInfo) {
+				void PerformTask(const HermitPtr& h_, const FileInfoPtr& fileInfo) {
 					FilePathPtr destFilePath;
-					AppendToFilePath(mH_, mDestPath, fileInfo->mName, destFilePath);
+					AppendToFilePath(h_, mDestPath, fileInfo->mName, destFilePath);
 					if (destFilePath == nullptr) {
-						NOTIFY_ERROR(mH_, "CopyDirectoryLinks: AppendToFilePath failed, path:", mDestPath, "item name:", fileInfo->mName);
-						ProcessNextItem();
+						NOTIFY_ERROR(h_, "CopyDirectoryLinks: AppendToFilePath failed, path:", mDestPath, "item name:", fileInfo->mName);
+						ProcessNextItem(h_);
 						return;
 					}
 					
 					auto completion = std::make_shared<Completion>(shared_from_this(), fileInfo->mPath, destFilePath);
-					CopyOneSymbolicLink(mH_, fileInfo->mPath, destFilePath, completion);
+					CopyOneSymbolicLink(h_, fileInfo->mPath, destFilePath, completion);
 				}
 
 				//
@@ -425,11 +423,10 @@ namespace hermit {
 						mCompletion->Call(h_, FileSystemCopyResult::kStoppedViaUpdateCallback);
 						return;
 					}
-					ProcessNextItem();
+					ProcessNextItem(h_);
 				}
 				
 				//
-				HermitPtr mH_;
 				DirectoryPtr mDirectory;
 				FilePathPtr mSourcePath;
 				FilePathPtr mDestPath;
@@ -453,13 +450,11 @@ namespace hermit {
 			class CopyDirectoryDirectories : public std::enable_shared_from_this<CopyDirectoryDirectories> {
 			public:
 				//
-				CopyDirectoryDirectories(const HermitPtr& h_,
-										 const DirectoryPtr& directory,
+				CopyDirectoryDirectories(const DirectoryPtr& directory,
 										 const FilePathPtr& sourcePath,
 										 const FilePathPtr& destPath,
 										 const FileSystemCopyIntermediateUpdateCallbackPtr& updateCallback,
 										 const FileSystemCopyCompletionPtr& completion) :
-				mH_(h_),
 				mDirectory(directory),
 				mSourcePath(sourcePath),
 				mDestPath(destPath),
@@ -478,8 +473,8 @@ namespace hermit {
 					}
 					
 					//
-					virtual void PerformTask(const int32_t& taskId) override {
-						mOwner->PerformTask(mFileInfo);
+					virtual void PerformTask(const HermitPtr& h_) override {
+						mOwner->PerformTask(h_, mFileInfo);
 					}
 					
 					//
@@ -488,22 +483,21 @@ namespace hermit {
 				};
 
 				//
-				void ProcessNextItem() {
+				void ProcessNextItem(const HermitPtr& h_) {
 					if (mIt == end(mDirectory->mDirectories)) {
-						auto copyLinks = std::make_shared<CopyDirectoryLinks>(mH_,
-																			  mDirectory,
+						auto copyLinks = std::make_shared<CopyDirectoryLinks>(mDirectory,
 																			  mSourcePath,
 																			  mDestPath,
 																			  mUpdateCallback,
 																			  mCompletion);
-						copyLinks->ProcessNextItem();
+						copyLinks->ProcessNextItem(h_);
 						return;
 					}
 					auto fileInfo = *mIt++;
 					auto task = std::make_shared<Task>(shared_from_this(), fileInfo);
-					if (!QueueAsyncTask(task, 10)) {
-						NOTIFY_ERROR(mH_, "CopyDirectoryDirectories: QueueAsyncTask failed.");
-						mCompletion->Call(mH_, FileSystemCopyResult::kError);
+					if (!QueueAsyncTask(h_, task, 10)) {
+						NOTIFY_ERROR(h_, "CopyDirectoryDirectories: QueueAsyncTask failed.");
+						mCompletion->Call(h_, FileSystemCopyResult::kError);
 					}
 				}
 				
@@ -529,17 +523,17 @@ namespace hermit {
 				};
 				
 				//
-				void PerformTask(const FileInfoPtr& fileInfo) {
+				void PerformTask(const HermitPtr& h_, const FileInfoPtr& fileInfo) {
 					FilePathPtr destFilePath;
-					AppendToFilePath(mH_, mDestPath, fileInfo->mName, destFilePath);
+					AppendToFilePath(h_, mDestPath, fileInfo->mName, destFilePath);
 					if (destFilePath == nullptr) {
-						NOTIFY_ERROR(mH_, "CopyDirectoryDirectories: AppendToFilePath failed, path:", mDestPath, "item name:", fileInfo->mName);
-						ProcessNextItem();
+						NOTIFY_ERROR(h_, "CopyDirectoryDirectories: AppendToFilePath failed, path:", mDestPath, "item name:", fileInfo->mName);
+						ProcessNextItem(h_);
 						return;
 					}
 					
 					auto completion = std::make_shared<Completion>(shared_from_this(), fileInfo->mPath, destFilePath);
-					CopyOneDirectory(mH_, fileInfo->mPath, destFilePath, mUpdateCallback, completion);
+					CopyOneDirectory(h_, fileInfo->mPath, destFilePath, mUpdateCallback, completion);
 				}
 
 				//
@@ -551,11 +545,10 @@ namespace hermit {
 						mCompletion->Call(h_, FileSystemCopyResult::kStoppedViaUpdateCallback);
 						return;
 					}
-					ProcessNextItem();
+					ProcessNextItem(h_);
 				}
 
 				//
-				HermitPtr mH_;
 				DirectoryPtr mDirectory;
 				FilePathPtr mSourcePath;
 				FilePathPtr mDestPath;
@@ -572,13 +565,11 @@ namespace hermit {
 			class CopyDirectoryFiles : public std::enable_shared_from_this<CopyDirectoryFiles> {
 			public:
 				//
-				CopyDirectoryFiles(const HermitPtr& h_,
-								   const DirectoryPtr& directory,
+				CopyDirectoryFiles(const DirectoryPtr& directory,
 								   const FilePathPtr& sourcePath,
 								   const FilePathPtr& destPath,
 								   const FileSystemCopyIntermediateUpdateCallbackPtr& updateCallback,
 								   const FileSystemCopyCompletionPtr& completion) :
-				mH_(h_),
 				mDirectory(directory),
 				mSourcePath(sourcePath),
 				mDestPath(destPath),
@@ -597,8 +588,8 @@ namespace hermit {
 					}
 					
 					//
-					virtual void PerformTask(const int32_t& taskId) override {
-						mOwner->PerformTask(mFileInfo);
+					virtual void PerformTask(const HermitPtr& h_) override {
+						mOwner->PerformTask(h_, mFileInfo);
 					}
 					
 					//
@@ -607,22 +598,21 @@ namespace hermit {
 				};
 
 				//
-				void ProcessNextItem() {
+				void ProcessNextItem(const HermitPtr& h_) {
 					if (mIt == end(mDirectory->mFiles)) {
-						auto copyDirectories = std::make_shared<CopyDirectoryDirectories>(mH_,
-																						  mDirectory,
+						auto copyDirectories = std::make_shared<CopyDirectoryDirectories>(mDirectory,
 																						  mSourcePath,
 																						  mDestPath,
 																						  mUpdateCallback,
 																						  mCompletion);
-						copyDirectories->ProcessNextItem();
+						copyDirectories->ProcessNextItem(h_);
 						return;
 					}
 					auto fileInfo = *mIt++;
 					auto task = std::make_shared<Task>(shared_from_this(), fileInfo);
-					if (!QueueAsyncTask(task, 10)) {
-						NOTIFY_ERROR(mH_, "CopyDirectoryFiles: QueueAsyncTask failed.");
-						mCompletion->Call(mH_, FileSystemCopyResult::kError);
+					if (!QueueAsyncTask(h_, task, 10)) {
+						NOTIFY_ERROR(h_, "CopyDirectoryFiles: QueueAsyncTask failed.");
+						mCompletion->Call(h_, FileSystemCopyResult::kError);
 					}
 				}
 				
@@ -648,17 +638,17 @@ namespace hermit {
 				};
 				
 				//
-				void PerformTask(const FileInfoPtr& fileInfo) {
+				void PerformTask(const HermitPtr& h_, const FileInfoPtr& fileInfo) {
 					FilePathPtr destFilePath;
-					AppendToFilePath(mH_, mDestPath, fileInfo->mName, destFilePath);
+					AppendToFilePath(h_, mDestPath, fileInfo->mName, destFilePath);
 					if (destFilePath == nullptr) {
-						NOTIFY_ERROR(mH_, "CopyDirectoryFiles: AppendToFilePath failed, path:", mDestPath, "item name:", fileInfo->mName);
-						ProcessNextItem();
+						NOTIFY_ERROR(h_, "CopyDirectoryFiles: AppendToFilePath failed, path:", mDestPath, "item name:", fileInfo->mName);
+						ProcessNextItem(h_);
 						return;
 					}
 					
 					auto completion = std::make_shared<Completion>(shared_from_this(), fileInfo->mPath, destFilePath);
-					CopyOneFile(mH_, fileInfo->mPath, destFilePath, completion);
+					CopyOneFile(h_, fileInfo->mPath, destFilePath, completion);
 				}
 				
 				//
@@ -670,11 +660,10 @@ namespace hermit {
 						mCompletion->Call(h_, FileSystemCopyResult::kStoppedViaUpdateCallback);
 						return;
 					}
-					ProcessNextItem();
+					ProcessNextItem(h_);
 				}
 
 				//
-				HermitPtr mH_;
 				DirectoryPtr mDirectory;
 				FilePathPtr mSourcePath;
 				FilePathPtr mDestPath;
@@ -704,13 +693,12 @@ namespace hermit {
 					return;
 				}
 				
-				auto copyFiles = std::make_shared<CopyDirectoryFiles>(h_,
-																	  directory,
+				auto copyFiles = std::make_shared<CopyDirectoryFiles>(directory,
 																	  sourcePath,
 																	  destPath,
 																	  updateCallback,
 																	  completion);
-				copyFiles->ProcessNextItem();
+				copyFiles->ProcessNextItem(h_);
 			}
 						
 		} // namespace FileSystemCopy_Impl

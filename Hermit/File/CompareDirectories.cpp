@@ -581,14 +581,12 @@ namespace hermit {
 			//
 			class Task : public AsyncTask {
 			public:
-				Task(const HermitPtr& h_,
-					 const FilePathPtr& inFilePath1,
+				Task(const FilePathPtr& inFilePath1,
 					 const FilePathPtr& inFilePath2,
 					 const bool& inIgnoreDates,
 					 const bool& inIgnoreFinderInfo,
 					 const PreprocessFileFunctionPtr& inPreprocessFunction,
 					 const CompareDirectoriesCompletionPtr& inCompletion) :
-				mH_(h_),
 				mFilePath1(inFilePath1),
 				mFilePath2(inFilePath2),
 				mIgnoreDates(inIgnoreDates),
@@ -598,11 +596,10 @@ namespace hermit {
 				}
 				
 				//
-				virtual void PerformTask(const int32_t& taskId) override {
-					PerformWork(mH_, mFilePath1, mFilePath2, mIgnoreDates, mIgnoreFinderInfo, mPreprocessFunction, mCompletion);
+				virtual void PerformTask(const HermitPtr& h_) override {
+					PerformWork(h_, mFilePath1, mFilePath2, mIgnoreDates, mIgnoreFinderInfo, mPreprocessFunction, mCompletion);
 				}
 
-				HermitPtr mH_;
 				FilePathPtr mFilePath1;
 				FilePathPtr mFilePath2;
 				bool mIgnoreDates;
@@ -621,14 +618,13 @@ namespace hermit {
 								const bool& inIgnoreFinderInfo,
 								const PreprocessFileFunctionPtr& inPreprocessFunction,
 								const CompareDirectoriesCompletionPtr& inCompletion) {
-			auto task = std::make_shared<Task>(h_,
-											   inFilePath1,
+			auto task = std::make_shared<Task>(inFilePath1,
 											   inFilePath2,
 											   inIgnoreDates,
 											   inIgnoreFinderInfo,
 											   inPreprocessFunction,
 											   inCompletion);
-			if (!QueueAsyncTask(task, 100)) {
+			if (!QueueAsyncTask(h_, task, 100)) {
 				NOTIFY_ERROR(h_, "CompareDirectories: QueueAsyncTask failed.");
 				inCompletion->Call(CompareDirectoriesStatus::kError);
 			}

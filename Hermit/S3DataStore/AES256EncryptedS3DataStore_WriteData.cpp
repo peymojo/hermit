@@ -30,13 +30,11 @@ namespace hermit {
             class Task : public AsyncTask {
             public:
                 //
-                Task(const HermitPtr& h_,
-                     const AES256EncryptedS3DataStorePtr& dataStore,
+                Task(const AES256EncryptedS3DataStorePtr& dataStore,
                      const datastore::DataPathPtr& path,
                      const SharedBufferPtr& data,
                      const datastore::EncryptionSetting& encryptionSetting,
                      const datastore::WriteDataStoreDataCompletionFunctionPtr& completion) :
-                mH_(h_),
                 mDataStore(dataStore),
                 mPath(path),
                 mData(data),
@@ -45,8 +43,8 @@ namespace hermit {
                 }
                 
                 //
-                void PerformTask(const int32_t& inTaskId) {
-                    mDataStore->DoWriteData(mH_,
+				virtual void PerformTask(const HermitPtr& h_) override {
+                    mDataStore->DoWriteData(h_,
                                             mPath,
                                             mData,
                                             mEncryptionSetting,
@@ -54,7 +52,6 @@ namespace hermit {
                 }
                 
                 //
-                HermitPtr mH_;
                 AES256EncryptedS3DataStorePtr mDataStore;
                 datastore::DataPathPtr mPath;
                 SharedBufferPtr mData;
@@ -71,14 +68,12 @@ namespace hermit {
                                                    const SharedBufferPtr& data,
                                                    const datastore::EncryptionSetting& encryptionSetting,
                                                    const datastore::WriteDataStoreDataCompletionFunctionPtr& completionFunction) {
-            
-            auto task = std::make_shared<Task>(h_,
-                                               std::static_pointer_cast<AES256EncryptedS3DataStore>(shared_from_this()),
+            auto task = std::make_shared<Task>(std::static_pointer_cast<AES256EncryptedS3DataStore>(shared_from_this()),
                                                path,
                                                data,
                                                encryptionSetting,
                                                completionFunction);
-            if (!QueueAsyncTask(task, 15)) {
+            if (!QueueAsyncTask(h_, task, 15)) {
                 NOTIFY_ERROR(h_, "QueueAsyncTask failed");
                 completionFunction->Call(h_, datastore::WriteDataStoreDataResult::kError);
             }
@@ -90,7 +85,6 @@ namespace hermit {
                                                      const SharedBufferPtr& data,
                                                      const datastore::EncryptionSetting& encryptionSetting,
                                                      const datastore::WriteDataStoreDataCompletionFunctionPtr& completion) {
-            
             if (CHECK_FOR_ABORT(h_)) {
                 completion->Call(h_, datastore::WriteDataStoreDataResult::kCanceled);
                 return;

@@ -20,159 +20,131 @@
 #include <pthread.h>
 #include <string>
 #include "AsyncTaskQueue.h"
+#include "Hermit.h"
 #include "StaticLog.h"
 #include "ThreadLock.h"
 
 namespace hermit {
-
-namespace {
-
-	//
-	class QueueEntry {
-	public:
-		QueueEntry(
-			const int32_t& inTaskID,
-			const AsyncTaskPtr& inTask)
-			:
-			mTaskID(inTaskID),
-			mTask(inTask) {
-		}
+	namespace AsyncTaskQueue_Impl {
 		
-		~QueueEntry() {
-		}
+		//
+		class QueueEntry {
+		public:
+			//
+			QueueEntry(const HermitPtr& h_, const AsyncTaskPtr& inTask) : mH_(h_), mTask(inTask) {
+			}
+			
+			//
+			~QueueEntry() = default;
+			
+			//
+			HermitPtr mH_;
+			AsyncTaskPtr mTask;
+		};
+		typedef std::unique_ptr<QueueEntry> QueueEntryPtr;
 		
-		int32_t mTaskID;
-		AsyncTaskPtr mTask;
-	};
-	typedef std::unique_ptr<QueueEntry> QueueEntryPtr;
-	
-	//
-	typedef std::pair<int32_t, int32_t> IntPair;
-	typedef std::map<IntPair, QueueEntryPtr> TaskMap;
-	
-	//
-	static ThreadLock sTasksLock;
-	static bool sThreadsStarted = false;
-	static bool sQuitThreads = false;
-	static TaskMap sTasks;
-	static std::atomic_int_fast32_t sNextTaskId;
-	static pthread_mutex_t sMutex;
-	static pthread_cond_t sCondition;
-	static pthread_attr_t sAttr;
-	
+		//
+		typedef std::map<int32_t, QueueEntryPtr> TaskMap;
+		
+		//
+		static ThreadLock sTasksLock;
+		static bool sThreadsStarted = false;
+		static bool sQuitThreads = false;
+		static TaskMap sTasks;
+		static pthread_mutex_t sMutex;
+		static pthread_cond_t sCondition;
+		static pthread_attr_t sAttr;
+		
 #define THREAD_COUNT 8
-	
-	static pthread_t sThreads[THREAD_COUNT];
-
-	//
-	void* StartThread(void* inParam) {
-		while (true) {
-			QueueEntryPtr nextTask;
-			pthread_mutex_lock(&sMutex);
-			while (!sQuitThreads && sTasks.empty()) {
-				pthread_cond_wait(&sCondition, &sMutex);
-			}
-			if (sQuitThreads) {
+		
+		static pthread_t sThreads[THREAD_COUNT];
+		
+		//
+		void* StartThread(void* inParam) {
+			while (true) {
+				QueueEntryPtr nextTask;
+				pthread_mutex_lock(&sMutex);
+				while (!sQuitThreads && sTasks.empty()) {
+					pthread_cond_wait(&sCondition, &sMutex);
+				}
+				if (sQuitThreads) {
+					pthread_mutex_unlock(&sMutex);
+					break;
+				}
+				auto it = sTasks.begin();
+				nextTask = std::move(it->second);
+				sTasks.erase(it);
 				pthread_mutex_unlock(&sMutex);
-				break;
+				
+				nextTask->mTask->PerformTask(nextTask->mH_);
 			}
-			auto it = sTasks.begin();
-//			LogSInt32("ThreadProc: Starting task # ", it->first.second);
-			nextTask = std::move(it->second);
-			sTasks.erase(it);
+			
+			pthread_mutex_lock(&sMutex);
+			pthread_cond_signal(&sCondition);
 			pthread_mutex_unlock(&sMutex);
-
-			nextTask->mTask->PerformTask(nextTask->mTaskID);
+			pthread_exit(nullptr);
+		}
+		
+	} // namespace AsyncTaskQueue_Impl
+	using namespace AsyncTaskQueue_Impl;
+	
+	//
+	bool QueueAsyncTask(const HermitPtr& h_, const AsyncTaskPtr& task, const int32_t& priority) {
+		bool queueHasBeenShutDown = false;
+		QueueEntryPtr entry(new QueueEntry(h_, task)); {
+			ThreadLockScope lock(sTasksLock);
+			if (sQuitThreads) {
+				queueHasBeenShutDown = true;
+			}
+			else if (!sThreadsStarted) {
+				pthread_mutex_init(&sMutex, nullptr);
+				pthread_cond_init(&sCondition, nullptr);
+				
+				pthread_attr_init(&sAttr);
+				pthread_attr_setdetachstate(&sAttr, PTHREAD_CREATE_JOINABLE);
+				
+				for (int n = 0; n < THREAD_COUNT; ++n) {
+					pthread_create(&sThreads[n], &sAttr, StartThread, (void*)0);
+				}
+				
+				sThreadsStarted = true;
+			}
+		}
+		
+		if (queueHasBeenShutDown) {
+			return false;
 		}
 		
 		pthread_mutex_lock(&sMutex);
+		sTasks.insert(TaskMap::value_type(priority, std::move(entry)));
 		pthread_cond_signal(&sCondition);
 		pthread_mutex_unlock(&sMutex);
-		pthread_exit(nullptr);
-	}
-
-} // private namespace
-
-//
-int32_t GetNextTaskId() {
-	return ++sNextTaskId;
-}
-
-//
-bool QueueAsyncTask(const AsyncTaskPtr& task, const int32_t& priority) {
-	bool queueHasBeenShutDown = false;
-	int32_t taskId = GetNextTaskId();
-	QueueEntryPtr entry(new QueueEntry(taskId, task)); {
-		ThreadLockScope lock(sTasksLock);
-		if (sQuitThreads) {
-			queueHasBeenShutDown = true;
-		}
-		else if (!sThreadsStarted) {
-			pthread_mutex_init(&sMutex, nullptr);
-			pthread_cond_init(&sCondition, nullptr);
-
-			pthread_attr_init(&sAttr);
-			pthread_attr_setdetachstate(&sAttr, PTHREAD_CREATE_JOINABLE);
-
-			for (int n = 0; n < THREAD_COUNT; ++n) {
-				pthread_create(&sThreads[n], &sAttr, StartThread, (void*)0);
-			}
-
-			sThreadsStarted = true;
-		}
-	}
-
-	if (queueHasBeenShutDown) {
-		return false;
-	}
-
-	pthread_mutex_lock(&sMutex);
-	IntPair key(priority, taskId);
-	sTasks.insert(TaskMap::value_type(key, std::move(entry)));
-	pthread_cond_signal(&sCondition);
-	pthread_mutex_unlock(&sMutex);
-	
-	return true;
-}
-	
-//
-bool CancelAsyncTask(const int32_t& taskId) {
-	bool removed = false;
-	pthread_mutex_lock(&sMutex);
-	auto end = sTasks.end();
-	for (auto it = sTasks.begin(); it != end; ++it) {
-		if (it->first.second == taskId) {
-			sTasks.erase(it);
-			removed = true;
-			break;
-		}
-	}
-	pthread_mutex_unlock(&sMutex);
-	
-	return removed;
-}
-	
-//
-void ShutdownAsyncTaskQueue() {
-	{
-		ThreadLockScope lock(sTasksLock);
-		if (sThreadsStarted) {
-			sThreadsStarted = false;
-			if (!sTasks.empty()) {
-				StaticLog("ShutdownAsyncTaskQueue: !mTasks.empty()");
-			}
 		
-			pthread_mutex_lock(&sMutex);
-			sTasks.clear();
-			sQuitThreads = true;
-			pthread_cond_signal(&sCondition);
-			pthread_mutex_unlock(&sMutex);
-		}
+		return true;
 	}
 	
-	for (int n = 0; n < THREAD_COUNT; ++n) {
-		pthread_join(sThreads[n], nullptr);
+	//
+	void ShutdownAsyncTaskQueue() {
+		{
+			ThreadLockScope lock(sTasksLock);
+			if (sThreadsStarted) {
+				sThreadsStarted = false;
+				if (!sTasks.empty()) {
+					StaticLog("ShutdownAsyncTaskQueue: !mTasks.empty()");
+				}
+				
+				pthread_mutex_lock(&sMutex);
+				sTasks.clear();
+				sQuitThreads = true;
+				pthread_cond_signal(&sCondition);
+				pthread_mutex_unlock(&sMutex);
+			}
+		}
+		
+		for (int n = 0; n < THREAD_COUNT; ++n) {
+			pthread_join(sThreads[n], nullptr);
+		}
 	}
-}
 	
 } // namespace hermit
+

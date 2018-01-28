@@ -16,7 +16,7 @@
 //	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#include <map>
+#include <set>
 #include <thread>
 #include <vector>
 #include "Notification.h"
@@ -24,31 +24,27 @@
 #include "TaskQueue.h"
 
 namespace hermit {
-	
-	namespace {
+	namespace TaskQueue_Impl {
 		
 		//
-		typedef std::pair<TaskQueueLockCallbackPtr, HermitPtr> LockCallback;
+		typedef std::pair<LockTaskQueueCompletionPtr, HermitPtr> LockCallback;
 		typedef std::vector<LockCallback> LockCallbackVector;
 		
 		//
 		class QueueEntry {
 		public:
 			//
-			QueueEntry(const int32_t& inTaskID, const AsyncTaskPtr& inTask)
-			:
-			mTaskID(inTaskID),
-			mTask(inTask) {
+			QueueEntry(const HermitPtr& h_, const AsyncTaskPtr& task) : mH_(h_), mTask(task) {
 			}
 			
 			//
-			int32_t mTaskID;
+			HermitPtr mH_;
 			AsyncTaskPtr mTask;
 		};
-		typedef std::unique_ptr<QueueEntry> QueueEntryPtr;
+		typedef std::shared_ptr<QueueEntry> QueueEntryPtr;
 		
 		//
-		typedef std::map<int32_t, QueueEntryPtr> TaskMap;
+		typedef std::set<QueueEntryPtr> TaskSet;
 		
 		//
 		class QueueInfoImpl : public QueueInfo {
@@ -60,7 +56,7 @@ namespace hermit {
 			void Shutdown();
 			
 			//
-			TaskMap mTasks;
+			TaskSet mTasks;
 			std::thread mThread;
 			pthread_attr_t mAttr;
 			pthread_mutex_t mMutex;
@@ -71,7 +67,7 @@ namespace hermit {
 			int32_t mLockCount;
 			bool mLocked;
 			LockCallbackVector mLockCallbacks;
-			TaskMap mPendingTasks;
+			TaskSet mPendingTasks;
 		};
 		typedef std::shared_ptr<QueueInfoImpl> QueueInfoImplPtr;
 		
@@ -98,19 +94,19 @@ namespace hermit {
 				}
 				else {
 					auto it = queueInfo->mTasks.begin();
-					nextTask = std::move(it->second);
+					nextTask = std::move(*it);
 					queueInfo->mTasks.erase(it);
 					queueInfo->mBusy = true;
 				}
 				pthread_mutex_unlock(&queueInfo->mMutex);
 				
 				if (nextTask != nullptr) {
-					nextTask->mTask->PerformTask(nextTask->mTaskID);
+					nextTask->mTask->PerformTask(nextTask->mH_);
 				}
 				else if (!lockCallbacks.empty()) {
 					auto end = lockCallbacks.end();
 					for (auto it = lockCallbacks.begin(); it != end; ++it) {
-						(*it).first->Call((*it).second, kTaskQueueLockStatus_Success);
+						(*it).first->Call((*it).second, LockTaskQueueResult::kSuccess);
 					}
 				}
 			}
@@ -121,13 +117,14 @@ namespace hermit {
 			
 			auto end = queueInfo->mLockCallbacks.end();
 			for (auto it = queueInfo->mLockCallbacks.begin(); it != end; ++it) {
-				(*it).first->Call((*it).second, kTaskQueueLockStatus_Cancel);
+				(*it).first->Call((*it).second, LockTaskQueueResult::kCancel);
 			}
 			
 			pthread_exit(nullptr);
 		}
 		
-	} // private namespace
+	} // namespace TaskQueue_Impl
+	using namespace TaskQueue_Impl;
 	
 	//
 	QueueInfoImpl::QueueInfoImpl() :
@@ -162,7 +159,6 @@ namespace hermit {
 		mQueueInfo(std::make_shared<QueueInfoImpl>()) {
 		
 		auto queueInfo = std::static_pointer_cast<QueueInfoImpl>(mQueueInfo);
-			//		pthread_create(&queueInfo->mThread, &queueInfo->mAttr, ThreadProc, mQueueInfo.get());
 		queueInfo->mThread = std::thread(ThreadProc, mQueueInfo);
 	}
 	
@@ -173,18 +169,16 @@ namespace hermit {
 	}
 	
 	//
-	bool TaskQueue::QueueTask(const AsyncTaskPtr& inTask) {
-		int32_t taskID = GetNextTaskId();
-		QueueEntryPtr entry(new QueueEntry(taskID, inTask));
-				
+	bool TaskQueue::QueueTask(const HermitPtr& h_, const AsyncTaskPtr& task) {
+		QueueEntryPtr entry(new QueueEntry(h_, task));				
 		auto queueInfo = std::static_pointer_cast<QueueInfoImpl>(mQueueInfo);
 		pthread_mutex_lock(&queueInfo->mMutex);
 		
 		if (queueInfo->mLockCount > 0) {
-			queueInfo->mPendingTasks.insert(TaskMap::value_type(taskID, std::move(entry)));
+			queueInfo->mPendingTasks.insert(std::move(entry));
 		}
 		else {
-			queueInfo->mTasks.insert(TaskMap::value_type(taskID, std::move(entry)));
+			queueInfo->mTasks.insert(std::move(entry));
 		}
 		pthread_cond_signal(&queueInfo->mCondition);
 		pthread_mutex_unlock(&queueInfo->mMutex);
@@ -203,25 +197,24 @@ namespace hermit {
 	}
 	
 	//
-	void TaskQueue::Lock(const HermitPtr& h_, const TaskQueueLockCallbackPtr& inCallback) {
-		bool callCallbackNow = false;
-		
+	void TaskQueue::Lock(const HermitPtr& h_, const LockTaskQueueCompletionPtr& completion) {
 		auto queueInfo = std::static_pointer_cast<QueueInfoImpl>(mQueueInfo);
 		pthread_mutex_lock(&queueInfo->mMutex);
 		
+		bool callCallbackNow = false;
 		queueInfo->mLockCount++;
 		if (queueInfo->mLocked) {
 			callCallbackNow = true;
 		}
 		else {
-			queueInfo->mLockCallbacks.push_back(make_pair(inCallback, h_));
+			queueInfo->mLockCallbacks.push_back(make_pair(completion, h_));
 		}
 		
 		pthread_cond_signal(&queueInfo->mCondition);
 		pthread_mutex_unlock(&queueInfo->mMutex);
 		
 		if (callCallbackNow) {
-			inCallback->Call(h_, kTaskQueueLockStatus_Success);
+			completion->Call(h_, LockTaskQueueResult::kSuccess);
 		}
 	}
 	

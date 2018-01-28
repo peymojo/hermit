@@ -290,21 +290,18 @@ namespace hermit {
             class ReadTableTask : public AsyncTask {
             public:
                 //
-                ReadTableTask(const HermitPtr& h_,
-                              const pagestore::PageStorePtr& inPageStore,
+                ReadTableTask(const pagestore::PageStorePtr& inPageStore,
                               const ReadPageTableCompletionFunctionPtr& inCompletionFunction) :
-                mH_(h_),
                 mPageStore(inPageStore),
                 mCompletionFunction(inCompletionFunction) {
                 }
                 
                 //
-                void PerformTask(const int32_t& inTaskID) {
-                    PerformReadTableWork(mH_, mPageStore, mCompletionFunction);
+				virtual void PerformTask(const HermitPtr& h_) override {
+                    PerformReadTableWork(h_, mPageStore, mCompletionFunction);
                 }
                 
                 //
-                HermitPtr mH_;
                 pagestore::PageStorePtr mPageStore;
                 ReadPageTableCompletionFunctionPtr mCompletionFunction;
             };
@@ -373,8 +370,8 @@ namespace hermit {
         
         //
         void DataStorePageStore::ReadPageTable(const HermitPtr& h_, const ReadPageTableCompletionFunctionPtr& inCompletionFunction) {
-            auto task = std::make_shared<ReadTableTask>(h_, shared_from_this(), inCompletionFunction);
-            if (!QueueAsyncTask(task, 5)) {
+            auto task = std::make_shared<ReadTableTask>(shared_from_this(), inCompletionFunction);
+            if (!QueueAsyncTask(h_, task, 5)) {
                 inCompletionFunction->Call(h_, ReadPageTableResult::kError);
             }
         }

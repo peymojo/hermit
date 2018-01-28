@@ -166,33 +166,30 @@ namespace hermit {
             class Task : public AsyncTask {
             public:
                 //
-                Task(const HermitPtr& h_,
-                     const pagestore::PageStorePtr& pageStore,
+                Task(const pagestore::PageStorePtr& pageStore,
                      const pagestore::ValidatePageStoreCompletionFunctionPtr& completion) :
-                mH_(h_),
                 mPageStore(pageStore),
                 mCompletion(completion) {
                 }
                 
                 //
-                void PerformTask(const int32_t& inTaskID) {
-                    if (CHECK_FOR_ABORT(mH_)) {
-                        mCompletion->Call(mH_, pagestore::ValidatePageStoreResult::kCanceled);
+				virtual void PerformTask(const HermitPtr& h_) override {
+                    if (CHECK_FOR_ABORT(h_)) {
+                        mCompletion->Call(h_, pagestore::ValidatePageStoreResult::kCanceled);
                         return;
                     }
                     
                     DataStorePageStore& pageStore = static_cast<DataStorePageStore&>(*mPageStore);
                     if (!pageStore.mPageTableLoaded) {
                         auto completion = std::make_shared<TableLoaded>(mPageStore, mCompletion);
-                        pageStore.ReadPageTable(mH_, completion);
+                        pageStore.ReadPageTable(h_, completion);
                         return;
                     }
                     auto validator = std::make_shared<PageValidator>(mPageStore, mCompletion);
-                    validator->ValidatePages(mH_);
+                    validator->ValidatePages(h_);
                 }
                 
                 //
-                HermitPtr mH_;
                 pagestore::PageStorePtr mPageStore;
                 pagestore::ValidatePageStoreCompletionFunctionPtr mCompletion;
             };
@@ -228,8 +225,8 @@ namespace hermit {
                                         const pagestore::ValidatePageStoreCompletionFunctionPtr& inCompletionFunction) {
             DataStorePageStore& pageStore = static_cast<DataStorePageStore&>(*inPageStore);
             auto proxy = std::make_shared<CompletionProxy>(inPageStore, inCompletionFunction);
-            auto task = std::make_shared<Task>(h_, inPageStore, proxy);
-            if (!pageStore.QueueTask(task)) {
+            auto task = std::make_shared<Task>(inPageStore, proxy);
+            if (!pageStore.QueueTask(h_, task)) {
                 NOTIFY_ERROR(h_, "pageStore.QueueTask failed");
                 inCompletionFunction->Call(h_, pagestore::ValidatePageStoreResult::kError);
             }

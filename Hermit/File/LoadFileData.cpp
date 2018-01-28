@@ -75,23 +75,22 @@ namespace hermit {
 			class LoadTask : public AsyncTask {
 			public:
 				//
-				LoadTask(const HermitPtr& h_, const DataLoaderPtr& loader) : mH_(h_), mLoader(loader) {
+				LoadTask(const DataLoaderPtr& loader) : mLoader(loader) {
 				}
 				
 				//
-				virtual void PerformTask(const int32_t& taskId) override {
-					mLoader->PerformLoadTask(mH_);
+				virtual void PerformTask(const HermitPtr& h_) override {
+					mLoader->PerformLoadTask(h_);
 				}
 				
 				//
-				HermitPtr mH_;
 				DataLoaderPtr mLoader;
 			};
 
 			//
 			void LoadNextChunk(const HermitPtr& h_) {
-				auto task = std::make_shared<LoadTask>(h_, shared_from_this());
-				if (!QueueAsyncTask(task, 1)) {
+				auto task = std::make_shared<LoadTask>(shared_from_this());
+				if (!QueueAsyncTask(h_, task, 1)) {
 					NOTIFY_ERROR(h_, "LoadFileData: QueueAsyncTask failed.");
 					mCompletion->Call(h_, LoadFileDataResult::kError);
 					return;
