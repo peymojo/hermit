@@ -21,18 +21,18 @@
 #import "GetApplicationSettingsPath.h"
 
 namespace hermit {
-namespace file {
-
-//
-void GetApplicationSettingsPath(const std::string& inApplicationName,
-								const FilePathCallbackRef& inCallback) {
-	@autoreleasepool {
-		NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-		NSString* documentsDirectory = [paths objectAtIndex:0];
-		NSString* settingsDir = [NSString stringWithFormat:@"%@/%s", documentsDirectory, inApplicationName.c_str()];
-		CreateFilePathFromUTF8String([settingsDir cStringUsingEncoding:NSUTF8StringEncoding], inCallback);
-	}
-}
-
-} // namespace file
+	namespace file {
+		
+		//
+		void GetApplicationSettingsPath(const HermitPtr& h_, const std::string& applicationName, FilePathPtr& outSettingsPath) {
+			@autoreleasepool {
+				NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+				NSString* documentsDirectory = [paths objectAtIndex:0];
+				NSString* settingsDir = [NSString stringWithFormat:@"%@/%s", documentsDirectory, applicationName.c_str()];
+				CreateFilePathFromUTF8String(h_, [settingsDir cStringUsingEncoding:NSUTF8StringEncoding], outSettingsPath);
+			}
+		}
+		
+	} // namespace file
 } // namespace hermit
+

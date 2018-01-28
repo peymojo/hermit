@@ -20,13 +20,14 @@
 #define GetApplicationSettingsPath_h
 
 #include <string>
+#include "Hermit/Foundation/Hermit.h"
 #include "FilePath.h"
 
 namespace hermit {
 	namespace file {
 		
 		//
-		void GetApplicationSettingsPath(const std::string& applicationName, FilePathPtr& outSettingsPath);
+		void GetApplicationSettingsPath(const HermitPtr& h_, const std::string& applicationName, FilePathPtr& outSettingsPath);
 		
 	} // namespace file
 } // namespace hermit

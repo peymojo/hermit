@@ -24,8 +24,7 @@
 
 namespace hermit {
 	namespace file {
-		
-		namespace {
+		namespace ReadFirstLineFromUTF8FilePath_Impl {
 
 			//
 			class ReadCompletion : public ReadFirstLineFromFileCompletion {
@@ -59,22 +58,20 @@ namespace hermit {
 				ReadFirstLineFromUTF8FilePathCompletionPtr mCompletion;
 			};
 			
-		} // private namespace
+		} // namespace ReadFirstLineFromUTF8FilePath_Impl
+		using namespace ReadFirstLineFromUTF8FilePath_Impl;
 		
 		//
 		void ReadFirstLineFromUTF8FilePath(const HermitPtr& h_,
 										   const std::string& filePathUTF8,
 										   const ReadFirstLineFromUTF8FilePathCompletionPtr& completion) {
 			FilePathPtr filePath;
-			CreateFilePathFromUTF8String(filePathUTF8, filePath);
+			CreateFilePathFromUTF8String(h_, filePathUTF8, filePath);
 			if (filePath == nullptr) {
-				NOTIFY_ERROR(h_,
-							 "ReadFirstLineFromUTF8FilePath: CreateFilePathFromUTF8String failed for path string:",
-							 filePathUTF8);
+				NOTIFY_ERROR(h_, "ReadFirstLineFromUTF8FilePath: CreateFilePathFromUTF8String failed for:", filePathUTF8);
 				completion->Call(h_, ReadFirstLineFromUTF8FilePathResult::kError, "");
 				return;
 			}
-			
 			auto readCompletion = std::make_shared<ReadCompletion>(completion);
 			ReadFirstLineFromFile(h_, filePath, readCompletion);
 		}

@@ -24,14 +24,11 @@ namespace hermit {
 	namespace file {
 		
 		//
-		void GetApplicationSettingsPath(const std::string& applicationName, FilePathPtr& outSettingsPath) {
+		void GetApplicationSettingsPath(const HermitPtr& h_, const std::string& applicationName, FilePathPtr& outSettingsPath) {
 			@autoreleasepool {
 				NSString* libraryDir = [NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES) lastObject];
-				//NSLog(@"Library dir: %@", libraryDir);
 				NSString* appPrefsDir = [NSString stringWithFormat:@"%@/%s", libraryDir, applicationName.c_str()];
-				//NSLog(@"App prefs dir: %@", appPrefsDir);
-				
-				CreateFilePathFromUTF8String([appPrefsDir cStringUsingEncoding:NSUTF8StringEncoding], outSettingsPath);
+				CreateFilePathFromUTF8String(h_, [appPrefsDir cStringUsingEncoding:NSUTF8StringEncoding], outSettingsPath);
 			}
 		}
 		

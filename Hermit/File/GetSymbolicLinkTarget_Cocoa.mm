@@ -26,8 +26,7 @@
 
 namespace hermit {
 	namespace file {
-		
-		namespace {
+		namespace GetSymbolicLinkTarget_Cocoa_Impl {
 
 			//
 			typedef std::vector<std::string> StringVector;
@@ -78,9 +77,9 @@ namespace hermit {
 				outNodes.swap(nodes);
 			}
 			
-		} // private namespace
+		} // namespace GetSymbolicLinkTarget_Cocoa_Impl
+		using namespace  GetSymbolicLinkTarget_Cocoa_Impl;
 		
-		//
 		//
 		void GetSymbolicLinkTarget(const HermitPtr& h_,
 								   const FilePathPtr& inLinkPath,
@@ -95,29 +94,19 @@ namespace hermit {
 				NSString* destination = [[NSFileManager defaultManager] destinationOfSymbolicLinkAtPath:path error:&error];
 				if (error != nil) {
 					NOTIFY_ERROR(h_,
-								 "GetSymbolicLinkTarget(): NSFileHandle destinationOfSymbolicLinkAtPath failed for path:",
-								 inLinkPath,
-								 "error code:",
-								 (int32_t)[error code],
-								 "error:",
-								 [[error localizedDescription] UTF8String]);
-					
+								 "GetSymbolicLinkTarget(): NSFileHandle destinationOfSymbolicLinkAtPath failed for path:", inLinkPath,
+								 "error code:", (int32_t)[error code],
+								 "error:", [[error localizedDescription] UTF8String]);
 					inCallback.Call(false, 0, false);
 				}
 				else if (destination == nil) {
-					NOTIFY_ERROR(h_,
-								 "GetSymbolicLinkTarget: no error but destination is nil path:",
-								 inLinkPath);
-					
+					NOTIFY_ERROR(h_, "GetSymbolicLinkTarget: no error but destination is nil path:", inLinkPath);
 					inCallback.Call(false, 0, false);
 				}
 				else {
 					std::string destinationPathUTF8([destination UTF8String]);
 					if (destinationPathUTF8.empty()) {
-						NOTIFY_ERROR(h_,
-									 "GetSymbolicLinkTarget: destinationPathUTF8 is empty for link at path:",
-									 inLinkPath);
-						
+						NOTIFY_ERROR(h_, "GetSymbolicLinkTarget: destinationPathUTF8 is empty for link at path:", inLinkPath);
 						inCallback.Call(false, 0, false);
 					}
 					else {
@@ -127,10 +116,7 @@ namespace hermit {
 						FilePathPtr destinationPath;
 						CreateFilePathFromComponents(nodes, destinationPath);
 						if (destinationPath == 0) {
-							NOTIFY_ERROR(h_,
-										 "GetSymbolicLinkTarget: CreateFilePathFromUTF8String failed for string:",
-										 destinationPathUTF8);
-							
+							NOTIFY_ERROR(h_, "GetSymbolicLinkTarget: CreateFilePathFromComponents failed for string:", destinationPathUTF8);
 							inCallback.Call(false, 0, false);
 							return;
 						}

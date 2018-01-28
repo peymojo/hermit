@@ -20,13 +20,14 @@
 #define CreateFilePathFromUTF8String_h
 
 #include <string>
+#include "Hermit/Foundation/Hermit.h"
 #include "FilePath.h"
 
 namespace hermit {
 	namespace file {
 		
 		//
-		void CreateFilePathFromUTF8String(const std::string& pathString, FilePathPtr& outFilePath);
+		void CreateFilePathFromUTF8String(const HermitPtr& h_, const std::string& pathString, FilePathPtr& outFilePath);
 		
 	} // namespace file
 } // namespace hermit

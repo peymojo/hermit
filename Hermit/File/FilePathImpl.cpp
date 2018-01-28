@@ -416,8 +416,8 @@ namespace hermit {
 		} // private namespace
 		
 		//
-		void CreateFilePathFromUTF8String(const std::string& inPathString, FilePathPtr& outFilePath) {
-			outFilePath = std::make_shared<FilePathImpl>(inPathString);
+		void CreateFilePathFromUTF8String(const HermitPtr& h_, const std::string& pathString, FilePathPtr& outFilePath) {
+			outFilePath = std::make_shared<FilePathImpl>(pathString);
 		}
 		
 		//

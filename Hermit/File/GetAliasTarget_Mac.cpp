@@ -27,8 +27,7 @@
 
 namespace hermit {
 	namespace file {
-		
-		namespace {
+		namespace GetAliasTarget_Mac_Impl {
 
 			//
 			std::string CFStringToStdString(CFStringRef inStringRef) {
@@ -88,7 +87,8 @@ namespace hermit {
 				outNodes.swap(nodes);
 			}
 			
-		} // private namespace
+		} // namespace GetAliasTarget_Mac_Impl
+		using namespace GetAliasTarget_Mac_Impl;
 		
 		//
 		void GetAliasTarget(const HermitPtr& h_,
@@ -102,24 +102,21 @@ namespace hermit {
 																	   pathUTF8.size(),
 																	   false);
 			
-			if (fileURL == nullptr) {
-				NOTIFY_ERROR(h_,
-							 "GetAliasTarget(): CFURLCreateFromFileSystemRepresentation failed for path:",
-							 inFilePath);
-				
+			if (fileURL == nil) {
+				NOTIFY_ERROR(h_, "GetAliasTarget(): CFURLCreateFromFileSystemRepresentation failed for:", inFilePath);
 				inCallback.Call(kGetAliasTargetStatus_Error, 0, false);
 				return;
 			}
 			
-			CFErrorRef errorRef = nullptr;
+			CFErrorRef errorRef = nil;
 			CFDataRef bookmarkData = CFURLCreateBookmarkDataFromFile(kCFAllocatorDefault, fileURL, &errorRef);
 			CFRelease(fileURL);
-			fileURL = nullptr;
+			fileURL = nil;
 			
-			if (errorRef != nullptr) {
-				if (bookmarkData != nullptr) {
+			if (errorRef != nil) {
+				if (bookmarkData != nil) {
 					CFRelease(bookmarkData);
-					bookmarkData = nullptr;
+					bookmarkData = nil;
 				}
 				CFIndex errorCode = CFErrorGetCode(errorRef);
 				CFStringRef errorDomain = CFErrorGetDomain(errorRef);
@@ -133,36 +130,27 @@ namespace hermit {
 					return;
 				}
 				
-				NOTIFY_ERROR(h_,
-							 "GetAliasTarget(): CFURLCreateBookmarkDataFromFile failed for path:",
-							 inFilePath);
-				
-				NOTIFY_ERROR(h_,
-							 "-- errorDomain:",
-							 CFStringToStdString(errorDomain));
-				
-				NOTIFY_ERROR(h_, "-- errorCode:", (int32_t)errorCode);
-				
+				std::string description;
 				CFStringRef errorDescription = CFErrorCopyDescription(errorRef);
-				if (errorDescription != nullptr) {
-					NOTIFY_ERROR(h_,
-								 "-- errorDescription:",
-								 CFStringToStdString(errorDescription));
-					
+				if (errorDescription != nil) {
+					description = CFStringToStdString(errorDescription);
 					CFRelease(errorDescription);
-					errorDescription = nullptr;
+					errorDescription = nil;
 				}
-				
+				std::string failureReason;
 				CFStringRef errorFailureReason = CFErrorCopyFailureReason(errorRef);
-				if (errorFailureReason != nullptr) {
-					NOTIFY_ERROR(h_,
-								 "-- errorFailureReason:",
-								 CFStringToStdString(errorFailureReason));
-					
+				if (errorFailureReason != nil) {
+					failureReason = CFStringToStdString(errorFailureReason);
 					CFRelease(errorFailureReason);
-					errorFailureReason = nullptr;
+					errorFailureReason = nil;
 				}
 				
+				NOTIFY_ERROR(h_,
+							 "GetAliasTarget(): CFURLCreateBookmarkDataFromFile failed for path:", inFilePath,
+							 "errorDomain:", CFStringToStdString(errorDomain),
+							 "errorCode:", (int32_t)errorCode,
+							 "description:", description,
+							 "reason:", failureReason);
 				inCallback.Call(kGetAliasTargetStatus_Error, 0, false);
 				return;
 			}
@@ -171,31 +159,31 @@ namespace hermit {
 			//	try to resolve.
 			std::string aliasPath;
 			CFStringRef pathEntry = (CFStringRef)CFURLCreateResourcePropertyForKeyFromBookmarkData(kCFAllocatorDefault, kCFURLPathKey, bookmarkData);
-			if (pathEntry != nullptr) {
+			if (pathEntry != nil) {
 				CFRelease(bookmarkData);
-				bookmarkData = nullptr;
+				bookmarkData = nil;
 				
 				aliasPath = CFStringToStdString(pathEntry);
 				CFRelease(pathEntry);
-				pathEntry = nullptr;
+				pathEntry = nil;
 			}
 			else {
 				Boolean isStale = false;
 				CFURLRef targetURL = CFURLCreateByResolvingBookmarkData(kCFAllocatorDefault,
 																		bookmarkData,
 																		kCFBookmarkResolutionWithoutUIMask | kCFBookmarkResolutionWithoutMountingMask,
-																		nullptr,
-																		nullptr,
+																		nil,
+																		nil,
 																		&isStale,
 																		&errorRef);
 				
 				CFRelease(bookmarkData);
-				bookmarkData = nullptr;
+				bookmarkData = nil;
 				
 				if (errorRef != 0) {
-					if (targetURL != nullptr) {
+					if (targetURL != nil) {
 						CFRelease(targetURL);
-						targetURL = nullptr;
+						targetURL = nil;
 					}
 					
 					CFStringRef errorDomain = CFErrorGetDomain(errorRef);
@@ -208,36 +196,26 @@ namespace hermit {
 						return;
 					}
 					
-					NOTIFY_ERROR(h_,
-								 "GetAliasTarget(): CFURLCreateByResolvingBookmarkData failed for path:",
-								 inFilePath);
-					
-					NOTIFY_ERROR(h_,
-								 "-- errorDomain:",
-								 CFStringToStdString(errorDomain));
-					
-					NOTIFY_ERROR(h_, "-- errorCode:", (int32_t)errorCode);
-					
+					std::string description;
 					CFStringRef errorDescription = CFErrorCopyDescription(errorRef);
-					if (errorDescription != nullptr) {
-						NOTIFY_ERROR(h_,
-									 "-- errorDescription:",
-									 CFStringToStdString(errorDescription));
-						
+					if (errorDescription != nil) {
+						description = CFStringToStdString(errorDescription);
 						CFRelease(errorDescription);
-						errorDescription = nullptr;
+						errorDescription = nil;
 					}
-					
+					std::string failureReason;
 					CFStringRef errorFailureReason = CFErrorCopyFailureReason(errorRef);
-					if (errorFailureReason != nullptr) {
-						NOTIFY_ERROR(h_,
-									 "-- errorFailureReason:",
-									 CFStringToStdString(errorFailureReason));
-						
+					if (errorFailureReason != nil) {
+						failureReason = CFStringToStdString(errorFailureReason);
 						CFRelease(errorFailureReason);
-						errorFailureReason = nullptr;
+						errorFailureReason = nil;
 					}
-					
+					NOTIFY_ERROR(h_,
+								 "GetAliasTarget(): CFURLCreateByResolvingBookmarkData failed for path:", inFilePath,
+								 "errorDomain:", CFStringToStdString(errorDomain),
+								 "errorCode:", (int32_t)errorCode,
+								 "description:", description,
+								 "reason:", failureReason);					
 					inCallback.Call(kGetAliasTargetStatus_Error, 0, false);
 					return;
 				}
@@ -246,13 +224,10 @@ namespace hermit {
 				std::vector<UInt8> path(kMaxSize);
 				Boolean success = CFURLGetFileSystemRepresentation(targetURL, false, &path.at(0), kMaxSize);
 				CFRelease(targetURL);
-				targetURL = nullptr;
+				targetURL = nil;
 				
 				if (!success) {
-					NOTIFY_ERROR(h_,
-								 "GetAliasTarget(): CFURLGetFileSystemRepresentation failed for path:",
-								 inFilePath);
-					
+					NOTIFY_ERROR(h_, "GetAliasTarget(): CFURLGetFileSystemRepresentation failed for path:", inFilePath);
 					inCallback.Call(kGetAliasTargetStatus_Error, 0, false);
 					return;
 				}
@@ -269,10 +244,7 @@ namespace hermit {
 			FilePathPtr destinationPath;
 			CreateFilePathFromComponents(nodes, destinationPath);
 			if (destinationPath == 0) {
-				NOTIFY_ERROR(h_,
-							 "GetAliasTarget(): CreateFilePathFromUTF8String failed for target path:",
-							 aliasPath);
-				
+				NOTIFY_ERROR(h_, "GetAliasTarget(): CreateFilePathFromComponents failed for target path:", aliasPath);
 				inCallback.Call(kGetAliasTargetStatus_Error, 0, false);
 				return;
 			}
