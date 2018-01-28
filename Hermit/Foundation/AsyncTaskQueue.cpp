@@ -18,6 +18,7 @@
 
 #include <map>
 #include <pthread.h>
+#include <queue>
 #include <string>
 #include "AsyncTaskQueue.h"
 #include "Hermit.h"
@@ -41,16 +42,22 @@ namespace hermit {
 			HermitPtr mH_;
 			AsyncTaskPtr mTask;
 		};
-		typedef std::unique_ptr<QueueEntry> QueueEntryPtr;
+		typedef std::shared_ptr<QueueEntry> QueueEntryPtr;
 		
 		//
-		typedef std::map<int32_t, QueueEntryPtr> TaskMap;
+		typedef std::queue<QueueEntryPtr> Queue;
+		
+		//
+		typedef std::shared_ptr<Queue> QueuePtr;
+		
+		//
+		typedef std::multimap<int32_t, QueuePtr> TaskQueueMap;
 		
 		//
 		static ThreadLock sTasksLock;
 		static bool sThreadsStarted = false;
 		static bool sQuitThreads = false;
-		static TaskMap sTasks;
+		static TaskQueueMap sTasks;
 		static pthread_mutex_t sMutex;
 		static pthread_cond_t sCondition;
 		static pthread_attr_t sAttr;
@@ -72,8 +79,11 @@ namespace hermit {
 					break;
 				}
 				auto it = sTasks.begin();
-				nextTask = std::move(it->second);
-				sTasks.erase(it);
+				nextTask = it->second->front();
+				it->second->pop();
+				if (it->second->empty()) {
+					sTasks.erase(it);
+				}
 				pthread_mutex_unlock(&sMutex);
 				
 				nextTask->mTask->PerformTask(nextTask->mH_);
@@ -116,7 +126,15 @@ namespace hermit {
 		}
 		
 		pthread_mutex_lock(&sMutex);
-		sTasks.insert(TaskMap::value_type(priority, std::move(entry)));
+		auto it = sTasks.find(priority);
+		if (it == end(sTasks)) {
+			auto queue = std::make_shared<Queue>();
+			queue->push(entry);
+			sTasks.insert(TaskQueueMap::value_type(priority, queue));
+		}
+		else {
+			it->second->push(entry);
+		}
 		pthread_cond_signal(&sCondition);
 		pthread_mutex_unlock(&sMutex);
 		

@@ -16,7 +16,7 @@
 //	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#include <set>
+#include <queue>
 #include <thread>
 #include <vector>
 #include "Notification.h"
@@ -44,7 +44,7 @@ namespace hermit {
 		typedef std::shared_ptr<QueueEntry> QueueEntryPtr;
 		
 		//
-		typedef std::set<QueueEntryPtr> TaskSet;
+		typedef std::queue<QueueEntryPtr> Queue;
 		
 		//
 		class QueueInfoImpl : public QueueInfo {
@@ -56,7 +56,7 @@ namespace hermit {
 			void Shutdown();
 			
 			//
-			TaskSet mTasks;
+			Queue mTasks;
 			std::thread mThread;
 			pthread_attr_t mAttr;
 			pthread_mutex_t mMutex;
@@ -67,7 +67,7 @@ namespace hermit {
 			int32_t mLockCount;
 			bool mLocked;
 			LockCallbackVector mLockCallbacks;
-			TaskSet mPendingTasks;
+			Queue mPendingTasks;
 		};
 		typedef std::shared_ptr<QueueInfoImpl> QueueInfoImplPtr;
 		
@@ -93,9 +93,8 @@ namespace hermit {
 					lockCallbacks.swap(queueInfo->mLockCallbacks);
 				}
 				else {
-					auto it = queueInfo->mTasks.begin();
-					nextTask = std::move(*it);
-					queueInfo->mTasks.erase(it);
+					nextTask = queueInfo->mTasks.front();
+					queueInfo->mTasks.pop();
 					queueInfo->mBusy = true;
 				}
 				pthread_mutex_unlock(&queueInfo->mMutex);
@@ -145,8 +144,10 @@ namespace hermit {
 		
 		if (!mTasks.empty()) {
 			StaticLog("QueueInfoImpl::Shutdown(): !mTasks.empty()");
+			while (!mTasks.empty()) {
+				mTasks.pop();
+			}
 		}
-		mTasks.clear();
 		mQuit = true;
 		pthread_cond_signal(&mCondition);
 		pthread_mutex_unlock(&mMutex);
@@ -175,10 +176,10 @@ namespace hermit {
 		pthread_mutex_lock(&queueInfo->mMutex);
 		
 		if (queueInfo->mLockCount > 0) {
-			queueInfo->mPendingTasks.insert(std::move(entry));
+			queueInfo->mPendingTasks.push(entry);
 		}
 		else {
-			queueInfo->mTasks.insert(std::move(entry));
+			queueInfo->mTasks.push(entry);
 		}
 		pthread_cond_signal(&queueInfo->mCondition);
 		pthread_mutex_unlock(&queueInfo->mMutex);
