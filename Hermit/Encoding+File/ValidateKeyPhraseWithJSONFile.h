@@ -39,8 +39,8 @@ namespace hermit {
 		//
 		DEFINE_ASYNC_FUNCTION_3A(ValidateKeyPhraseWithJSONFileCompletion,
 								 HermitPtr,
-								 ValidateKeyPhraseWithJSONFileResult,
-								 std::string);
+								 ValidateKeyPhraseWithJSONFileResult,			// result
+								 std::string);									// aesKey
 		
 		//
 		void ValidateKeyPhraseWithJSONFile(const HermitPtr& h_,

@@ -40,6 +40,7 @@ namespace hermit {
 								 KeyPhraseToKeyWithJSONFileResult,
 								 std::string,								// inAESKey
 								 file::FilePathPtr);						// inKeyJSONFilePath
+		
 		//
 		void KeyPhraseToKeyWithJSONFile(const HermitPtr& h_,
 										const std::string& inKeyPhrase,
