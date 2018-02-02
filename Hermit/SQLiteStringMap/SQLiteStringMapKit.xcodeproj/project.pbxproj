@@ -23,6 +23,17 @@
 		EF2FEC311F9E26E20069B142 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = EF2FEC301F9E26E20069B142 /* libsqlite3.tbd */; };
 		EF70081F1F9E211000216C2D /* SQLiteStringMapImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF70081D1F9E211000216C2D /* SQLiteStringMapImpl.cpp */; };
 		EF7008201F9E211000216C2D /* SQLiteStringMapImpl.h in Headers */ = {isa = PBXBuildFile; fileRef = EF70081E1F9E211000216C2D /* SQLiteStringMapImpl.h */; };
+		EF9C57202024347200E5D090 /* SQLiteStringMap.h in Headers */ = {isa = PBXBuildFile; fileRef = EF9C571F2024347200E5D090 /* SQLiteStringMap.h */; };
+		EF9C57222024347200E5D090 /* SQLiteStringMap.m in Sources */ = {isa = PBXBuildFile; fileRef = EF9C57212024347200E5D090 /* SQLiteStringMap.m */; };
+		EF9C57262024347C00E5D090 /* SQLiteStringMapImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF70081D1F9E211000216C2D /* SQLiteStringMapImpl.cpp */; };
+		EF9C57272024347C00E5D090 /* SQLiteStringMap_CommitChanges.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF1191FE1F9E1869000B820F /* SQLiteStringMap_CommitChanges.cpp */; };
+		EF9C57282024347C00E5D090 /* SQLiteStringMap_GetValue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF1192001F9E1881000B820F /* SQLiteStringMap_GetValue.cpp */; };
+		EF9C57292024347C00E5D090 /* SQLiteStringMap_Lock.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF1192021F9E1893000B820F /* SQLiteStringMap_Lock.cpp */; };
+		EF9C572A2024347C00E5D090 /* SQLiteStringMap_SetValue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF1192041F9E18A6000B820F /* SQLiteStringMap_SetValue.cpp */; };
+		EF9C572B2024347C00E5D090 /* SQLiteStringMap_Unlock.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF1192061F9E18BE000B820F /* SQLiteStringMap_Unlock.cpp */; };
+		EF9C572C2024347C00E5D090 /* SQLiteStringMap_Validate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF1192081F9E18CF000B820F /* SQLiteStringMap_Validate.cpp */; };
+		EF9C572D2024347C00E5D090 /* SQLiteStringMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF1191FA1F9E146E000B820F /* SQLiteStringMap.cpp */; };
+		EF9C572E2024347C00E5D090 /* WithSQLiteStringMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF11920A1F9E18FF000B820F /* WithSQLiteStringMap.cpp */; };
 		EFDC028F1F9E1332005ECC1F /* SQLiteStringMapKit.h in Headers */ = {isa = PBXBuildFile; fileRef = EFDC028D1F9E1332005ECC1F /* SQLiteStringMapKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
@@ -44,12 +55,22 @@
 		EF70081D1F9E211000216C2D /* SQLiteStringMapImpl.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SQLiteStringMapImpl.cpp; sourceTree = "<group>"; };
 		EF70081E1F9E211000216C2D /* SQLiteStringMapImpl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SQLiteStringMapImpl.h; sourceTree = "<group>"; };
 		EF7008211F9E22D400216C2D /* StatementWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StatementWrapper.h; sourceTree = "<group>"; };
+		EF9C571D2024347200E5D090 /* libSQLiteStringMap.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSQLiteStringMap.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF9C571F2024347200E5D090 /* SQLiteStringMap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SQLiteStringMap.h; sourceTree = "<group>"; };
+		EF9C57212024347200E5D090 /* SQLiteStringMap.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SQLiteStringMap.m; sourceTree = "<group>"; };
 		EFDC028A1F9E1332005ECC1F /* SQLiteStringMapKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SQLiteStringMapKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EFDC028D1F9E1332005ECC1F /* SQLiteStringMapKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SQLiteStringMapKit.h; sourceTree = "<group>"; };
 		EFDC028E1F9E1332005ECC1F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		EF9C571A2024347200E5D090 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EFDC02861F9E1332005ECC1F /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -85,10 +106,20 @@
 			path = Impl;
 			sourceTree = "<group>";
 		};
+		EF9C571E2024347200E5D090 /* SQLiteStringMap */ = {
+			isa = PBXGroup;
+			children = (
+				EF9C571F2024347200E5D090 /* SQLiteStringMap.h */,
+				EF9C57212024347200E5D090 /* SQLiteStringMap.m */,
+			);
+			path = SQLiteStringMap;
+			sourceTree = "<group>";
+		};
 		EFDC02801F9E1332005ECC1F = {
 			isa = PBXGroup;
 			children = (
 				EF70081C1F9E20FF00216C2D /* Impl */,
+				EF9C571E2024347200E5D090 /* SQLiteStringMap */,
 				EFDC028B1F9E1332005ECC1F /* Products */,
 				EF1191FE1F9E1869000B820F /* SQLiteStringMap_CommitChanges.cpp */,
 				EF1192001F9E1881000B820F /* SQLiteStringMap_GetValue.cpp */,
@@ -109,6 +140,7 @@
 			isa = PBXGroup;
 			children = (
 				EFDC028A1F9E1332005ECC1F /* SQLiteStringMapKit.framework */,
+				EF9C571D2024347200E5D090 /* libSQLiteStringMap.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -125,6 +157,14 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		EF9C571B2024347200E5D090 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF9C57202024347200E5D090 /* SQLiteStringMap.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EFDC02871F9E1332005ECC1F /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -139,6 +179,23 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		EF9C571C2024347200E5D090 /* SQLiteStringMap */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EF9C57252024347200E5D090 /* Build configuration list for PBXNativeTarget "SQLiteStringMap" */;
+			buildPhases = (
+				EF9C57192024347200E5D090 /* Sources */,
+				EF9C571A2024347200E5D090 /* Frameworks */,
+				EF9C571B2024347200E5D090 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SQLiteStringMap;
+			productName = SQLiteStringMap;
+			productReference = EF9C571D2024347200E5D090 /* libSQLiteStringMap.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 		EFDC02891F9E1332005ECC1F /* SQLiteStringMapKit */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = EFDC02921F9E1332005ECC1F /* Build configuration list for PBXNativeTarget "SQLiteStringMapKit" */;
@@ -166,6 +223,10 @@
 				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = filehaven;
 				TargetAttributes = {
+					EF9C571C2024347200E5D090 = {
+						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Automatic;
+					};
 					EFDC02891F9E1332005ECC1F = {
 						CreatedOnToolsVersion = 9.0.1;
 						ProvisioningStyle = Automatic;
@@ -185,6 +246,7 @@
 			projectRoot = "";
 			targets = (
 				EFDC02891F9E1332005ECC1F /* SQLiteStringMapKit */,
+				EF9C571C2024347200E5D090 /* SQLiteStringMap */,
 			);
 		};
 /* End PBXProject section */
@@ -200,6 +262,23 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		EF9C57192024347200E5D090 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF9C57262024347C00E5D090 /* SQLiteStringMapImpl.cpp in Sources */,
+				EF9C57272024347C00E5D090 /* SQLiteStringMap_CommitChanges.cpp in Sources */,
+				EF9C57282024347C00E5D090 /* SQLiteStringMap_GetValue.cpp in Sources */,
+				EF9C57292024347C00E5D090 /* SQLiteStringMap_Lock.cpp in Sources */,
+				EF9C572A2024347C00E5D090 /* SQLiteStringMap_SetValue.cpp in Sources */,
+				EF9C572B2024347C00E5D090 /* SQLiteStringMap_Unlock.cpp in Sources */,
+				EF9C572C2024347C00E5D090 /* SQLiteStringMap_Validate.cpp in Sources */,
+				EF9C572D2024347C00E5D090 /* SQLiteStringMap.cpp in Sources */,
+				EF9C572E2024347C00E5D090 /* WithSQLiteStringMap.cpp in Sources */,
+				EF9C57222024347200E5D090 /* SQLiteStringMap.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EFDC02851F9E1332005ECC1F /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -219,6 +298,28 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		EF9C57232024347200E5D090 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		EF9C57242024347200E5D090 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		EFDC02901F9E1332005ECC1F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -268,6 +369,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = ../../;
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -320,6 +422,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = ../../;
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
@@ -340,7 +443,6 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_VERSION = A;
-				HEADER_SEARCH_PATHS = ../../;
 				INFOPLIST_FILE = SQLiteStringMapKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
@@ -362,7 +464,6 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_VERSION = A;
-				HEADER_SEARCH_PATHS = ../../;
 				INFOPLIST_FILE = SQLiteStringMapKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
@@ -375,6 +476,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		EF9C57252024347200E5D090 /* Build configuration list for PBXNativeTarget "SQLiteStringMap" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EF9C57232024347200E5D090 /* Debug */,
+				EF9C57242024347200E5D090 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		EFDC02841F9E1332005ECC1F /* Build configuration list for PBXProject "SQLiteStringMapKit" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
