@@ -130,20 +130,19 @@ namespace hermit {
 	private:
 		//
 		void OutputLine(const std::string& line) {
-			
 			std::lock_guard<std::recursive_mutex> guard(mStreamMutex);
 			
-			if (!mFileStream.is_open()) {
-				mFileStream.open(mLogFilePath);
-				if (!mFileStream.is_open()) {
-					NSLog(@"LoggingHermit: couldn't open log file: %s", mLogFilePath.c_str());
-				}
-				else {
-					OutputLine("Logging started.");
-				}
-			}
-			
 			if (!mLogFilePath.empty()) {
+				if (!mFileStream.is_open()) {
+					mFileStream.open(mLogFilePath);
+					if (!mFileStream.is_open()) {
+						NSLog(@"LoggingHermit: couldn't open log file: %s", mLogFilePath.c_str());
+						mLogFilePath.clear();
+					}
+					else {
+						OutputLine("Logging started.");
+					}
+				}
 				if (mFileStream.is_open()) {
 					time_t now = 0;
 					time(&now);
