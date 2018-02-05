@@ -19,18 +19,11 @@
 #ifndef ListDirectoryContents_h
 #define ListDirectoryContents_h
 
-#include "Hermit/Foundation/Callback.h"
 #include "Hermit/Foundation/Hermit.h"
 #include "FilePath.h"
 
 namespace hermit {
 	namespace file {
-		
-		//
-		DEFINE_CALLBACK_3A(ListDirectoryContentsItemCallback,
-						   HermitPtr,
-						   FilePathPtr,						// inParentPath
-						   std::string);					// inItemName
 		
 		//
 		enum class ListDirectoryContentsResult {
@@ -41,12 +34,22 @@ namespace hermit {
 			kPermissionDenied,
 			kError
 		};
-		
+
+		//
+		class ListDirectoryContentsItemCallback {
+		public:
+			//
+			virtual bool OnItem(const HermitPtr& h_,
+								const ListDirectoryContentsResult& result,
+								const FilePathPtr& parentPath,
+								const std::string& itemName) = 0;
+		};
+			
 		//
 		ListDirectoryContentsResult ListDirectoryContents(const HermitPtr& h_,
-														  const FilePathPtr& inDirectoryPath,
-														  const bool& inDescendSubdirectories,
-														  const ListDirectoryContentsItemCallbackRef& inItemCallback);
+														  const FilePathPtr& directoryPath,
+														  const bool& descendSubdirectories,
+														  ListDirectoryContentsItemCallback& itemCallback);
 		
 	} // namespace file
 } // namespace hermit

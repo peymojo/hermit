@@ -400,33 +400,33 @@ namespace hermit {
 			class Directory : public ListDirectoryContentsItemCallback {
 			public:
 				//
-				//
-				Directory(const HermitPtr& h_, const PreprocessFileFunctionPtr& inPreprocessFunction) :
-				mH_(h_),
+				Directory(const PreprocessFileFunctionPtr& inPreprocessFunction) :
 				mPreprocessFunction(inPreprocessFunction) {
 				}
 				
 				//
-				//
-				bool Function(const HermitPtr& h_, const FilePathPtr& inParentPath, const std::string& inItemName) {
+				virtual bool OnItem(const HermitPtr& h_,
+									const ListDirectoryContentsResult& result,
+									const FilePathPtr& inParentPath,
+									const std::string& inItemName) override {
 					PreprocessFileInstruction instruction = PreprocessFileInstruction::kContinue;
 					if (mPreprocessFunction != nullptr) {
-						instruction = mPreprocessFunction->Preprocess(mH_, inParentPath, inItemName);
+						instruction = mPreprocessFunction->Preprocess(h_, inParentPath, inItemName);
 					}
 					
 					FilePathPtr itemPath;
-					AppendToFilePath(mH_, inParentPath, inItemName, itemPath);
+					AppendToFilePath(h_, inParentPath, inItemName, itemPath);
 					if (itemPath == nullptr) {
-						NOTIFY_ERROR(mH_, "CompareDirectories: Directory::Function: AppendToFilePath failed.");
+						NOTIFY_ERROR(h_, "CompareDirectories: Directory::Function: AppendToFilePath failed.");
 						return false;
 					}
 						
 					if (instruction == PreprocessFileInstruction::kSkip) {
 						FileNotificationParams params(kFileSkipped, itemPath);
-						NOTIFY(mH_, kFileSkippedNotification, &params);
+						NOTIFY(h_, kFileSkippedNotification, &params);
 					}
 					else if (instruction != PreprocessFileInstruction::kContinue) {
-						NOTIFY_ERROR(mH_, "CompareDirectories: preprocess function failed for:", itemPath);
+						NOTIFY_ERROR(h_, "CompareDirectories: preprocess function failed for:", itemPath);
 						return false;
 					}
 					else {
@@ -437,15 +437,11 @@ namespace hermit {
 				}
 				
 				//
-				//
-				const FileSet& GetFiles() const
-				{
+				const FileSet& GetFiles() const {
 					return mFiles;
 				}
 				
 				//
-				//
-				HermitPtr mH_;
 				PreprocessFileFunctionPtr mPreprocessFunction;
 				FileSet mFiles;
 			};
@@ -553,7 +549,7 @@ namespace hermit {
 					return;
 				}
 				
-				Directory dir1(h_, inPreprocessFunction);
+				Directory dir1(inPreprocessFunction);
 				auto status1 = ListDirectoryContents(h_, inFilePath1, false, dir1);
 				if (status1 != ListDirectoryContentsResult::kSuccess) {
 					NOTIFY_ERROR(h_, "CompareDirectories: ListDirectoryContents failed for:", inFilePath1);
@@ -561,7 +557,7 @@ namespace hermit {
 					return;
 				}
 				
-				Directory dir2(h_, inPreprocessFunction);
+				Directory dir2(inPreprocessFunction);
 				auto status2 = ListDirectoryContents(h_, inFilePath2, false, dir2);
 				if (status2 != ListDirectoryContentsResult::kSuccess) {
 					NOTIFY_ERROR(h_, "CompareDirectories: ListDirectoryContents failed for:", inFilePath2);

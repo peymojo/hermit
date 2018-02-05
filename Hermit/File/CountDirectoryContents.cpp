@@ -24,18 +24,15 @@
 
 namespace hermit {
 	namespace file {
-		
-		namespace {
+		namespace CountDirectoryContents_Impl {
 			
 			//
-			class ListDirectoryContentsCallback2 : public ListDirectoryContentsWithTypeItemCallback {
+			class ListDirectoryContentsCallback : public ListDirectoryContentsWithTypeItemCallback {
 			public:
 				//
-				ListDirectoryContentsCallback2(const HermitPtr& h_,
-											   const bool& inDescendSubdirectories,
-											   const bool& inIgnorePermissionsErrors,
-											   const PreprocessFileFunctionPtr& inPreprocessFunction) :
-				mH_(h_),
+				ListDirectoryContentsCallback(const bool& inDescendSubdirectories,
+											  const bool& inIgnorePermissionsErrors,
+											  const PreprocessFileFunctionPtr& inPreprocessFunction) :
 				mDescendSubdirectories(inDescendSubdirectories),
 				mIgnorePermissionsErrors(inIgnorePermissionsErrors),
 				mPreprocessFunction(inPreprocessFunction),
@@ -44,51 +41,53 @@ namespace hermit {
 				}
 				
 				//
-				virtual bool Function(const HermitPtr& h_,
-									  const FilePathPtr& inParentPath,
-									  const std::string& inItemName,
-									  const FileType& inType) override {
-					
+				virtual bool OnItem(const HermitPtr& h_,
+									const ListDirectoryContentsResult& result,
+									const FilePathPtr& parentPath,
+									const std::string& itemName,
+									const FileType& itemType) override {
 					if (CHECK_FOR_ABORT(h_)) {
 						return false;
 					}
 					
 					if (mPreprocessFunction != nullptr) {
-						auto instruction = mPreprocessFunction->Preprocess(h_, inParentPath, inItemName);
+						auto instruction = mPreprocessFunction->Preprocess(h_, parentPath, itemName);
 						if (instruction == PreprocessFileInstruction::kSkip) {
 							return true;
 						}
 						if (instruction != PreprocessFileInstruction::kContinue) {
-							NOTIFY_ERROR(mH_, "CountDirectoryContents: mPreprocessFunction failed for:", inParentPath);
-							NOTIFY_ERROR(mH_, "-- inItemName:", inItemName);
+							NOTIFY_ERROR(h_,
+										 "CountDirectoryContents: mPreprocessFunction failed for:", parentPath,
+										 "inItemName:", itemName);
 							mErrorOccurred = true;
 							return false;
 						}
 					}
 					
-					if ((inType == FileType::kDirectory) && mDescendSubdirectories) {
+					if ((itemType == FileType::kDirectory) && mDescendSubdirectories) {
 						FilePathPtr directoryPath;
-						AppendToFilePath(mH_, inParentPath, inItemName, directoryPath);
+						AppendToFilePath(h_, parentPath, itemName, directoryPath);
 						if (directoryPath == nullptr) {
-							NOTIFY_ERROR(mH_, "CountDirectoryContents: AppendToFilePath failed for:", inParentPath);
-							NOTIFY_ERROR(mH_, "-- inItemName:", inItemName);
+							NOTIFY_ERROR(h_,
+										 "CountDirectoryContents: AppendToFilePath failed for:", parentPath,
+										 "inItemName:", itemName);
 							mErrorOccurred = true;
 							return false;
 						}
 						
-						ListDirectoryContentsCallback2 itemCallback(mH_, true, mIgnorePermissionsErrors, mPreprocessFunction);
-						auto result = ListDirectoryContentsWithType(mH_, directoryPath, false, itemCallback);
+						ListDirectoryContentsCallback itemCallback(true, mIgnorePermissionsErrors, mPreprocessFunction);
+						auto result = ListDirectoryContentsWithType(h_, directoryPath, false, itemCallback);
 						if (result == ListDirectoryContentsResult::kCanceled) {
 							return false;
 						}
 						if (mIgnorePermissionsErrors && (result == ListDirectoryContentsResult::kPermissionDenied)) {
-							return true;
+							return false;
 						}
 						if (result != ListDirectoryContentsResult::kSuccess) {
 							if ((result == ListDirectoryContentsResult::kPermissionDenied) && mIgnorePermissionsErrors) {
 								return true;
 							}
-							NOTIFY_ERROR(mH_, "CountDirectoryContents: ListDirectoryContentsWithType failed for:", directoryPath);
+							NOTIFY_ERROR(h_, "CountDirectoryContents: ListDirectoryContentsWithType failed for:", directoryPath);
 							mErrorOccurred = true;
 							return false;
 						}
@@ -100,7 +99,6 @@ namespace hermit {
 				}
 				
 				//
-				HermitPtr mH_;
 				bool mDescendSubdirectories;
 				bool mIgnorePermissionsErrors;
 				PreprocessFileFunctionPtr mPreprocessFunction;
@@ -108,7 +106,8 @@ namespace hermit {
 				bool mErrorOccurred;
 			};
 			
-		} // private namespace
+		} // namespace CountDirectoryContents_Impl
+		using namespace CountDirectoryContents_Impl;
 		
 		//
 		void CountDirectoryContents(const HermitPtr& h_,
@@ -118,10 +117,9 @@ namespace hermit {
 									const PreprocessFileFunctionPtr& inPreprocessFunction,
 									const CountDirectoryContentsCallbackRef& inCallback) {
 			
-			ListDirectoryContentsCallback2 itemCallback(h_,
-														inDescendSubdirectories,
-														inIgnorePermissionsErrors,
-														inPreprocessFunction);
+			ListDirectoryContentsCallback itemCallback(inDescendSubdirectories,
+													   inIgnorePermissionsErrors,
+													   inPreprocessFunction);
 			auto result = ListDirectoryContentsWithType(h_, inDirectoryPath, false, itemCallback);
 			if (result == ListDirectoryContentsResult::kCanceled) {
 				inCallback.Call(kCountDirectoryContentsStatus_Canceled, 0);

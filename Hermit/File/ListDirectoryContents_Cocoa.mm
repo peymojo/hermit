@@ -32,12 +32,12 @@ namespace hermit {
 			
 			//
 			static ListDirectoryContentsResult ProcessDirectory(const HermitPtr& h_,
-																const FilePathPtr& inDirectoryPath,
-																const bool& inDescendSubdirectories,
-																const ListDirectoryContentsItemCallbackRef& inCallback) {
+																const FilePathPtr& directoryPath,
+																const bool& descendSubdirectories,
+																ListDirectoryContentsItemCallback& itemCallback) {
 				
 				std::string pathUTF8;
-				FilePathToCocoaPathString(h_, inDirectoryPath, pathUTF8);
+				FilePathToCocoaPathString(h_, directoryPath, pathUTF8);
 				string::AddTrailingSlash(pathUTF8, pathUTF8);
 				
 				NSString* pathString = [NSString stringWithUTF8String:pathUTF8.c_str()];
@@ -54,7 +54,7 @@ namespace hermit {
 					}
 					
 					NOTIFY_ERROR(h_,
-								 "ListDirectoryContents: contentsOfDirectoryAtPath failed for path:", inDirectoryPath,
+								 "ListDirectoryContents: contentsOfDirectoryAtPath failed for path:", directoryPath,
 								 "error:", [[error localizedDescription] UTF8String],
 								 "error code:", (int32_t)errorCode);
 					
@@ -70,12 +70,12 @@ namespace hermit {
 							fileNameUTF8[n] = '/';
 						}
 					}
-					if (!inCallback.Call(h_, inDirectoryPath, fileNameUTF8)) {
+					if (!itemCallback.OnItem(h_, ListDirectoryContentsResult::kSuccess, directoryPath, fileNameUTF8)) {
 						return ListDirectoryContentsResult::kCanceled;
 					}
 				}
 				
-				if (inDescendSubdirectories) {
+				if (descendSubdirectories) {
 					for (int n = 0; n < numItems; ++n) {
 						NSString* fileName = [items objectAtIndex:n];
 						
@@ -101,15 +101,15 @@ namespace hermit {
 							}
 							
 							FilePathPtr filePath;
-							AppendToFilePath(h_, inDirectoryPath, fileNameUTF8, filePath);
+							AppendToFilePath(h_, directoryPath, fileNameUTF8, filePath);
 							if (filePath == nullptr) {
 								NOTIFY_ERROR(h_,
-											 "ListDirectoryContents: AppendToFilePath failed for path:", inDirectoryPath,
+											 "ListDirectoryContents: AppendToFilePath failed for path:", directoryPath,
 											 "leaf name:", fileNameUTF8);
 								return ListDirectoryContentsResult::kError;
 							}
 							
-							auto result = ProcessDirectory(h_, filePath, inDescendSubdirectories, inCallback);
+							auto result = ProcessDirectory(h_, filePath, descendSubdirectories, itemCallback);
 							if (result != ListDirectoryContentsResult::kSuccess) {
 								return result;
 							}
@@ -123,12 +123,12 @@ namespace hermit {
 		
 		//
 		ListDirectoryContentsResult ListDirectoryContents(const HermitPtr& h_,
-														  const FilePathPtr& inDirectoryPath,
-														  const bool& inDescendSubdirectories,
-														  const ListDirectoryContentsItemCallbackRef& inItemCallback) {
+														  const FilePathPtr& directoryPath,
+														  const bool& descendSubdirectories,
+														  ListDirectoryContentsItemCallback& itemCallback) {
 			
 			@autoreleasepool {
-				return ProcessDirectory(h_, inDirectoryPath, inDescendSubdirectories, inItemCallback);
+				return ProcessDirectory(h_, directoryPath, descendSubdirectories, itemCallback);
 			}
 		}
 		

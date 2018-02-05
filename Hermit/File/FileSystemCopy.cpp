@@ -289,10 +289,11 @@ namespace hermit {
 				}
 				
 				//
-				virtual bool Function(const HermitPtr& h_,
-									  const FilePathPtr& parentPath,
-									  const std::string& itemName,
-									  const FileType& fileType) override {
+				virtual bool OnItem(const HermitPtr& h_,
+									const ListDirectoryContentsResult& result,
+									const FilePathPtr& parentPath,
+									const std::string& itemName,
+									const FileType& fileType) override {
 					FilePathPtr itemPath;
 					AppendToFilePath(h_, parentPath, itemName, itemPath);
 					if (itemPath == nullptr) {

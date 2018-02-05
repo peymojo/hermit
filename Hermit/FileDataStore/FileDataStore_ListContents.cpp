@@ -29,14 +29,17 @@ namespace hermit {
 			class ListItemsCallback : public file::ListDirectoryContentsItemCallback {
 			public:
 				//
-				ListItemsCallback(datastore::DataPathPtr inRootPath,
+				ListItemsCallback(datastore::DataPathPtr rootPath,
 								  const datastore::ListDataStoreContentsItemCallbackPtr& itemCallback) :
-				mRootPath(inRootPath),
+				mRootPath(rootPath),
 				mItemCallback(itemCallback) {
 				}
 				
 				//
-				virtual bool Function(const HermitPtr& h_, const file::FilePathPtr& parentFilePath, const std::string& itemName) override {
+				virtual bool OnItem(const HermitPtr& h_,
+									const file::ListDirectoryContentsResult& result,
+									const file::FilePathPtr& parentFilePath,
+									const std::string& itemName) override {
 					return mItemCallback->OnOneItem(h_, mRootPath, itemName);
 				}
 				
