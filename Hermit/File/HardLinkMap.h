@@ -22,6 +22,7 @@
 #include "Hermit/File/FilePath.h"
 #include "Hermit/Foundation/AsyncFunction.h"
 #include "Hermit/Foundation/Hermit.h"
+#include "Hermit/Foundation/TaskQueue.h"
 
 namespace hermit {
 	namespace file {
@@ -66,9 +67,10 @@ namespace hermit {
 		
 		//
 		class HardLinkMapImpl;
+		typedef std::shared_ptr<HardLinkMapImpl> HardLinkMapImplPtr;
 		
 		//
-		class HardLinkMap : public GetHardLinkInfoFunction {
+		class HardLinkMap : public GetHardLinkInfoFunction, public TaskQueue, public std::enable_shared_from_this<HardLinkMap> {
 		public:
 			//
 			HardLinkMap(const FilePathPtr& rootItem);
@@ -83,8 +85,9 @@ namespace hermit {
 							  const GetHardLinkInfoCompletionFunctionPtr& completion) override;
 			
 			//
-			HardLinkMapImpl* mImpl;
+			HardLinkMapImplPtr mImpl;
 		};
+		typedef std::shared_ptr<HardLinkMap> HardLinkMapPtr;
 
 	} // namespace file
 } // namespace hermit
