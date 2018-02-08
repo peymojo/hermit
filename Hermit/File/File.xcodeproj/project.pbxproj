@@ -208,6 +208,12 @@
 		EF92C1C21F10FF510097D708 /* StreamOutFileData_Cocoa.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5FC61D878B840056E526 /* StreamOutFileData_Cocoa.mm */; };
 		EF92C1C51F10FF990097D708 /* FoundationKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF92C1C41F10FF990097D708 /* FoundationKit.framework */; };
 		EF92C1C71F10FF9E0097D708 /* StringKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF92C1C61F10FF9E0097D708 /* StringKit.framework */; };
+		EFAD0802202AB917000B3D32 /* HardLinkMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD0800202AB917000B3D32 /* HardLinkMap.cpp */; };
+		EFAD0803202AB917000B3D32 /* HardLinkMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD0800202AB917000B3D32 /* HardLinkMap.cpp */; };
+		EFAD0804202AB917000B3D32 /* HardLinkMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD0800202AB917000B3D32 /* HardLinkMap.cpp */; };
+		EFAD0805202AB917000B3D32 /* HardLinkMap.h in Headers */ = {isa = PBXBuildFile; fileRef = EFAD0801202AB917000B3D32 /* HardLinkMap.h */; };
+		EFAD0806202AB917000B3D32 /* HardLinkMap.h in Headers */ = {isa = PBXBuildFile; fileRef = EFAD0801202AB917000B3D32 /* HardLinkMap.h */; };
+		EFAD0807202AB917000B3D32 /* HardLinkMap.h in Headers */ = {isa = PBXBuildFile; fileRef = EFAD0801202AB917000B3D32 /* HardLinkMap.h */; };
 		EFCA3CEA2015DEDC00801984 /* CompareXAttrs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFCA3CE82015DEDC00801984 /* CompareXAttrs.cpp */; };
 		EFCA3CEB2015DEDC00801984 /* CompareXAttrs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFCA3CE82015DEDC00801984 /* CompareXAttrs.cpp */; };
 		EFCA3CEC2015DEDC00801984 /* CompareXAttrs.h in Headers */ = {isa = PBXBuildFile; fileRef = EFCA3CE92015DEDC00801984 /* CompareXAttrs.h */; };
@@ -239,6 +245,8 @@
 		EF92C16F1F10FF180097D708 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EF92C1C41F10FF990097D708 /* FoundationKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FoundationKit.framework; path = "../../../../Library/Developer/Xcode/DerivedData/Vault_Browser-etrnbxqipwhocnapsvsbsqbjzmyg/Build/Products/Debug/FoundationKit.framework"; sourceTree = "<group>"; };
 		EF92C1C61F10FF9E0097D708 /* StringKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StringKit.framework; path = "../../../../Library/Developer/Xcode/DerivedData/Vault_Browser-etrnbxqipwhocnapsvsbsqbjzmyg/Build/Products/Debug/StringKit.framework"; sourceTree = "<group>"; };
+		EFAD0800202AB917000B3D32 /* HardLinkMap.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = HardLinkMap.cpp; sourceTree = "<group>"; };
+		EFAD0801202AB917000B3D32 /* HardLinkMap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HardLinkMap.h; sourceTree = "<group>"; };
 		EFAD5F221D878B840056E526 /* AppendToFilePath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppendToFilePath.h; sourceTree = "<group>"; };
 		EFAD5F2F1D878B840056E526 /* CopySymbolicLink_Cocoa.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CopySymbolicLink_Cocoa.mm; sourceTree = "<group>"; };
 		EFAD5F301D878B840056E526 /* CopySymbolicLink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CopySymbolicLink.h; sourceTree = "<group>"; };
@@ -567,6 +575,8 @@
 				EFAD5F851D878B840056E526 /* GetSymbolicLinkTarget.h */,
 				EFAD5F861D878B840056E526 /* GetTemporaryFilePath_Mac.cpp */,
 				EFAD5F871D878B840056E526 /* GetTemporaryFilePath.h */,
+				EFAD0800202AB917000B3D32 /* HardLinkMap.cpp */,
+				EFAD0801202AB917000B3D32 /* HardLinkMap.h */,
 				EFAD5F881D878B840056E526 /* LibFile.h */,
 				EFAD5F891D878B840056E526 /* LibFile.m */,
 				EFAD5F8A1D878B840056E526 /* ListDirectoryContents_Cocoa.mm */,
@@ -649,6 +659,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EFAD0807202AB917000B3D32 /* HardLinkMap.h in Headers */,
 				EFCA3CED2015DEDC00801984 /* CompareXAttrs.h in Headers */,
 				EF51C74B201AD2540028B7D4 /* CopyXAttrs.h in Headers */,
 				EF2CF5C81FF24A0000652E69 /* FileLib.h in Headers */,
@@ -659,6 +670,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EFAD0806202AB917000B3D32 /* HardLinkMap.h in Headers */,
 				EF65112A1F656EDA002D8065 /* FileKit_iOS.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -667,6 +679,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EFAD0805202AB917000B3D32 /* HardLinkMap.h in Headers */,
 				EF55F57D20121CCD0087BEA3 /* CompareLinks.h in Headers */,
 				EF55F56F2012183C0087BEA3 /* CompareFiles.h in Headers */,
 				EF51C74A201AD2540028B7D4 /* CopyXAttrs.h in Headers */,
@@ -809,6 +822,7 @@
 				EF2CF5FA1FF24A2400652E69 /* CreateEmptyFile_Cocoa.mm in Sources */,
 				EF2CF5FB1FF24A2400652E69 /* CreateHardLink_Cocoa.mm in Sources */,
 				EF2CF5FC1FF24A2400652E69 /* CreateSymbolicLink_Cocoa.mm in Sources */,
+				EFAD0804202AB917000B3D32 /* HardLinkMap.cpp in Sources */,
 				EF2CF5FD1FF24A2400652E69 /* DeleteFile_Cocoa.mm in Sources */,
 				EF2CF5FE1FF24A2400652E69 /* FileExists_Cocoa.mm in Sources */,
 				EF2CF5FF1FF24A2400652E69 /* FileSystemRename_Cocoa.mm in Sources */,
@@ -879,6 +893,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EF6511681F656EE8002D8065 /* GetFileDates_Cocoa.mm in Sources */,
+				EFAD0803202AB917000B3D32 /* HardLinkMap.cpp in Sources */,
 				EF65115D1F656EE8002D8065 /* CopySymbolicLink_Cocoa.mm in Sources */,
 				EF65115F1F656EE8002D8065 /* CreateDirectory_Cocoa.mm in Sources */,
 				EF6511601F656EE8002D8065 /* CreateEmptyFile_Cocoa.mm in Sources */,
@@ -948,6 +963,7 @@
 				EF92C1B01F10FF510097D708 /* GetFilePosixOwnership_Cocoa.mm in Sources */,
 				EF51C748201AD2540028B7D4 /* CopyXAttrs.cpp in Sources */,
 				EF92C1B11F10FF510097D708 /* GetFilePosixPermissions_Cocoa.mm in Sources */,
+				EFAD0802202AB917000B3D32 /* HardLinkMap.cpp in Sources */,
 				EF92C1B21F10FF510097D708 /* GetFileResourceValues_Cocoa.mm in Sources */,
 				EF92C1B31F10FF510097D708 /* GetSymbolicLinkTarget_Cocoa.mm in Sources */,
 				EF92C1B41F10FF510097D708 /* ListDirectoryContents_Cocoa.mm in Sources */,
