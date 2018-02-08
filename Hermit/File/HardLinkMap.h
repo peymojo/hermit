@@ -36,7 +36,7 @@ namespace hermit {
 		};
 		
 		//
-		DEFINE_ASYNC_FUNCTION_5A(IngestHardLinkTargetCompletionFunction,
+		DEFINE_ASYNC_FUNCTION_5A(ProcessHardLinkCompletionFunction,
 								 HermitPtr,
 								 HardLinkInfoStatus,							// status
 								 std::string,									// objectDataId
@@ -44,9 +44,9 @@ namespace hermit {
 								 std::string);									// dataHash
 		
 		//
-		DEFINE_ASYNC_FUNCTION_2A(IngestHardLinkTargetFunction,
+		DEFINE_ASYNC_FUNCTION_2A(ProcessHardLinkFunction,
 								 HermitPtr,
-								 IngestHardLinkTargetCompletionFunctionPtr);	// completion
+								 ProcessHardLinkCompletionFunctionPtr);			// completion
 		
 		//
 		DEFINE_ASYNC_FUNCTION_6A(GetHardLinkInfoCompletionFunction,
@@ -61,29 +61,29 @@ namespace hermit {
 		DEFINE_ASYNC_FUNCTION_4A(GetHardLinkInfoFunction,
 								 HermitPtr,
 								 FilePathPtr,									// item
-								 IngestHardLinkTargetFunctionPtr,				// ingestTargetFunction
+								 ProcessHardLinkFunctionPtr,					// processFunction
 								 GetHardLinkInfoCompletionFunctionPtr);			// completion
 		
 		//
-		class HardLinkInfoHandlerImpl;
+		class HardLinkMapImpl;
 		
 		//
-		class HardLinkInfoHandler : public GetHardLinkInfoFunction {
+		class HardLinkMap : public GetHardLinkInfoFunction {
 		public:
 			//
-			HardLinkInfoHandler(const FilePathPtr& rootItem);
+			HardLinkMap(const FilePathPtr& rootItem);
 			
 			//
-			~HardLinkInfoHandler();
+			~HardLinkMap();
 			
 			//
 			virtual void Call(const hermit::HermitPtr& h_,
 							  const FilePathPtr& item,
-							  const IngestHardLinkTargetFunctionPtr& ingestTargetFunction,
+							  const ProcessHardLinkFunctionPtr& processFunction,
 							  const GetHardLinkInfoCompletionFunctionPtr& completion) override;
 			
 			//
-			HardLinkInfoHandlerImpl* mImpl;
+			HardLinkMapImpl* mImpl;
 		};
 
 	} // namespace file
