@@ -7,6 +7,25 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EF16AB62202C2F5100AF9DAE /* S3DataStore.h in Headers */ = {isa = PBXBuildFile; fileRef = EF16AB61202C2F5100AF9DAE /* S3DataStore.h */; };
+		EF16AB64202C2F5100AF9DAE /* S3DataStore.m in Sources */ = {isa = PBXBuildFile; fileRef = EF16AB63202C2F5100AF9DAE /* S3DataStore.m */; };
+		EF16AB68202C2F5900AF9DAE /* AES256EncryptedS3DataStore_LoadData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD61381D878C960056E526 /* AES256EncryptedS3DataStore_LoadData.cpp */; };
+		EF16AB69202C2F5900AF9DAE /* AES256EncryptedS3DataStore_WriteData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD61491D878C960056E526 /* AES256EncryptedS3DataStore_WriteData.cpp */; };
+		EF16AB6A202C2F5900AF9DAE /* AES256EncryptedS3DataStore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD612C1D878C960056E526 /* AES256EncryptedS3DataStore.cpp */; };
+		EF16AB6B202C2F5900AF9DAE /* S3DataPath_AppendPathComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD613C1D878C960056E526 /* S3DataPath_AppendPathComponent.cpp */; };
+		EF16AB6C202C2F5900AF9DAE /* S3DataPath_GetLastPathComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD613D1D878C960056E526 /* S3DataPath_GetLastPathComponent.cpp */; };
+		EF16AB6D202C2F5900AF9DAE /* S3DataPath_GetStringRepresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD613E1D878C960056E526 /* S3DataPath_GetStringRepresentation.cpp */; };
+		EF16AB6E202C2F5900AF9DAE /* S3DataPath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD613F1D878C960056E526 /* S3DataPath.cpp */; };
+		EF16AB6F202C2F5900AF9DAE /* S3DataStore_CreateLocationIfNeeded.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD612E1D878C960056E526 /* S3DataStore_CreateLocationIfNeeded.cpp */; };
+		EF16AB70202C2F5900AF9DAE /* S3DataStore_DeleteItem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD61301D878C960056E526 /* S3DataStore_DeleteItem.cpp */; };
+		EF16AB71202C2F5900AF9DAE /* S3DataStore_ItemExists.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD61321D878C960056E526 /* S3DataStore_ItemExists.cpp */; };
+		EF16AB72202C2F5900AF9DAE /* S3DataStore_ListContents.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD61361D878C960056E526 /* S3DataStore_ListContents.cpp */; };
+		EF16AB73202C2F5900AF9DAE /* S3DataStore_LoadData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD613A1D878C960056E526 /* S3DataStore_LoadData.cpp */; };
+		EF16AB74202C2F5900AF9DAE /* S3DataStore_WriteData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD614B1D878C960056E526 /* S3DataStore_WriteData.cpp */; };
+		EF16AB75202C2F5900AF9DAE /* S3DataStore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD61411D878C960056E526 /* S3DataStore.cpp */; };
+		EF16AB76202C2F5900AF9DAE /* S3PathToDataPath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD61431D878C960056E526 /* S3PathToDataPath.cpp */; };
+		EF16AB77202C2F5900AF9DAE /* WithAES256EncryptedS3DataStore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD61451D878C960056E526 /* WithAES256EncryptedS3DataStore.cpp */; };
+		EF16AB78202C2F5900AF9DAE /* WithS3DataStore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD61471D878C960056E526 /* WithS3DataStore.cpp */; };
 		EF72564B1F18D6DF0054DCE0 /* S3DataStoreKit.h in Headers */ = {isa = PBXBuildFile; fileRef = EF7256491F18D6DF0054DCE0 /* S3DataStoreKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EF72564F1F18D6F20054DCE0 /* AES256EncryptedS3DataStore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD612C1D878C960056E526 /* AES256EncryptedS3DataStore.cpp */; };
 		EF7256501F18D6F20054DCE0 /* S3DataStore_CreateLocationIfNeeded.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD612E1D878C960056E526 /* S3DataStore_CreateLocationIfNeeded.cpp */; };
@@ -64,6 +83,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		EF16AB5F202C2F5100AF9DAE /* libS3DataStore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libS3DataStore.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF16AB61202C2F5100AF9DAE /* S3DataStore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = S3DataStore.h; sourceTree = "<group>"; };
+		EF16AB63202C2F5100AF9DAE /* S3DataStore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = S3DataStore.m; sourceTree = "<group>"; };
 		EF7256471F18D6DF0054DCE0 /* S3DataStoreKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = S3DataStoreKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF7256491F18D6DF0054DCE0 /* S3DataStoreKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = S3DataStoreKit.h; sourceTree = "<group>"; };
 		EF72564A1F18D6DF0054DCE0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -107,6 +129,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		EF16AB5C202C2F5100AF9DAE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EF7256431F18D6DF0054DCE0 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -132,6 +161,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		EF16AB60202C2F5100AF9DAE /* S3DataStore */ = {
+			isa = PBXGroup;
+			children = (
+				EF16AB61202C2F5100AF9DAE /* S3DataStore.h */,
+				EF16AB63202C2F5100AF9DAE /* S3DataStore.m */,
+			);
+			path = S3DataStore;
+			sourceTree = "<group>";
+		};
 		EF7256481F18D6DF0054DCE0 /* S3DataStoreKit */ = {
 			isa = PBXGroup;
 			children = (
@@ -164,6 +202,7 @@
 				EFAD61491D878C960056E526 /* AES256EncryptedS3DataStore_WriteData.cpp */,
 				EFAD612C1D878C960056E526 /* AES256EncryptedS3DataStore.cpp */,
 				EFAD612D1D878C960056E526 /* AES256EncryptedS3DataStore.h */,
+				EF16AB60202C2F5100AF9DAE /* S3DataStore */,
 				EF7256601F18D7550054DCE0 /* Frameworks */,
 				EFAD61341D878C960056E526 /* LibS3DataStore.h */,
 				EFAD61351D878C960056E526 /* LibS3DataStore.m */,
@@ -197,6 +236,7 @@
 			children = (
 				EF7256471F18D6DF0054DCE0 /* S3DataStoreKit.framework */,
 				EFF398A21F6555D900B1BD33 /* S3DataStoreKit_iOS.framework */,
+				EF16AB5F202C2F5100AF9DAE /* libS3DataStore.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -221,6 +261,14 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		EF16AB5D202C2F5100AF9DAE /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF16AB62202C2F5100AF9DAE /* S3DataStore.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EF7256441F18D6DF0054DCE0 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -240,6 +288,23 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		EF16AB5E202C2F5100AF9DAE /* S3DataStore */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EF16AB67202C2F5100AF9DAE /* Build configuration list for PBXNativeTarget "S3DataStore" */;
+			buildPhases = (
+				EF16AB5B202C2F5100AF9DAE /* Sources */,
+				EF16AB5C202C2F5100AF9DAE /* Frameworks */,
+				EF16AB5D202C2F5100AF9DAE /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = S3DataStore;
+			productName = S3DataStore;
+			productReference = EF16AB5F202C2F5100AF9DAE /* libS3DataStore.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 		EF7256461F18D6DF0054DCE0 /* S3DataStoreKit */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = EF72564E1F18D6DF0054DCE0 /* Build configuration list for PBXNativeTarget "S3DataStoreKit" */;
@@ -285,6 +350,10 @@
 				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = peymojo;
 				TargetAttributes = {
+					EF16AB5E202C2F5100AF9DAE = {
+						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Automatic;
+					};
 					EF7256461F18D6DF0054DCE0 = {
 						CreatedOnToolsVersion = 8.3.3;
 						ProvisioningStyle = Automatic;
@@ -316,6 +385,7 @@
 			targets = (
 				EF7256461F18D6DF0054DCE0 /* S3DataStoreKit */,
 				EFF398A11F6555D900B1BD33 /* S3DataStoreKit_iOS */,
+				EF16AB5E202C2F5100AF9DAE /* S3DataStore */,
 			);
 		};
 /* End PBXProject section */
@@ -348,6 +418,31 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		EF16AB5B202C2F5100AF9DAE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF16AB68202C2F5900AF9DAE /* AES256EncryptedS3DataStore_LoadData.cpp in Sources */,
+				EF16AB69202C2F5900AF9DAE /* AES256EncryptedS3DataStore_WriteData.cpp in Sources */,
+				EF16AB6A202C2F5900AF9DAE /* AES256EncryptedS3DataStore.cpp in Sources */,
+				EF16AB6B202C2F5900AF9DAE /* S3DataPath_AppendPathComponent.cpp in Sources */,
+				EF16AB6C202C2F5900AF9DAE /* S3DataPath_GetLastPathComponent.cpp in Sources */,
+				EF16AB6D202C2F5900AF9DAE /* S3DataPath_GetStringRepresentation.cpp in Sources */,
+				EF16AB6E202C2F5900AF9DAE /* S3DataPath.cpp in Sources */,
+				EF16AB6F202C2F5900AF9DAE /* S3DataStore_CreateLocationIfNeeded.cpp in Sources */,
+				EF16AB70202C2F5900AF9DAE /* S3DataStore_DeleteItem.cpp in Sources */,
+				EF16AB71202C2F5900AF9DAE /* S3DataStore_ItemExists.cpp in Sources */,
+				EF16AB72202C2F5900AF9DAE /* S3DataStore_ListContents.cpp in Sources */,
+				EF16AB73202C2F5900AF9DAE /* S3DataStore_LoadData.cpp in Sources */,
+				EF16AB74202C2F5900AF9DAE /* S3DataStore_WriteData.cpp in Sources */,
+				EF16AB75202C2F5900AF9DAE /* S3DataStore.cpp in Sources */,
+				EF16AB76202C2F5900AF9DAE /* S3PathToDataPath.cpp in Sources */,
+				EF16AB77202C2F5900AF9DAE /* WithAES256EncryptedS3DataStore.cpp in Sources */,
+				EF16AB78202C2F5900AF9DAE /* WithS3DataStore.cpp in Sources */,
+				EF16AB64202C2F5100AF9DAE /* S3DataStore.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EF7256421F18D6DF0054DCE0 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -399,6 +494,36 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		EF16AB65202C2F5100AF9DAE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		EF16AB66202C2F5100AF9DAE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		EF72564C1F18D6DF0054DCE0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -412,7 +537,6 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_VERSION = A;
-				HEADER_SEARCH_PATHS = ../../;
 				INFOPLIST_FILE = S3DataStoreKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
@@ -438,7 +562,6 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_VERSION = A;
-				HEADER_SEARCH_PATHS = ../../;
 				INFOPLIST_FILE = S3DataStoreKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
@@ -496,6 +619,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = ../../;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -542,6 +666,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = ../../;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
@@ -561,7 +686,6 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				HEADER_SEARCH_PATHS = ../../;
 				INFOPLIST_FILE = S3DataStoreKit_iOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
@@ -589,7 +713,6 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				HEADER_SEARCH_PATHS = ../../;
 				INFOPLIST_FILE = S3DataStoreKit_iOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
@@ -608,6 +731,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		EF16AB67202C2F5100AF9DAE /* Build configuration list for PBXNativeTarget "S3DataStore" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EF16AB65202C2F5100AF9DAE /* Debug */,
+				EF16AB66202C2F5100AF9DAE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		EF72564E1F18D6DF0054DCE0 /* Build configuration list for PBXNativeTarget "S3DataStoreKit" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

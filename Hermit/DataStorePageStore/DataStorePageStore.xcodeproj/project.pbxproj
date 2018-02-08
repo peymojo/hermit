@@ -7,6 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EF16AAFB202C2E5300AF9DAE /* DataStorePageStore.h in Headers */ = {isa = PBXBuildFile; fileRef = EF16AAFA202C2E5300AF9DAE /* DataStorePageStore.h */; };
+		EF16AAFD202C2E5300AF9DAE /* DataStorePageStore.m in Sources */ = {isa = PBXBuildFile; fileRef = EF16AAFC202C2E5300AF9DAE /* DataStorePageStore.m */; };
+		EF16AB01202C2E5D00AF9DAE /* CommitDataStorePageStoreChanges.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5E281D8787140056E526 /* CommitDataStorePageStoreChanges.cpp */; };
+		EF16AB02202C2E5D00AF9DAE /* DataStorePageStore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5E2A1D8787140056E526 /* DataStorePageStore.cpp */; };
+		EF16AB03202C2E5D00AF9DAE /* EnumerateDataStorePageStorePages.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5E2C1D8787140056E526 /* EnumerateDataStorePageStorePages.cpp */; };
+		EF16AB04202C2E5D00AF9DAE /* LockDataStorePageStore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5E301D8787140056E526 /* LockDataStorePageStore.cpp */; };
+		EF16AB05202C2E5D00AF9DAE /* ReadDataStorePageStorePage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5E321D8787140056E526 /* ReadDataStorePageStorePage.cpp */; };
+		EF16AB06202C2E5D00AF9DAE /* UnlockDataStorePageStore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5E341D8787140056E526 /* UnlockDataStorePageStore.cpp */; };
+		EF16AB07202C2E5D00AF9DAE /* ValidateDataStorePageStore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5E361D8787140056E526 /* ValidateDataStorePageStore.cpp */; };
+		EF16AB08202C2E5D00AF9DAE /* WithDataStorePageStore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5E381D8787140056E526 /* WithDataStorePageStore.cpp */; };
+		EF16AB09202C2E5D00AF9DAE /* WriteDataStorePageStorePage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5E3A1D8787140056E526 /* WriteDataStorePageStorePage.cpp */; };
 		EF6511A11F657E17002D8065 /* DataStorePageStoreKit_iOS.h in Headers */ = {isa = PBXBuildFile; fileRef = EF65119F1F657E17002D8065 /* DataStorePageStoreKit_iOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EF6511A51F657E1F002D8065 /* CommitDataStorePageStoreChanges.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5E281D8787140056E526 /* CommitDataStorePageStoreChanges.cpp */; };
 		EF6511A61F657E1F002D8065 /* DataStorePageStore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5E2A1D8787140056E526 /* DataStorePageStore.cpp */; };
@@ -40,6 +51,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		EF16AAF8202C2E5300AF9DAE /* libDataStorePageStore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libDataStorePageStore.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF16AAFA202C2E5300AF9DAE /* DataStorePageStore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DataStorePageStore.h; sourceTree = "<group>"; };
+		EF16AAFC202C2E5300AF9DAE /* DataStorePageStore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DataStorePageStore.m; sourceTree = "<group>"; };
 		EF65119D1F657E17002D8065 /* DataStorePageStoreKit_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DataStorePageStoreKit_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF65119F1F657E17002D8065 /* DataStorePageStoreKit_iOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DataStorePageStoreKit_iOS.h; sourceTree = "<group>"; };
 		EF6511A01F657E17002D8065 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -79,6 +93,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		EF16AAF5202C2E5300AF9DAE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EF6511991F657E17002D8065 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -106,6 +127,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		EF16AAF9202C2E5300AF9DAE /* DataStorePageStore */ = {
+			isa = PBXGroup;
+			children = (
+				EF16AAFA202C2E5300AF9DAE /* DataStorePageStore.h */,
+				EF16AAFC202C2E5300AF9DAE /* DataStorePageStore.m */,
+			);
+			path = DataStorePageStore;
+			sourceTree = "<group>";
+		};
 		EF65119E1F657E17002D8065 /* DataStorePageStoreKit_iOS */ = {
 			isa = PBXGroup;
 			children = (
@@ -166,6 +196,7 @@
 				EFAD5E3B1D8787140056E526 /* WriteDataStorePageStorePage.h */,
 				EF72553D1F18D0390054DCE0 /* DataStorePageStoreKit */,
 				EF65119E1F657E17002D8065 /* DataStorePageStoreKit_iOS */,
+				EF16AAF9202C2E5300AF9DAE /* DataStorePageStore */,
 				EFAD5E1D1D8786E60056E526 /* Products */,
 				EF72554D1F18D08C0054DCE0 /* Frameworks */,
 			);
@@ -176,6 +207,7 @@
 			children = (
 				EF72553C1F18D0390054DCE0 /* DataStorePageStoreKit.framework */,
 				EF65119D1F657E17002D8065 /* DataStorePageStoreKit_iOS.framework */,
+				EF16AAF8202C2E5300AF9DAE /* libDataStorePageStore.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -183,6 +215,14 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		EF16AAF6202C2E5300AF9DAE /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF16AAFB202C2E5300AF9DAE /* DataStorePageStore.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EF65119A1F657E17002D8065 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -202,6 +242,23 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		EF16AAF7202C2E5300AF9DAE /* DataStorePageStore */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EF16AB00202C2E5300AF9DAE /* Build configuration list for PBXNativeTarget "DataStorePageStore" */;
+			buildPhases = (
+				EF16AAF4202C2E5300AF9DAE /* Sources */,
+				EF16AAF5202C2E5300AF9DAE /* Frameworks */,
+				EF16AAF6202C2E5300AF9DAE /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DataStorePageStore;
+			productName = DataStorePageStore;
+			productReference = EF16AAF8202C2E5300AF9DAE /* libDataStorePageStore.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 		EF65119C1F657E17002D8065 /* DataStorePageStoreKit_iOS */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = EF6511A41F657E17002D8065 /* Build configuration list for PBXNativeTarget "DataStorePageStoreKit_iOS" */;
@@ -247,6 +304,10 @@
 				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = peymojo;
 				TargetAttributes = {
+					EF16AAF7202C2E5300AF9DAE = {
+						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Automatic;
+					};
 					EF65119C1F657E17002D8065 = {
 						CreatedOnToolsVersion = 8.3.3;
 						DevelopmentTeam = HQWNX3S2CF;
@@ -272,6 +333,7 @@
 			targets = (
 				EF72553B1F18D0390054DCE0 /* DataStorePageStoreKit */,
 				EF65119C1F657E17002D8065 /* DataStorePageStoreKit_iOS */,
+				EF16AAF7202C2E5300AF9DAE /* DataStorePageStore */,
 			);
 		};
 /* End PBXProject section */
@@ -294,6 +356,23 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		EF16AAF4202C2E5300AF9DAE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF16AB01202C2E5D00AF9DAE /* CommitDataStorePageStoreChanges.cpp in Sources */,
+				EF16AB02202C2E5D00AF9DAE /* DataStorePageStore.cpp in Sources */,
+				EF16AB03202C2E5D00AF9DAE /* EnumerateDataStorePageStorePages.cpp in Sources */,
+				EF16AB04202C2E5D00AF9DAE /* LockDataStorePageStore.cpp in Sources */,
+				EF16AB05202C2E5D00AF9DAE /* ReadDataStorePageStorePage.cpp in Sources */,
+				EF16AB06202C2E5D00AF9DAE /* UnlockDataStorePageStore.cpp in Sources */,
+				EF16AB07202C2E5D00AF9DAE /* ValidateDataStorePageStore.cpp in Sources */,
+				EF16AB08202C2E5D00AF9DAE /* WithDataStorePageStore.cpp in Sources */,
+				EF16AB09202C2E5D00AF9DAE /* WriteDataStorePageStorePage.cpp in Sources */,
+				EF16AAFD202C2E5300AF9DAE /* DataStorePageStore.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EF6511981F657E17002D8065 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -329,6 +408,36 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		EF16AAFE202C2E5300AF9DAE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		EF16AAFF202C2E5300AF9DAE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		EF6511A21F657E17002D8065 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -342,7 +451,6 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				HEADER_SEARCH_PATHS = ../../;
 				INFOPLIST_FILE = DataStorePageStoreKit_iOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
@@ -370,7 +478,6 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				HEADER_SEARCH_PATHS = ../../;
 				INFOPLIST_FILE = DataStorePageStoreKit_iOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
@@ -399,7 +506,6 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_VERSION = A;
-				HEADER_SEARCH_PATHS = ../../;
 				INFOPLIST_FILE = DataStorePageStoreKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
@@ -425,7 +531,6 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_VERSION = A;
-				HEADER_SEARCH_PATHS = ../../;
 				INFOPLIST_FILE = DataStorePageStoreKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
@@ -483,6 +588,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = ../../;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -529,6 +635,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = ../../;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
@@ -538,6 +645,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		EF16AB00202C2E5300AF9DAE /* Build configuration list for PBXNativeTarget "DataStorePageStore" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EF16AAFE202C2E5300AF9DAE /* Debug */,
+				EF16AAFF202C2E5300AF9DAE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		EF6511A41F657E17002D8065 /* Build configuration list for PBXNativeTarget "DataStorePageStoreKit_iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

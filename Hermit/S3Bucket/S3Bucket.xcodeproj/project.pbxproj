@@ -7,6 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EF16AAB4202C2DC700AF9DAE /* S3Bucket.h in Headers */ = {isa = PBXBuildFile; fileRef = EF16AAB3202C2DC700AF9DAE /* S3Bucket.h */; };
+		EF16AAB6202C2DC700AF9DAE /* S3Bucket.m in Sources */ = {isa = PBXBuildFile; fileRef = EF16AAB5202C2DC700AF9DAE /* S3Bucket.m */; };
+		EF16AABA202C2DD000AF9DAE /* PutMultipartObjectToS3Bucket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD59C21D86B74B0056E526 /* PutMultipartObjectToS3Bucket.cpp */; };
+		EF16AABB202C2DD000AF9DAE /* S3Bucket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD59C41D86B74B0056E526 /* S3Bucket.cpp */; };
+		EF16AABC202C2DD000AF9DAE /* S3BucketImpl_DeleteObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD59C61D86B74B0056E526 /* S3BucketImpl_DeleteObject.cpp */; };
+		EF16AABD202C2DD000AF9DAE /* S3BucketImpl_GetObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD59C71D86B74B0056E526 /* S3BucketImpl_GetObject.cpp */; };
+		EF16AABE202C2DD000AF9DAE /* S3BucketImpl_GetObjectVersion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD59C81D86B74B0056E526 /* S3BucketImpl_GetObjectVersion.cpp */; };
+		EF16AABF202C2DD000AF9DAE /* S3BucketImpl_IsVersioningEnabled.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD59C91D86B74B0056E526 /* S3BucketImpl_IsVersioningEnabled.cpp */; };
+		EF16AAC0202C2DD000AF9DAE /* S3BucketImpl_ListObjects.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD59CA1D86B74B0056E526 /* S3BucketImpl_ListObjects.cpp */; };
+		EF16AAC1202C2DD000AF9DAE /* S3BucketImpl_PutObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD59CB1D86B74B0056E526 /* S3BucketImpl_PutObject.cpp */; };
+		EF16AAC2202C2DD000AF9DAE /* S3BucketImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD59CC1D86B74B0056E526 /* S3BucketImpl.cpp */; };
+		EF16AAC3202C2DD000AF9DAE /* WithS3Bucket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD59CE1D86B74B0056E526 /* WithS3Bucket.cpp */; };
 		EF72562B1F18D65B0054DCE0 /* S3BucketKit.h in Headers */ = {isa = PBXBuildFile; fileRef = EF7256291F18D65B0054DCE0 /* S3BucketKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EF72562F1F18D66D0054DCE0 /* PutMultipartObjectToS3Bucket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD59C21D86B74B0056E526 /* PutMultipartObjectToS3Bucket.cpp */; };
 		EF7256301F18D66D0054DCE0 /* S3Bucket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD59C41D86B74B0056E526 /* S3Bucket.cpp */; };
@@ -40,6 +52,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		EF16AAB1202C2DC700AF9DAE /* libS3Bucket.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libS3Bucket.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF16AAB3202C2DC700AF9DAE /* S3Bucket.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = S3Bucket.h; sourceTree = "<group>"; };
+		EF16AAB5202C2DC700AF9DAE /* S3Bucket.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = S3Bucket.m; sourceTree = "<group>"; };
 		EF7256271F18D65B0054DCE0 /* S3BucketKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = S3BucketKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF7256291F18D65B0054DCE0 /* S3BucketKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = S3BucketKit.h; sourceTree = "<group>"; };
 		EF72562A1F18D65B0054DCE0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -73,6 +88,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		EF16AAAE202C2DC700AF9DAE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EF7256231F18D65B0054DCE0 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -98,6 +120,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		EF16AAB2202C2DC700AF9DAE /* S3Bucket */ = {
+			isa = PBXGroup;
+			children = (
+				EF16AAB3202C2DC700AF9DAE /* S3Bucket.h */,
+				EF16AAB5202C2DC700AF9DAE /* S3Bucket.m */,
+			);
+			path = S3Bucket;
+			sourceTree = "<group>";
+		};
 		EF7256281F18D65B0054DCE0 /* S3BucketKit */ = {
 			isa = PBXGroup;
 			children = (
@@ -143,6 +174,7 @@
 				EFAD59CF1D86B74B0056E526 /* WithS3Bucket.h */,
 				EF7256281F18D65B0054DCE0 /* S3BucketKit */,
 				EFF397D11F6552C400B1BD33 /* S3BucketKit_iOS */,
+				EF16AAB2202C2DC700AF9DAE /* S3Bucket */,
 				EFAD59B51D86B7200056E526 /* Products */,
 				EF7256391F18D6A30054DCE0 /* Frameworks */,
 			);
@@ -153,6 +185,7 @@
 			children = (
 				EF7256271F18D65B0054DCE0 /* S3BucketKit.framework */,
 				EFF397D01F6552C400B1BD33 /* S3BucketKit_iOS.framework */,
+				EF16AAB1202C2DC700AF9DAE /* libS3Bucket.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -169,6 +202,14 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		EF16AAAF202C2DC700AF9DAE /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF16AAB4202C2DC700AF9DAE /* S3Bucket.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EF7256241F18D65B0054DCE0 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -188,6 +229,23 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		EF16AAB0202C2DC700AF9DAE /* S3Bucket */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EF16AAB9202C2DC700AF9DAE /* Build configuration list for PBXNativeTarget "S3Bucket" */;
+			buildPhases = (
+				EF16AAAD202C2DC700AF9DAE /* Sources */,
+				EF16AAAE202C2DC700AF9DAE /* Frameworks */,
+				EF16AAAF202C2DC700AF9DAE /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = S3Bucket;
+			productName = S3Bucket;
+			productReference = EF16AAB1202C2DC700AF9DAE /* libS3Bucket.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 		EF7256261F18D65B0054DCE0 /* S3BucketKit */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = EF72562E1F18D65B0054DCE0 /* Build configuration list for PBXNativeTarget "S3BucketKit" */;
@@ -233,6 +291,10 @@
 				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = peymojo;
 				TargetAttributes = {
+					EF16AAB0202C2DC700AF9DAE = {
+						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Automatic;
+					};
 					EF7256261F18D65B0054DCE0 = {
 						CreatedOnToolsVersion = 8.3.3;
 						ProvisioningStyle = Automatic;
@@ -258,6 +320,7 @@
 			targets = (
 				EF7256261F18D65B0054DCE0 /* S3BucketKit */,
 				EFF397CF1F6552C400B1BD33 /* S3BucketKit_iOS */,
+				EF16AAB0202C2DC700AF9DAE /* S3Bucket */,
 			);
 		};
 /* End PBXProject section */
@@ -280,6 +343,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		EF16AAAD202C2DC700AF9DAE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF16AABA202C2DD000AF9DAE /* PutMultipartObjectToS3Bucket.cpp in Sources */,
+				EF16AABB202C2DD000AF9DAE /* S3Bucket.cpp in Sources */,
+				EF16AABC202C2DD000AF9DAE /* S3BucketImpl_DeleteObject.cpp in Sources */,
+				EF16AABD202C2DD000AF9DAE /* S3BucketImpl_GetObject.cpp in Sources */,
+				EF16AABE202C2DD000AF9DAE /* S3BucketImpl_GetObjectVersion.cpp in Sources */,
+				EF16AABF202C2DD000AF9DAE /* S3BucketImpl_IsVersioningEnabled.cpp in Sources */,
+				EF16AAC0202C2DD000AF9DAE /* S3BucketImpl_ListObjects.cpp in Sources */,
+				EF16AAC1202C2DD000AF9DAE /* S3BucketImpl_PutObject.cpp in Sources */,
+				EF16AAC2202C2DD000AF9DAE /* S3BucketImpl.cpp in Sources */,
+				EF16AAC3202C2DD000AF9DAE /* WithS3Bucket.cpp in Sources */,
+				EF16AAB6202C2DC700AF9DAE /* S3Bucket.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EF7256221F18D65B0054DCE0 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -317,6 +398,36 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		EF16AAB7202C2DC700AF9DAE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		EF16AAB8202C2DC700AF9DAE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		EF72562C1F18D65B0054DCE0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -330,7 +441,6 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_VERSION = A;
-				HEADER_SEARCH_PATHS = ../../;
 				INFOPLIST_FILE = S3BucketKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
@@ -356,7 +466,6 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_VERSION = A;
-				HEADER_SEARCH_PATHS = ../../;
 				INFOPLIST_FILE = S3BucketKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
@@ -414,6 +523,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = ../../;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -460,6 +570,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = ../../;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
@@ -479,7 +590,6 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				HEADER_SEARCH_PATHS = ../../;
 				INFOPLIST_FILE = S3BucketKit_iOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
@@ -507,7 +617,6 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				HEADER_SEARCH_PATHS = ../../;
 				INFOPLIST_FILE = S3BucketKit_iOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
@@ -526,6 +635,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		EF16AAB9202C2DC700AF9DAE /* Build configuration list for PBXNativeTarget "S3Bucket" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EF16AAB7202C2DC700AF9DAE /* Debug */,
+				EF16AAB8202C2DC700AF9DAE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		EF72562E1F18D65B0054DCE0 /* Build configuration list for PBXNativeTarget "S3BucketKit" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

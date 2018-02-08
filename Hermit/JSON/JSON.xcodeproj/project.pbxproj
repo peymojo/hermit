@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EF16AAD9202C2E0A00AF9DAE /* JSON.h in Headers */ = {isa = PBXBuildFile; fileRef = EF16AAD8202C2E0A00AF9DAE /* JSON.h */; };
+		EF16AADB202C2E0A00AF9DAE /* JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = EF16AADA202C2E0A00AF9DAE /* JSON.m */; };
+		EF16AB7B202C2F8A00AF9DAE /* DataValueToJSON.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD590E1D86B45F0056E526 /* DataValueToJSON.cpp */; };
+		EF16AB7C202C2F8A00AF9DAE /* JSONToDataValue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD59111D86B45F0056E526 /* JSONToDataValue.cpp */; };
 		EF26C9711F63B7D700E24993 /* ValueKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF26C9701F63B7D700E24993 /* ValueKit.framework */; };
 		EF92C1401F10FD120097D708 /* JSONKit.h in Headers */ = {isa = PBXBuildFile; fileRef = EF92C13E1F10FD120097D708 /* JSONKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EF92C1441F10FD1D0097D708 /* DataValueToJSON.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD590E1D86B45F0056E526 /* DataValueToJSON.cpp */; };
@@ -22,6 +26,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		EF16AAD6202C2E0A00AF9DAE /* libJSON.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libJSON.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF16AAD8202C2E0A00AF9DAE /* JSON.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JSON.h; sourceTree = "<group>"; };
+		EF16AADA202C2E0A00AF9DAE /* JSON.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JSON.m; sourceTree = "<group>"; };
 		EF26C9701F63B7D700E24993 /* ValueKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ValueKit.framework; path = "../../../../Library/Developer/Xcode/DerivedData/Vault_Browser-etrnbxqipwhocnapsvsbsqbjzmyg/Build/Products/Debug/ValueKit.framework"; sourceTree = "<group>"; };
 		EF92C13C1F10FD120097D708 /* JSONKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = JSONKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF92C13E1F10FD120097D708 /* JSONKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JSONKit.h; sourceTree = "<group>"; };
@@ -44,6 +51,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		EF16AAD3202C2E0A00AF9DAE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EF92C1381F10FD120097D708 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -67,6 +81,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		EF16AAD7202C2E0A00AF9DAE /* JSON */ = {
+			isa = PBXGroup;
+			children = (
+				EF16AAD8202C2E0A00AF9DAE /* JSON.h */,
+				EF16AADA202C2E0A00AF9DAE /* JSON.m */,
+			);
+			path = JSON;
+			sourceTree = "<group>";
+		};
 		EF92C13D1F10FD120097D708 /* JSONKit */ = {
 			isa = PBXGroup;
 			children = (
@@ -101,6 +124,7 @@
 				EFAD59141D86B45F0056E526 /* LibJSON.m */,
 				EF92C13D1F10FD120097D708 /* JSONKit */,
 				EFF398861F65553B00B1BD33 /* JSONKit_iOS */,
+				EF16AAD7202C2E0A00AF9DAE /* JSON */,
 				EFAD59031D86B4240056E526 /* Products */,
 				EF92C1481F10FDC90097D708 /* Frameworks */,
 			);
@@ -111,6 +135,7 @@
 			children = (
 				EF92C13C1F10FD120097D708 /* JSONKit.framework */,
 				EFF398851F65553B00B1BD33 /* JSONKit_iOS.framework */,
+				EF16AAD6202C2E0A00AF9DAE /* libJSON.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -127,6 +152,14 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		EF16AAD4202C2E0A00AF9DAE /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF16AAD9202C2E0A00AF9DAE /* JSON.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EF92C1391F10FD120097D708 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -146,6 +179,23 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		EF16AAD5202C2E0A00AF9DAE /* JSON */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EF16AADE202C2E0A00AF9DAE /* Build configuration list for PBXNativeTarget "JSON" */;
+			buildPhases = (
+				EF16AAD2202C2E0A00AF9DAE /* Sources */,
+				EF16AAD3202C2E0A00AF9DAE /* Frameworks */,
+				EF16AAD4202C2E0A00AF9DAE /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = JSON;
+			productName = JSON;
+			productReference = EF16AAD6202C2E0A00AF9DAE /* libJSON.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 		EF92C13B1F10FD120097D708 /* JSONKit */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = EF92C1431F10FD120097D708 /* Build configuration list for PBXNativeTarget "JSONKit" */;
@@ -191,6 +241,10 @@
 				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = peymojo;
 				TargetAttributes = {
+					EF16AAD5202C2E0A00AF9DAE = {
+						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Automatic;
+					};
 					EF92C13B1F10FD120097D708 = {
 						CreatedOnToolsVersion = 8.3.3;
 						ProvisioningStyle = Automatic;
@@ -216,6 +270,7 @@
 			targets = (
 				EF92C13B1F10FD120097D708 /* JSONKit */,
 				EFF398841F65553B00B1BD33 /* JSONKit_iOS */,
+				EF16AAD5202C2E0A00AF9DAE /* JSON */,
 			);
 		};
 /* End PBXProject section */
@@ -238,6 +293,16 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		EF16AAD2202C2E0A00AF9DAE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF16AB7B202C2F8A00AF9DAE /* DataValueToJSON.cpp in Sources */,
+				EF16AB7C202C2F8A00AF9DAE /* JSONToDataValue.cpp in Sources */,
+				EF16AADB202C2E0A00AF9DAE /* JSON.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EF92C1371F10FD120097D708 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -259,6 +324,36 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		EF16AADC202C2E0A00AF9DAE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		EF16AADD202C2E0A00AF9DAE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		EF92C1411F10FD120097D708 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -272,7 +367,6 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_VERSION = A;
-				HEADER_SEARCH_PATHS = ../../;
 				INFOPLIST_FILE = JSONKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
@@ -298,7 +392,6 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_VERSION = A;
-				HEADER_SEARCH_PATHS = ../../;
 				INFOPLIST_FILE = JSONKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
@@ -356,6 +449,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = ../../;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -402,6 +496,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = ../../;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
@@ -421,7 +516,6 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				HEADER_SEARCH_PATHS = ../../;
 				INFOPLIST_FILE = JSONKit_iOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
@@ -449,7 +543,6 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				HEADER_SEARCH_PATHS = ../../;
 				INFOPLIST_FILE = JSONKit_iOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
@@ -468,6 +561,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		EF16AADE202C2E0A00AF9DAE /* Build configuration list for PBXNativeTarget "JSON" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EF16AADC202C2E0A00AF9DAE /* Debug */,
+				EF16AADD202C2E0A00AF9DAE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		EF92C1431F10FD120097D708 /* Build configuration list for PBXNativeTarget "JSONKit" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

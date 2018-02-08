@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EF16AB4F202C2F2900AF9DAE /* EncodingFile.h in Headers */ = {isa = PBXBuildFile; fileRef = EF16AB4E202C2F2900AF9DAE /* EncodingFile.h */; };
+		EF16AB51202C2F2900AF9DAE /* EncodingFile.m in Sources */ = {isa = PBXBuildFile; fileRef = EF16AB50202C2F2900AF9DAE /* EncodingFile.m */; };
+		EF16AB55202C2F3100AF9DAE /* CalculateFileCRC32.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5EE51D878A320056E526 /* CalculateFileCRC32.cpp */; };
+		EF16AB56202C2F3700AF9DAE /* CalculateFileMurmur3_128.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5EE91D878A320056E526 /* CalculateFileMurmur3_128.cpp */; };
+		EF16AB57202C2F3700AF9DAE /* GetFileMD5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5EEB1D878A320056E526 /* GetFileMD5.cpp */; };
+		EF16AB58202C2F3700AF9DAE /* GetFileMD5WithProgress.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5EED1D878A320056E526 /* GetFileMD5WithProgress.cpp */; };
+		EF16AB59202C2F3700AF9DAE /* KeyPhraseToKeyWithJSONFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5EEF1D878A320056E526 /* KeyPhraseToKeyWithJSONFile.cpp */; };
+		EF16AB5A202C2F3700AF9DAE /* ValidateKeyPhraseWithJSONFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5EF31D878A320056E526 /* ValidateKeyPhraseWithJSONFile.cpp */; };
 		EF7255931F18D33E0054DCE0 /* EncodingFileKit.h in Headers */ = {isa = PBXBuildFile; fileRef = EF7255911F18D33E0054DCE0 /* EncodingFileKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EF7255981F18D3500054DCE0 /* CalculateFileCRC32.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5EE51D878A320056E526 /* CalculateFileCRC32.cpp */; };
 		EF72559A1F18D3500054DCE0 /* CalculateFileMurmur3_128.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5EE91D878A320056E526 /* CalculateFileMurmur3_128.cpp */; };
@@ -22,6 +30,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		EF16AB4C202C2F2900AF9DAE /* libEncodingFile.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libEncodingFile.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF16AB4E202C2F2900AF9DAE /* EncodingFile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EncodingFile.h; sourceTree = "<group>"; };
+		EF16AB50202C2F2900AF9DAE /* EncodingFile.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EncodingFile.m; sourceTree = "<group>"; };
 		EF72558F1F18D33E0054DCE0 /* EncodingFileKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = EncodingFileKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF7255911F18D33E0054DCE0 /* EncodingFileKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EncodingFileKit.h; sourceTree = "<group>"; };
 		EF7255921F18D33E0054DCE0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -47,6 +58,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		EF16AB49202C2F2900AF9DAE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EF72558B1F18D33E0054DCE0 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -62,6 +80,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		EF16AB4D202C2F2900AF9DAE /* EncodingFile */ = {
+			isa = PBXGroup;
+			children = (
+				EF16AB4E202C2F2900AF9DAE /* EncodingFile.h */,
+				EF16AB50202C2F2900AF9DAE /* EncodingFile.m */,
+			);
+			path = EncodingFile;
+			sourceTree = "<group>";
+		};
 		EF7255901F18D33E0054DCE0 /* EncodingFileKit */ = {
 			isa = PBXGroup;
 			children = (
@@ -101,6 +128,7 @@
 				EFAD5EF31D878A320056E526 /* ValidateKeyPhraseWithJSONFile.cpp */,
 				EFAD5EF41D878A320056E526 /* ValidateKeyPhraseWithJSONFile.h */,
 				EF7255901F18D33E0054DCE0 /* EncodingFileKit */,
+				EF16AB4D202C2F2900AF9DAE /* EncodingFile */,
 				EFAD5ED41D878A010056E526 /* Products */,
 				EF72559F1F18D39C0054DCE0 /* Frameworks */,
 			);
@@ -110,6 +138,7 @@
 			isa = PBXGroup;
 			children = (
 				EF72558F1F18D33E0054DCE0 /* EncodingFileKit.framework */,
+				EF16AB4C202C2F2900AF9DAE /* libEncodingFile.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -117,6 +146,14 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		EF16AB4A202C2F2900AF9DAE /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF16AB4F202C2F2900AF9DAE /* EncodingFile.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EF72558C1F18D33E0054DCE0 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -128,6 +165,23 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		EF16AB4B202C2F2900AF9DAE /* EncodingFile */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EF16AB54202C2F2900AF9DAE /* Build configuration list for PBXNativeTarget "EncodingFile" */;
+			buildPhases = (
+				EF16AB48202C2F2900AF9DAE /* Sources */,
+				EF16AB49202C2F2900AF9DAE /* Frameworks */,
+				EF16AB4A202C2F2900AF9DAE /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = EncodingFile;
+			productName = EncodingFile;
+			productReference = EF16AB4C202C2F2900AF9DAE /* libEncodingFile.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 		EF72558E1F18D33E0054DCE0 /* EncodingFileKit */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = EF7255961F18D33E0054DCE0 /* Build configuration list for PBXNativeTarget "EncodingFileKit" */;
@@ -155,6 +209,10 @@
 				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = peymojo;
 				TargetAttributes = {
+					EF16AB4B202C2F2900AF9DAE = {
+						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Automatic;
+					};
 					EF72558E1F18D33E0054DCE0 = {
 						CreatedOnToolsVersion = 8.3.3;
 						ProvisioningStyle = Automatic;
@@ -174,6 +232,7 @@
 			projectRoot = "";
 			targets = (
 				EF72558E1F18D33E0054DCE0 /* EncodingFileKit */,
+				EF16AB4B202C2F2900AF9DAE /* EncodingFile */,
 			);
 		};
 /* End PBXProject section */
@@ -189,6 +248,20 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		EF16AB48202C2F2900AF9DAE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF16AB56202C2F3700AF9DAE /* CalculateFileMurmur3_128.cpp in Sources */,
+				EF16AB57202C2F3700AF9DAE /* GetFileMD5.cpp in Sources */,
+				EF16AB58202C2F3700AF9DAE /* GetFileMD5WithProgress.cpp in Sources */,
+				EF16AB59202C2F3700AF9DAE /* KeyPhraseToKeyWithJSONFile.cpp in Sources */,
+				EF16AB5A202C2F3700AF9DAE /* ValidateKeyPhraseWithJSONFile.cpp in Sources */,
+				EF16AB55202C2F3100AF9DAE /* CalculateFileCRC32.cpp in Sources */,
+				EF16AB51202C2F2900AF9DAE /* EncodingFile.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EF72558A1F18D33E0054DCE0 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -205,6 +278,36 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		EF16AB52202C2F2900AF9DAE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		EF16AB53202C2F2900AF9DAE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		EF7255941F18D33E0054DCE0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -218,7 +321,6 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_VERSION = A;
-				HEADER_SEARCH_PATHS = ../../;
 				INFOPLIST_FILE = EncodingFileKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
@@ -244,7 +346,6 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_VERSION = A;
-				HEADER_SEARCH_PATHS = ../../;
 				INFOPLIST_FILE = EncodingFileKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
@@ -302,6 +403,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = ../../;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -348,6 +450,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = ../../;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
@@ -357,6 +460,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		EF16AB54202C2F2900AF9DAE /* Build configuration list for PBXNativeTarget "EncodingFile" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EF16AB52202C2F2900AF9DAE /* Debug */,
+				EF16AB53202C2F2900AF9DAE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		EF7255961F18D33E0054DCE0 /* Build configuration list for PBXNativeTarget "EncodingFileKit" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

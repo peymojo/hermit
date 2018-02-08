@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EF16AB11202C2E7800AF9DAE /* DataStoreStringMap.h in Headers */ = {isa = PBXBuildFile; fileRef = EF16AB10202C2E7800AF9DAE /* DataStoreStringMap.h */; };
+		EF16AB13202C2E7800AF9DAE /* DataStoreStringMap.m in Sources */ = {isa = PBXBuildFile; fileRef = EF16AB12202C2E7800AF9DAE /* DataStoreStringMap.m */; };
+		EF16AB17202C2E7F00AF9DAE /* WithDataStoreStringMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5E0B1D8786870056E526 /* WithDataStoreStringMap.cpp */; };
 		EF6511911F657DD1002D8065 /* DataStoreStringMapKit_iOS.h in Headers */ = {isa = PBXBuildFile; fileRef = EF65118F1F657DD1002D8065 /* DataStoreStringMapKit_iOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EF6511951F657DDA002D8065 /* WithDataStoreStringMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5E0B1D8786870056E526 /* WithDataStoreStringMap.cpp */; };
 		EF6511971F657DF5002D8065 /* FoundationKit_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF6511961F657DF5002D8065 /* FoundationKit_iOS.framework */; };
@@ -20,6 +23,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		EF16AB0E202C2E7800AF9DAE /* libDataStoreStringMap.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libDataStoreStringMap.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF16AB10202C2E7800AF9DAE /* DataStoreStringMap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DataStoreStringMap.h; sourceTree = "<group>"; };
+		EF16AB12202C2E7800AF9DAE /* DataStoreStringMap.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DataStoreStringMap.m; sourceTree = "<group>"; };
 		EF65118D1F657DD1002D8065 /* DataStoreStringMapKit_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DataStoreStringMapKit_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF65118F1F657DD1002D8065 /* DataStoreStringMapKit_iOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DataStoreStringMapKit_iOS.h; sourceTree = "<group>"; };
 		EF6511901F657DD1002D8065 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -39,6 +45,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		EF16AB0B202C2E7800AF9DAE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EF6511891F657DD1002D8065 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -62,6 +75,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		EF16AB0F202C2E7800AF9DAE /* DataStoreStringMap */ = {
+			isa = PBXGroup;
+			children = (
+				EF16AB10202C2E7800AF9DAE /* DataStoreStringMap.h */,
+				EF16AB12202C2E7800AF9DAE /* DataStoreStringMap.m */,
+			);
+			path = DataStoreStringMap;
+			sourceTree = "<group>";
+		};
 		EF65118E1F657DD1002D8065 /* DataStoreStringMapKit_iOS */ = {
 			isa = PBXGroup;
 			children = (
@@ -102,6 +124,7 @@
 				EFAD5E0C1D8786870056E526 /* WithDataStoreStringMap.h */,
 				EF72552B1F18CF610054DCE0 /* DataStoreStringMapKit */,
 				EF65118E1F657DD1002D8065 /* DataStoreStringMapKit_iOS */,
+				EF16AB0F202C2E7800AF9DAE /* DataStoreStringMap */,
 				EFAD5DFE1D87865D0056E526 /* Products */,
 				EF7255691F18D1800054DCE0 /* Frameworks */,
 			);
@@ -112,6 +135,7 @@
 			children = (
 				EF72552A1F18CF610054DCE0 /* DataStoreStringMapKit.framework */,
 				EF65118D1F657DD1002D8065 /* DataStoreStringMapKit_iOS.framework */,
+				EF16AB0E202C2E7800AF9DAE /* libDataStoreStringMap.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -119,6 +143,14 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		EF16AB0C202C2E7800AF9DAE /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF16AB11202C2E7800AF9DAE /* DataStoreStringMap.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EF65118A1F657DD1002D8065 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -138,6 +170,23 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		EF16AB0D202C2E7800AF9DAE /* DataStoreStringMap */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EF16AB16202C2E7800AF9DAE /* Build configuration list for PBXNativeTarget "DataStoreStringMap" */;
+			buildPhases = (
+				EF16AB0A202C2E7800AF9DAE /* Sources */,
+				EF16AB0B202C2E7800AF9DAE /* Frameworks */,
+				EF16AB0C202C2E7800AF9DAE /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DataStoreStringMap;
+			productName = DataStoreStringMap;
+			productReference = EF16AB0E202C2E7800AF9DAE /* libDataStoreStringMap.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 		EF65118C1F657DD1002D8065 /* DataStoreStringMapKit_iOS */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = EF6511941F657DD1002D8065 /* Build configuration list for PBXNativeTarget "DataStoreStringMapKit_iOS" */;
@@ -183,6 +232,10 @@
 				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = peymojo;
 				TargetAttributes = {
+					EF16AB0D202C2E7800AF9DAE = {
+						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Automatic;
+					};
 					EF65118C1F657DD1002D8065 = {
 						CreatedOnToolsVersion = 8.3.3;
 						DevelopmentTeam = HQWNX3S2CF;
@@ -208,6 +261,7 @@
 			targets = (
 				EF7255291F18CF610054DCE0 /* DataStoreStringMapKit */,
 				EF65118C1F657DD1002D8065 /* DataStoreStringMapKit_iOS */,
+				EF16AB0D202C2E7800AF9DAE /* DataStoreStringMap */,
 			);
 		};
 /* End PBXProject section */
@@ -230,6 +284,15 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		EF16AB0A202C2E7800AF9DAE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF16AB17202C2E7F00AF9DAE /* WithDataStoreStringMap.cpp in Sources */,
+				EF16AB13202C2E7800AF9DAE /* DataStoreStringMap.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EF6511881F657DD1002D8065 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -249,6 +312,36 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		EF16AB14202C2E7800AF9DAE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		EF16AB15202C2E7800AF9DAE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		EF6511921F657DD1002D8065 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -262,7 +355,6 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				HEADER_SEARCH_PATHS = ../../;
 				INFOPLIST_FILE = DataStoreStringMapKit_iOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
@@ -290,7 +382,6 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				HEADER_SEARCH_PATHS = ../../;
 				INFOPLIST_FILE = DataStoreStringMapKit_iOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
@@ -319,7 +410,6 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_VERSION = A;
-				HEADER_SEARCH_PATHS = ../../;
 				INFOPLIST_FILE = DataStoreStringMapKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
@@ -345,7 +435,6 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_VERSION = A;
-				HEADER_SEARCH_PATHS = ../../;
 				INFOPLIST_FILE = DataStoreStringMapKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
@@ -403,6 +492,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = ../../;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -449,6 +539,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = ../../;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
@@ -458,6 +549,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		EF16AB16202C2E7800AF9DAE /* Build configuration list for PBXNativeTarget "DataStoreStringMap" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EF16AB14202C2E7800AF9DAE /* Debug */,
+				EF16AB15202C2E7800AF9DAE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		EF6511941F657DD1002D8065 /* Build configuration list for PBXNativeTarget "DataStoreStringMapKit_iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

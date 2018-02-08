@@ -7,6 +7,26 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EF16AB30202C2F0700AF9DAE /* FileDataStore.h in Headers */ = {isa = PBXBuildFile; fileRef = EF16AB2F202C2F0700AF9DAE /* FileDataStore.h */; };
+		EF16AB32202C2F0700AF9DAE /* FileDataStore.m in Sources */ = {isa = PBXBuildFile; fileRef = EF16AB31202C2F0700AF9DAE /* FileDataStore.m */; };
+		EF16AB36202C2F0E00AF9DAE /* AES256EncryptedFileDataStore_LoadData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF680A291EB49A160025DA02 /* AES256EncryptedFileDataStore_LoadData.cpp */; };
+		EF16AB37202C2F0E00AF9DAE /* AES256EncryptedFileDataStore_WriteData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF680A371EB49A160025DA02 /* AES256EncryptedFileDataStore_WriteData.cpp */; };
+		EF16AB38202C2F0E00AF9DAE /* AES256EncryptedFileDataStore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF680A151EB49A160025DA02 /* AES256EncryptedFileDataStore.cpp */; };
+		EF16AB39202C2F0E00AF9DAE /* FileDataStore_CreateLocationIfNeeded.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF680A171EB49A160025DA02 /* FileDataStore_CreateLocationIfNeeded.cpp */; };
+		EF16AB3A202C2F0E00AF9DAE /* FileDataStore_DeleteItem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF680A191EB49A160025DA02 /* FileDataStore_DeleteItem.cpp */; };
+		EF16AB3B202C2F0E00AF9DAE /* FileDataStore_ItemExists.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF680A241EB49A160025DA02 /* FileDataStore_ItemExists.cpp */; };
+		EF16AB3C202C2F0E00AF9DAE /* FileDataStore_ListContents.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF680A271EB49A160025DA02 /* FileDataStore_ListContents.cpp */; };
+		EF16AB3D202C2F0E00AF9DAE /* FileDataStore_LoadData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF680A2B1EB49A160025DA02 /* FileDataStore_LoadData.cpp */; };
+		EF16AB3E202C2F0E00AF9DAE /* FileDataStore_WriteData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF680A391EB49A160025DA02 /* FileDataStore_WriteData.cpp */; };
+		EF16AB3F202C2F0E00AF9DAE /* FileDataStore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF680A1B1EB49A160025DA02 /* FileDataStore.cpp */; };
+		EF16AB40202C2F0E00AF9DAE /* FilePathDataPath_AppendPathComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF680A1D1EB49A160025DA02 /* FilePathDataPath_AppendPathComponent.cpp */; };
+		EF16AB41202C2F0E00AF9DAE /* FilePathDataPath_GetLastPathComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF680A1E1EB49A160025DA02 /* FilePathDataPath_GetLastPathComponent.cpp */; };
+		EF16AB42202C2F0E00AF9DAE /* FilePathDataPath_GetStringRepresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF680A1F1EB49A160025DA02 /* FilePathDataPath_GetStringRepresentation.cpp */; };
+		EF16AB43202C2F0E00AF9DAE /* FilePathDataPath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF680A201EB49A160025DA02 /* FilePathDataPath.cpp */; };
+		EF16AB44202C2F0E00AF9DAE /* FilePathToDataPath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF680A221EB49A160025DA02 /* FilePathToDataPath.cpp */; };
+		EF16AB45202C2F0E00AF9DAE /* LogFilePathDataPath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF680A2D1EB49A160025DA02 /* LogFilePathDataPath.cpp */; };
+		EF16AB46202C2F0E00AF9DAE /* WithAES256EncryptedFileDataStore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF680A2F1EB49A160025DA02 /* WithAES256EncryptedFileDataStore.cpp */; };
+		EF16AB47202C2F0E00AF9DAE /* WithFileDataStore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF680A351EB49A160025DA02 /* WithFileDataStore.cpp */; };
 		EF7255CD1F18D49E0054DCE0 /* FileDataStoreKit.h in Headers */ = {isa = PBXBuildFile; fileRef = EF7255CB1F18D49E0054DCE0 /* FileDataStoreKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EF7255D11F18D4BD0054DCE0 /* AES256EncryptedFileDataStore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF680A151EB49A160025DA02 /* AES256EncryptedFileDataStore.cpp */; };
 		EF7255D21F18D4BD0054DCE0 /* FileDataStore_CreateLocationIfNeeded.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF680A171EB49A160025DA02 /* FileDataStore_CreateLocationIfNeeded.cpp */; };
@@ -33,6 +53,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		EF16AB2D202C2F0700AF9DAE /* libFileDataStore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libFileDataStore.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF16AB2F202C2F0700AF9DAE /* FileDataStore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileDataStore.h; sourceTree = "<group>"; };
+		EF16AB31202C2F0700AF9DAE /* FileDataStore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FileDataStore.m; sourceTree = "<group>"; };
 		EF680A151EB49A160025DA02 /* AES256EncryptedFileDataStore.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AES256EncryptedFileDataStore.cpp; sourceTree = SOURCE_ROOT; };
 		EF680A161EB49A160025DA02 /* AES256EncryptedFileDataStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AES256EncryptedFileDataStore.h; sourceTree = SOURCE_ROOT; };
 		EF680A171EB49A160025DA02 /* FileDataStore_CreateLocationIfNeeded.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileDataStore_CreateLocationIfNeeded.cpp; sourceTree = SOURCE_ROOT; };
@@ -70,6 +93,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		EF16AB2A202C2F0700AF9DAE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EF7255C51F18D49E0054DCE0 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -84,11 +114,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		EF16AB2E202C2F0700AF9DAE /* FileDataStore */ = {
+			isa = PBXGroup;
+			children = (
+				EF16AB2F202C2F0700AF9DAE /* FileDataStore.h */,
+				EF16AB31202C2F0700AF9DAE /* FileDataStore.m */,
+			);
+			path = FileDataStore;
+			sourceTree = "<group>";
+		};
 		EF688C671EB47EC700EFCE38 = {
 			isa = PBXGroup;
 			children = (
 				EF688C721EB47EC700EFCE38 /* FileDataStore */,
 				EF7255CA1F18D49E0054DCE0 /* FileDataStoreKit */,
+				EF16AB2E202C2F0700AF9DAE /* FileDataStore */,
 				EF688C711EB47EC700EFCE38 /* Products */,
 				EF7255E31F18D5080054DCE0 /* Frameworks */,
 			);
@@ -98,6 +138,7 @@
 			isa = PBXGroup;
 			children = (
 				EF7255C91F18D49E0054DCE0 /* FileDataStoreKit.framework */,
+				EF16AB2D202C2F0700AF9DAE /* libFileDataStore.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -159,6 +200,14 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		EF16AB2B202C2F0700AF9DAE /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF16AB30202C2F0700AF9DAE /* FileDataStore.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EF7255C61F18D49E0054DCE0 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -170,6 +219,23 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		EF16AB2C202C2F0700AF9DAE /* FileDataStore */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EF16AB35202C2F0700AF9DAE /* Build configuration list for PBXNativeTarget "FileDataStore" */;
+			buildPhases = (
+				EF16AB29202C2F0700AF9DAE /* Sources */,
+				EF16AB2A202C2F0700AF9DAE /* Frameworks */,
+				EF16AB2B202C2F0700AF9DAE /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FileDataStore;
+			productName = FileDataStore;
+			productReference = EF16AB2D202C2F0700AF9DAE /* libFileDataStore.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 		EF7255C81F18D49E0054DCE0 /* FileDataStoreKit */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = EF7255D01F18D49E0054DCE0 /* Build configuration list for PBXNativeTarget "FileDataStoreKit" */;
@@ -197,6 +263,10 @@
 				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = filehaven;
 				TargetAttributes = {
+					EF16AB2C202C2F0700AF9DAE = {
+						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Automatic;
+					};
 					EF7255C81F18D49E0054DCE0 = {
 						CreatedOnToolsVersion = 8.3.3;
 						ProvisioningStyle = Automatic;
@@ -216,6 +286,7 @@
 			projectRoot = "";
 			targets = (
 				EF7255C81F18D49E0054DCE0 /* FileDataStoreKit */,
+				EF16AB2C202C2F0700AF9DAE /* FileDataStore */,
 			);
 		};
 /* End PBXProject section */
@@ -231,6 +302,32 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		EF16AB29202C2F0700AF9DAE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF16AB36202C2F0E00AF9DAE /* AES256EncryptedFileDataStore_LoadData.cpp in Sources */,
+				EF16AB37202C2F0E00AF9DAE /* AES256EncryptedFileDataStore_WriteData.cpp in Sources */,
+				EF16AB38202C2F0E00AF9DAE /* AES256EncryptedFileDataStore.cpp in Sources */,
+				EF16AB39202C2F0E00AF9DAE /* FileDataStore_CreateLocationIfNeeded.cpp in Sources */,
+				EF16AB3A202C2F0E00AF9DAE /* FileDataStore_DeleteItem.cpp in Sources */,
+				EF16AB3B202C2F0E00AF9DAE /* FileDataStore_ItemExists.cpp in Sources */,
+				EF16AB3C202C2F0E00AF9DAE /* FileDataStore_ListContents.cpp in Sources */,
+				EF16AB3D202C2F0E00AF9DAE /* FileDataStore_LoadData.cpp in Sources */,
+				EF16AB3E202C2F0E00AF9DAE /* FileDataStore_WriteData.cpp in Sources */,
+				EF16AB3F202C2F0E00AF9DAE /* FileDataStore.cpp in Sources */,
+				EF16AB40202C2F0E00AF9DAE /* FilePathDataPath_AppendPathComponent.cpp in Sources */,
+				EF16AB41202C2F0E00AF9DAE /* FilePathDataPath_GetLastPathComponent.cpp in Sources */,
+				EF16AB42202C2F0E00AF9DAE /* FilePathDataPath_GetStringRepresentation.cpp in Sources */,
+				EF16AB43202C2F0E00AF9DAE /* FilePathDataPath.cpp in Sources */,
+				EF16AB44202C2F0E00AF9DAE /* FilePathToDataPath.cpp in Sources */,
+				EF16AB45202C2F0E00AF9DAE /* LogFilePathDataPath.cpp in Sources */,
+				EF16AB46202C2F0E00AF9DAE /* WithAES256EncryptedFileDataStore.cpp in Sources */,
+				EF16AB47202C2F0E00AF9DAE /* WithFileDataStore.cpp in Sources */,
+				EF16AB32202C2F0700AF9DAE /* FileDataStore.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EF7255C41F18D49E0054DCE0 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -259,6 +356,32 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		EF16AB33202C2F0700AF9DAE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		EF16AB34202C2F0700AF9DAE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		EF688C771EB47EC700EFCE38 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -411,6 +534,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		EF16AB35202C2F0700AF9DAE /* Build configuration list for PBXNativeTarget "FileDataStore" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EF16AB33202C2F0700AF9DAE /* Debug */,
+				EF16AB34202C2F0700AF9DAE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		EF688C6B1EB47EC700EFCE38 /* Build configuration list for PBXProject "FileDataStore" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EF16AACB202C2DEB00AF9DAE /* Value.h in Headers */ = {isa = PBXBuildFile; fileRef = EF16AACA202C2DEB00AF9DAE /* Value.h */; };
+		EF16AACD202C2DEB00AF9DAE /* Value.m in Sources */ = {isa = PBXBuildFile; fileRef = EF16AACC202C2DEB00AF9DAE /* Value.m */; };
+		EF16AAD1202C2DF300AF9DAE /* Value.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD57EA1D86B1A00056E526 /* Value.cpp */; };
 		EF92C1061F10F9570097D708 /* ValueKit.h in Headers */ = {isa = PBXBuildFile; fileRef = EF92C1041F10F9570097D708 /* ValueKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EF92C10A1F10F9640097D708 /* Value.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD57EA1D86B1A00056E526 /* Value.cpp */; };
 		EF92C10F1F10FA580097D708 /* FoundationKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF92C10E1F10FA580097D708 /* FoundationKit.framework */; };
@@ -16,6 +19,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		EF16AAC8202C2DEB00AF9DAE /* libValue.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libValue.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF16AACA202C2DEB00AF9DAE /* Value.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Value.h; sourceTree = "<group>"; };
+		EF16AACC202C2DEB00AF9DAE /* Value.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Value.m; sourceTree = "<group>"; };
 		EF1EBB101F63A719003BCFBD /* ValuesPromise.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ValuesPromise.h; sourceTree = "<group>"; };
 		EF92C1021F10F9570097D708 /* ValueKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ValueKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF92C1041F10F9570097D708 /* ValueKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ValueKit.h; sourceTree = "<group>"; };
@@ -34,6 +40,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		EF16AAC5202C2DEB00AF9DAE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EF92C0FE1F10F9570097D708 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -53,6 +66,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		EF16AAC9202C2DEB00AF9DAE /* Value */ = {
+			isa = PBXGroup;
+			children = (
+				EF16AACA202C2DEB00AF9DAE /* Value.h */,
+				EF16AACC202C2DEB00AF9DAE /* Value.m */,
+			);
+			path = Value;
+			sourceTree = "<group>";
+		};
 		EF92C1031F10F9570097D708 /* ValueKit */ = {
 			isa = PBXGroup;
 			children = (
@@ -77,6 +99,7 @@
 				EFAD57E51D86B1A00056E526 /* DataType.h */,
 				EFAD57E61D86B1A00056E526 /* EnumerateDataValuesFunction.h */,
 				EFF397B41F65526600B1BD33 /* ValueKit_iOS */,
+				EF16AAC9202C2DEB00AF9DAE /* Value */,
 				EF92C10D1F10FA580097D708 /* Frameworks */,
 				EFAD57E81D86B1A00056E526 /* LibValue.h */,
 				EFAD57E91D86B1A00056E526 /* LibValue.m */,
@@ -93,6 +116,7 @@
 			children = (
 				EF92C1021F10F9570097D708 /* ValueKit.framework */,
 				EFF397B31F65526600B1BD33 /* ValueKit_iOS.framework */,
+				EF16AAC8202C2DEB00AF9DAE /* libValue.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -109,6 +133,14 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		EF16AAC6202C2DEB00AF9DAE /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF16AACB202C2DEB00AF9DAE /* Value.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EF92C0FF1F10F9570097D708 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -128,6 +160,23 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		EF16AAC7202C2DEB00AF9DAE /* Value */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EF16AAD0202C2DEB00AF9DAE /* Build configuration list for PBXNativeTarget "Value" */;
+			buildPhases = (
+				EF16AAC4202C2DEB00AF9DAE /* Sources */,
+				EF16AAC5202C2DEB00AF9DAE /* Frameworks */,
+				EF16AAC6202C2DEB00AF9DAE /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Value;
+			productName = Value;
+			productReference = EF16AAC8202C2DEB00AF9DAE /* libValue.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 		EF92C1011F10F9570097D708 /* ValueKit */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = EF92C1091F10F9570097D708 /* Build configuration list for PBXNativeTarget "ValueKit" */;
@@ -173,6 +222,10 @@
 				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = peymojo;
 				TargetAttributes = {
+					EF16AAC7202C2DEB00AF9DAE = {
+						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Automatic;
+					};
 					EF92C1011F10F9570097D708 = {
 						CreatedOnToolsVersion = 8.3.3;
 						ProvisioningStyle = Automatic;
@@ -198,6 +251,7 @@
 			targets = (
 				EF92C1011F10F9570097D708 /* ValueKit */,
 				EFF397B21F65526600B1BD33 /* ValueKit_iOS */,
+				EF16AAC7202C2DEB00AF9DAE /* Value */,
 			);
 		};
 /* End PBXProject section */
@@ -220,6 +274,15 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		EF16AAC4202C2DEB00AF9DAE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF16AAD1202C2DF300AF9DAE /* Value.cpp in Sources */,
+				EF16AACD202C2DEB00AF9DAE /* Value.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EF92C0FD1F10F9570097D708 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -239,6 +302,36 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		EF16AACE202C2DEB00AF9DAE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		EF16AACF202C2DEB00AF9DAE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		EF92C1071F10F9570097D708 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -252,7 +345,6 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_VERSION = A;
-				HEADER_SEARCH_PATHS = ../../;
 				INFOPLIST_FILE = ValueKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
@@ -278,7 +370,6 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_VERSION = A;
-				HEADER_SEARCH_PATHS = ../../;
 				INFOPLIST_FILE = ValueKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
@@ -336,6 +427,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = ../../;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -382,6 +474,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = ../../;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
@@ -401,7 +494,6 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				HEADER_SEARCH_PATHS = ../../;
 				INFOPLIST_FILE = ValueKit_iOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
@@ -429,7 +521,6 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				HEADER_SEARCH_PATHS = ../../;
 				INFOPLIST_FILE = ValueKit_iOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
@@ -448,6 +539,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		EF16AAD0202C2DEB00AF9DAE /* Build configuration list for PBXNativeTarget "Value" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EF16AACE202C2DEB00AF9DAE /* Debug */,
+				EF16AACF202C2DEB00AF9DAE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		EF92C1091F10F9570097D708 /* Build configuration list for PBXNativeTarget "ValueKit" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
