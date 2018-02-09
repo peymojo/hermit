@@ -20,24 +20,25 @@
 #define CompareLinks_h
 
 #include "Hermit/Foundation/Hermit.h"
+#include "CompareFiles.h"
 #include "FilePath.h"
 
 namespace hermit {
 	namespace file {
 		
 		//
-		enum CompareLinksStatus {
-			kCompareLinksStatus_Unknown,
-			kCompareLinksStatus_Success,
-			kCompareLinksStatus_Cancel,
-			kCompareLinksStatus_Error
+		enum class CompareLinksStatus {
+			kUnknown,
+			kSuccess,
+			kCancel,
+			kError
 		};
 		
 		//
 		CompareLinksStatus CompareLinks(const HermitPtr& h_,
-										const FilePathPtr& inFilePath1,
-										const FilePathPtr& inFilePath2,
-										const bool& inIgnoreDates);
+										const FilePathPtr& filePath1,
+										const FilePathPtr& filePath2,
+										const IgnoreDates& ignoreDates);
 		
 	} // namespace file
 } // namespace hermit

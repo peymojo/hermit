@@ -49,8 +49,8 @@ namespace hermit {
 				InternalCompletion(const HermitPtr& h_,
 								   const FilePathPtr& filePath1,
 								   const FilePathPtr& filePath2,
-								   bool ignoreDates,
-								   bool ignoreFinderInfo,
+								   const IgnoreDates& ignoreDates,
+								   const IgnoreFinderInfo& ignoreFinderInfo,
 								   const CompareDirectoriesCompletionPtr& completion) :
 				mH_(h_),
 				mFilePath1(filePath1),
@@ -155,7 +155,7 @@ namespace hermit {
 						NOTIFY(mH_, kFilesDifferNotification, &params);
 					}
 					
-					if (!mIgnoreFinderInfo) {
+					if (mIgnoreFinderInfo == IgnoreFinderInfo::kNo) {
 						auto compareFinderInfoStatus = CompareFinderInfo(mH_, mFilePath1, mFilePath2);
 						if ((compareFinderInfoStatus != kCompareFinderInfoStatus_Match) &&
 							(compareFinderInfoStatus != kCompareFinderInfoStatus_FinderInfosDiffer) &&
@@ -181,7 +181,7 @@ namespace hermit {
 						}
 					}
 					
-					if (!mIgnoreDates) {
+					if (mIgnoreDates == IgnoreDates::kNo) {
 						GetFileDatesCallbackClassT<std::string> datesCallback1;
 						GetFileDates(mH_, mFilePath1, datesCallback1);
 						if (!datesCallback1.mSuccess) {
@@ -235,8 +235,8 @@ namespace hermit {
 				HermitPtr mH_;
 				FilePathPtr mFilePath1;
 				FilePathPtr mFilePath2;
-				bool mIgnoreDates;
-				bool mIgnoreFinderInfo;
+				IgnoreDates mIgnoreDates;
+				IgnoreFinderInfo mIgnoreFinderInfo;
 				CompareDirectoriesCompletionPtr mCompletion;
 			};
 			typedef std::shared_ptr<InternalCompletion> InternalCompletionPtr;
@@ -452,8 +452,8 @@ namespace hermit {
 											  const Directory& dir2,
 											  const HardLinkMapPtr& hardLinkMap1,
 											  const HardLinkMapPtr& hardLinkMap2,
-											  const bool& ignoreDates,
-											  const bool& ignoreFinderInfo,
+											  const IgnoreDates& ignoreDates,
+											  const IgnoreFinderInfo& ignoreFinderInfo,
 											  const PreprocessFileFunctionPtr& preprocessFunction,
 											  const InternalCompletionPtr& completion) {
 				const FileSet& dir1Files = dir1.GetFiles();
@@ -528,8 +528,8 @@ namespace hermit {
 							 const FilePathPtr& filePath2,
 							 const HardLinkMapPtr& hardLinkMap1,
 							 const HardLinkMapPtr& hardLinkMap2,
-							 const bool& ignoreDates,
-							 const bool& ignoreFinderInfo,
+							 const IgnoreDates& ignoreDates,
+							 const IgnoreFinderInfo& ignoreFinderInfo,
 							 const PreprocessFileFunctionPtr& preprocessFunction,
 							 const CompareDirectoriesCompletionPtr& completion) {
 				FileType fileType1 = FileType::kUnknown;
@@ -595,8 +595,8 @@ namespace hermit {
 					 const FilePathPtr& filePath2,
 					 const HardLinkMapPtr& hardLinkMap1,
 					 const HardLinkMapPtr& hardLinkMap2,
-					 const bool& ignoreDates,
-					 const bool& ignoreFinderInfo,
+					 const IgnoreDates& ignoreDates,
+					 const IgnoreFinderInfo& ignoreFinderInfo,
 					 const PreprocessFileFunctionPtr& preprocessFunction,
 					 const CompareDirectoriesCompletionPtr& completion) :
 				mFilePath1(filePath1),
@@ -626,8 +626,8 @@ namespace hermit {
 				FilePathPtr mFilePath2;
 				HardLinkMapPtr mHardLinkMap1;
 				HardLinkMapPtr mHardLinkMap2;
-				bool mIgnoreDates;
-				bool mIgnoreFinderInfo;
+				IgnoreDates mIgnoreDates;
+				IgnoreFinderInfo mIgnoreFinderInfo;
 				PreprocessFileFunctionPtr mPreprocessFunction;
 				CompareDirectoriesCompletionPtr mCompletion;
 			};
@@ -640,8 +640,8 @@ namespace hermit {
 								const FilePathPtr& filePath2,
 								const HardLinkMapPtr& hardLinkMap1,
 								const HardLinkMapPtr& hardLinkMap2,
-								const bool& ignoreDates,
-								const bool& ignoreFinderInfo,
+								const IgnoreDates& ignoreDates,
+								const IgnoreFinderInfo& ignoreFinderInfo,
 								const PreprocessFileFunctionPtr& preprocessFunction,
 								const CompareDirectoriesCompletionPtr& completion) {
 			auto task = std::make_shared<Task>(filePath1,

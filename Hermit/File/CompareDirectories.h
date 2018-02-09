@@ -21,6 +21,7 @@
 
 #include "Hermit/Foundation/AsyncFunction.h"
 #include "Hermit/Foundation/Hermit.h"
+#include "CompareFiles.h"
 #include "FilePath.h"
 #include "HardLinkMap.h"
 #include "PreprocessFileFunction.h"
@@ -48,8 +49,8 @@ namespace hermit {
 								const FilePathPtr& filePath2,
 								const HardLinkMapPtr& hardLinkMap1,
 								const HardLinkMapPtr& hardLinkMap2,
-								const bool& ignoreDates,
-								const bool& ignoreFinderInfo,
+								const IgnoreDates& ignoreDates,
+								const IgnoreFinderInfo& ignoreFinderInfo,
 								const PreprocessFileFunctionPtr& preprocessFunction,
 								const CompareDirectoriesCompletionPtr& completion);
 		

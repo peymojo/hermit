@@ -61,8 +61,7 @@ namespace hermit {
 		extern const char* kIsAliasDiffers;
 		extern const char* kAliasTargetsDiffer;
 		extern const char* kIsHardLinkDiffers;
-		extern const char* kHardLinkFileSystemNumDiffers;
-		extern const char* kHardLinkFileNumDiffers;
+		extern const char* kHardLinksDiffer;
 		extern const char* kFileDeviceStatesDiffer;
 		extern const char* kFileDeviceModesDiffer;
 		extern const char* kFileDeviceIDsDiffer;

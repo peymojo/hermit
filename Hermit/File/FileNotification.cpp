@@ -57,8 +57,7 @@ namespace hermit {
 		const char* kIsAliasDiffers = "isaliasdiffers";
 		const char* kAliasTargetsDiffer = "aliastargetsdiffer";
 		const char* kIsHardLinkDiffers = "ishardlinkdiffers";
-		const char* kHardLinkFileSystemNumDiffers = "hardlinkfilesystemnumdiffers";
-		const char* kHardLinkFileNumDiffers = "hardlinkfilenumdiffers";
+		const char* kHardLinksDiffer = "hardlinksdiffer";
 		const char* kFileDeviceStatesDiffer = "devicestatesdiffer";
 		const char* kFileDeviceModesDiffer = "devicemodesdiffer";
 		const char* kFileDeviceIDsDiffer = "deviceidsdiffer";
