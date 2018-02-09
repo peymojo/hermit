@@ -22,6 +22,7 @@
 #include "Hermit/Foundation/AsyncFunction.h"
 #include "Hermit/Foundation/Hermit.h"
 #include "FilePath.h"
+#include "HardLinkMap.h"
 #include "PreprocessFileFunction.h"
 
 namespace hermit {
@@ -39,16 +40,18 @@ namespace hermit {
 		DEFINE_ASYNC_FUNCTION_1A(CompareDirectoriesCompletion, CompareDirectoriesStatus);
 		
 		//
-		//	NOTE: inPreprocessFunction is NOT called for inFirstDirectoryPath & inSecondDirectoryPath.
+		//	NOTE: preprocessFunction is NOT called for filePath1 & filePath2.
 		//	It's called for all sub-files & nested sub-files of the directories.
 		//
 		void CompareDirectories(const HermitPtr& h_,
-								const FilePathPtr& inFilePath1,
-								const FilePathPtr& inFilePath2,
-								const bool& inIgnoreDates,
-								const bool& inIgnoreFinderInfo,
-								const PreprocessFileFunctionPtr& inPreprocessFunction,
-								const CompareDirectoriesCompletionPtr& inCompletion);
+								const FilePathPtr& filePath1,
+								const FilePathPtr& filePath2,
+								const HardLinkMapPtr& hardLinkMap1,
+								const HardLinkMapPtr& hardLinkMap2,
+								const bool& ignoreDates,
+								const bool& ignoreFinderInfo,
+								const PreprocessFileFunctionPtr& preprocessFunction,
+								const CompareDirectoriesCompletionPtr& completion);
 		
 	} // namespace file
 } // namespace hermit

@@ -448,14 +448,16 @@ namespace hermit {
 			
 			//
 			static void CompareDirectoryFiles(const HermitPtr& h_,
-											  const Directory& inDir1,
-											  const Directory& inDir2,
-											  const bool& inIgnoreDates,
-											  const bool& inIgnoreFinderInfo,
-											  const PreprocessFileFunctionPtr& inPreprocessFunction,
-											  const InternalCompletionPtr& inCompletion) {
-				const FileSet& dir1Files = inDir1.GetFiles();
-				const FileSet& dir2Files = inDir2.GetFiles();
+											  const Directory& dir1,
+											  const Directory& dir2,
+											  const HardLinkMapPtr& hardLinkMap1,
+											  const HardLinkMapPtr& hardLinkMap2,
+											  const bool& ignoreDates,
+											  const bool& ignoreFinderInfo,
+											  const PreprocessFileFunctionPtr& preprocessFunction,
+											  const InternalCompletionPtr& completion) {
+				const FileSet& dir1Files = dir1.GetFiles();
+				const FileSet& dir2Files = dir2.GetFiles();
 				
 				FileSet::const_iterator end1 = dir1Files.end();
 				FileSet::const_iterator end2 = dir2Files.end();
@@ -463,7 +465,7 @@ namespace hermit {
 				FileSet::const_iterator it1 = dir1Files.begin();
 				FileSet::const_iterator it2 = dir2Files.begin();
 				
-				auto aggregator = std::make_shared<Aggregator>(h_, inCompletion);
+				auto aggregator = std::make_shared<Aggregator>(h_, completion);
 				bool match = true;
 				while (true) {
 					if (it1 == end1) {
@@ -507,9 +509,11 @@ namespace hermit {
 						CompareFiles(proxy,
 									 (*it1)->mPath,
 									 (*it2)->mPath,
-									 inIgnoreDates,
-									 inIgnoreFinderInfo,
-									 inPreprocessFunction,
+									 hardLinkMap1,
+									 hardLinkMap2,
+									 ignoreDates,
+									 ignoreFinderInfo,
+									 preprocessFunction,
 									 completion);
 						++it1;
 						++it2;
@@ -520,84 +524,108 @@ namespace hermit {
 			
 			//
 			void PerformWork(const HermitPtr& h_,
-							 const FilePathPtr& inFilePath1,
-							 const FilePathPtr& inFilePath2,
-							 const bool& inIgnoreDates,
-							 const bool& inIgnoreFinderInfo,
-							 const PreprocessFileFunctionPtr& inPreprocessFunction,
-							 const CompareDirectoriesCompletionPtr& inCompletion) {
+							 const FilePathPtr& filePath1,
+							 const FilePathPtr& filePath2,
+							 const HardLinkMapPtr& hardLinkMap1,
+							 const HardLinkMapPtr& hardLinkMap2,
+							 const bool& ignoreDates,
+							 const bool& ignoreFinderInfo,
+							 const PreprocessFileFunctionPtr& preprocessFunction,
+							 const CompareDirectoriesCompletionPtr& completion) {
 				FileType fileType1 = FileType::kUnknown;
-				if (!GetFileType(h_, inFilePath1, fileType1)) {
-					NOTIFY_ERROR(h_, "CompareDirectories: GetFileType failed for:", inFilePath1);
-					inCompletion->Call(CompareDirectoriesStatus::kError);
+				if (!GetFileType(h_, filePath1, fileType1)) {
+					NOTIFY_ERROR(h_, "CompareDirectories: GetFileType failed for:", filePath1);
+					completion->Call(CompareDirectoriesStatus::kError);
 					return;
 				}
 				if (fileType1 != FileType::kDirectory) {
-					NOTIFY_ERROR(h_, "CompareDirectories: path not a directory:", inFilePath1);
-					inCompletion->Call(CompareDirectoriesStatus::kError);
+					NOTIFY_ERROR(h_, "CompareDirectories: path not a directory:", filePath1);
+					completion->Call(CompareDirectoriesStatus::kError);
 					return;
 				}
 				FileType fileType2 = FileType::kUnknown;
-				if (!GetFileType(h_, inFilePath2, fileType2)) {
-					NOTIFY_ERROR(h_, "CompareDirectories: GetFileType failed for:", inFilePath2);
-					inCompletion->Call(CompareDirectoriesStatus::kError);
+				if (!GetFileType(h_, filePath2, fileType2)) {
+					NOTIFY_ERROR(h_, "CompareDirectories: GetFileType failed for:", filePath2);
+					completion->Call(CompareDirectoriesStatus::kError);
 					return;
 				}
 				if (fileType2 != FileType::kDirectory) {
-					NOTIFY_ERROR(h_, "CompareDirectories: path not a directory:", inFilePath2);
-					inCompletion->Call(CompareDirectoriesStatus::kError);
+					NOTIFY_ERROR(h_, "CompareDirectories: path not a directory:", filePath2);
+					completion->Call(CompareDirectoriesStatus::kError);
 					return;
 				}
 				
-				Directory dir1(inPreprocessFunction);
-				auto status1 = ListDirectoryContents(h_, inFilePath1, false, dir1);
+				Directory dir1(preprocessFunction);
+				auto status1 = ListDirectoryContents(h_, filePath1, false, dir1);
 				if (status1 != ListDirectoryContentsResult::kSuccess) {
-					NOTIFY_ERROR(h_, "CompareDirectories: ListDirectoryContents failed for:", inFilePath1);
-					inCompletion->Call(CompareDirectoriesStatus::kError);
+					NOTIFY_ERROR(h_, "CompareDirectories: ListDirectoryContents failed for:", filePath1);
+					completion->Call(CompareDirectoriesStatus::kError);
 					return;
 				}
 				
-				Directory dir2(inPreprocessFunction);
-				auto status2 = ListDirectoryContents(h_, inFilePath2, false, dir2);
+				Directory dir2(preprocessFunction);
+				auto status2 = ListDirectoryContents(h_, filePath2, false, dir2);
 				if (status2 != ListDirectoryContentsResult::kSuccess) {
-					NOTIFY_ERROR(h_, "CompareDirectories: ListDirectoryContents failed for:", inFilePath2);
-					inCompletion->Call(CompareDirectoriesStatus::kError);
+					NOTIFY_ERROR(h_, "CompareDirectories: ListDirectoryContents failed for:", filePath2);
+					completion->Call(CompareDirectoriesStatus::kError);
 					return;
 				}
 				
-				auto completion = std::make_shared<InternalCompletion>(h_,
-																	   inFilePath1,
-																	   inFilePath2,
-																	   inIgnoreDates,
-																	   inIgnoreFinderInfo,
-																	   inCompletion);
-				CompareDirectoryFiles(h_, dir1, dir2, inIgnoreDates, inIgnoreFinderInfo, inPreprocessFunction, completion);
+				auto compareCompletion = std::make_shared<InternalCompletion>(h_,
+																			  filePath1,
+																			  filePath2,
+																			  ignoreDates,
+																			  ignoreFinderInfo,
+																			  completion);
+				CompareDirectoryFiles(h_,
+									  dir1,
+									  dir2,
+									  hardLinkMap1,
+									  hardLinkMap2,
+									  ignoreDates,
+									  ignoreFinderInfo,
+									  preprocessFunction,
+									  compareCompletion);
 			}
 
 			//
 			class Task : public AsyncTask {
 			public:
-				Task(const FilePathPtr& inFilePath1,
-					 const FilePathPtr& inFilePath2,
-					 const bool& inIgnoreDates,
-					 const bool& inIgnoreFinderInfo,
-					 const PreprocessFileFunctionPtr& inPreprocessFunction,
-					 const CompareDirectoriesCompletionPtr& inCompletion) :
-				mFilePath1(inFilePath1),
-				mFilePath2(inFilePath2),
-				mIgnoreDates(inIgnoreDates),
-				mIgnoreFinderInfo(inIgnoreFinderInfo),
-				mPreprocessFunction(inPreprocessFunction),
-				mCompletion(inCompletion) {
+				Task(const FilePathPtr& filePath1,
+					 const FilePathPtr& filePath2,
+					 const HardLinkMapPtr& hardLinkMap1,
+					 const HardLinkMapPtr& hardLinkMap2,
+					 const bool& ignoreDates,
+					 const bool& ignoreFinderInfo,
+					 const PreprocessFileFunctionPtr& preprocessFunction,
+					 const CompareDirectoriesCompletionPtr& completion) :
+				mFilePath1(filePath1),
+				mFilePath2(filePath2),
+				mHardLinkMap1(hardLinkMap1),
+				mHardLinkMap2(hardLinkMap2),
+				mIgnoreDates(ignoreDates),
+				mIgnoreFinderInfo(ignoreFinderInfo),
+				mPreprocessFunction(preprocessFunction),
+				mCompletion(completion) {
 				}
 				
 				//
 				virtual void PerformTask(const HermitPtr& h_) override {
-					PerformWork(h_, mFilePath1, mFilePath2, mIgnoreDates, mIgnoreFinderInfo, mPreprocessFunction, mCompletion);
+					PerformWork(h_,
+								mFilePath1,
+								mFilePath2,
+								mHardLinkMap1,
+								mHardLinkMap2,
+								mIgnoreDates,
+								mIgnoreFinderInfo,
+								mPreprocessFunction,
+								mCompletion);
 				}
 
 				FilePathPtr mFilePath1;
 				FilePathPtr mFilePath2;
+				HardLinkMapPtr mHardLinkMap1;
+				HardLinkMapPtr mHardLinkMap2;
 				bool mIgnoreDates;
 				bool mIgnoreFinderInfo;
 				PreprocessFileFunctionPtr mPreprocessFunction;
@@ -608,21 +636,25 @@ namespace hermit {
         using namespace CompareDirectories_Impl;
 		
 		void CompareDirectories(const HermitPtr& h_,
-								const FilePathPtr& inFilePath1,
-								const FilePathPtr& inFilePath2,
-								const bool& inIgnoreDates,
-								const bool& inIgnoreFinderInfo,
-								const PreprocessFileFunctionPtr& inPreprocessFunction,
-								const CompareDirectoriesCompletionPtr& inCompletion) {
-			auto task = std::make_shared<Task>(inFilePath1,
-											   inFilePath2,
-											   inIgnoreDates,
-											   inIgnoreFinderInfo,
-											   inPreprocessFunction,
-											   inCompletion);
+								const FilePathPtr& filePath1,
+								const FilePathPtr& filePath2,
+								const HardLinkMapPtr& hardLinkMap1,
+								const HardLinkMapPtr& hardLinkMap2,
+								const bool& ignoreDates,
+								const bool& ignoreFinderInfo,
+								const PreprocessFileFunctionPtr& preprocessFunction,
+								const CompareDirectoriesCompletionPtr& completion) {
+			auto task = std::make_shared<Task>(filePath1,
+											   filePath2,
+											   hardLinkMap1,
+											   hardLinkMap2,
+											   ignoreDates,
+											   ignoreFinderInfo,
+											   preprocessFunction,
+											   completion);
 			if (!QueueAsyncTask(h_, task, 100)) {
 				NOTIFY_ERROR(h_, "CompareDirectories: QueueAsyncTask failed.");
-				inCompletion->Call(CompareDirectoriesStatus::kError);
+				completion->Call(CompareDirectoriesStatus::kError);
 			}
 		}
 		

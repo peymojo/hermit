@@ -45,8 +45,7 @@
 
 namespace hermit {
 	namespace file {
-		
-		namespace {
+		namespace CompareFiles_Cocoa_Impl {
 			
 			//
 			bool CompareData(const HermitPtr& h_,
@@ -73,7 +72,7 @@ namespace hermit {
 					return false;
 				}
 				if (file1Handle == nil) {
-					NOTIFY_ERROR(h_, "CompareData: NSFileHandle fileHandleForReadingAtPath returned nil fileHandle for path : ", inPath1);
+					NOTIFY_ERROR(h_, "CompareData: NSFileHandle fileHandleForReadingAtPath returned nil fileHandle for path :", inPath1);
 					return false;
 				}
 				
@@ -96,7 +95,7 @@ namespace hermit {
 				if (file2Handle == nil) {
 					[file1Handle closeFile];
 					
-					NOTIFY_ERROR(h_, "CompareData: NSFileHandle fileHandleForReadingAtPath returned nil fileHandle for path 2: ", inPath2);
+					NOTIFY_ERROR(h_, "CompareData: NSFileHandle fileHandleForReadingAtPath returned nil fileHandle for path 2:", inPath2);
 					return false;
 				}
 				
@@ -193,46 +192,40 @@ namespace hermit {
 			}
 			
 			//
-			enum CompareAliasFileStatus
-			{
-				kCompareAliasFileStatus_Match,
-				kCompareAliasFileStatus_NonMatch,
-				kCompareAliasFileStatus_CouldntResolveAliases,
-				kCompareAliseFileStatus_Error
+			enum class CompareAliasFileStatus {
+				kMatch,
+				kNonMatch,
+				kCouldntResolveAliases,
+				kError
 			};
 			
 			//
-			CompareAliasFileStatus CompareAliasFiles(const HermitPtr& h_,
-													 const FilePathPtr& inFilePath1,
-													 const FilePathPtr& inFilePath2) {
-				
+			CompareAliasFileStatus CompareAliasFiles(const HermitPtr& h_, const FilePathPtr& filePath1, const FilePathPtr& filePath2) {
 				GetAliasTargetCallbackClassT<FilePathPtr> aliasTarget1Callback;
-				GetAliasTarget(h_, inFilePath1, aliasTarget1Callback);
+				GetAliasTarget(h_, filePath1, aliasTarget1Callback);
 				if ((aliasTarget1Callback.mStatus != kGetAliasTargetStatus_Success) &&
 					(aliasTarget1Callback.mStatus != kGetAliasTargetStatus_TargetNotFound)) {
-					NOTIFY_ERROR(h_, "CompareAliasFiles: GetAliasTarget failed for path: ", inFilePath1);
-					return kCompareAliseFileStatus_Error;
+					NOTIFY_ERROR(h_, "CompareAliasFiles: GetAliasTarget failed for path:", filePath1);
+					return CompareAliasFileStatus::kError;
 				}
 				
 				GetAliasTargetCallbackClassT<FilePathPtr> aliasTarget2Callback;
-				GetAliasTarget(h_, inFilePath2, aliasTarget2Callback);
+				GetAliasTarget(h_, filePath2, aliasTarget2Callback);
 				if ((aliasTarget2Callback.mStatus != kGetAliasTargetStatus_Success) &&
 					(aliasTarget2Callback.mStatus != kGetAliasTargetStatus_TargetNotFound)) {
-					NOTIFY_ERROR(h_, "CompareAliasFiles: GetAliasTarget failed for path: ", inFilePath2);
-					return kCompareAliseFileStatus_Error;
+					NOTIFY_ERROR(h_, "CompareAliasFiles: GetAliasTarget failed for path:", filePath2);
+					return CompareAliasFileStatus::kError;
 				}
 				
 				if ((aliasTarget1Callback.mStatus == kGetAliasTargetStatus_TargetNotFound) ||
 					(aliasTarget2Callback.mStatus == kGetAliasTargetStatus_TargetNotFound)) {
 					if (aliasTarget1Callback.mStatus != aliasTarget2Callback.mStatus) {
 						NOTIFY_ERROR(h_,
-									 "CompareAliasFiles: GetAliasTarget target not found mismatch for path:",
-									 inFilePath1,
-									 "and path:",
-									 inFilePath2);
-						return kCompareAliseFileStatus_Error;
+									 "CompareAliasFiles: GetAliasTarget target not found mismatch for path:", filePath1,
+									 "and path:", filePath2);
+						return CompareAliasFileStatus::kError;
 					}
-					return kCompareAliasFileStatus_CouldntResolveAliases;
+					return CompareAliasFileStatus::kCouldntResolveAliases;
 				}
 				
 				FilePathPtr aliasTarget1Path(aliasTarget1Callback.mFilePath);
@@ -246,48 +239,44 @@ namespace hermit {
 					GetCanonicalFilePathString(h_, aliasTarget2Path, canonicalPath2);
 					
 					if (canonicalPath1 == canonicalPath2) {
-						return kCompareAliasFileStatus_Match;
+						return CompareAliasFileStatus::kMatch;
 					}
 				}
 				
 				if (!aliasTarget1Callback.mIsRelativePath) {
 					FilePathPtr parentPath;
-					GetFilePathParent(h_, inFilePath1, parentPath);
+					GetFilePathParent(h_, filePath1, parentPath);
 					if (parentPath == nullptr) {
-						NOTIFY_ERROR(h_, "CompareAliasFiles: GetFilePathParent failed for path: ", inFilePath1);
-						return kCompareAliseFileStatus_Error;
+						NOTIFY_ERROR(h_, "CompareAliasFiles: GetFilePathParent failed for path:", filePath1);
+						return CompareAliasFileStatus::kError;
 					}
 					
 					GetRelativeFilePathCallbackClassT<FilePathPtr> getRelativePathCallback;
 					GetRelativeFilePath(h_, parentPath, aliasTarget1Path, getRelativePathCallback);
 					if (!getRelativePathCallback.mSuccess) {
 						NOTIFY_ERROR(h_,
-									 "CompareAliasFiles: GetRelativeFilePath failed for parent path:",
-									 parentPath,
-									 "and target path:",
-									 aliasTarget1Path);
-						return kCompareAliseFileStatus_Error;
+									 "CompareAliasFiles: GetRelativeFilePath failed for parent path:", parentPath,
+									 "and target path:", aliasTarget1Path);
+						return CompareAliasFileStatus::kError;
 					}
 					aliasTarget1Path = getRelativePathCallback.mFilePath;
 				}
 				
 				if (!aliasTarget2Callback.mIsRelativePath) {
 					FilePathPtr parentPath;
-					GetFilePathParent(h_, inFilePath2, parentPath);
+					GetFilePathParent(h_, filePath2, parentPath);
 					if (parentPath == nullptr) {
-						NOTIFY_ERROR(h_, "CompareAliasFiles: GetFilePathParent failed for path: ", inFilePath2);
-						return kCompareAliseFileStatus_Error;
+						NOTIFY_ERROR(h_, "CompareAliasFiles: GetFilePathParent failed for path:", filePath2);
+						return CompareAliasFileStatus::kError;
 					}
 					
 					GetRelativeFilePathCallbackClassT<FilePathPtr> getRelativePathCallback;
 					GetRelativeFilePath(h_, parentPath, aliasTarget2Path, getRelativePathCallback);
 					if (!getRelativePathCallback.mSuccess) {
 						NOTIFY_ERROR(h_,
-									 "CompareAliasFiles: GetRelativeFilePath failed for parent path: ",
-									 parentPath,
-									 "and target path:",
-									 aliasTarget2Path);
-						return kCompareAliseFileStatus_Error;
+									 "CompareAliasFiles: GetRelativeFilePath failed for parent path:", parentPath,
+									 "and target path:", aliasTarget2Path);
+						return CompareAliasFileStatus::kError;
 					}
 					aliasTarget2Path = getRelativePathCallback.mFilePath;
 				}
@@ -298,11 +287,10 @@ namespace hermit {
 				std::string canonicalPath2;
 				GetCanonicalFilePathString(h_, aliasTarget2Path, canonicalPath2);
 				
-				if (canonicalPath1 != canonicalPath2)
-				{
-					return kCompareAliasFileStatus_NonMatch;
+				if (canonicalPath1 != canonicalPath2) {
+					return CompareAliasFileStatus::kNonMatch;
 				}
-				return kCompareAliasFileStatus_Match;
+				return CompareAliasFileStatus::kMatch;
 			}
 			
 			//
@@ -310,13 +298,13 @@ namespace hermit {
 			public:
 				//
 				DirectoriesCompletion(const HermitPtr& h_,
-									  const FilePathPtr& inFilePath1,
-									  const FilePathPtr& inFilePath2,
-									  const CompareFilesCompletionPtr& inCompletion) :
+									  const FilePathPtr& filePath1,
+									  const FilePathPtr& filePath2,
+									  const CompareFilesCompletionPtr& completion) :
 				mH_(h_),
-				mFilePath1(inFilePath1),
-				mFilePath2(inFilePath2),
-				mCompletion(inCompletion) {
+				mFilePath1(filePath1),
+				mFilePath2(filePath2),
+				mCompletion(completion) {
 				}
 				
 				//
@@ -340,81 +328,83 @@ namespace hermit {
 				CompareFilesCompletionPtr mCompletion;
 			};
 			
-		} // private namespace
+		} // namespace CompareFiles_Cocoa_Impl
+		using namespace CompareFiles_Cocoa_Impl;
 		
 		//
 		void CompareFiles(const HermitPtr& h_,
-						  const FilePathPtr& inFilePath1,
-						  const FilePathPtr& inFilePath2,
-						  const bool& inIgnoreDates,
-						  const bool& inIgnoreFinderInfo,
-						  const PreprocessFileFunctionPtr& inPreprocessFunction,
-						  const CompareFilesCompletionPtr& inCompletion) {
-			
+						  const FilePathPtr& filePath1,
+						  const FilePathPtr& filePath2,
+						  const HardLinkMapPtr& hardLinkMap1,
+						  const HardLinkMapPtr& hardLinkMap2,
+						  const bool& ignoreDates,
+						  const bool& ignoreFinderInfo,
+						  const PreprocessFileFunctionPtr& preprocessFunction,
+						  const CompareFilesCompletionPtr& completion) {
 			FileType fileType1 = FileType::kUnknown;
-			if (!GetFileType(h_, inFilePath1, fileType1)) {
-				NOTIFY_ERROR(h_, "CompareFiles: GetFileType failed for:", inFilePath1);
-				inCompletion->Call(CompareFilesStatus::kError);
+			if (!GetFileType(h_, filePath1, fileType1)) {
+				NOTIFY_ERROR(h_, "CompareFiles: GetFileType failed for:", filePath1);
+				completion->Call(CompareFilesStatus::kError);
 				return;
 			}
 			FileType fileType2 = FileType::kUnknown;
-			if (!GetFileType(h_, inFilePath2, fileType2)) {
-				NOTIFY_ERROR(h_, "CompareFiles: GetFileType failed for: ", inFilePath2);
-				inCompletion->Call(CompareFilesStatus::kError);
+			if (!GetFileType(h_, filePath2, fileType2)) {
+				NOTIFY_ERROR(h_, "CompareFiles: GetFileType failed for:", filePath2);
+				completion->Call(CompareFilesStatus::kError);
 				return;
 			}
 			if (fileType1 != fileType2) {
-				FileNotificationParams params(kFileTypesDiffer, inFilePath1, inFilePath2);
+				FileNotificationParams params(kFileTypesDiffer, filePath1, filePath2);
 				NOTIFY(h_, kFilesDifferNotification, &params);
-				inCompletion->Call(CompareFilesStatus::kError);
+				completion->Call(CompareFilesStatus::kError);
 				return;
 			}
 			if (fileType1 == FileType::kDirectory) {
-				auto completion = std::make_shared<DirectoriesCompletion>(h_, inFilePath1, inFilePath2, inCompletion);
-				CompareDirectories(h_, inFilePath1, inFilePath2, inIgnoreDates, inIgnoreFinderInfo, inPreprocessFunction, completion);
+				auto compareCompletion = std::make_shared<DirectoriesCompletion>(h_, filePath1, filePath2, completion);
+				CompareDirectories(h_,
+								   filePath1,
+								   filePath2,
+								   hardLinkMap1,
+								   hardLinkMap2,
+								   ignoreDates,
+								   ignoreFinderInfo,
+								   preprocessFunction,
+								   compareCompletion);
 				return;
 			}
 			if (fileType1 == FileType::kSymbolicLink) {
-				auto status = CompareLinks(h_, inFilePath1, inFilePath2, inIgnoreDates);
+				auto status = CompareLinks(h_, filePath1, filePath2, ignoreDates);
 				if (status == kCompareLinksStatus_Cancel) {
-					inCompletion->Call(CompareFilesStatus::kCancel);
+					completion->Call(CompareFilesStatus::kCancel);
 					return;
 				}
 				if (status != kCompareLinksStatus_Success) {
-					NOTIFY_ERROR(h_,
-								 "CompareFiles: CompareLinks failed for path 1:",
-								 inFilePath1,
-								 "path 2:",
-								 inFilePath2);
-					inCompletion->Call(CompareFilesStatus::kError);
+					NOTIFY_ERROR(h_, "CompareFiles: CompareLinks failed for path 1:", filePath1, "path 2:", filePath2);
+					completion->Call(CompareFilesStatus::kError);
 					return;
 				}
-				inCompletion->Call(CompareFilesStatus::kSuccess);
+				completion->Call(CompareFilesStatus::kSuccess);
 				return;
 			}
 			if (fileType1 != FileType::kFile) {
-				NOTIFY_ERROR(h_,
-							 "CompareFiles: Unexpected file types for path 1:",
-							 inFilePath1,
-							 "path 2:",
-							 inFilePath2);
-				inCompletion->Call(CompareFilesStatus::kError);
+				NOTIFY_ERROR(h_, "CompareFiles: Unexpected file types for path 1:", filePath1, "path 2:", filePath2);
+				completion->Call(CompareFilesStatus::kError);
 				return;
 			}
 			
 			GetFileIsDeviceCallbackClass isDeviceCallback1;
-			GetFileIsDevice(h_, inFilePath1, isDeviceCallback1);
+			GetFileIsDevice(h_, filePath1, isDeviceCallback1);
 			if (!isDeviceCallback1.mSuccess) {
-				NOTIFY_ERROR(h_, "CompareFiles: GetFileIsDevice failed for:", inFilePath1);
-				inCompletion->Call(CompareFilesStatus::kError);
+				NOTIFY_ERROR(h_, "CompareFiles: GetFileIsDevice failed for:", filePath1);
+				completion->Call(CompareFilesStatus::kError);
 				return;
 			}
 			
 			GetFileIsDeviceCallbackClass isDeviceCallback2;
-			GetFileIsDevice(h_, inFilePath2, isDeviceCallback2);
+			GetFileIsDevice(h_, filePath2, isDeviceCallback2);
 			if (!isDeviceCallback2.mSuccess) {
-				NOTIFY_ERROR(h_, "CompareFiles: GetFileIsDevice failed for: ", inFilePath2);
-				inCompletion->Call(CompareFilesStatus::kError);
+				NOTIFY_ERROR(h_, "CompareFiles: GetFileIsDevice failed for:", filePath2);
+				completion->Call(CompareFilesStatus::kError);
 				return;
 			}
 			
@@ -425,8 +415,8 @@ namespace hermit {
 				if (isDeviceCallback1.mIsDevice != isDeviceCallback2.mIsDevice) {
 					match = false;
 					FileNotificationParams params(kFileDeviceStatesDiffer,
-												  inFilePath1,
-												  inFilePath2,
+												  filePath1,
+												  filePath2,
 												  isDeviceCallback1.mIsDevice,
 												  isDeviceCallback2.mIsDevice);
 					NOTIFY(h_, kFilesDifferNotification, &params);
@@ -435,8 +425,8 @@ namespace hermit {
 					if (isDeviceCallback1.mDeviceMode != isDeviceCallback2.mDeviceMode) {
 						match = false;
 						FileNotificationParams params(kFileDeviceModesDiffer,
-													  inFilePath1,
-													  inFilePath2,
+													  filePath1,
+													  filePath2,
 													  isDeviceCallback1.mDeviceMode,
 													  isDeviceCallback2.mDeviceMode);
 						NOTIFY(h_, kFilesDifferNotification, &params);
@@ -444,8 +434,8 @@ namespace hermit {
 					if (isDeviceCallback1.mDeviceID != isDeviceCallback2.mDeviceID) {
 						match = false;
 						FileNotificationParams params(kFileDeviceIDsDiffer,
-													  inFilePath1,
-													  inFilePath2,
+													  filePath1,
+													  filePath2,
 													  isDeviceCallback1.mDeviceID,
 													  isDeviceCallback2.mDeviceID);
 						NOTIFY(h_, kFilesDifferNotification, &params);
@@ -456,25 +446,25 @@ namespace hermit {
 				bool compareBits = true;
 				
 				PathIsHardLinkCallbackClass hardLinkCallback1;
-				PathIsHardLink(h_, inFilePath1, hardLinkCallback1);
+				PathIsHardLink(h_, filePath1, hardLinkCallback1);
 				if (!hardLinkCallback1.mSuccess) {
-					NOTIFY_ERROR(h_, "CompareFiles: PathIsHardLink failed for: ", inFilePath1);
-					inCompletion->Call(CompareFilesStatus::kError);
+					NOTIFY_ERROR(h_, "CompareFiles: PathIsHardLink failed for:", filePath1);
+					completion->Call(CompareFilesStatus::kError);
 					return;
 				}
 				
 				PathIsHardLinkCallbackClass hardLinkCallback2;
-				PathIsHardLink(h_, inFilePath2, hardLinkCallback2);
+				PathIsHardLink(h_, filePath2, hardLinkCallback2);
 				if (!hardLinkCallback2.mSuccess) {
-					NOTIFY_ERROR(h_, "CompareFiles: PathIsHardLink failed for: ", inFilePath2);
-					inCompletion->Call(CompareFilesStatus::kError);
+					NOTIFY_ERROR(h_, "CompareFiles: PathIsHardLink failed for:", filePath2);
+					completion->Call(CompareFilesStatus::kError);
 					return;
 				}
 				
 				if (hardLinkCallback1.mIsHardLink != hardLinkCallback2.mIsHardLink) {
-					FileNotificationParams params(kIsHardLinkDiffers, inFilePath1, inFilePath2);
+					FileNotificationParams params(kIsHardLinkDiffers, filePath1, filePath2);
 					NOTIFY(h_, kFilesDifferNotification, &params);
-					inCompletion->Call(CompareFilesStatus::kSuccess);
+					completion->Call(CompareFilesStatus::kSuccess);
 					return;
 				}
 				if (hardLinkCallback1.mIsHardLink) {
@@ -482,13 +472,13 @@ namespace hermit {
 					if (hardLinkCallback1.mFileSystemNumber != hardLinkCallback2.mFileSystemNumber) {
 						hardLinkTargetsMatch = false;
 						match = false;
-						FileNotificationParams params(kHardLinkFileSystemNumDiffers, inFilePath1, inFilePath2);
+						FileNotificationParams params(kHardLinkFileSystemNumDiffers, filePath1, filePath2);
 						NOTIFY(h_, kFilesDifferNotification, &params);
 					}
 					if (hardLinkCallback1.mFileNumber != hardLinkCallback2.mFileNumber) {
 						hardLinkTargetsMatch = false;
 						match = false;
-						FileNotificationParams params(kHardLinkFileNumDiffers, inFilePath1, inFilePath2);
+						FileNotificationParams params(kHardLinkFileNumDiffers, filePath1, filePath2);
 						NOTIFY(h_, kFilesDifferNotification, &params);
 					}
 					if (hardLinkTargetsMatch) {
@@ -497,45 +487,44 @@ namespace hermit {
 				}
 				else {
 					PathIsAliasCallbackClass isAlias1Callback;
-					PathIsAlias(h_, inFilePath1, isAlias1Callback);
+					PathIsAlias(h_, filePath1, isAlias1Callback);
 					if (!isAlias1Callback.mSuccess) {
-						NOTIFY_ERROR(h_, "CompareFiles: PathIsAlias failed for: ", inFilePath1);
-						inCompletion->Call(CompareFilesStatus::kError);
+						NOTIFY_ERROR(h_, "CompareFiles: PathIsAlias failed for:", filePath1);
+						completion->Call(CompareFilesStatus::kError);
 						return;
 					}
 					
 					PathIsAliasCallbackClass isAlias2Callback;
-					PathIsAlias(h_, inFilePath2, isAlias2Callback);
+					PathIsAlias(h_, filePath2, isAlias2Callback);
 					if (!isAlias2Callback.mSuccess) {
-						NOTIFY_ERROR(h_, "CompareFiles: PathIsAlias failed for: ", inFilePath2);
-						inCompletion->Call(CompareFilesStatus::kError);
+						NOTIFY_ERROR(h_, "CompareFiles: PathIsAlias failed for:", filePath2);
+						completion->Call(CompareFilesStatus::kError);
 						return;
 					}
 					
 					if (isAlias1Callback.mIsAlias != isAlias2Callback.mIsAlias) {
-						FileNotificationParams params(kIsAliasDiffers, inFilePath1, inFilePath2);
+						FileNotificationParams params(kIsAliasDiffers, filePath1, filePath2);
 						NOTIFY(h_, kFilesDifferNotification, &params);
-						inCompletion->Call(CompareFilesStatus::kSuccess);
+						completion->Call(CompareFilesStatus::kSuccess);
 						return;
 					}
 					
 					bool isAliasMatch = false;
 					if (isAlias1Callback.mIsAlias) {
 						compareBits = false;
-						CompareAliasFileStatus compareAliasStatus = CompareAliasFiles(h_, inFilePath1, inFilePath2);
-						if (compareAliasStatus == kCompareAliseFileStatus_Error) {
-							NOTIFY_ERROR(h_, "CompareFiles: CompareAliasFiles failed for: ", inFilePath1);
-							NOTIFY_ERROR(h_, "-- and: ", inFilePath2);
-							inCompletion->Call(CompareFilesStatus::kError);
+						CompareAliasFileStatus compareAliasStatus = CompareAliasFiles(h_, filePath1, filePath2);
+						if (compareAliasStatus == CompareAliasFileStatus::kError) {
+							NOTIFY_ERROR(h_, "CompareFiles: CompareAliasFiles failed for:", filePath1, "and:", filePath2);
+							completion->Call(CompareFilesStatus::kError);
 							return;
 						}
 						
-						if (compareAliasStatus == kCompareAliasFileStatus_NonMatch) {
+						if (compareAliasStatus == CompareAliasFileStatus::kNonMatch) {
 							match = false;
-							FileNotificationParams params(kAliasTargetsDiffer, inFilePath1, inFilePath2);
+							FileNotificationParams params(kAliasTargetsDiffer, filePath1, filePath2);
 							NOTIFY(h_, kFilesDifferNotification, &params);
 						}
-						else if (compareAliasStatus == kCompareAliasFileStatus_Match) {
+						else if (compareAliasStatus == CompareAliasFileStatus::kMatch) {
 							isAliasMatch = true;
 						}
 					}
@@ -543,39 +532,39 @@ namespace hermit {
 				
 				if (compareBits) {
 					GetFileTotalSizeCallbackClass sizeCallback;
-					GetFileTotalSize(h_, inFilePath1, sizeCallback);
+					GetFileTotalSize(h_, filePath1, sizeCallback);
 					if (!sizeCallback.mSuccess) {
-						NOTIFY_ERROR(h_, "CompareFiles: GetFileForkSize failed for: ", inFilePath1);
-						inCompletion->Call(CompareFilesStatus::kError);
+						NOTIFY_ERROR(h_, "CompareFiles: GetFileForkSize failed for:", filePath1);
+						completion->Call(CompareFilesStatus::kError);
 						return;
 					}
 					uint64_t fileSize1 = sizeCallback.mTotalSize;
 					
-					GetFileTotalSize(h_, inFilePath2, sizeCallback);
+					GetFileTotalSize(h_, filePath2, sizeCallback);
 					if (!sizeCallback.mSuccess) {
-						NOTIFY_ERROR(h_, "CompareFiles: GetFileForkSize failed for: ", inFilePath2);
-						inCompletion->Call(CompareFilesStatus::kError);
+						NOTIFY_ERROR(h_, "CompareFiles: GetFileForkSize failed for:", filePath2);
+						completion->Call(CompareFilesStatus::kError);
 						return;
 					}
 					uint64_t fileSize2 = sizeCallback.mTotalSize;
 					
 					if (fileSize1 != fileSize2) {
 						match = false;
-						FileNotificationParams params(kFileSizesDiffer, inFilePath1, inFilePath2, fileSize1, fileSize2);
+						FileNotificationParams params(kFileSizesDiffer, filePath1, filePath2, fileSize1, fileSize2);
 						NOTIFY(h_, kFilesDifferNotification, &params);
 					}
 					else if (fileSize1 > 0) {
 						@autoreleasepool {
 							uint64_t differenceOffset = 0;
 							bool dataMatch = false;
-							bool result = CompareData(h_, inFilePath1, inFilePath2, dataMatch, differenceOffset);
+							bool result = CompareData(h_, filePath1, filePath2, dataMatch, differenceOffset);
 							if (!result) {
-								inCompletion->Call(CompareFilesStatus::kError);
+								completion->Call(CompareFilesStatus::kError);
 								return;
 							}
 							if (!dataMatch) {
 								match = false;
-								FileNotificationParams params(kFileContentsDiffer, inFilePath1, inFilePath2, differenceOffset, 0);
+								FileNotificationParams params(kFileContentsDiffer, filePath1, filePath2, differenceOffset, 0);
 								NOTIFY(h_, kFilesDifferNotification, &params);
 							}
 						}
@@ -584,77 +573,77 @@ namespace hermit {
 			}
 			
 			GetFileIsLockedCallbackClass lockedCallback1;
-			GetFileIsLocked(h_, inFilePath1, lockedCallback1);
+			GetFileIsLocked(h_, filePath1, lockedCallback1);
 			if (!lockedCallback1.mSuccess) {
-				NOTIFY_ERROR(h_, "CompareFiles: GetFileIsLocked failed for: ", inFilePath1);
-				inCompletion->Call(CompareFilesStatus::kError);
+				NOTIFY_ERROR(h_, "CompareFiles: GetFileIsLocked failed for:", filePath1);
+				completion->Call(CompareFilesStatus::kError);
 				return;
 			}
 			
 			GetFileIsLockedCallbackClass lockedCallback2;
-			GetFileIsLocked(h_, inFilePath2, lockedCallback2);
+			GetFileIsLocked(h_, filePath2, lockedCallback2);
 			if (!lockedCallback2.mSuccess) {
-				NOTIFY_ERROR(h_, "CompareFiles: GetFileIsLocked failed for: ", inFilePath2);
-				inCompletion->Call(CompareFilesStatus::kError);
+				NOTIFY_ERROR(h_, "CompareFiles: GetFileIsLocked failed for:", filePath2);
+				completion->Call(CompareFilesStatus::kError);
 				return;
 			}
 			
 			if (lockedCallback1.mIsLocked != lockedCallback2.mIsLocked) {
 				match = false;
-				FileNotificationParams params(kLockedStatesDiffer, inFilePath1, inFilePath2);
+				FileNotificationParams params(kLockedStatesDiffer, filePath1, filePath2);
 				NOTIFY(h_, kFilesDifferNotification, &params);
 			}
 			
 			GetFileBSDFlagsCallbackClass bsdFlagsCallback1;
-			GetFileBSDFlags(h_, inFilePath1, bsdFlagsCallback1);
+			GetFileBSDFlags(h_, filePath1, bsdFlagsCallback1);
 			if (!bsdFlagsCallback1.mSuccess) {
-				NOTIFY_ERROR(h_, "CompareFiles: GetFileBSDFlags failed for: ", inFilePath1);
-				inCompletion->Call(CompareFilesStatus::kError);
+				NOTIFY_ERROR(h_, "CompareFiles: GetFileBSDFlags failed for:", filePath1);
+				completion->Call(CompareFilesStatus::kError);
 				return;
 			}
 			
 			GetFileBSDFlagsCallbackClass bsdFlagsCallback2;
-			GetFileBSDFlags(h_, inFilePath2, bsdFlagsCallback2);
+			GetFileBSDFlags(h_, filePath2, bsdFlagsCallback2);
 			if (!bsdFlagsCallback2.mSuccess) {
-				NOTIFY_ERROR(h_, "CompareFiles: GetFileBSDFlags failed for: ", inFilePath2);
-				inCompletion->Call(CompareFilesStatus::kError);
+				NOTIFY_ERROR(h_, "CompareFiles: GetFileBSDFlags failed for:", filePath2);
+				completion->Call(CompareFilesStatus::kError);
 				return;
 			}
 			
 			if (bsdFlagsCallback1.mFlags != bsdFlagsCallback2.mFlags) {
 				match = false;
-				FileNotificationParams params(kBSDFlagsDiffer, inFilePath1, inFilePath2);
+				FileNotificationParams params(kBSDFlagsDiffer, filePath1, filePath2);
 				NOTIFY(h_, kFilesDifferNotification, &params);
 			}
 			
 			GetFileACLCallbackClass<std::string> aclCallback1;
-			GetFileACL(h_, inFilePath1, aclCallback1);
+			GetFileACL(h_, filePath1, aclCallback1);
 			if (!aclCallback1.mSuccess) {
-				NOTIFY_ERROR(h_, "CompareFiles: GetFileACL failed for: ", inFilePath1);
-				inCompletion->Call(CompareFilesStatus::kError);
+				NOTIFY_ERROR(h_, "CompareFiles: GetFileACL failed for:", filePath1);
+				completion->Call(CompareFilesStatus::kError);
 				return;
 			}
 			
 			GetFileACLCallbackClass<std::string> aclCallback2;
-			GetFileACL(h_, inFilePath2, aclCallback2);
+			GetFileACL(h_, filePath2, aclCallback2);
 			if (!aclCallback2.mSuccess) {
-				NOTIFY_ERROR(h_, "CompareFiles: GetFileACL failed for: ", inFilePath2);
-				inCompletion->Call(CompareFilesStatus::kError);
+				NOTIFY_ERROR(h_, "CompareFiles: GetFileACL failed for:", filePath2);
+				completion->Call(CompareFilesStatus::kError);
 				return;
 			}
 			
 			if (aclCallback1.mACL != aclCallback2.mACL) {
 				match = false;
-				FileNotificationParams params(kACLsDiffer, inFilePath1, inFilePath2);
+				FileNotificationParams params(kACLsDiffer, filePath1, filePath2);
 				NOTIFY(h_, kFilesDifferNotification, &params);
 			}
 			
 			if (!isDevicePath) {
                 bool xattrsMatch = false;
-                auto result = CompareXAttrs(h_, inFilePath1, inFilePath2, xattrsMatch);
+                auto result = CompareXAttrs(h_, filePath1, filePath2, xattrsMatch);
                 if (result != CompareXAttrsResult::kSuccess) {
-                    NOTIFY_ERROR(h_, "CompareXAttrs failed for:", inFilePath1);
-                    inCompletion->Call(CompareFilesStatus::kError);
+                    NOTIFY_ERROR(h_, "CompareXAttrs failed for:", filePath1);
+                    completion->Call(CompareFilesStatus::kError);
                     return;
                 }
                 if (!xattrsMatch) {
@@ -663,46 +652,46 @@ namespace hermit {
 			}
 			
 			uint32_t permissions1 = 0;
-			if (!GetFilePosixPermissions(h_, inFilePath1, permissions1)) {
-				NOTIFY_ERROR(h_, "CompareFiles: GetFilePosixPermissions failed for path 1: ", inFilePath1);
-				inCompletion->Call(CompareFilesStatus::kError);
+			if (!GetFilePosixPermissions(h_, filePath1, permissions1)) {
+				NOTIFY_ERROR(h_, "CompareFiles: GetFilePosixPermissions failed for path 1:", filePath1);
+				completion->Call(CompareFilesStatus::kError);
 				return;
 			}
 			
 			uint32_t permissions2 = 0;
-			if (!GetFilePosixPermissions(h_, inFilePath2, permissions2)) {
-				NOTIFY_ERROR(h_, "CompareFiles: GetFilePosixPermissions failed for path 2: ", inFilePath2);
-				inCompletion->Call(CompareFilesStatus::kError);
+			if (!GetFilePosixPermissions(h_, filePath2, permissions2)) {
+				NOTIFY_ERROR(h_, "CompareFiles: GetFilePosixPermissions failed for path 2:", filePath2);
+				completion->Call(CompareFilesStatus::kError);
 				return;
 			}
 			
 			if (permissions1 != permissions2) {
 				match = false;
-				FileNotificationParams params(kPermissionsDiffer, inFilePath1, inFilePath2);
+				FileNotificationParams params(kPermissionsDiffer, filePath1, filePath2);
 				NOTIFY(h_, kFilesDifferNotification, &params);
 			}
 			
 			std::string userOwner1;
 			std::string groupOwner1;
-			if (!GetFilePosixOwnership(h_, inFilePath1, userOwner1, groupOwner1)) {
-				NOTIFY_ERROR(h_, "CompareFiles: GetFilePosixOwnership failed for path 1: ", inFilePath1);
-				inCompletion->Call(CompareFilesStatus::kError);
+			if (!GetFilePosixOwnership(h_, filePath1, userOwner1, groupOwner1)) {
+				NOTIFY_ERROR(h_, "CompareFiles: GetFilePosixOwnership failed for path 1:", filePath1);
+				completion->Call(CompareFilesStatus::kError);
 				return;
 			}
 			
 			std::string userOwner2;
 			std::string groupOwner2;
-			if (!GetFilePosixOwnership(h_, inFilePath2, userOwner2, groupOwner2)) {
-				NOTIFY_ERROR(h_, "CompareFiles: GetFilePosixOwnership failed for path 2: ", inFilePath2);
-				inCompletion->Call(CompareFilesStatus::kError);
+			if (!GetFilePosixOwnership(h_, filePath2, userOwner2, groupOwner2)) {
+				NOTIFY_ERROR(h_, "CompareFiles: GetFilePosixOwnership failed for path 2:", filePath2);
+				completion->Call(CompareFilesStatus::kError);
 				return;
 			}
 			
 			if (userOwner1 != userOwner2) {
 				match = false;
 				FileNotificationParams params(kUserOwnersDiffer,
-											  inFilePath1,
-											  inFilePath2,
+											  filePath1,
+											  filePath2,
 											  userOwner1,
 											  userOwner2);
 				NOTIFY(h_, kFilesDifferNotification, &params);
@@ -710,57 +699,55 @@ namespace hermit {
 			if (groupOwner1 != groupOwner2) {
 				match = false;
 				FileNotificationParams params(kGroupOwnersDiffer,
-											  inFilePath1,
-											  inFilePath2,
+											  filePath1,
+											  filePath2,
 											  groupOwner1,
 											  groupOwner2);
 				NOTIFY(h_, kFilesDifferNotification, &params);
 			}
 			
-			if (!isDevicePath && !inIgnoreFinderInfo) {
-				auto status = CompareFinderInfo(h_, inFilePath1, inFilePath2);
+			if (!isDevicePath && !ignoreFinderInfo) {
+				auto status = CompareFinderInfo(h_, filePath1, filePath2);
 				if ((status != kCompareFinderInfoStatus_Match) &&
 					(status != kCompareFinderInfoStatus_FinderInfosDiffer)) {
 					NOTIFY_ERROR(h_,
-								 "CompareFiles: CompareFinderInfo failed for path 1:",
-								 inFilePath1,
-								 "and path 2:",
-								 inFilePath2);
-					FileNotificationParams params(kErrorComparingFinderInfo, inFilePath1, inFilePath2);
+								 "CompareFiles: CompareFinderInfo failed for path 1:", filePath1,
+								 "and path 2:", filePath2);
+					FileNotificationParams params(kErrorComparingFinderInfo, filePath1, filePath2);
 					NOTIFY(h_, kFileErrorNotification, &params);
-					inCompletion->Call(CompareFilesStatus::kError);
+					completion->Call(CompareFilesStatus::kError);
 					return;
 				}
 				
 				if (status == kCompareFinderInfoStatus_FinderInfosDiffer) {
 					match = false;
-					FileNotificationParams params(kFinderInfosDiffer, inFilePath1, inFilePath2);
+					FileNotificationParams params(kFinderInfosDiffer, filePath1, filePath2);
 					NOTIFY(h_, kFilesDifferNotification, &params);
 				}
 			}
 			
-			if (!inIgnoreDates) {
+			if (!ignoreDates) {
 				GetFileDatesCallbackClassT<std::string> datesCallback1;
-				GetFileDates(h_, inFilePath1, datesCallback1);
+				GetFileDates(h_, filePath1, datesCallback1);
 				if (!datesCallback1.mSuccess) {
-					NOTIFY_ERROR(h_, "CompareFiles: GetFileDates failed for: ", inFilePath1);
-					inCompletion->Call(CompareFilesStatus::kError);
+					NOTIFY_ERROR(h_, "CompareFiles: GetFileDates failed for:", filePath1);
+					completion->Call(CompareFilesStatus::kError);
 					return;
 				}
 				
 				GetFileDatesCallbackClassT<std::string> datesCallback2;
-				GetFileDates(h_, inFilePath2, datesCallback2);
+				GetFileDates(h_, filePath2, datesCallback2);
 				if (!datesCallback2.mSuccess) {
-					NOTIFY_ERROR(h_, "CompareFiles: GetFileDates failed for: ", inFilePath2);
-					inCompletion->Call(CompareFilesStatus::kError);
+					NOTIFY_ERROR(h_, "CompareFiles: GetFileDates failed for:", filePath2);
+					completion->Call(CompareFilesStatus::kError);
 					return;
 				}
 				
 				if (datesCallback1.mCreationDate != datesCallback2.mCreationDate) {
 					match = false;
 					FileNotificationParams params(kCreationDatesDiffer,
-												  inFilePath1,
-												  inFilePath2,
+												  filePath1,
+												  filePath2,
 												  datesCallback1.mCreationDate,
 												  datesCallback2.mCreationDate);
 					NOTIFY(h_, kFilesDifferNotification, &params);
@@ -769,8 +756,8 @@ namespace hermit {
 				if (datesCallback1.mModificationDate != datesCallback2.mModificationDate) {
 					match = false;
 					FileNotificationParams params(kModificationDatesDiffer,
-												  inFilePath1,
-												  inFilePath2,
+												  filePath1,
+												  filePath2,
 												  datesCallback1.mModificationDate,
 												  datesCallback2.mModificationDate);
 					NOTIFY(h_, kFilesDifferNotification, &params);
@@ -778,11 +765,11 @@ namespace hermit {
 			}
 			
 			if (match) {
-				FileNotificationParams params(kFilesMatch, inFilePath1, inFilePath2);
+				FileNotificationParams params(kFilesMatch, filePath1, filePath2);
 				NOTIFY(h_, kFilesMatchNotification, &params);
 			}
 			
-			inCompletion->Call(CompareFilesStatus::kSuccess);
+			completion->Call(CompareFilesStatus::kSuccess);
 		}
 		
 	} // namespace file
