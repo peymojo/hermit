@@ -89,6 +89,9 @@ namespace hermit {
 						else if (S_ISLNK(s.st_mode)) {
 							fileType = FileType::kSymbolicLink;
 						}
+						else if (S_ISBLK(s.st_mode) || S_ISCHR(s.st_mode) || S_ISFIFO(s.st_mode) || S_ISSOCK(s.st_mode)) {
+							fileType = FileType::kDevice;
+						}
 
 						if (fileType == FileType::kUnknown) {
 							NOTIFY_ERROR(h_, "ListDirectoryContentsWithType: Unrecognized item type:", itemPathUTF8);

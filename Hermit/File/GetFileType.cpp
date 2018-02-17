@@ -16,9 +16,9 @@
 //	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+#include <sys/stat.h>
 #include "Hermit/Foundation/Notification.h"
-#include "PathIsDirectory.h"
-#include "PathIsSymbolicLink.h"
+#include "FilePathToCocoaPathString.h"
 #include "GetFileType.h"
 
 namespace hermit {
@@ -26,33 +26,34 @@ namespace hermit {
 		
 		//
 		GetFileTypeStatus GetFileType(const HermitPtr& h_, const FilePathPtr& filePath, FileType& outType) {
-		
-			FileType fileType = FileType::kUnknown;
-			
-			//	Check for symbolic link first, as a link to a directory might also identify as a directory.
-			PathIsSymbolicLinkCallbackClass isLinkCallback;
-			PathIsSymbolicLink(h_, filePath, isLinkCallback);
-			if (!isLinkCallback.mSuccess) {
-				NOTIFY_ERROR(h_, "GetFileType: PathIsSymbolicLink failed for path:", filePath);
+			std::string itemPathUTF8;
+			FilePathToCocoaPathString(h_, filePath, itemPathUTF8);
+
+			struct stat s;
+			int err = lstat(itemPathUTF8.c_str(), &s);
+			if (err != 0) {
+				NOTIFY_ERROR(h_, "lstat failed for path:", itemPathUTF8, "err:", err);
 				return GetFileTypeStatus::kError;
 			}
-			if (isLinkCallback.mIsLink) {
+
+			FileType fileType = FileType::kUnknown;
+			if (S_ISREG(s.st_mode)) {
+				fileType = FileType::kFile;
+			}
+			else if (S_ISDIR(s.st_mode)) {
+				fileType = FileType::kDirectory;
+			}
+			else if (S_ISLNK(s.st_mode)) {
 				fileType = FileType::kSymbolicLink;
 			}
-			else {
-				bool isDirectory = false;
-				auto status = PathIsDirectory(h_, filePath, isDirectory);
-				if (status != PathIsDirectoryStatus::kSuccess) {
-					NOTIFY_ERROR(h_, "GetFileType: PathIsDirectory failed for path:", filePath);
-					return GetFileTypeStatus::kError;
-				}
-				if (isDirectory) {
-					fileType = FileType::kDirectory;
-				}
-				else {
-					fileType = FileType::kFile;
-				}
+			else if (S_ISBLK(s.st_mode) || S_ISCHR(s.st_mode) || S_ISFIFO(s.st_mode) || S_ISSOCK(s.st_mode)) {
+				fileType = FileType::kDevice;
 			}
+			else {
+				NOTIFY_ERROR(h_, "Unrecognized file type:", itemPathUTF8);
+				return GetFileTypeStatus::kError;
+			}
+
 			outType = fileType;
 			return GetFileTypeStatus::kSuccess;
 		}

@@ -26,7 +26,8 @@ namespace hermit {
 			kUnknown,
 			kFile,
 			kDirectory,
-			kSymbolicLink
+			kSymbolicLink,
+			kDevice
 		};
 		
 	} // namespace

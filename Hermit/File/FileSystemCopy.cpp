@@ -303,7 +303,7 @@ namespace hermit {
 					}
 					else {
 						auto fileInfo = std::make_shared<FileInfo>(itemPath, itemName);
-						if (fileType == FileType::kFile) {
+						if ((fileType == FileType::kFile) || (fileType == FileType::kDevice)) {
 							mFiles.insert(fileInfo);
 						}
 						else if (fileType == FileType::kDirectory) {
@@ -751,7 +751,7 @@ namespace hermit {
 				CopyOneSymbolicLink(h_, sourcePath, destPath, completion);
 				return;
 			}
-			if (fileType == FileType::kFile) {
+			if ((fileType == FileType::kFile) || (fileType == FileType::kDevice)) {
 				CopyOneFile(h_, sourcePath, destPath, completion);
 				return;
 			}

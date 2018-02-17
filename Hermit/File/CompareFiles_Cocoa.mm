@@ -1042,7 +1042,7 @@ namespace hermit {
 			}
 			
 			// Is this something we don't even know about?
-			if (fileType1 != FileType::kFile) {
+			if ((fileType1 != FileType::kFile) && (fileType1 != FileType::kDevice)) {
 				NOTIFY_ERROR(h_, "CompareFiles: Unexpected file types for path 1:", filePath1, "path 2:", filePath2);
 				completion->Call(CompareFilesStatus::kError);
 				return;
