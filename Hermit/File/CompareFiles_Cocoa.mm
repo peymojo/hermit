@@ -111,7 +111,7 @@ namespace hermit {
 				
 				if (bsdFlagsCallback1.mFlags != bsdFlagsCallback2.mFlags) {
 					match = IsMatch::kNo;
-					FileNotificationParams params(kBSDFlagsDiffer, filePath1, filePath2);
+					FileNotificationParams params(kBSDFlagsDiffer, filePath1, filePath2, bsdFlagsCallback1.mFlags, bsdFlagsCallback2.mFlags);
 					NOTIFY(h_, kFilesDifferNotification, &params);
 				}
 				
