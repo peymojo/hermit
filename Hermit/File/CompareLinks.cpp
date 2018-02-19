@@ -100,7 +100,11 @@ namespace hermit {
 			bool match = true;
 			if (link1TargetPathUTF8 != link2TargetPathUTF8) {
 				match = false;
-				FileNotificationParams params(kLinkTargetsDiffer, filePath1, filePath2);
+				FileNotificationParams params(kLinkTargetsDiffer,
+											  filePath1,
+											  filePath2,
+											  link1TargetPathUTF8,
+											  link2TargetPathUTF8);
 				NOTIFY(h_, kFilesDifferNotification, &params);
 			}
 						
