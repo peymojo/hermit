@@ -39,7 +39,7 @@ namespace hermit {
 				[url getResourceValue:&isAliasValue forKey:NSURLIsAliasFileKey error:&error];
 				if (error != nil) {
 					NOTIFY_ERROR(h_,
-								 "SetFileDates: setResourceValue:NSURLCreationDateKey failed for file:", inFilePath,
+								 "PathIsAlias: setResourceValue:NSURLCreationDateKey failed for file:", inFilePath,
 								 "error.localizedDescription:", [error.localizedDescription UTF8String],
 								 "error.domain:", [error.domain UTF8String],
 								 "error.code: ", (int32_t)error.code);
