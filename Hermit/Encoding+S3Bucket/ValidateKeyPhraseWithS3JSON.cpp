@@ -59,7 +59,7 @@ namespace hermit {
 				
 				value::ValuePtr values;
 				uint64_t bytesConsumed = 0;
-				if (!json::JSONToDataValue(h_, mResponse->mData, mResponse->mData.size(), values, bytesConsumed)) {
+				if (!json::JSONToDataValue(h_, mResponse->mData.data(), mResponse->mData.size(), values, bytesConsumed)) {
 					NOTIFY_ERROR(h_, "ValidateKeyPhraseWithS3JSON: JSONToDataValue failed, keyJSON path:", mKeystorePath);
 					mCompletion->Call(ValidateKeyPhraseWithS3JSONStatus::kError, "");
 					return;

@@ -25,12 +25,10 @@
 namespace hermit {
 	namespace json {
 		
-		//
-		bool JSONToDataValue(const HermitPtr& h_,
-							 const std::string& JSON,
-							 const int64_t& maxJSONSize,
-							 value::ValuePtr& outValue,
-							 uint64_t& outBytesConsumed);
+		// Parse json data in the buffer pointed to by <input> up to max <inputSize>
+		// The json may end before inputSize is reached, this is not considered an error.
+		// <outBytesConsumed> will indicate how much data was used.
+		bool JSONToDataValue(const HermitPtr& h_, const char* input, size_t inputSize, value::ValuePtr& outValue, uint64_t& outBytesConsumed);
 		
 	} // namespace json
 } // namespace hermit

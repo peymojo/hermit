@@ -87,7 +87,7 @@ namespace hermit {
 					
 					value::ValuePtr value;
 					uint64_t bytesConsumed = 0;
-					if (!json::JSONToDataValue(h_, mData->mData, mData->mData.size(), value, bytesConsumed)) {
+					if (!json::JSONToDataValue(h_, mData->mData.data(), mData->mData.size(), value, bytesConsumed)) {
 						NOTIFY_ERROR(h_, "ValidateKeyPhraseWithJSONFile: JSONToDataValue failed, keyJSONFilePath:", mKeyJSONFilePath);
 						mCompletion->Call(h_, ValidateKeyPhraseWithJSONFileResult::kError, "");
 						return;

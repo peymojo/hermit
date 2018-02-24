@@ -202,8 +202,9 @@ namespace hermit {
 			class JSONParser {
 			public:
 				//
-				JSONParser(const std::string& inData) :
-				mData(inData),
+				JSONParser(const char* input, size_t inputSize) :
+				mInput(input),
+				mInputSize(inputSize),
 				mInString(false),
 				mInNumber(false),
 				mInBool(false),
@@ -277,14 +278,14 @@ namespace hermit {
 						   const bool& inIsRoot,
 						   const value::DataType& inContainerType,
 						   value::EnumerateDataValuesCallback& inValuesCallback) {
-					while (mIndex < mData.size()) {
-						char ch = mData[mIndex++];
+					while (mIndex < mInputSize) {
+						char ch = mInput[mIndex++];
 						
 						bool thisCharIsEscape = false;
 						if (mInString) {
 							if (ch == '\"') {
 								if (!mLastCharWasEscape) {
-									std::string stringValue = std::string(mData.data() + mStringStartPos,
+									std::string stringValue = std::string(mInput + mStringStartPos,
 																		  mIndex - mStringStartPos - 1);
 									if (!UnescapeString(h_, stringValue)) {
 										NOTIFY_ERROR(h_, "ParseJSON: UnescapeString failed for stringValue:", stringValue);
@@ -623,7 +624,8 @@ namespace hermit {
 				}
 				
 				//
-				std::string mData;
+				const char* mInput;
+				size_t mInputSize;
 				bool mInString;
 				bool mInBool;
 				std::string mCurrentBoolStr;
@@ -643,20 +645,19 @@ namespace hermit {
 		} // private namespace
 		
 		//
-		bool JSONToDataValue(const HermitPtr& h_,
-							 const std::string& JSON,
-							 const int64_t& maxJSONSize,
-							 value::ValuePtr& outValue,
-							 uint64_t& outBytesConsumed) {
+		bool JSONToDataValue(const HermitPtr& h_, const char* input, size_t inputSize, value::ValuePtr& outValue, uint64_t& outBytesConsumed) {
 			EnumerateRootJSONValuesCallbackT<std::string, ValueMap, ValueVector> valuesCallback;
-			JSONParser parser(JSON);
+			JSONParser parser(input, inputSize);
 			if (!parser.Parse(h_, true, value::DataType::kArray, valuesCallback)) {
 				if (parser.mError) {
-					NOTIFY_ERROR(h_, "JSONToDataValue: JSONParser.Parse failed, json:", JSON);
+					NOTIFY_ERROR(h_, "JSONToDataValue: JSONParser.Parse failed");
 					return false;
 				}
-				//	client decided it had everything it needed... note that this means the parser.mIndex
-				//	value can be before the end of the json... so it goes.
+				// TODO: In a previous implementation which used client callbacks, the client could abort the json parse once it
+				// got the information it needed. This isn't still true, so this combination of Parse returning false but mError not
+				// being set seems obsolete. (Also there was a confusing side effect with that model where the outBytesConsumed
+				// would be less than the end of the json.)
+				NOTIFY_ERROR(h_, "JSONToDataValue: JSONParser.Parse returned false but no error raised?");
 			}
 			outValue = valuesCallback.mValue;
 			outBytesConsumed = parser.mIndex;
