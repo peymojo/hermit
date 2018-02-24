@@ -28,6 +28,7 @@
 #include "Hermit/File/DeleteFile.h"
 #include "Hermit/File/FileExists.h"
 #include "Hermit/File/GetAliasTarget.h"
+#include "Hermit/File/GetFileBSDFlags.h"
 #include "Hermit/File/GetFileDataSize.h"
 #include "Hermit/File/GetFileDates.h"
 #include "Hermit/File/GetFilePathUTF8String.h"
@@ -40,6 +41,7 @@
 #include "Hermit/File/PathIsAlias.h"
 #include "Hermit/File/PathIsPackage.h"
 #include "Hermit/File/SetDirectoryIsPackage.h"
+#include "Hermit/File/SetFileBSDFlags.h"
 #include "Hermit/File/SetFileDates.h"
 #include "Hermit/File/SetFilePosixOwnership.h"
 #include "Hermit/File/SetFilePosixPermissions.h"
@@ -69,6 +71,19 @@ namespace hermit {
 					success = false;
 				}
 
+				GetFileBSDFlagsCallbackClass bsdFlags;
+				GetFileBSDFlags(h_, sourcePath, bsdFlags);
+				if (!bsdFlags.mSuccess) {
+					NOTIFY_ERROR(h_, "GetFileBSDFlags failed for source path:", sourcePath);
+					success = false;
+				}
+				else {
+					if (!SetFileBSDFlags(h_, destPath, bsdFlags.mFlags)) {
+						NOTIFY_ERROR(h_, "SetFileBSDFlags failed for dest path:", destPath);
+						success = false;
+					}
+				}
+				
 				uint32_t permissions = 0;
 				if (!GetFilePosixPermissions(h_, sourcePath, permissions)) {
 					NOTIFY_ERROR(h_, "GetFilePosixPermissions failed for source path:", sourcePath);
