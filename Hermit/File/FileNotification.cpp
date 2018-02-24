@@ -51,6 +51,7 @@ namespace hermit {
         const char* kXAttrPresenceMismatch = "xattr-presence-mismatch";
         const char* kXAttrValuesDiffer = "xattr-values-differ";
         const char* kPermissionsDiffer = "permissionsdiffer";
+		const char* kDirectoryAccessDiffers = "directory-access-differs";
 		const char* kUserOwnersDiffer = "userownersdiffer";
 		const char* kGroupOwnersDiffer = "groupownersdiffer";
 		const char* kLinkTargetsDiffer = "linktargetsdiffer";
@@ -62,6 +63,10 @@ namespace hermit {
 		const char* kFileDeviceModesDiffer = "devicemodesdiffer";
 		const char* kFileDeviceIDsDiffer = "deviceidsdiffer";
 		const char* kFileSkipped = "fileskipped";
+		
+		//
+		const char* kPermissionDeniedNotification = "permission-denied";
+		const char* kPermissionDenied = "permission-denied";
 		
 		//
 		FileNotificationParams::FileNotificationParams(const std::string& inType, const FilePathPtr& inPath1) :

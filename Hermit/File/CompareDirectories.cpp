@@ -200,8 +200,7 @@ namespace hermit {
 						
 						if (datesCallback1.mCreationDate != datesCallback2.mCreationDate) {
 							attributesMatch = false;
-							FileNotificationParams params(
-														  kCreationDatesDiffer,
+							FileNotificationParams params(kCreationDatesDiffer,
 														  mFilePath1,
 														  mFilePath2,
 														  datesCallback1.mCreationDate,
@@ -210,8 +209,7 @@ namespace hermit {
 						}
 						if (datesCallback1.mModificationDate != datesCallback2.mModificationDate) {
 							attributesMatch = false;
-							FileNotificationParams params(
-														  kModificationDatesDiffer,
+							FileNotificationParams params(kModificationDatesDiffer,
 														  mFilePath1,
 														  mFilePath2,
 														  datesCallback1.mModificationDate,
@@ -557,7 +555,7 @@ namespace hermit {
 				
 				Directory dir1(preprocessFunction);
 				auto status1 = ListDirectoryContents(h_, filePath1, false, dir1);
-				if (status1 != ListDirectoryContentsResult::kSuccess) {
+				if ((status1 != ListDirectoryContentsResult::kSuccess) && (status1 != ListDirectoryContentsResult::kPermissionDenied)) {
 					NOTIFY_ERROR(h_, "CompareDirectories: ListDirectoryContents failed for:", filePath1);
 					completion->Call(CompareDirectoriesStatus::kError);
 					return;
@@ -565,9 +563,28 @@ namespace hermit {
 				
 				Directory dir2(preprocessFunction);
 				auto status2 = ListDirectoryContents(h_, filePath2, false, dir2);
-				if (status2 != ListDirectoryContentsResult::kSuccess) {
+				if ((status2 != ListDirectoryContentsResult::kSuccess) && (status2 != ListDirectoryContentsResult::kPermissionDenied)) {
 					NOTIFY_ERROR(h_, "CompareDirectories: ListDirectoryContents failed for:", filePath2);
 					completion->Call(CompareDirectoriesStatus::kError);
+					return;
+				}
+				
+				if ((status1 == ListDirectoryContentsResult::kPermissionDenied) || (status2 == ListDirectoryContentsResult::kPermissionDenied)) {
+					if (status1 != status2) {
+						FileNotificationParams params(kDirectoryAccessDiffers, filePath1, filePath2);
+						NOTIFY(h_, kFilesDifferNotification, &params);
+					}
+					if (status1 == ListDirectoryContentsResult::kPermissionDenied) {
+						FileNotificationParams params(kPermissionDenied, filePath1);
+						NOTIFY(h_, kPermissionDeniedNotification, &params);
+					}
+					if (status2 == ListDirectoryContentsResult::kPermissionDenied) {
+						FileNotificationParams params(kPermissionDenied, filePath2);
+						NOTIFY(h_, kPermissionDeniedNotification, &params);
+					}
+					// Can't really continue to test attributes and so forth since those calls will
+					// likely also encounter permission denied errors.
+					completion->Call(CompareDirectoriesStatus::kSuccess);
 					return;
 				}
 				

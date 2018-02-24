@@ -55,6 +55,7 @@ namespace hermit {
         extern const char* kXAttrPresenceMismatch;
         extern const char* kXAttrValuesDiffer;
 		extern const char* kPermissionsDiffer;
+		extern const char* kDirectoryAccessDiffers;
 		extern const char* kUserOwnersDiffer;
 		extern const char* kGroupOwnersDiffer;
 		extern const char* kLinkTargetsDiffer;
@@ -67,6 +68,10 @@ namespace hermit {
 		extern const char* kFileDeviceIDsDiffer;
 		extern const char* kFileSkipped;
 		
+		//
+		extern const char* kPermissionDeniedNotification;
+		extern const char* kPermissionDenied;
+
 		//
 		struct FileNotificationParams {
 			//
