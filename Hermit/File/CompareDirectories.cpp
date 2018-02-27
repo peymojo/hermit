@@ -381,7 +381,7 @@ namespace hermit {
 			typedef std::shared_ptr<FileInfo> FileInfoPtr;
 			
 			//
-			struct SortFileInfoPtrs : public std::binary_function<FileInfoPtr, FileInfoPtr, bool> {
+			struct CompareFileInfoPtrs : public std::binary_function<FileInfoPtr, FileInfoPtr, bool> {
 				//
 				bool operator ()(const FileInfoPtr& inLHS, const FileInfoPtr& inRHS) const {
 					if (inLHS->mLowerName == inRHS->mLowerName) {
@@ -392,7 +392,7 @@ namespace hermit {
 			};
 			
 			//
-			typedef std::set<FileInfoPtr, SortFileInfoPtrs> FileSet;
+			typedef std::set<FileInfoPtr, CompareFileInfoPtrs> FileSet;
 			
 			//
 			class Directory : public ListDirectoryContentsItemCallback {
@@ -463,6 +463,7 @@ namespace hermit {
 				FileSet::const_iterator it1 = dir1Files.begin();
 				FileSet::const_iterator it2 = dir2Files.begin();
 				
+				CompareFileInfoPtrs firstComesBeforeSecondFn;
 				auto aggregator = std::make_shared<Aggregator>(h_, completion);
 				bool match = true;
 				while (true) {
@@ -485,20 +486,16 @@ namespace hermit {
 						break;
 					}
 					
-					if ((*it1)->mName < (*it2)->mName) {
+					if (firstComesBeforeSecondFn((*it1), (*it2))) {
 						match = false;
-						
 						FileNotificationParams params(kItemInPath1Only, (*it1)->mPath, NULL);
 						NOTIFY(h_, kFilesDifferNotification, &params);
-						
 						++it1;
 					}
-					else if ((*it1)->mName > (*it2)->mName) {
+					else if (firstComesBeforeSecondFn((*it2), (*it1))) {
 						match = false;
-						
 						FileNotificationParams params(kItemInPath2Only, NULL, (*it2)->mPath);
 						NOTIFY(h_, kFilesDifferNotification, &params);
-						
 						++it2;
 					}
 					else {
