@@ -45,6 +45,12 @@
 		EFAB5ACE1F642BF2002DFCC5 /* GetPrimaryMACAddress.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAB5ACC1F642BF2002DFCC5 /* GetPrimaryMACAddress.cpp */; };
 		EFAB5ACF1F642BF2002DFCC5 /* GetPrimaryMACAddress.h in Headers */ = {isa = PBXBuildFile; fileRef = EFAB5ACD1F642BF2002DFCC5 /* GetPrimaryMACAddress.h */; };
 		EFAB5AD11F642C99002DFCC5 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EFAB5AD01F642C99002DFCC5 /* IOKit.framework */; };
+		EFECA4C2204705D4006F73DF /* SimpleTaskQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFECA4C0204705D4006F73DF /* SimpleTaskQueue.cpp */; };
+		EFECA4C3204705D4006F73DF /* SimpleTaskQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFECA4C0204705D4006F73DF /* SimpleTaskQueue.cpp */; };
+		EFECA4C4204705D4006F73DF /* SimpleTaskQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFECA4C0204705D4006F73DF /* SimpleTaskQueue.cpp */; };
+		EFECA4C5204705D4006F73DF /* SimpleTaskQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = EFECA4C1204705D4006F73DF /* SimpleTaskQueue.h */; };
+		EFECA4C6204705D4006F73DF /* SimpleTaskQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = EFECA4C1204705D4006F73DF /* SimpleTaskQueue.h */; };
+		EFECA4C7204705D4006F73DF /* SimpleTaskQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = EFECA4C1204705D4006F73DF /* SimpleTaskQueue.h */; };
 		EFF396D61F65504600B1BD33 /* FoundationKit_iOS.h in Headers */ = {isa = PBXBuildFile; fileRef = EFF396D41F65504600B1BD33 /* FoundationKit_iOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EFF396E11F65507700B1BD33 /* CompareMemory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF59A6401F5911A500902A12 /* CompareMemory.cpp */; };
 		EFF396EE1F65507700B1BD33 /* GenerateSecureRandomBytes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFE49F3E1D86AFE60044BC06 /* GenerateSecureRandomBytes.cpp */; };
@@ -108,6 +114,8 @@
 		EFE49F521D86AFE60044BC06 /* TaskQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskQueue.h; sourceTree = "<group>"; };
 		EFE49F551D86AFE60044BC06 /* ThreadLock_Mac.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ThreadLock_Mac.cpp; sourceTree = "<group>"; };
 		EFE49F561D86AFE60044BC06 /* ThreadLock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThreadLock.h; sourceTree = "<group>"; };
+		EFECA4C0204705D4006F73DF /* SimpleTaskQueue.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SimpleTaskQueue.cpp; sourceTree = "<group>"; };
+		EFECA4C1204705D4006F73DF /* SimpleTaskQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SimpleTaskQueue.h; sourceTree = "<group>"; };
 		EFF396D21F65504600B1BD33 /* FoundationKit_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FoundationKit_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EFF396D41F65504600B1BD33 /* FoundationKit_iOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FoundationKit_iOS.h; sourceTree = "<group>"; };
 		EFF396D51F65504600B1BD33 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -205,6 +213,8 @@
 				EFB6438E1D86AF6D00EBDFFF /* Products */,
 				EFE49F4A1D86AFE60044BC06 /* SharedBuffer.cpp */,
 				EFE49F4B1D86AFE60044BC06 /* SharedBuffer.h */,
+				EFECA4C0204705D4006F73DF /* SimpleTaskQueue.cpp */,
+				EFECA4C1204705D4006F73DF /* SimpleTaskQueue.h */,
 				EFE49F4D1D86AFE60044BC06 /* StaticLog.h */,
 				EFE49F4E1D86AFE60044BC06 /* StaticLog.mm */,
 				EFE49F4F1D86AFE60044BC06 /* StreamDataFunction.h */,
@@ -242,6 +252,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EF2CF5AE1FF249C200652E69 /* FoundationLib.h in Headers */,
+				EFECA4C7204705D4006F73DF /* SimpleTaskQueue.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -252,6 +263,7 @@
 				EF59A64F1F5911A500902A12 /* GetCurrentUTCTimeString.h in Headers */,
 				EF92C0E41F10F7200097D708 /* FoundationKit.h in Headers */,
 				EF59A64D1F5911A500902A12 /* GetCurrentUTCAndLocalTimeStrings.h in Headers */,
+				EFECA4C5204705D4006F73DF /* SimpleTaskQueue.h in Headers */,
 				EF59A64B1F5911A500902A12 /* CompareMemory.h in Headers */,
 				EF59A6531F5911A500902A12 /* MemXOR.h in Headers */,
 				EFAB5ACF1F642BF2002DFCC5 /* GetPrimaryMACAddress.h in Headers */,
@@ -264,6 +276,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EFF396D61F65504600B1BD33 /* FoundationKit_iOS.h in Headers */,
+				EFECA4C6204705D4006F73DF /* SimpleTaskQueue.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -393,6 +406,7 @@
 				EF2CF5B41FF249D500652E69 /* AsyncTaskQueue.cpp in Sources */,
 				EF2CF5B51FF249D500652E69 /* CompareMemory.cpp in Sources */,
 				EF2CF5B61FF249D500652E69 /* GenerateSecureRandomBytes.cpp in Sources */,
+				EFECA4C4204705D4006F73DF /* SimpleTaskQueue.cpp in Sources */,
 				EF2CF5B71FF249D500652E69 /* GetCurrentUTCAndLocalTimeStrings.cpp in Sources */,
 				EF2CF5B81FF249D500652E69 /* GetCurrentUTCTimeString.cpp in Sources */,
 				EF2CF5B91FF249D500652E69 /* GetPrimaryMACAddress.cpp in Sources */,
@@ -414,6 +428,7 @@
 				EF59A64E1F5911A500902A12 /* GetCurrentUTCTimeString.cpp in Sources */,
 				EF92C0F11F10F77C0097D708 /* StaticLog.mm in Sources */,
 				EF92C0E91F10F72D0097D708 /* GenerateSecureRandomBytes.cpp in Sources */,
+				EFECA4C2204705D4006F73DF /* SimpleTaskQueue.cpp in Sources */,
 				EF59A6521F5911A500902A12 /* MemXOR.cpp in Sources */,
 				EF92C0EA1F10F72D0097D708 /* Notification.cpp in Sources */,
 				EF92C0EB1F10F72D0097D708 /* AsyncTaskQueue.cpp in Sources */,
@@ -435,6 +450,7 @@
 				EFF396F01F65507700B1BD33 /* GetCurrentUTCAndLocalTimeStrings.cpp in Sources */,
 				EFF396F21F65507700B1BD33 /* GetCurrentUTCTimeString.cpp in Sources */,
 				EFF396F61F65507700B1BD33 /* GetUTCSecondsFromDateTimeString_Cocoa.mm in Sources */,
+				EFECA4C3204705D4006F73DF /* SimpleTaskQueue.cpp in Sources */,
 				EFF396FA1F65507700B1BD33 /* LibFoundation.m in Sources */,
 				EFF396FC1F65507700B1BD33 /* LoggingHermit.mm in Sources */,
 				EFF396FD1F65507700B1BD33 /* MemXOR.cpp in Sources */,
