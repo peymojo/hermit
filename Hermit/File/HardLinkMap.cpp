@@ -449,7 +449,7 @@ namespace hermit {
 			auto completionProxy = std::make_shared<CompletionProxy>(shared_from_this(), completion);
 			auto task = std::make_shared<Task>(mImpl->mContext, item, processFunction, completionProxy);
 			if (!QueueTask(h_, task)) {
-				NOTIFY_ERROR(h_, "QueueAsyncTask failed");
+				NOTIFY_ERROR(h_, "QueueTask failed");
 				completion->Call(h_, HardLinkInfoStatus::kError, std::vector<std::string>(), "", 0, "");
 			}
 		}
