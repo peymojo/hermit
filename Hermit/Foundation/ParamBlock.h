@@ -137,45 +137,6 @@ struct Name { \
 
 //
 //
-#define DEFINE_PARAMBLOCK_7( \
-	Name, \
-	P1Type, P1Name, \
-	P2Type, P2Name, \
-	P3Type, P3Name, \
-	P4Type, P4Name, \
-	P5Type, P5Name, \
-	P6Type, P6Name, \
-	P7Type, P7Name) \
-struct Name { \
-	Name( \
-		const P1Type& inP1, \
-		const P2Type& inP2, \
-		const P3Type& inP3, \
-		const P4Type& inP4, \
-		const P5Type& inP5, \
-		const P6Type& inP6, \
-		const P7Type& inP7) \
-		: \
-		P1Name(inP1), \
-		P2Name(inP2), \
-		P3Name(inP3), \
-		P4Name(inP4), \
-		P5Name(inP5), \
-		P6Name(inP6), \
-		P7Name(inP7) \
-	{ \
-	} \
-	P1Type P1Name; \
-	P2Type P2Name; \
-	P3Type P3Name; \
-	P4Type P4Name; \
-	P5Type P5Name; \
-	P6Type P6Name; \
-	P7Type P7Name; \
-};
-
-//
-//
 #define DEFINE_PARAMBLOCK_8( \
 	Name, \
 	P1Type, P1Name, \
