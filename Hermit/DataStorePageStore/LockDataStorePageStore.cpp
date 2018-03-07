@@ -35,15 +35,15 @@ namespace hermit {
 				//
 				virtual void Call(const HermitPtr& h_, const LockTaskQueueResult& result) override {
 					if (result == LockTaskQueueResult::kCancel) {
-						mCompletion->Call(h_, pagestore::kLockPageStoreStatus_Canceled);
+						mCompletion->Call(h_, pagestore::LockPageStoreResult::kCanceled);
 						return;
 					}
 					if (result != LockTaskQueueResult::kSuccess) {
 						NOTIFY_ERROR(h_, "LockDataStorePageStore: pageStore.Lock failed.");
-						mCompletion->Call(h_, pagestore::kLockPageStoreStatus_Canceled);
+						mCompletion->Call(h_, pagestore::LockPageStoreResult::kCanceled);
 						return;
 					}
-					mCompletion->Call(h_, pagestore::kLockPageStoreStatus_Success);
+					mCompletion->Call(h_, pagestore::LockPageStoreResult::kSuccess);
 				}
 				
 				//

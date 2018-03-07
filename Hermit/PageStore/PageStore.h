@@ -60,28 +60,27 @@ namespace hermit {
 		
 		
 		//
-		enum WritePageStorePageResult {
-			kWritePageStorePageResult_Unknown,
-			kWritePageStorePageResult_Success,
-			kWritePageStorePageResult_Canceled,
-			kWritePageStorePageResult_Error
+		enum class WritePageStorePageResult {
+			kUnknown,
+			kSuccess,
+			kCanceled,
+			kError
 		};
 		
 		//
-		DEFINE_ASYNC_FUNCTION_1A(WritePageStorePageCompletionFunction,
-								 WritePageStorePageResult);					// inResult
+		DEFINE_ASYNC_FUNCTION_2A(WritePageStorePageCompletionFunction, HermitPtr, WritePageStorePageResult);
 		
 		
 		//
-		enum LockPageStoreStatus {
-			kLockPageStoreStatus_Unknown,
-			kLockPageStoreStatus_Success,
-			kLockPageStoreStatus_Canceled,
-			kLockPageStoreStatus_Error
+		enum class LockPageStoreResult {
+			kUnknown,
+			kSuccess,
+			kCanceled,
+			kError
 		};
 		
 		//
-		DEFINE_ASYNC_FUNCTION_2A(LockPageStoreCompletionFunction, HermitPtr, LockPageStoreStatus);
+		DEFINE_ASYNC_FUNCTION_2A(LockPageStoreCompletionFunction, HermitPtr, LockPageStoreResult);
 		
 		
 		//

@@ -102,7 +102,6 @@
 		EFE49F411D86AFE60044BC06 /* LoggingHermit.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LoggingHermit.mm; sourceTree = "<group>"; };
 		EFE49F451D86AFE60044BC06 /* Notification.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Notification.cpp; sourceTree = "<group>"; };
 		EFE49F461D86AFE60044BC06 /* Notification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Notification.h; sourceTree = "<group>"; };
-		EFE49F471D86AFE60044BC06 /* ParamBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParamBlock.h; sourceTree = "<group>"; };
 		EFE49F481D86AFE60044BC06 /* AsyncTaskQueue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AsyncTaskQueue.cpp; sourceTree = "<group>"; };
 		EFE49F491D86AFE60044BC06 /* AsyncTaskQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncTaskQueue.h; sourceTree = "<group>"; };
 		EFE49F4A1D86AFE60044BC06 /* SharedBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SharedBuffer.cpp; sourceTree = "<group>"; };
@@ -209,7 +208,6 @@
 				EF59A6491F5911A500902A12 /* MemXOR.h */,
 				EFE49F451D86AFE60044BC06 /* Notification.cpp */,
 				EFE49F461D86AFE60044BC06 /* Notification.h */,
-				EFE49F471D86AFE60044BC06 /* ParamBlock.h */,
 				EFB6438E1D86AF6D00EBDFFF /* Products */,
 				EFE49F4A1D86AFE60044BC06 /* SharedBuffer.cpp */,
 				EFE49F4B1D86AFE60044BC06 /* SharedBuffer.h */,

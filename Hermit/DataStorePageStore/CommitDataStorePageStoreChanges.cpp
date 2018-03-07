@@ -584,12 +584,12 @@ namespace hermit {
                 }
                 
                 //
-                virtual void Call(const HermitPtr& h_, const pagestore::LockPageStoreStatus& inStatus) override {
-                    if (inStatus == pagestore::kLockPageStoreStatus_Canceled) {
+				virtual void Call(const HermitPtr& h_, const pagestore::LockPageStoreResult& result) override {
+					if (result == pagestore::LockPageStoreResult::kCanceled) {
                         mCompletion->Call(h_, pagestore::CommitPageStoreChangesResult::kCanceled);
                         return;
                     }
-                    if (inStatus != pagestore::kLockPageStoreStatus_Success) {
+					if (result != pagestore::LockPageStoreResult::kSuccess) {
                         NOTIFY_ERROR(h_, "CommitDataStorePageStoreChanges: LockPageStore failed.");
                         mCompletion->Call(h_, pagestore::CommitPageStoreChangesResult::kError);
                         return;

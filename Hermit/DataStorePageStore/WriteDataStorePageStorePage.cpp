@@ -22,8 +22,7 @@
 
 namespace hermit {
 	namespace datastorepagestore {
-		
-		namespace {
+		namespace WriteDataStorePageStorePage_Impl {
 			
 			//
 			void PerformWork(const HermitPtr& h_,
@@ -32,7 +31,7 @@ namespace hermit {
 							 const SharedBufferPtr& inPageData,
 							 const pagestore::WritePageStorePageCompletionFunctionPtr& inCompletionFunction) {
 				if (CHECK_FOR_ABORT(h_)) {
-					inCompletionFunction->Call(pagestore::kWritePageStorePageResult_Canceled);
+					inCompletionFunction->Call(h_, pagestore::WritePageStorePageResult::kCanceled);
 					return;
 				}
 				
@@ -44,7 +43,7 @@ namespace hermit {
 				else {
 					pageStore.mDirtyPages.insert(DataStorePageStore::PageDataMap::value_type(inPageName, inPageData));
 				}
-				inCompletionFunction->Call(pagestore::kWritePageStorePageResult_Success);
+				inCompletionFunction->Call(h_, pagestore::WritePageStorePageResult::kSuccess);
 			}
 			
 			//
@@ -84,8 +83,8 @@ namespace hermit {
 				}
 				
 				//
-				virtual void Call(const pagestore::WritePageStorePageResult& inResult) override {
-					mCompletionFunction->Call(inResult);
+				virtual void Call(const hermit::HermitPtr& h_, const pagestore::WritePageStorePageResult& result) override {
+					mCompletionFunction->Call(h_, result);
 					DataStorePageStore& pageStore = static_cast<DataStorePageStore&>(*mPageStore);
 					pageStore.TaskComplete();
 				}
@@ -95,7 +94,8 @@ namespace hermit {
 				pagestore::WritePageStorePageCompletionFunctionPtr mCompletionFunction;
 			};
 			
-		} // private namespace
+		} // namespace WriteDataStorePageStorePage_Impl
+		using namespace WriteDataStorePageStorePage_Impl;
 		
 		//
 		void WriteDataStorePageStorePage(const HermitPtr& h_,
@@ -108,7 +108,7 @@ namespace hermit {
 			auto task = std::make_shared<Task>(inPageStore,  inPageName, inPageData, proxy);
 			if (!pageStore.QueueTask(h_, task)) {
 				NOTIFY_ERROR(h_, "pageStore.QueueTask failed");
-				inCompletionFunction->Call(pagestore::WritePageStorePageResult::kWritePageStorePageResult_Error);
+				inCompletionFunction->Call(h_, pagestore::WritePageStorePageResult::kError);
 			}
 		}
 		
