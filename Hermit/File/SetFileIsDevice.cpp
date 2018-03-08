@@ -54,7 +54,6 @@ namespace hermit {
 			if (result != 0) {
 				int err = errno;
 				if (err == EPERM) {
-					NOTIFY_ERROR(h_, "SetFileIsDevice: mknod permission denied for:", inFilePath, "mode:", mode);
 					return kSetFileIsDeviceResult_PermissionDenied;
 				}
 				NOTIFY_ERROR(h_, "SetFileIsDevice: mknod failed for file:", inFilePath, "errno:", err, "mode:", mode);
