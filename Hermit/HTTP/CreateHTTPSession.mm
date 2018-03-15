@@ -330,13 +330,17 @@ namespace hermit {
 						NSString* field = [NSString stringWithUTF8String:(*it).first.c_str()];
 						[request setValue:value forHTTPHeaderField:field];
 					}
-					NSURLSessionDataTask* dataTask = [mSession dataTaskWithRequest:request];
-					TaskParams* params = [[TaskParams alloc] initWith:h_
-														  dataHandler:dataHandler
-															   status:status
-														   completion:completion];
-					objc_setAssociatedObject(dataTask, TASK_PARAMS_KEY, params, OBJC_ASSOCIATION_RETAIN);
-					[dataTask resume];
+					NSURLSessionDataTask* task = nil;
+					if ((body != nullptr) && (body->Size() > 0)) {
+						NSData* data = [NSData dataWithBytes:body->Data() length:body->Size()];
+						task = [mSession uploadTaskWithRequest:request fromData:data];
+					}
+					else {
+						task = [mSession dataTaskWithRequest:request];
+					}
+					TaskParams* params = [[TaskParams alloc] initWith:h_ dataHandler:dataHandler status:status completion:completion];
+					objc_setAssociatedObject(task, TASK_PARAMS_KEY, params, OBJC_ASSOCIATION_RETAIN);
+					[task resume];
 				}
 				
 			private:
