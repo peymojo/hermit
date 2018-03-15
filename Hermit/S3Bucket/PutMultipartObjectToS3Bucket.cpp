@@ -707,7 +707,7 @@ namespace hermit {
                                                                               uploadId,
                                                                               calculatedPartSize,
                                                                               numberOfParts,
-                                                                              0,
+                                                                              1,
                                                                               s3::PartVector(),
                                                                               mCompletion);
                         partUploader->UploadPartWithRetry(h_);
