@@ -272,6 +272,8 @@ namespace hermit {
 										mCompletion->Call(h_, S3Result::kError);
 										return;
 									}
+									// Reset the data buffer, otherwise the result of the redirect will be appended.
+									mOurDataHandler->mData.clear();
 									StreamInS3Object(h_,
 													 mRedirectCount + 1,
 													 pc.mEndpoint,
