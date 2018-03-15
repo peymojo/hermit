@@ -135,8 +135,9 @@ static void* const TASK_PARAMS_KEY = (void*)&TASK_PARAMS_KEY;
 }
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task willPerformHTTPRedirection:(NSHTTPURLResponse *)response newRequest:(NSURLRequest *)request completionHandler:(void (^)(NSURLRequest *))completionHandler {
-	NSLog(@"willPerformHTTPRedirection");
-	completionHandler(request);
+	// Don't do redirects automatically, let the client decide what to do. Passing nil here
+	// will cause the response to bubble up back to the caller.
+	completionHandler(nil);
 }
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * _Nullable credential))completionHandler {
