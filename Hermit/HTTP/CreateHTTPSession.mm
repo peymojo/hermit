@@ -130,7 +130,6 @@ static void* const TASK_PARAMS_KEY = (void*)&TASK_PARAMS_KEY;
 }
 
 - (void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * _Nullable credential))completionHandler {
-	NSLog(@"session didReceiveChallenge");
 	completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
 }
 
@@ -152,7 +151,9 @@ static void* const TASK_PARAMS_KEY = (void*)&TASK_PARAMS_KEY;
 }
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(nullable NSError *)error {
-	NSLog(@"didCompleteWithError");
+	if (error != nil) {
+		NSLog(@"didCompleteWithError: %@", error);
+	}
 	TaskParams* params = objc_getAssociatedObject(task, TASK_PARAMS_KEY);
 	if (params != nil) {
 		[params status:task];
@@ -166,7 +167,6 @@ static void* const TASK_PARAMS_KEY = (void*)&TASK_PARAMS_KEY;
 //}
 
 - (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveData:(NSData *)data {
-	NSLog(@"didReceiveData");
 	TaskParams* params = objc_getAssociatedObject(dataTask, TASK_PARAMS_KEY);
 	if (params != nil) {
 		[params sendData:data];
