@@ -101,7 +101,7 @@ static void* const TASK_PARAMS_KEY = (void*)&TASK_PARAMS_KEY;
 - (void)sendData:(NSData*)data {
 	[data enumerateByteRangesUsingBlock:^(const void *bytes, NSRange byteRange, BOOL *stop) {
 		auto completion = std::make_shared<hermit::http::StreamResult>();
-		_dataHandler->HandleData(_h_, hermit::DataBuffer((const char*)bytes, byteRange.length), false, completion);
+		self->_dataHandler->HandleData(self->_h_, hermit::DataBuffer((const char*)bytes, byteRange.length), false, completion);
 	}];
 }
 
