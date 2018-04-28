@@ -19,6 +19,7 @@
 #ifndef AES256DecryptCBC_h
 #define AES256DecryptCBC_h
 
+#include <string>
 #include "Hermit/Foundation/Callback.h"
 #include "Hermit/Foundation/DataBuffer.h"
 #include "Hermit/Foundation/Hermit.h"
@@ -27,47 +28,31 @@ namespace hermit {
 	namespace encoding {
 		
 		//
-		//
 		DEFINE_CALLBACK_2A(AES256DecryptCBCCallback,
 						   bool,						// inSuccess
 						   DataBuffer);					// inData
 		
 		//
-		//
-		class AES256DecryptCBCCallbackClass
-		:
-		public AES256DecryptCBCCallback
-		{
+		class AES256DecryptCBCCallbackClass : public AES256DecryptCBCCallback {
 		public:
 			//
-			//
-			AES256DecryptCBCCallbackClass()
-			:
-			mSuccess(false)
-			{
+			AES256DecryptCBCCallbackClass() : mSuccess(false) {
 			}
 			
 			//
-			//
-			bool Function(
-						  const bool& inSuccess,
-						  const DataBuffer& inData)
-			{
+			bool Function(const bool& inSuccess, const DataBuffer& inData) {
 				mSuccess = inSuccess;
-				if (inSuccess)
-				{
+				if (inSuccess) {
 					mData.assign(inData.first, inData.second);
 				}
 				return true;
 			}
 			
 			//
-			//
 			bool mSuccess;
 			std::string mData;
 		};
 		
-		//
 		//
 		void AES256DecryptCBC(const HermitPtr& h_,
 							  const DataBuffer& inCipherText,
