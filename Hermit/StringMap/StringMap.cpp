@@ -24,37 +24,19 @@ namespace hermit {
 
 		//
 		void StringMap::GetValue(const HermitPtr& h_,
-								 const std::string& inKey,
-								 const GetStringMapValueCompletionFunctionPtr& inCompletionFunction) {
+								 const std::string& key,
+								 const GetStringMapValueCompletionPtr& completion) {
 			NOTIFY_ERROR(h_, "unimplemented");
+			completion->Call(h_, GetStringMapValueResult::kError, "");
 		}
 		
 		//
 		void StringMap::SetValue(const HermitPtr& h_,
 								 const std::string& inKey,
 								 const std::string& inValue,
-								 const SetStringMapValueCompletionFunctionPtr& inCompletionFunction) {
+								 const SetStringMapValueCompletionPtr& completion) {
 			NOTIFY_ERROR(h_, "unimplemented");
-		}
-		
-		//
-		void StringMap::Lock(const HermitPtr& h_, const LockStringMapCompletionFunctionPtr& inCompletionFunction) {
-			NOTIFY_ERROR(h_, "unimplemented");
-		}
-		
-		//
-		void StringMap::Unlock(const HermitPtr& h_) {
-			NOTIFY_ERROR(h_, "unimplemented");
-		}
-		
-		//
-		void StringMap::CommitChanges(const HermitPtr& h_, const CommitStringMapChangesCompletionFunctionPtr& inCompletionFunction) {
-			NOTIFY_ERROR(h_, "unimplemented");
-		}
-		
-		//
-		void StringMap::Validate(const HermitPtr& h_, const ValidateStringMapCompletionFunctionPtr& inCompletionFunction) {
-			NOTIFY_ERROR(h_, "unimplemented");
+			completion->Call(h_, SetStringMapValueResult::kError);
 		}
 		
 	} // namespace stringmap

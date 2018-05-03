@@ -40,31 +40,15 @@ namespace hermit {
 			
 			//
 			virtual void GetValue(const HermitPtr& h_,
-								  const std::string& inKey,
-								  const stringmap::GetStringMapValueCompletionFunctionPtr& inCompletion) override;
+								  const std::string& key,
+								  const stringmap::GetStringMapValueCompletionPtr& completion) override;
 			
 			//
 			virtual void SetValue(const HermitPtr& h_,
-								  const std::string& inKey,
-								  const std::string& inValue,
-								  const stringmap::SetStringMapValueCompletionFunctionPtr& inCompletion) override;
+								  const std::string& key,
+								  const std::string& value,
+								  const stringmap::SetStringMapValueCompletionPtr& completion) override;
 			
-			//
-			virtual void Lock(const HermitPtr& h_,
-							  const stringmap::LockStringMapCompletionFunctionPtr& inCompletion) override;
-			
-			//
-			virtual void Unlock(const HermitPtr& h_) override;
-			
-			//
-			virtual void CommitChanges(const HermitPtr& h_,
-									   const stringmap::CommitStringMapChangesCompletionFunctionPtr& inCompletion) override;
-			
-			//
-			virtual void Validate(const HermitPtr& h_,
-								  const stringmap::ValidateStringMapCompletionFunctionPtr& inCompletion) override;
-			
-
 			//
 			SQLiteStringMapImplPtr mImpl;
 		};

@@ -21,13 +21,13 @@
 
 #include <memory>
 #include <sqlite3.h>
-#include "Hermit/Foundation/TaskQueue.h"
+#include <thread>
 
 namespace hermit {
 	namespace sqlitestringmap {
 		
 		//
-		class SQLiteStringMapImpl : public hermit::TaskQueue {
+		class SQLiteStringMapImpl {
 		public:
 			//
 			SQLiteStringMapImpl(sqlite3* db);
@@ -37,6 +37,7 @@ namespace hermit {
 			
 			//
 			sqlite3* mDB;
+			std::mutex mMutex;
 		};
 		typedef std::shared_ptr<SQLiteStringMapImpl> SQLiteStringMapImplPtr;
 		

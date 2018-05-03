@@ -29,11 +29,12 @@ namespace hermit {
 		namespace SQLiteStringMap_SetValue_Impl {
 
 			//
-			void PerformWork(const HermitPtr& h_,
-							 const SQLiteStringMapImplPtr& impl,
-							 const std::string& inKey,
-							 const std::string& inValue,
-							 const stringmap::SetStringMapValueCompletionFunctionPtr& inCompletion) {
+			stringmap::SetStringMapValueResult PerformWork(const HermitPtr& h_,
+														   const SQLiteStringMapImplPtr& impl,
+														   const std::string& key,
+														   const std::string& value) {
+				std::lock_guard<std::mutex> lock(impl->mMutex);
+
 				std::string updateStmtText("UPDATE map set value = ? where key = ?");
 				sqlite3_stmt* updateStmt = nullptr;
 				int rc = sqlite3_prepare_v2(impl->mDB,
@@ -44,29 +45,25 @@ namespace hermit {
 				
 				if (rc != 0) {
 					NOTIFY_ERROR(h_, "sqlite3_prepare_v2(update) failed, error:", sqlite3_errmsg(impl->mDB));
-					inCompletion->Call(h_, stringmap::SetStringMapValueResult::kError);
-					return;
+					return stringmap::SetStringMapValueResult::kError;
 				}
 				Impl::StatementWrapper updateStmtWrapper(updateStmt);
 				
-				rc = sqlite3_bind_text(updateStmt, 1, inValue.c_str(), (int)inValue.size(), SQLITE_TRANSIENT);
+				rc = sqlite3_bind_text(updateStmt, 1, value.c_str(), (int)value.size(), SQLITE_TRANSIENT);
 				if (rc != 0) {
 					NOTIFY_ERROR(h_, "sqlite3_bind_text(1) failed, error:", sqlite3_errmsg(impl->mDB));
-					inCompletion->Call(h_, stringmap::SetStringMapValueResult::kError);
-					return;
+					return stringmap::SetStringMapValueResult::kError;
 				}
-				rc = sqlite3_bind_text(updateStmt, 2, inKey.c_str(), (int)inKey.size(), SQLITE_TRANSIENT);
+				rc = sqlite3_bind_text(updateStmt, 2, key.c_str(), (int)key.size(), SQLITE_TRANSIENT);
 				if (rc != 0) {
 					NOTIFY_ERROR(h_, "sqlite3_bind_text(2) failed, error:", sqlite3_errmsg(impl->mDB));
-					inCompletion->Call(h_, stringmap::SetStringMapValueResult::kError);
-					return;
+					return stringmap::SetStringMapValueResult::kError;
 				}
 				
 				rc = sqlite3_step(updateStmt);
 				if (rc != SQLITE_DONE) {
 					NOTIFY_ERROR(h_, "sqlite3_step(update) failed, error:", sqlite3_errmsg(impl->mDB));
-					inCompletion->Call(h_, stringmap::SetStringMapValueResult::kError);
-					return;
+					return stringmap::SetStringMapValueResult::kError;
 				}
 				
 				int rows = sqlite3_changes(impl->mDB);
@@ -81,87 +78,35 @@ namespace hermit {
 					
 					if (rc != 0) {
 						NOTIFY_ERROR(h_, "sqlite3_prepare_v2(insert) failed, error:", sqlite3_errmsg(impl->mDB));
-						inCompletion->Call(h_, stringmap::SetStringMapValueResult::kError);
-						return;
+						return stringmap::SetStringMapValueResult::kError;
 					}
 					Impl::StatementWrapper insertStmtWrapper(insertStmt);
 					
-					rc = sqlite3_bind_text(insertStmt, 1, inKey.c_str(), (int)inKey.size(), SQLITE_TRANSIENT);
+					rc = sqlite3_bind_text(insertStmt, 1, key.c_str(), (int)key.size(), SQLITE_TRANSIENT);
 					if (rc != 0) {
 						NOTIFY_ERROR(h_, "sqlite3_bind_text(1) failed, error:", sqlite3_errmsg(impl->mDB));
-						inCompletion->Call(h_, stringmap::SetStringMapValueResult::kError);
-						return;
+						return stringmap::SetStringMapValueResult::kError;
 					}
-					rc = sqlite3_bind_text(insertStmt, 2, inValue.c_str(), (int)inValue.size(), SQLITE_TRANSIENT);
+					rc = sqlite3_bind_text(insertStmt, 2, value.c_str(), (int)value.size(), SQLITE_TRANSIENT);
 					if (rc != 0) {
 						NOTIFY_ERROR(h_, "sqlite3_bind_text(2) failed, error:", sqlite3_errmsg(impl->mDB));
-						inCompletion->Call(h_, stringmap::SetStringMapValueResult::kError);
-						return;
+						return stringmap::SetStringMapValueResult::kError;
 					}
 					
 					rc = sqlite3_step(insertStmt);
 					if (rc != SQLITE_DONE) {
 						NOTIFY_ERROR(h_, "sqlite3_step(insert) failed, error:", sqlite3_errmsg(impl->mDB));
-						inCompletion->Call(h_, stringmap::SetStringMapValueResult::kError);
-						return;
+						return stringmap::SetStringMapValueResult::kError;
 					}
 					
 					int rows = sqlite3_changes(impl->mDB);
 					if (rows != 1) {
 						NOTIFY_ERROR(h_, "Insert failed to add a row");
-						inCompletion->Call(h_, stringmap::SetStringMapValueResult::kError);
-						return;
+						return stringmap::SetStringMapValueResult::kError;
 					}
 				}
-				inCompletion->Call(h_, stringmap::SetStringMapValueResult::kSuccess);
+				return stringmap::SetStringMapValueResult::kSuccess;
 			}
-
-			//
-			class Task : public AsyncTask {
-			public:
-				//
-				Task(const SQLiteStringMapImplPtr& impl,
-					 const std::string& key,
-					 const std::string& value,
-					 const stringmap::SetStringMapValueCompletionFunctionPtr& completion) :
-				mImpl(impl),
-				mKey(key),
-				mValue(value),
-				mCompletion(completion) {
-				}
-				
-				//
-				virtual void PerformTask(const HermitPtr& h_) override {
-					PerformWork(h_, mImpl, mKey, mValue, mCompletion);
-				}
-				
-				//
-				SQLiteStringMapImplPtr mImpl;
-				std::string mKey;
-				std::string mValue;
-				stringmap::SetStringMapValueCompletionFunctionPtr mCompletion;
-			};
-
-			//
-			class CompletionProxy : public stringmap::SetStringMapValueCompletionFunction {
-			public:
-				//
-				CompletionProxy(const SQLiteStringMapImplPtr& impl,
-								const stringmap::SetStringMapValueCompletionFunctionPtr& completion) :
-				mImpl(impl),
-				mCompletion(completion) {
-				}
-				
-				//
-				virtual void Call(const HermitPtr& h_, const stringmap::SetStringMapValueResult& inResult) override {
-					mCompletion->Call(h_, inResult);
-					mImpl->TaskComplete();
-				}
-				
-				//
-				SQLiteStringMapImplPtr mImpl;
-				stringmap::SetStringMapValueCompletionFunctionPtr mCompletion;
-			};
 			
 		} // namespace SQLiteStringMap_SetValue_Impl
 		using namespace SQLiteStringMap_SetValue_Impl;
@@ -170,24 +115,15 @@ namespace hermit {
 		void SQLiteStringMap::SetValue(const HermitPtr& h_,
 									   const std::string& key,
 									   const std::string& value,
-									   const stringmap::SetStringMapValueCompletionFunctionPtr& completion) {
+									   const stringmap::SetStringMapValueCompletionPtr& completion) {
 			if (key.empty()) {
 				NOTIFY_ERROR(h_, "SQLiteStringMap::SetValue: empty key.");
 				completion->Call(h_, stringmap::SetStringMapValueResult::kError);
 				return;
 			}
-			if (key[0] < ' ') {
-				NOTIFY_ERROR(h_, "SQLiteStringMap::SetValue: invalid key.");
-				completion->Call(h_, stringmap::SetStringMapValueResult::kError);
-				return;
-			}
 			
-			auto completionProxy = std::make_shared<CompletionProxy>(mImpl, completion);
-			auto task = std::make_shared<Task>(mImpl, key, value, completionProxy);
-			if (!mImpl->QueueTask(h_, task)) {
-				NOTIFY_ERROR(h_, "QueueTask failed.");
-				completion->Call(h_, stringmap::SetStringMapValueResult::kError);
-			}
+			auto result = PerformWork(h_, mImpl, key, value);
+			completion->Call(h_, result);
 		}
 		
 	} // namespace sqlitestringmap

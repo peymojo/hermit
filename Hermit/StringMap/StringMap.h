@@ -45,10 +45,10 @@ namespace hermit {
 		};
 		
 		//
-		DEFINE_ASYNC_FUNCTION_3A(GetStringMapValueCompletionFunction,
+		DEFINE_ASYNC_FUNCTION_3A(GetStringMapValueCompletion,
 								 HermitPtr,
-								 GetStringMapValueResult,					// inStatus
-								 std::string);								// inValue
+								 GetStringMapValueResult,					// result
+								 std::string);								// value
 		
 
 		//
@@ -60,79 +60,20 @@ namespace hermit {
 		};
 		
 		//
-		DEFINE_ASYNC_FUNCTION_2A(SetStringMapValueCompletionFunction,
-								 HermitPtr,
-								 SetStringMapValueResult);					// inResult
-		
-		
-		//
-		enum class LockStringMapResult {
-			kUnknown,
-			kSuccess,
-			kCanceled,
-			kError
-		};
-		
-		//
-		DEFINE_ASYNC_FUNCTION_2A(LockStringMapCompletionFunction,
-								 HermitPtr,
-								 LockStringMapResult);
-		
-
-		//
-		enum class CommitStringMapChangesResult {
-			kUnknown,
-			kSuccess,
-			kCanceled,
-			kError
-		};
-		
-		//
-		DEFINE_ASYNC_FUNCTION_2A(CommitStringMapChangesCompletionFunction,
-								 HermitPtr,
-								 CommitStringMapChangesResult);				// inStatus
-		
-
-		//
-		enum class ValidateStringMapResult {
-			kUnknown,
-			kSuccess,
-			kCanceled,
-			kError
-		};
-		
-		//
-		DEFINE_ASYNC_FUNCTION_2A(ValidateStringMapCompletionFunction,
-								 HermitPtr,
-								 ValidateStringMapResult);					// inResult
+		DEFINE_ASYNC_FUNCTION_2A(SetStringMapValueCompletion, HermitPtr, SetStringMapValueResult);
 		
 		//
 		struct StringMap {
 			//
 			virtual void GetValue(const HermitPtr& h_,
-								  const std::string& inKey,
-								  const GetStringMapValueCompletionFunctionPtr& inCompletionFunction);
+								  const std::string& key,
+								  const GetStringMapValueCompletionPtr& completion);
 
 			//
 			virtual void SetValue(const HermitPtr& h_,
-								  const std::string& inKey,
-								  const std::string& inValue,
-								  const SetStringMapValueCompletionFunctionPtr& inCompletionFunction);
-
-			//
-			virtual void Lock(const HermitPtr& h_,
-							  const LockStringMapCompletionFunctionPtr& inCompletionFunction);
-
-			//
-			virtual void Unlock(const HermitPtr& h_);
-
-			//
-			virtual void CommitChanges(const HermitPtr& h_,
-									   const CommitStringMapChangesCompletionFunctionPtr& inCompletionFunction);
-
-			//
-			virtual void Validate(const HermitPtr& h_,
-								  const ValidateStringMapCompletionFunctionPtr& inCompletionFunction);
+								  const std::string& key,
+								  const std::string& value,
+								  const SetStringMapValueCompletionPtr& completion);
 			
 		protected:
 			//
