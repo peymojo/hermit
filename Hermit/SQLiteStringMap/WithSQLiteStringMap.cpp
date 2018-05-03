@@ -26,7 +26,6 @@
 
 namespace hermit {
 	namespace sqlitestringmap {
-		
 		namespace WithSQLiteStringMap_Impl {
 			
 			//
@@ -218,5 +217,5 @@ namespace hermit {
 			return stringmap::WithStringMapResult::kSuccess;
 		}
 		
-	} // namespace pagestorestringmap
+	} // namespace sqlitestringmap
 } // namespace hermit

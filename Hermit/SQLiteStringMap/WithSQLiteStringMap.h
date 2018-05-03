@@ -30,7 +30,7 @@ namespace hermit {
 														   const file::FilePathPtr& filePath,
 														   stringmap::StringMapPtr& outStringMap);
 		
-	} // namespace pagestorestringmap
+	} // namespace sqlitestringmap
 } // namespace hermit
 
 #endif /* WithSQLiteStringMap_h */
