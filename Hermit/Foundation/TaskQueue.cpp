@@ -27,10 +27,6 @@ namespace hermit {
 	namespace TaskQueue_Impl {
 		
 		//
-		typedef std::pair<LockTaskQueueCompletionPtr, HermitPtr> LockCallback;
-		typedef std::vector<LockCallback> LockCallbackVector;
-		
-		//
 		class QueueEntry {
 		public:
 			//
@@ -63,11 +59,6 @@ namespace hermit {
 			pthread_cond_t mCondition;
 			bool mBusy;
 			bool mQuit;
-			
-			int32_t mLockCount;
-			bool mLocked;
-			LockCallbackVector mLockCallbacks;
-			Queue mPendingTasks;
 		};
 		typedef std::shared_ptr<QueueInfoImpl> QueueInfoImplPtr;
 		
@@ -76,9 +67,7 @@ namespace hermit {
 			auto queueInfo = std::static_pointer_cast<QueueInfoImpl>(param);
 			while (true) {
 				pthread_mutex_lock(&queueInfo->mMutex);
-				while (!queueInfo->mQuit &&
-					   (queueInfo->mTasks.empty() || queueInfo->mBusy) &&
-					   !(queueInfo->mTasks.empty() && !queueInfo->mBusy && (queueInfo->mLockCount > 0) && !queueInfo->mLocked)) {
+				while (!queueInfo->mQuit && (queueInfo->mTasks.empty() || queueInfo->mBusy)) {
 					pthread_cond_wait(&queueInfo->mCondition, &queueInfo->mMutex);
 				}
 				if (queueInfo->mQuit) {
@@ -86,38 +75,19 @@ namespace hermit {
 					break;
 				}
 				
-				LockCallbackVector lockCallbacks;
-				QueueEntryPtr nextTask;
-				if ((queueInfo->mLockCount > 0) && !queueInfo->mLocked && queueInfo->mTasks.empty()) {
-					queueInfo->mLocked = true;
-					lockCallbacks.swap(queueInfo->mLockCallbacks);
-				}
-				else {
-					nextTask = queueInfo->mTasks.front();
-					queueInfo->mTasks.pop();
-					queueInfo->mBusy = true;
-				}
+				QueueEntryPtr nextTask = queueInfo->mTasks.front();
+				queueInfo->mTasks.pop();
+				queueInfo->mBusy = true;
 				pthread_mutex_unlock(&queueInfo->mMutex);
 				
 				if (nextTask != nullptr) {
 					nextTask->mTask->PerformTask(nextTask->mH_);
-				}
-				else if (!lockCallbacks.empty()) {
-					auto end = lockCallbacks.end();
-					for (auto it = lockCallbacks.begin(); it != end; ++it) {
-						(*it).first->Call((*it).second, LockTaskQueueResult::kSuccess);
-					}
 				}
 			}
 			
 			pthread_mutex_lock(&queueInfo->mMutex);
 			pthread_cond_signal(&queueInfo->mCondition);
 			pthread_mutex_unlock(&queueInfo->mMutex);
-			
-			auto end = queueInfo->mLockCallbacks.end();
-			for (auto it = queueInfo->mLockCallbacks.begin(); it != end; ++it) {
-				(*it).first->Call((*it).second, LockTaskQueueResult::kCancel);
-			}
 			
 			pthread_exit(nullptr);
 		}
@@ -128,9 +98,7 @@ namespace hermit {
 	//
 	QueueInfoImpl::QueueInfoImpl() :
 		mBusy(false),
-		mQuit(false),
-		mLockCount(0),
-		mLocked(false) {
+		mQuit(false) {
 		
 		pthread_mutex_init(&mMutex, nullptr);
 		pthread_cond_init(&mCondition, nullptr);
@@ -174,13 +142,7 @@ namespace hermit {
 		QueueEntryPtr entry(new QueueEntry(h_, task));				
 		auto queueInfo = std::static_pointer_cast<QueueInfoImpl>(mQueueInfo);
 		pthread_mutex_lock(&queueInfo->mMutex);
-		
-		if (queueInfo->mLockCount > 0) {
-			queueInfo->mPendingTasks.push(entry);
-		}
-		else {
-			queueInfo->mTasks.push(entry);
-		}
+		queueInfo->mTasks.push(entry);
 		pthread_cond_signal(&queueInfo->mCondition);
 		pthread_mutex_unlock(&queueInfo->mMutex);
 		
@@ -193,46 +155,6 @@ namespace hermit {
 		pthread_mutex_lock(&queueInfo->mMutex);
 				
 		queueInfo->mBusy = false;
-		pthread_cond_signal(&queueInfo->mCondition);
-		pthread_mutex_unlock(&queueInfo->mMutex);
-	}
-	
-	//
-	void TaskQueue::Lock(const HermitPtr& h_, const LockTaskQueueCompletionPtr& completion) {
-		auto queueInfo = std::static_pointer_cast<QueueInfoImpl>(mQueueInfo);
-		pthread_mutex_lock(&queueInfo->mMutex);
-		
-		bool callCallbackNow = false;
-		queueInfo->mLockCount++;
-		if (queueInfo->mLocked) {
-			callCallbackNow = true;
-		}
-		else {
-			queueInfo->mLockCallbacks.push_back(make_pair(completion, h_));
-		}
-		
-		pthread_cond_signal(&queueInfo->mCondition);
-		pthread_mutex_unlock(&queueInfo->mMutex);
-		
-		if (callCallbackNow) {
-			completion->Call(h_, LockTaskQueueResult::kSuccess);
-		}
-	}
-	
-	//
-	void TaskQueue::Unlock(const HermitPtr& h_) {
-		auto queueInfo = std::static_pointer_cast<QueueInfoImpl>(mQueueInfo);
-		pthread_mutex_lock(&queueInfo->mMutex);
-		
-		queueInfo->mLockCount--;
-		if (queueInfo->mLockCount == 0) {
-			queueInfo->mLocked = false;
-			if (!queueInfo->mTasks.empty()) {
-				NOTIFY_ERROR(h_, "TaskQueue::Unlock(): !queueInfo->mTasks.empty()");
-			}
-			queueInfo->mTasks.swap(queueInfo->mPendingTasks);
-		}
-		
 		pthread_cond_signal(&queueInfo->mCondition);
 		pthread_mutex_unlock(&queueInfo->mMutex);
 	}

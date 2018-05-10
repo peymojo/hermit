@@ -33,17 +33,6 @@ namespace hermit {
 	typedef std::shared_ptr<QueueInfo> QueueInfoPtr;
 	
 	//
-	enum class LockTaskQueueResult {
-		kUnknown,
-		kSuccess,
-		kCancel,
-		kError
-	};
-	
-	//
-	DEFINE_ASYNC_FUNCTION_2A(LockTaskQueueCompletion, HermitPtr, LockTaskQueueResult);
-	
-	//
 	class TaskQueue {
 	public:
 		//
@@ -57,12 +46,6 @@ namespace hermit {
 		
 		//
 		void TaskComplete();
-		
-		//
-		void Lock(const HermitPtr& h_, const LockTaskQueueCompletionPtr& completion);
-		
-		//
-		void Unlock(const HermitPtr& h_);
 		
 		//
 		QueueInfoPtr mQueueInfo;
