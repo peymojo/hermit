@@ -20,10 +20,10 @@
 #include <pthread.h>
 #include <queue>
 #include <string>
+#include <thread>
 #include "AsyncTaskQueue.h"
 #include "Hermit.h"
 #include "StaticLog.h"
-#include "ThreadLock.h"
 
 namespace hermit {
 	namespace AsyncTaskQueue_Impl {
@@ -54,7 +54,7 @@ namespace hermit {
 		typedef std::multimap<int32_t, QueuePtr> TaskQueueMap;
 		
 		//
-		static ThreadLock sTasksLock;
+		static std::mutex sTasksMutex;
 		static bool sThreadsStarted = false;
 		static bool sQuitThreads = false;
 		static TaskQueueMap sTasks;
@@ -101,8 +101,9 @@ namespace hermit {
 	//
 	bool QueueAsyncTask(const HermitPtr& h_, const AsyncTaskPtr& task, const int32_t& priority) {
 		bool queueHasBeenShutDown = false;
-		QueueEntryPtr entry(new QueueEntry(h_, task)); {
-			ThreadLockScope lock(sTasksLock);
+		QueueEntryPtr entry(new QueueEntry(h_, task));
+		{
+			std::lock_guard<std::mutex> lock(sTasksMutex);
 			if (sQuitThreads) {
 				queueHasBeenShutDown = true;
 			}
@@ -144,7 +145,7 @@ namespace hermit {
 	//
 	void ShutdownAsyncTaskQueue() {
 		{
-			ThreadLockScope lock(sTasksLock);
+			std::lock_guard<std::mutex> lock(sTasksMutex);
 			if (sThreadsStarted) {
 				sThreadsStarted = false;
 				if (!sTasks.empty()) {
