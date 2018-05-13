@@ -27,7 +27,8 @@ namespace hermit {
 	namespace s3datastore {
 		
 		//
-		bool WithS3DataStore(const s3bucket::S3BucketPtr& s3Bucket,
+		bool WithS3DataStore(const hermit::HermitPtr& h_,
+							 const s3bucket::S3BucketPtr& s3Bucket,
 							 const bool& useReducedRedundancyStorage,
 							 datastore::DataStorePtr& outDataStore);
 		

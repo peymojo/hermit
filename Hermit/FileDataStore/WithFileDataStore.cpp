@@ -23,7 +23,7 @@ namespace hermit {
 	namespace filedatastore {
 		
 		//
-		bool WithFileDataStore(datastore::DataStorePtr& outDataStore) {
+		bool WithFileDataStore(const hermit::HermitPtr& h_, datastore::DataStorePtr& outDataStore) {
 			outDataStore = std::make_shared<FileDataStore>();
 			return true;
 		}

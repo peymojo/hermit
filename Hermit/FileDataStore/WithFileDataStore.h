@@ -25,7 +25,7 @@ namespace hermit {
 	namespace filedatastore {
 		
 		//
-		bool WithFileDataStore(datastore::DataStorePtr& outFileDataStore);
+		bool WithFileDataStore(const hermit::HermitPtr& h_, datastore::DataStorePtr& outFileDataStore);
 		
 	} // namespace filedatastore
 } // namespace hermit

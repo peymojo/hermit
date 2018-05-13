@@ -23,7 +23,8 @@ namespace hermit {
 	namespace s3datastore {
 		
 		//
-		bool WithAES256EncryptedS3DataStore(const s3bucket::S3BucketPtr& s3Bucket,
+		bool WithAES256EncryptedS3DataStore(const hermit::HermitPtr& h_,
+											const s3bucket::S3BucketPtr& s3Bucket,
 											const bool& useReducedRedundancyStorage,
 											const std::string& aesKey,
 											datastore::DataStorePtr& outDataStore) {

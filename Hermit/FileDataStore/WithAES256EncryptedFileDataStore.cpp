@@ -23,7 +23,9 @@ namespace hermit {
 	namespace filedatastore {
 		
 		//
-		bool WithAES256EncryptedFileDataStore(const std::string& aesKey, datastore::DataStorePtr& outDataStore) {
+		bool WithAES256EncryptedFileDataStore(const hermit::HermitPtr& h_,
+											  const std::string& aesKey,
+											  datastore::DataStorePtr& outDataStore) {
 			outDataStore = std::make_shared<AES256EncryptedFileDataStore>(aesKey);
 			return true;
 		}
