@@ -8,18 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		EF120168200C49860087E968 /* DataStoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF12017D200C49860087E968 /* DataStoreKit.framework */; };
-		EF120169200C49860087E968 /* DataStorePageStoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF12017E200C49860087E968 /* DataStorePageStoreKit.framework */; };
-		EF12016A200C49860087E968 /* DataStoreStringMapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF12017F200C49860087E968 /* DataStoreStringMapKit.framework */; };
 		EF12016B200C49860087E968 /* EncodingFileKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF120180200C49860087E968 /* EncodingFileKit.framework */; };
 		EF12016C200C49860087E968 /* EncodingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF120181200C49860087E968 /* EncodingKit.framework */; };
-		EF12016D200C49860087E968 /* EncodingS3BucketKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF120182200C49860087E968 /* EncodingS3BucketKit.framework */; };
 		EF12016E200C49860087E968 /* FileDataStoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF120183200C49860087E968 /* FileDataStoreKit.framework */; };
 		EF12016F200C49860087E968 /* FileKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF120184200C49860087E968 /* FileKit.framework */; };
 		EF120170200C49860087E968 /* FoundationKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF120185200C49860087E968 /* FoundationKit.framework */; };
 		EF120171200C49860087E968 /* HTTPKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF120186200C49860087E968 /* HTTPKit.framework */; };
 		EF120172200C49860087E968 /* JSONKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF120187200C49860087E968 /* JSONKit.framework */; };
-		EF120173200C49860087E968 /* PageStoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF120188200C49860087E968 /* PageStoreKit.framework */; };
-		EF120174200C49860087E968 /* PageStoreStringMapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF120189200C49860087E968 /* PageStoreStringMapKit.framework */; };
 		EF120175200C49860087E968 /* S3BucketKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF12018A200C49860087E968 /* S3BucketKit.framework */; };
 		EF120176200C49860087E968 /* S3DataStoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF12018B200C49860087E968 /* S3DataStoreKit.framework */; };
 		EF120177200C49860087E968 /* S3Kit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF12018C200C49860087E968 /* S3Kit.framework */; };
@@ -75,18 +70,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				EF120168200C49860087E968 /* DataStoreKit.framework in Frameworks */,
-				EF120169200C49860087E968 /* DataStorePageStoreKit.framework in Frameworks */,
-				EF12016A200C49860087E968 /* DataStoreStringMapKit.framework in Frameworks */,
 				EF12016B200C49860087E968 /* EncodingFileKit.framework in Frameworks */,
 				EF12016C200C49860087E968 /* EncodingKit.framework in Frameworks */,
-				EF12016D200C49860087E968 /* EncodingS3BucketKit.framework in Frameworks */,
 				EF12016E200C49860087E968 /* FileDataStoreKit.framework in Frameworks */,
 				EF12016F200C49860087E968 /* FileKit.framework in Frameworks */,
 				EF120170200C49860087E968 /* FoundationKit.framework in Frameworks */,
 				EF120171200C49860087E968 /* HTTPKit.framework in Frameworks */,
 				EF120172200C49860087E968 /* JSONKit.framework in Frameworks */,
-				EF120173200C49860087E968 /* PageStoreKit.framework in Frameworks */,
-				EF120174200C49860087E968 /* PageStoreStringMapKit.framework in Frameworks */,
 				EF120175200C49860087E968 /* S3BucketKit.framework in Frameworks */,
 				EF120176200C49860087E968 /* S3DataStoreKit.framework in Frameworks */,
 				EF120177200C49860087E968 /* S3Kit.framework in Frameworks */,

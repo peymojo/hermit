@@ -8,19 +8,10 @@
       location = "group:../../Hermit/DataStore/DataStore.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:../../Hermit/DataStorePageStore/DataStorePageStore.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "group:../../Hermit/DataStoreStringMap/DataStoreStringMap.xcodeproj">
-   </FileRef>
-   <FileRef
       location = "group:../../Hermit/Encoding/Encoding.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:../../Hermit/Encoding+File/Encoding+File.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "group:../../Hermit/Encoding+S3Bucket/Encoding+S3Bucket.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:../../Hermit/File/File.xcodeproj">
@@ -36,12 +27,6 @@
    </FileRef>
    <FileRef
       location = "group:../../Hermit/JSON/JSON.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "group:../../Hermit/PageStore/PageStore.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "group:../../Hermit/PageStoreStringMap/PageStoreStringMap.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:../../Hermit/S3/S3.xcodeproj">
