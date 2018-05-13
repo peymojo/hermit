@@ -25,7 +25,7 @@ namespace hermit {
 	namespace s3datastore {
 		
 		//
-		bool S3PathToDataPath(const std::string& s3Path, datastore::DataPathPtr& outDataPath);
+		bool S3PathToDataPath(const hermit::HermitPtr& h_, const std::string& s3Path, datastore::DataPathPtr& outDataPath);
 		
 	} // namespace s3datastore
 } // namespace hermit

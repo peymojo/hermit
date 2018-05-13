@@ -32,7 +32,7 @@ namespace hermit {
 			std::string newPath(pathWithTrailingSlash);
 			newPath += name;
 			
-			return S3PathToDataPath(newPath, outDataPath);
+			return S3PathToDataPath(h_, newPath, outDataPath);
 		}
 		
 	} // namespace s3datastore
