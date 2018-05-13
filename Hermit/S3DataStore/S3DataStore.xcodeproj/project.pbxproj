@@ -72,16 +72,6 @@
 		EFF398EB1F6556F400B1BD33 /* StringKit_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EFF398EA1F6556F400B1BD33 /* StringKit_iOS.framework */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		EFE177A1200C4234006EAA12 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = EFE17798200C422E006EAA12 /* SQLiteStringMapKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = EFDC028A1F9E1332005ECC1F;
-			remoteInfo = SQLiteStringMapKit;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
 		EF16AB5F202C2F5100AF9DAE /* libS3DataStore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libS3DataStore.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF16AB61202C2F5100AF9DAE /* S3DataStore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = S3DataStore.h; sourceTree = "<group>"; };
@@ -118,7 +108,6 @@
 		EFAD61481D878C960056E526 /* WithS3DataStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WithS3DataStore.h; sourceTree = "<group>"; };
 		EFAD61491D878C960056E526 /* AES256EncryptedS3DataStore_WriteData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AES256EncryptedS3DataStore_WriteData.cpp; sourceTree = "<group>"; };
 		EFAD614B1D878C960056E526 /* S3DataStore_WriteData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = S3DataStore_WriteData.cpp; sourceTree = "<group>"; };
-		EFE17798200C422E006EAA12 /* SQLiteStringMapKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SQLiteStringMapKit.xcodeproj; path = /Users/pey/Development/hermit/Projects/Hermit/SQLiteStringMapKit.xcodeproj; sourceTree = "<absolute>"; };
 		EFF398A21F6555D900B1BD33 /* S3DataStoreKit_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = S3DataStoreKit_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EFF398A41F6555D900B1BD33 /* S3DataStoreKit_iOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = S3DataStoreKit_iOS.h; sourceTree = "<group>"; };
 		EFF398A51F6555D900B1BD33 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -197,7 +186,6 @@
 		EFAD61171D878C550056E526 = {
 			isa = PBXGroup;
 			children = (
-				EFE17798200C422E006EAA12 /* SQLiteStringMapKit.xcodeproj */,
 				EFAD61381D878C960056E526 /* AES256EncryptedS3DataStore_LoadData.cpp */,
 				EFAD61491D878C960056E526 /* AES256EncryptedS3DataStore_WriteData.cpp */,
 				EFAD612C1D878C960056E526 /* AES256EncryptedS3DataStore.cpp */,
@@ -237,14 +225,6 @@
 				EF7256471F18D6DF0054DCE0 /* S3DataStoreKit.framework */,
 				EFF398A21F6555D900B1BD33 /* S3DataStoreKit_iOS.framework */,
 				EF16AB5F202C2F5100AF9DAE /* libS3DataStore.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		EFE1779E200C4234006EAA12 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				EFE177A2200C4234006EAA12 /* SQLiteStringMapKit.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -375,12 +355,6 @@
 			mainGroup = EFAD61171D878C550056E526;
 			productRefGroup = EFAD61211D878C550056E526 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = EFE1779E200C4234006EAA12 /* Products */;
-					ProjectRef = EFE17798200C422E006EAA12 /* SQLiteStringMapKit.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				EF7256461F18D6DF0054DCE0 /* S3DataStoreKit */,
@@ -389,16 +363,6 @@
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		EFE177A2200C4234006EAA12 /* SQLiteStringMapKit.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = SQLiteStringMapKit.framework;
-			remoteRef = EFE177A1200C4234006EAA12 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		EF7256451F18D6DF0054DCE0 /* Resources */ = {
