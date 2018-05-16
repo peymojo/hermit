@@ -13,15 +13,11 @@
 		EF16AB56202C2F3700AF9DAE /* CalculateFileMurmur3_128.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5EE91D878A320056E526 /* CalculateFileMurmur3_128.cpp */; };
 		EF16AB57202C2F3700AF9DAE /* GetFileMD5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5EEB1D878A320056E526 /* GetFileMD5.cpp */; };
 		EF16AB58202C2F3700AF9DAE /* GetFileMD5WithProgress.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5EED1D878A320056E526 /* GetFileMD5WithProgress.cpp */; };
-		EF16AB59202C2F3700AF9DAE /* KeyPhraseToKeyWithJSONFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5EEF1D878A320056E526 /* KeyPhraseToKeyWithJSONFile.cpp */; };
-		EF16AB5A202C2F3700AF9DAE /* ValidateKeyPhraseWithJSONFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5EF31D878A320056E526 /* ValidateKeyPhraseWithJSONFile.cpp */; };
 		EF7255931F18D33E0054DCE0 /* EncodingFileKit.h in Headers */ = {isa = PBXBuildFile; fileRef = EF7255911F18D33E0054DCE0 /* EncodingFileKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EF7255981F18D3500054DCE0 /* CalculateFileCRC32.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5EE51D878A320056E526 /* CalculateFileCRC32.cpp */; };
 		EF72559A1F18D3500054DCE0 /* CalculateFileMurmur3_128.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5EE91D878A320056E526 /* CalculateFileMurmur3_128.cpp */; };
 		EF72559B1F18D3500054DCE0 /* GetFileMD5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5EEB1D878A320056E526 /* GetFileMD5.cpp */; };
 		EF72559C1F18D3500054DCE0 /* GetFileMD5WithProgress.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5EED1D878A320056E526 /* GetFileMD5WithProgress.cpp */; };
-		EF72559D1F18D3500054DCE0 /* KeyPhraseToKeyWithJSONFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5EEF1D878A320056E526 /* KeyPhraseToKeyWithJSONFile.cpp */; };
-		EF72559E1F18D3500054DCE0 /* ValidateKeyPhraseWithJSONFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5EF31D878A320056E526 /* ValidateKeyPhraseWithJSONFile.cpp */; };
 		EF7255A11F18D39C0054DCE0 /* FoundationKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF7255A01F18D39C0054DCE0 /* FoundationKit.framework */; };
 		EF7255A31F18D3A90054DCE0 /* FileKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF7255A21F18D3A90054DCE0 /* FileKit.framework */; };
 		EF7255A51F18D3B70054DCE0 /* JSONKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF7255A41F18D3B70054DCE0 /* JSONKit.framework */; };
@@ -49,12 +45,8 @@
 		EFAD5EEC1D878A320056E526 /* GetFileMD5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetFileMD5.h; sourceTree = "<group>"; };
 		EFAD5EED1D878A320056E526 /* GetFileMD5WithProgress.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GetFileMD5WithProgress.cpp; sourceTree = "<group>"; };
 		EFAD5EEE1D878A320056E526 /* GetFileMD5WithProgress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetFileMD5WithProgress.h; sourceTree = "<group>"; };
-		EFAD5EEF1D878A320056E526 /* KeyPhraseToKeyWithJSONFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyPhraseToKeyWithJSONFile.cpp; sourceTree = "<group>"; };
-		EFAD5EF01D878A320056E526 /* KeyPhraseToKeyWithJSONFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyPhraseToKeyWithJSONFile.h; sourceTree = "<group>"; };
 		EFAD5EF11D878A320056E526 /* LibEncoding_File.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LibEncoding_File.h; sourceTree = "<group>"; };
 		EFAD5EF21D878A320056E526 /* LibEncoding_File.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LibEncoding_File.m; sourceTree = "<group>"; };
-		EFAD5EF31D878A320056E526 /* ValidateKeyPhraseWithJSONFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ValidateKeyPhraseWithJSONFile.cpp; sourceTree = "<group>"; };
-		EFAD5EF41D878A320056E526 /* ValidateKeyPhraseWithJSONFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ValidateKeyPhraseWithJSONFile.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,12 +113,8 @@
 				EFAD5EEC1D878A320056E526 /* GetFileMD5.h */,
 				EFAD5EED1D878A320056E526 /* GetFileMD5WithProgress.cpp */,
 				EFAD5EEE1D878A320056E526 /* GetFileMD5WithProgress.h */,
-				EFAD5EEF1D878A320056E526 /* KeyPhraseToKeyWithJSONFile.cpp */,
-				EFAD5EF01D878A320056E526 /* KeyPhraseToKeyWithJSONFile.h */,
 				EFAD5EF11D878A320056E526 /* LibEncoding_File.h */,
 				EFAD5EF21D878A320056E526 /* LibEncoding_File.m */,
-				EFAD5EF31D878A320056E526 /* ValidateKeyPhraseWithJSONFile.cpp */,
-				EFAD5EF41D878A320056E526 /* ValidateKeyPhraseWithJSONFile.h */,
 				EF7255901F18D33E0054DCE0 /* EncodingFileKit */,
 				EF16AB4D202C2F2900AF9DAE /* EncodingFile */,
 				EFAD5ED41D878A010056E526 /* Products */,
@@ -255,8 +243,6 @@
 				EF16AB56202C2F3700AF9DAE /* CalculateFileMurmur3_128.cpp in Sources */,
 				EF16AB57202C2F3700AF9DAE /* GetFileMD5.cpp in Sources */,
 				EF16AB58202C2F3700AF9DAE /* GetFileMD5WithProgress.cpp in Sources */,
-				EF16AB59202C2F3700AF9DAE /* KeyPhraseToKeyWithJSONFile.cpp in Sources */,
-				EF16AB5A202C2F3700AF9DAE /* ValidateKeyPhraseWithJSONFile.cpp in Sources */,
 				EF16AB55202C2F3100AF9DAE /* CalculateFileCRC32.cpp in Sources */,
 				EF16AB51202C2F2900AF9DAE /* EncodingFile.m in Sources */,
 			);
@@ -270,8 +256,6 @@
 				EF72559A1F18D3500054DCE0 /* CalculateFileMurmur3_128.cpp in Sources */,
 				EF72559B1F18D3500054DCE0 /* GetFileMD5.cpp in Sources */,
 				EF72559C1F18D3500054DCE0 /* GetFileMD5WithProgress.cpp in Sources */,
-				EF72559D1F18D3500054DCE0 /* KeyPhraseToKeyWithJSONFile.cpp in Sources */,
-				EF72559E1F18D3500054DCE0 /* ValidateKeyPhraseWithJSONFile.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

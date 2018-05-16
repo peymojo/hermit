@@ -34,13 +34,10 @@
 		EF2CF69E1FF24C7100652E69 /* CreateUUIDString_Unix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD589C1D86B2E10056E526 /* CreateUUIDString_Unix.cpp */; };
 		EF2CF69F1FF24C7100652E69 /* CreateUUIDStringBase64Modified.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD589E1D86B2E10056E526 /* CreateUUIDStringBase64Modified.cpp */; };
 		EF2CF6A01FF24C7100652E69 /* EncodeHMACSHA1PBKDF2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58A01D86B2E10056E526 /* EncodeHMACSHA1PBKDF2.cpp */; };
-		EF2CF6A11FF24C7100652E69 /* EncryptChallengeText.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58A21D86B2E10056E526 /* EncryptChallengeText.cpp */; };
 		EF2CF6A21FF24C7100652E69 /* HexToBase64Modified.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58A41D86B2E10056E526 /* HexToBase64Modified.cpp */; };
-		EF2CF6A31FF24C7100652E69 /* KeyPhraseToKeyWithValues.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58A61D86B2E20056E526 /* KeyPhraseToKeyWithValues.cpp */; };
 		EF2CF6A41FF24C7100652E69 /* SHA1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58AA1D86B2E20056E526 /* SHA1.cpp */; };
 		EF2CF6A51FF24C7100652E69 /* SHA256.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58AC1D86B2E20056E526 /* SHA256.cpp */; };
 		EF2CF6A61FF24C7100652E69 /* UpdateCRC32.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58AE1D86B2E20056E526 /* UpdateCRC32.cpp */; };
-		EF2CF6A71FF24C7100652E69 /* ValidateKeyPhraseWithValues.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58B01D86B2E20056E526 /* ValidateKeyPhraseWithValues.cpp */; };
 		EF92C1D31F11006E0097D708 /* EncodingKit.h in Headers */ = {isa = PBXBuildFile; fileRef = EF92C1D11F11006E0097D708 /* EncodingKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EF92C1D71F11007B0097D708 /* AES256.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD586D1D86B2E10056E526 /* AES256.cpp */; };
 		EF92C1D81F11007B0097D708 /* AES256DecryptCBC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58701D86B2E10056E526 /* AES256DecryptCBC.cpp */; };
@@ -66,13 +63,10 @@
 		EF92C1EC1F11007B0097D708 /* CreateUUIDString_Mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD589B1D86B2E10056E526 /* CreateUUIDString_Mac.cpp */; };
 		EF92C1EE1F11007B0097D708 /* CreateUUIDStringBase64Modified.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD589E1D86B2E10056E526 /* CreateUUIDStringBase64Modified.cpp */; };
 		EF92C1EF1F11007B0097D708 /* EncodeHMACSHA1PBKDF2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58A01D86B2E10056E526 /* EncodeHMACSHA1PBKDF2.cpp */; };
-		EF92C1F01F11007B0097D708 /* EncryptChallengeText.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58A21D86B2E10056E526 /* EncryptChallengeText.cpp */; };
 		EF92C1F11F11007B0097D708 /* HexToBase64Modified.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58A41D86B2E10056E526 /* HexToBase64Modified.cpp */; };
-		EF92C1F21F11007B0097D708 /* KeyPhraseToKeyWithValues.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58A61D86B2E20056E526 /* KeyPhraseToKeyWithValues.cpp */; };
 		EF92C1F31F11007B0097D708 /* SHA1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58AA1D86B2E20056E526 /* SHA1.cpp */; };
 		EF92C1F41F11007B0097D708 /* SHA256.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58AC1D86B2E20056E526 /* SHA256.cpp */; };
 		EF92C1F51F11007B0097D708 /* UpdateCRC32.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58AE1D86B2E20056E526 /* UpdateCRC32.cpp */; };
-		EF92C1F61F11007B0097D708 /* ValidateKeyPhraseWithValues.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58B01D86B2E20056E526 /* ValidateKeyPhraseWithValues.cpp */; };
 		EF92C1FC1F11046B0097D708 /* FoundationKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF92C1F81F11046B0097D708 /* FoundationKit.framework */; };
 		EF92C1FE1F11046B0097D708 /* StringKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF92C1FA1F11046B0097D708 /* StringKit.framework */; };
 		EF92C1FF1F11046B0097D708 /* ValueKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF92C1FB1F11046B0097D708 /* ValueKit.framework */; };
@@ -101,13 +95,10 @@
 		EFF397FA1F6552E500B1BD33 /* CreateUUIDString_Mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD589B1D86B2E10056E526 /* CreateUUIDString_Mac.cpp */; };
 		EFF397FC1F6552E500B1BD33 /* CreateUUIDStringBase64Modified.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD589E1D86B2E10056E526 /* CreateUUIDStringBase64Modified.cpp */; };
 		EFF397FD1F6552E500B1BD33 /* EncodeHMACSHA1PBKDF2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58A01D86B2E10056E526 /* EncodeHMACSHA1PBKDF2.cpp */; };
-		EFF397FE1F6552E500B1BD33 /* EncryptChallengeText.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58A21D86B2E10056E526 /* EncryptChallengeText.cpp */; };
 		EFF397FF1F6552E500B1BD33 /* HexToBase64Modified.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58A41D86B2E10056E526 /* HexToBase64Modified.cpp */; };
-		EFF398001F6552E500B1BD33 /* KeyPhraseToKeyWithValues.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58A61D86B2E20056E526 /* KeyPhraseToKeyWithValues.cpp */; };
 		EFF398011F6552E500B1BD33 /* SHA1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58AA1D86B2E20056E526 /* SHA1.cpp */; };
 		EFF398021F6552E500B1BD33 /* SHA256.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58AC1D86B2E20056E526 /* SHA256.cpp */; };
 		EFF398031F6552E500B1BD33 /* UpdateCRC32.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58AE1D86B2E20056E526 /* UpdateCRC32.cpp */; };
-		EFF398041F6552E500B1BD33 /* ValidateKeyPhraseWithValues.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58B01D86B2E20056E526 /* ValidateKeyPhraseWithValues.cpp */; };
 		EFF398061F6552FD00B1BD33 /* ValueKit_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EFF398051F6552FD00B1BD33 /* ValueKit_iOS.framework */; };
 		EFF398081F65530300B1BD33 /* FoundationKit_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EFF398071F65530300B1BD33 /* FoundationKit_iOS.framework */; };
 		EFF3980A1F65530800B1BD33 /* StringKit_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EFF398091F65530800B1BD33 /* StringKit_iOS.framework */; };
@@ -177,12 +168,8 @@
 		EFAD589F1D86B2E10056E526 /* CreateUUIDStringBase64Modified.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateUUIDStringBase64Modified.h; sourceTree = "<group>"; };
 		EFAD58A01D86B2E10056E526 /* EncodeHMACSHA1PBKDF2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EncodeHMACSHA1PBKDF2.cpp; sourceTree = "<group>"; };
 		EFAD58A11D86B2E10056E526 /* EncodeHMACSHA1PBKDF2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EncodeHMACSHA1PBKDF2.h; sourceTree = "<group>"; };
-		EFAD58A21D86B2E10056E526 /* EncryptChallengeText.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EncryptChallengeText.cpp; sourceTree = "<group>"; };
-		EFAD58A31D86B2E10056E526 /* EncryptChallengeText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EncryptChallengeText.h; sourceTree = "<group>"; };
 		EFAD58A41D86B2E10056E526 /* HexToBase64Modified.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HexToBase64Modified.cpp; sourceTree = "<group>"; };
 		EFAD58A51D86B2E10056E526 /* HexToBase64Modified.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HexToBase64Modified.h; sourceTree = "<group>"; };
-		EFAD58A61D86B2E20056E526 /* KeyPhraseToKeyWithValues.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyPhraseToKeyWithValues.cpp; sourceTree = "<group>"; };
-		EFAD58A71D86B2E20056E526 /* KeyPhraseToKeyWithValues.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyPhraseToKeyWithValues.h; sourceTree = "<group>"; };
 		EFAD58A81D86B2E20056E526 /* LibEncoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LibEncoding.h; sourceTree = "<group>"; };
 		EFAD58A91D86B2E20056E526 /* LibEncoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LibEncoding.m; sourceTree = "<group>"; };
 		EFAD58AA1D86B2E20056E526 /* SHA1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SHA1.cpp; sourceTree = "<group>"; };
@@ -191,8 +178,6 @@
 		EFAD58AD1D86B2E20056E526 /* SHA256.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHA256.h; sourceTree = "<group>"; };
 		EFAD58AE1D86B2E20056E526 /* UpdateCRC32.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UpdateCRC32.cpp; sourceTree = "<group>"; };
 		EFAD58AF1D86B2E20056E526 /* UpdateCRC32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpdateCRC32.h; sourceTree = "<group>"; };
-		EFAD58B01D86B2E20056E526 /* ValidateKeyPhraseWithValues.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ValidateKeyPhraseWithValues.cpp; sourceTree = "<group>"; };
-		EFAD58B11D86B2E20056E526 /* ValidateKeyPhraseWithValues.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ValidateKeyPhraseWithValues.h; sourceTree = "<group>"; };
 		EFF397C31F6552AB00B1BD33 /* EncodingKit_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = EncodingKit_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EFF397C51F6552AB00B1BD33 /* EncodingKit_iOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EncodingKit_iOS.h; sourceTree = "<group>"; };
 		EFF397C61F6552AB00B1BD33 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -320,12 +305,8 @@
 				EFAD589F1D86B2E10056E526 /* CreateUUIDStringBase64Modified.h */,
 				EFAD58A01D86B2E10056E526 /* EncodeHMACSHA1PBKDF2.cpp */,
 				EFAD58A11D86B2E10056E526 /* EncodeHMACSHA1PBKDF2.h */,
-				EFAD58A21D86B2E10056E526 /* EncryptChallengeText.cpp */,
-				EFAD58A31D86B2E10056E526 /* EncryptChallengeText.h */,
 				EFAD58A41D86B2E10056E526 /* HexToBase64Modified.cpp */,
 				EFAD58A51D86B2E10056E526 /* HexToBase64Modified.h */,
-				EFAD58A61D86B2E20056E526 /* KeyPhraseToKeyWithValues.cpp */,
-				EFAD58A71D86B2E20056E526 /* KeyPhraseToKeyWithValues.h */,
 				EFAD58A81D86B2E20056E526 /* LibEncoding.h */,
 				EFAD58A91D86B2E20056E526 /* LibEncoding.m */,
 				EFAD58AA1D86B2E20056E526 /* SHA1.cpp */,
@@ -334,8 +315,6 @@
 				EFAD58AD1D86B2E20056E526 /* SHA256.h */,
 				EFAD58AE1D86B2E20056E526 /* UpdateCRC32.cpp */,
 				EFAD58AF1D86B2E20056E526 /* UpdateCRC32.h */,
-				EFAD58B01D86B2E20056E526 /* ValidateKeyPhraseWithValues.cpp */,
-				EFAD58B11D86B2E20056E526 /* ValidateKeyPhraseWithValues.h */,
 				EF92C1D01F11006E0097D708 /* EncodingKit */,
 				EFF397C41F6552AB00B1BD33 /* EncodingKit_iOS */,
 				EF2CF6801FF24C6600652E69 /* EncodingLib */,
@@ -536,13 +515,10 @@
 				EF2CF69E1FF24C7100652E69 /* CreateUUIDString_Unix.cpp in Sources */,
 				EF2CF69F1FF24C7100652E69 /* CreateUUIDStringBase64Modified.cpp in Sources */,
 				EF2CF6A01FF24C7100652E69 /* EncodeHMACSHA1PBKDF2.cpp in Sources */,
-				EF2CF6A11FF24C7100652E69 /* EncryptChallengeText.cpp in Sources */,
 				EF2CF6A21FF24C7100652E69 /* HexToBase64Modified.cpp in Sources */,
-				EF2CF6A31FF24C7100652E69 /* KeyPhraseToKeyWithValues.cpp in Sources */,
 				EF2CF6A41FF24C7100652E69 /* SHA1.cpp in Sources */,
 				EF2CF6A51FF24C7100652E69 /* SHA256.cpp in Sources */,
 				EF2CF6A61FF24C7100652E69 /* UpdateCRC32.cpp in Sources */,
-				EF2CF6A71FF24C7100652E69 /* ValidateKeyPhraseWithValues.cpp in Sources */,
 				EF2CF6841FF24C6600652E69 /* EncodingLib.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -575,13 +551,10 @@
 				EF92C1EC1F11007B0097D708 /* CreateUUIDString_Mac.cpp in Sources */,
 				EF92C1EE1F11007B0097D708 /* CreateUUIDStringBase64Modified.cpp in Sources */,
 				EF92C1EF1F11007B0097D708 /* EncodeHMACSHA1PBKDF2.cpp in Sources */,
-				EF92C1F01F11007B0097D708 /* EncryptChallengeText.cpp in Sources */,
 				EF92C1F11F11007B0097D708 /* HexToBase64Modified.cpp in Sources */,
-				EF92C1F21F11007B0097D708 /* KeyPhraseToKeyWithValues.cpp in Sources */,
 				EF92C1F31F11007B0097D708 /* SHA1.cpp in Sources */,
 				EF92C1F41F11007B0097D708 /* SHA256.cpp in Sources */,
 				EF92C1F51F11007B0097D708 /* UpdateCRC32.cpp in Sources */,
-				EF92C1F61F11007B0097D708 /* ValidateKeyPhraseWithValues.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -613,13 +586,10 @@
 				EFF397FA1F6552E500B1BD33 /* CreateUUIDString_Mac.cpp in Sources */,
 				EFF397FC1F6552E500B1BD33 /* CreateUUIDStringBase64Modified.cpp in Sources */,
 				EFF397FD1F6552E500B1BD33 /* EncodeHMACSHA1PBKDF2.cpp in Sources */,
-				EFF397FE1F6552E500B1BD33 /* EncryptChallengeText.cpp in Sources */,
 				EFF397FF1F6552E500B1BD33 /* HexToBase64Modified.cpp in Sources */,
-				EFF398001F6552E500B1BD33 /* KeyPhraseToKeyWithValues.cpp in Sources */,
 				EFF398011F6552E500B1BD33 /* SHA1.cpp in Sources */,
 				EFF398021F6552E500B1BD33 /* SHA256.cpp in Sources */,
 				EFF398031F6552E500B1BD33 /* UpdateCRC32.cpp in Sources */,
-				EFF398041F6552E500B1BD33 /* ValidateKeyPhraseWithValues.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
