@@ -23,6 +23,16 @@ namespace hermit {
 		
 		namespace {
 			
+//			//
+//			void LogBinaryString(const std::string& prefix, const std::string& s) {
+//				std::cout << prefix << ": ";
+//				for (std::string::size_type i = 0; i < s.length(); i++) {
+//					unsigned char ch = (unsigned char)s[i];
+//					std::cout << std::hex << std::setw(2) << std::setfill('0') << (int)ch;
+//				}
+//				std::cout << std::endl;
+//			}
+
 			//
 			static char ToHex(uint8_t inValue) {
 				if (inValue < 10) {
