@@ -18,6 +18,7 @@
 
 #import <objc/runtime.h>
 #import <Foundation/Foundation.h>
+#import "Hermit/Foundation/Notification.h"
 #import "CreateHTTPSession.h"
 
 namespace hermit {
@@ -108,8 +109,19 @@ static void* const TASK_PARAMS_KEY = (void*)&TASK_PARAMS_KEY;
 - (void)completion:(NSError*)error {
 	hermit::http::HTTPRequestResult result = hermit::http::HTTPRequestResult::kSuccess;
 	if (error != nil) {
-		NSLog(@"error: %@", error);
-		result = hermit::http::HTTPRequestResult::kError;
+		bool isNSURLError = [[error domain] isEqualToString:NSURLErrorDomain];
+		NSInteger errorCode = [error code];
+		if (isNSURLError && (errorCode == kCFURLErrorNetworkConnectionLost)) {
+			result = hermit::http::HTTPRequestResult::kNetworkConnectionLost;
+		}
+		else if (isNSURLError && (errorCode == kCFURLErrorTimedOut)) {
+			result = hermit::http::HTTPRequestResult::kTimedOut;
+		}
+		else {
+			NSLog(@"error: %@", error);
+			NOTIFY_ERROR(_h_, "DataSessionTask failed, error:", [error localizedDescription]);
+			result = hermit::http::HTTPRequestResult::kError;
+		}
 	}
 	_completion->Call(_h_, result);
 }
@@ -151,9 +163,6 @@ static void* const TASK_PARAMS_KEY = (void*)&TASK_PARAMS_KEY;
 }
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(nullable NSError *)error {
-	if (error != nil) {
-		NSLog(@"didCompleteWithError: %@", error);
-	}
 	TaskParams* params = objc_getAssociatedObject(task, TASK_PARAMS_KEY);
 	if (params != nil) {
 		[params status:task];
