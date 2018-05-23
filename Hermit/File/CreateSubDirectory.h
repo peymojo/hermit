@@ -19,7 +19,6 @@
 #ifndef CreateSubDirectory_h
 #define CreateSubDirectory_h
 
-#include "Hermit/Foundation/Callback.h"
 #include "Hermit/Foundation/Hermit.h"
 #include "FilePath.h"
 
@@ -27,48 +26,7 @@ namespace hermit {
 	namespace file {
 		
 		//
-		//
-		DEFINE_CALLBACK_2A(CreateSubDirectoryCallback,
-						   bool,							// inSuccess
-						   FilePathPtr);					// inDirectoryPath
-		
-		//
-		//
-		template <typename T>
-		class CreateSubDirectoryCallbackClassT
-		{
-		public:
-			//
-			//
-			CreateSubDirectoryCallbackClassT()
-			:
-			mSuccess(false)
-			{
-			}
-			
-			//
-			//
-			bool Function(bool inSuccess, FilePathPtr inFilePath)
-			{
-				mSuccess = inSuccess;
-				if (inSuccess)
-				{
-					mFilePath = inFilePath;
-				}
-				return true;
-			}
-			
-			//
-			//
-			bool mSuccess;
-			T mFilePath;
-		};
-		
-		//
-		void CreateSubDirectory(const HermitPtr& h_,
-								const FilePathPtr& inBasePath,
-								const std::string& inDirectoryName,
-								const CreateSubDirectoryCallbackRef& inCallback);
+		bool CreateSubDirectory(const HermitPtr& h_, const FilePathPtr& parent, const std::string& directoryName, FilePathPtr& outSubDirectory);
 		
 	} // namespace file
 } // namespace hermit

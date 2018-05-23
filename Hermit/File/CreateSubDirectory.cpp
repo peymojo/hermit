@@ -25,24 +25,21 @@ namespace hermit {
 	namespace file {
 		
 		//
-		void CreateSubDirectory(const HermitPtr& h_,
-								const FilePathPtr& inBasePath,
-								const std::string& inDirectoryName,
-								const CreateSubDirectoryCallbackRef& inCallback) {
+		bool CreateSubDirectory(const HermitPtr& h_, const FilePathPtr& parent, const std::string& directoryName, FilePathPtr& outSubDirectory) {
 			FilePathPtr dirPath;
-			AppendToFilePath(h_, inBasePath, inDirectoryName, dirPath);
+			AppendToFilePath(h_, parent, directoryName, dirPath);
 			if (dirPath == nullptr) {
-				NOTIFY_ERROR(h_, "CreateSubDirectory: AppendToFilePathFailed for directoryName:", inDirectoryName);
-				inCallback.Call(false, nullptr);
-				return;
+				NOTIFY_ERROR(h_, "AppendToFilePathFailed for directoryName:", directoryName);
+				return false;
 			}
 			
 			auto result = CreateDirectoryIfNeeded(h_, dirPath);
 			if (result.first != kCreateDirectoryIfNeededStatus_Success) {
-				inCallback.Call(false, nullptr);
-				return;
+				NOTIFY_ERROR(h_, "CreateDirectoryIfNeeded for dirPath:", dirPath);
+				return false;
 			}
-			inCallback.Call(true, dirPath);
+			outSubDirectory = dirPath;
+			return true;
 		}
 		
 	} // namespace file
