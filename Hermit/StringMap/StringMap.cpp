@@ -38,6 +38,12 @@ namespace hermit {
 			NOTIFY_ERROR(h_, "unimplemented");
 			completion->Call(h_, SetStringMapValueResult::kError);
 		}
-		
+
+		//
+		bool StringMap::ExportValues(const HermitPtr& h_, value::ValuePtr& outValues) {
+			NOTIFY_ERROR(h_, "unimplemented");
+			return false;
+		}
+
 	} // namespace stringmap
 } // namespace hermit

@@ -22,6 +22,7 @@
 #include <memory>
 #include "Hermit/Foundation/AsyncFunction.h"
 #include "Hermit/Foundation/Hermit.h"
+#include "Hermit/Value/Value.h"
 
 namespace hermit {
 	namespace stringmap {
@@ -74,6 +75,9 @@ namespace hermit {
 								  const std::string& key,
 								  const std::string& value,
 								  const SetStringMapValueCompletionPtr& completion);
+			
+			//
+			virtual bool ExportValues(const HermitPtr& h_, value::ValuePtr& outValues);
 			
 		protected:
 			//

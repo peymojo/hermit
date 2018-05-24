@@ -13,6 +13,9 @@
 		EF1192051F9E18A6000B820F /* SQLiteStringMap_SetValue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF1192041F9E18A6000B820F /* SQLiteStringMap_SetValue.cpp */; };
 		EF11920C1F9E18FF000B820F /* WithSQLiteStringMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF11920A1F9E18FF000B820F /* WithSQLiteStringMap.cpp */; };
 		EF11920D1F9E18FF000B820F /* WithSQLiteStringMap.h in Headers */ = {isa = PBXBuildFile; fileRef = EF11920B1F9E18FF000B820F /* WithSQLiteStringMap.h */; };
+		EF2075A020B6D0CA009ED8C5 /* SQLiteStringMap_ExportValues.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF20759F20B6D0CA009ED8C5 /* SQLiteStringMap_ExportValues.cpp */; };
+		EF2075A120B6D0CA009ED8C5 /* SQLiteStringMap_ExportValues.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF20759F20B6D0CA009ED8C5 /* SQLiteStringMap_ExportValues.cpp */; };
+		EF2075A320B6D5C4009ED8C5 /* ValueKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF2075A220B6D5C4009ED8C5 /* ValueKit.framework */; };
 		EF2FEC2A1F9E26B50069B142 /* FoundationKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF2FEC2B1F9E26B50069B142 /* FoundationKit.framework */; };
 		EF2FEC2C1F9E26D00069B142 /* FileKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF2FEC2D1F9E26D00069B142 /* FileKit.framework */; };
 		EF2FEC2E1F9E26DA0069B142 /* StringMapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF2FEC2F1F9E26DA0069B142 /* StringMapKit.framework */; };
@@ -36,6 +39,8 @@
 		EF1192041F9E18A6000B820F /* SQLiteStringMap_SetValue.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SQLiteStringMap_SetValue.cpp; sourceTree = "<group>"; };
 		EF11920A1F9E18FF000B820F /* WithSQLiteStringMap.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = WithSQLiteStringMap.cpp; sourceTree = "<group>"; };
 		EF11920B1F9E18FF000B820F /* WithSQLiteStringMap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WithSQLiteStringMap.h; sourceTree = "<group>"; };
+		EF20759F20B6D0CA009ED8C5 /* SQLiteStringMap_ExportValues.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SQLiteStringMap_ExportValues.cpp; sourceTree = "<group>"; };
+		EF2075A220B6D5C4009ED8C5 /* ValueKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ValueKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF2FEC2B1F9E26B50069B142 /* FoundationKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FoundationKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF2FEC2D1F9E26D00069B142 /* FileKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FileKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF2FEC2F1F9E26DA0069B142 /* StringMapKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StringMapKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -63,6 +68,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EF2075A320B6D5C4009ED8C5 /* ValueKit.framework in Frameworks */,
 				EF2FEC2E1F9E26DA0069B142 /* StringMapKit.framework in Frameworks */,
 				EF2FEC2C1F9E26D00069B142 /* FileKit.framework in Frameworks */,
 				EF2FEC311F9E26E20069B142 /* libsqlite3.tbd in Frameworks */,
@@ -76,6 +82,7 @@
 		EF2FEC291F9E26B50069B142 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				EF2075A220B6D5C4009ED8C5 /* ValueKit.framework */,
 				EF2FEC301F9E26E20069B142 /* libsqlite3.tbd */,
 				EF2FEC2F1F9E26DA0069B142 /* StringMapKit.framework */,
 				EF2FEC2D1F9E26D00069B142 /* FileKit.framework */,
@@ -106,9 +113,11 @@
 		EFDC02801F9E1332005ECC1F = {
 			isa = PBXGroup;
 			children = (
+				EF2FEC291F9E26B50069B142 /* Frameworks */,
 				EF70081C1F9E20FF00216C2D /* Impl */,
-				EF9C571E2024347200E5D090 /* SQLiteStringMap */,
 				EFDC028B1F9E1332005ECC1F /* Products */,
+				EF9C571E2024347200E5D090 /* SQLiteStringMap */,
+				EF20759F20B6D0CA009ED8C5 /* SQLiteStringMap_ExportValues.cpp */,
 				EF1192001F9E1881000B820F /* SQLiteStringMap_GetValue.cpp */,
 				EF1192041F9E18A6000B820F /* SQLiteStringMap_SetValue.cpp */,
 				EF1191FA1F9E146E000B820F /* SQLiteStringMap.cpp */,
@@ -116,7 +125,6 @@
 				EFDC028C1F9E1332005ECC1F /* SQLiteStringMapKit */,
 				EF11920A1F9E18FF000B820F /* WithSQLiteStringMap.cpp */,
 				EF11920B1F9E18FF000B820F /* WithSQLiteStringMap.h */,
-				EF2FEC291F9E26B50069B142 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -255,6 +263,7 @@
 				EF9C572A2024347C00E5D090 /* SQLiteStringMap_SetValue.cpp in Sources */,
 				EF9C572D2024347C00E5D090 /* SQLiteStringMap.cpp in Sources */,
 				EF9C572E2024347C00E5D090 /* WithSQLiteStringMap.cpp in Sources */,
+				EF2075A120B6D0CA009ED8C5 /* SQLiteStringMap_ExportValues.cpp in Sources */,
 				EF9C57222024347200E5D090 /* SQLiteStringMap.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -265,6 +274,7 @@
 			files = (
 				EF11920C1F9E18FF000B820F /* WithSQLiteStringMap.cpp in Sources */,
 				EF1192051F9E18A6000B820F /* SQLiteStringMap_SetValue.cpp in Sources */,
+				EF2075A020B6D0CA009ED8C5 /* SQLiteStringMap_ExportValues.cpp in Sources */,
 				EF1192011F9E1881000B820F /* SQLiteStringMap_GetValue.cpp in Sources */,
 				EF1191FC1F9E146E000B820F /* SQLiteStringMap.cpp in Sources */,
 				EF70081F1F9E211000216C2D /* SQLiteStringMapImpl.cpp in Sources */,
