@@ -50,7 +50,7 @@ namespace hermit {
 								  const stringmap::SetStringMapValueCompletionPtr& completion) override;
 			
 			//
-			virtual bool ExportValues(const HermitPtr& h_, hermit::value::ValuePtr& outValues) override;
+			virtual bool ExportValues(const HermitPtr& h_, value::ValuePtr& outValues) override;
 
 			//
 			SQLiteStringMapImplPtr mImpl;

@@ -29,8 +29,8 @@ namespace hermit {
 		namespace SQLiteStringMap_ExportValues_Impl {
 			
 			//
-			typedef std::map<std::string, hermit::value::ValuePtr> ValueMap;
-			typedef std::vector<hermit::value::ValuePtr> ValueVector;
+			typedef std::map<std::string, value::ValuePtr> ValueMap;
+			typedef std::vector<value::ValuePtr> ValueVector;
 
 			//
 			bool PerformWork(const HermitPtr& h_, const SQLiteStringMapImplPtr& impl, value::ValuePtr& outValues) {
@@ -49,7 +49,7 @@ namespace hermit {
 				}
 				Impl::StatementWrapper selectStatementWrapper(selectStatement);
 				
-				auto entriesArray = std::make_shared<hermit::value::ArrayValueClassT<ValueVector>>();
+				auto entriesArray = std::make_shared<value::ArrayValueClassT<ValueVector>>();
 				while (true) {
 					rc = sqlite3_step(selectStatement);
 					if (rc == SQLITE_DONE) {
@@ -72,9 +72,9 @@ namespace hermit {
 					}
 
 					ValueMap entry;
-					entry.insert(ValueMap::value_type("key", hermit::value::StringValue::New((const char*)keyTextPtr)));
-					entry.insert(ValueMap::value_type("value", hermit::value::StringValue::New((const char*)valueTextPtr)));
-					auto entryValues = std::make_shared<hermit::value::ObjectValueClassT<ValueMap>>(entry);
+					entry.insert(ValueMap::value_type("key", value::StringValue::New((const char*)keyTextPtr)));
+					entry.insert(ValueMap::value_type("value", value::StringValue::New((const char*)valueTextPtr)));
+					auto entryValues = std::make_shared<value::ObjectValueClassT<ValueMap>>(entry);
 
 					entriesArray->AppendItem(entryValues);
 				}
@@ -83,12 +83,11 @@ namespace hermit {
 				return true;
 			}
 			
-			
 		} // namespace SQLiteStringMap_ExportValues_Impl
 		using namespace SQLiteStringMap_ExportValues_Impl;
 
 		//
-		bool SQLiteStringMap::ExportValues(const hermit::HermitPtr &h_, hermit::value::ValuePtr &outValues) {
+		bool SQLiteStringMap::ExportValues(const HermitPtr &h_, value::ValuePtr &outValues) {
 			return PerformWork(h_, mImpl, outValues);
 		}
 
