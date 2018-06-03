@@ -23,7 +23,7 @@
 namespace hermit {
 	
 	//
-	void GetCurrentUTCAndLocalTimeStrings(std::string& outUTCTimeString, std::string& outLocalTimeString) {
+	void GetCurrentUTCAndLocalTimeStrings(const HermitPtr& h_, std::string& outUTCTimeString, std::string& outLocalTimeString) {
 		time_t now = 0;
 		time(&now);
 		

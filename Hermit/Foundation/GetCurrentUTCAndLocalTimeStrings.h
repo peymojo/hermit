@@ -20,11 +20,12 @@
 #define GetCurrentUTCAndLocalTimeStrings_h
 
 #include <string>
+#include "Hermit.h"
 
 namespace hermit {
 		
 	//
-	void GetCurrentUTCAndLocalTimeStrings(std::string& outUTCTimeString, std::string& outLocalTimeString);
+	void GetCurrentUTCAndLocalTimeStrings(const HermitPtr& h_, std::string& outUTCTimeString, std::string& outLocalTimeString);
 	
 } // namespace hermit
 
