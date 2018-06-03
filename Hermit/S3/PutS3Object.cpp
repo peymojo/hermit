@@ -296,7 +296,7 @@ namespace hermit {
 			}
 			
 			std::string dataSizeString;
-			string::UInt64ToString(data->Size(), dataSizeString);
+			string::UInt64ToString(h_, data->Size(), dataSizeString);
 			if (dataSizeString.empty()) {
 				NOTIFY_ERROR(h_, "PutS3Object: UInt64ToString failed for data->Size():", data->Size());
 				completion->Call(h_, S3Result::kError, "");

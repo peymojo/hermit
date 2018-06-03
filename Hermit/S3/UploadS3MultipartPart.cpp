@@ -324,7 +324,7 @@ namespace hermit {
 			}
 			
 			std::string partSizeString;
-			string::UInt64ToString(partData->Size(), partSizeString);
+			string::UInt64ToString(h_, partData->Size(), partSizeString);
 			if (partSizeString.empty()) {
 				NOTIFY_ERROR(h_, "UploadS3MultipartPart: UInt64ToString failed for partSize:", partData->Size());
 				completion->Call(h_, S3Result::kError, "");

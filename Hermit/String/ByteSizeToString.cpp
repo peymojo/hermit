@@ -25,7 +25,7 @@ namespace hermit {
 	namespace string {
 		
 		//
-		static std::string ByteSizeToString(uint64_t inSize) {
+		static std::string ByteSizeToString(const HermitPtr& h_, uint64_t inSize) {
 			static const uint64_t oneKilobyte = 1024;
 			static const uint64_t oneMegabyte = oneKilobyte * 1024;
 			static const uint64_t oneGigabyte = oneMegabyte * 1024;
@@ -63,7 +63,7 @@ namespace hermit {
 			}
 			else {
 				std::string str;
-				UInt64ToString(size, str);				
+				UInt64ToString(h_, size, str);
 				str += " bytes";
 				result = str;
 			}
@@ -72,8 +72,8 @@ namespace hermit {
 		
 		//
 		//
-		void ByteSizeToString(const uint64_t& bytes, std::string& outString) {
-			outString = ByteSizeToString(bytes);
+		void ByteSizeToString(const HermitPtr& h_, const uint64_t& bytes, std::string& outString) {
+			outString = ByteSizeToString(h_, bytes);
 		}
 		
 	} // namespace string

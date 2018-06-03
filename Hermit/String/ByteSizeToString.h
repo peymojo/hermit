@@ -20,12 +20,13 @@
 #define ByteSizeToString_h
 
 #include <string>
+#include "Hermit/Foundation/Hermit.h"
 
 namespace hermit {
 	namespace string {
 		
 		//
-		void ByteSizeToString(const uint64_t& bytes, std::string& outString);
+		void ByteSizeToString(const HermitPtr& h_, const uint64_t& bytes, std::string& outString);
 		
 	} // namespace string
 } // namespace hermit

@@ -20,12 +20,13 @@
 #define UInt64ToString_h
 
 #include <string>
+#include "Hermit/Foundation/Hermit.h"
 
 namespace hermit {
 	namespace string {
 		
 		//
-		void UInt64ToString(const uint64_t& value, std::string& outString);
+		void UInt64ToString(const HermitPtr& h_, const uint64_t& value, std::string& outString);
 		
 	} // namespace string
 } // namespace hermit

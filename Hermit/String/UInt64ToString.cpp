@@ -23,7 +23,7 @@ namespace hermit {
 	namespace string {
 		
 		//
-		void UInt64ToString(const uint64_t& value, std::string& outString) {
+		void UInt64ToString(const HermitPtr& h_, const uint64_t& value, std::string& outString) {
 			char buf[256];
 			sprintf(buf, "%llu", value);
 			outString = buf;
