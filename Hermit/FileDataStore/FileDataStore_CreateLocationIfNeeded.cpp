@@ -28,29 +28,31 @@ namespace hermit {
 		void FileDataStore::CreateLocationIfNeeded(const HermitPtr& h_,
                                                    const datastore::DataPathPtr& path,
                                                    const datastore::CreateDataStoreLocationIfNeededCompletionPtr& completion) {
-			FilePathDataPath& dataPath = static_cast<FilePathDataPath&>(*path);
-			if (dataPath.mFilePath == nullptr) {
-				NOTIFY_ERROR(h_, "dataPath.mFilePath is null.");
-                completion->Call(h_, datastore::CreateDataStoreLocationIfNeededResult::kError);
-                return;
-			}
-			
-			auto result = file::CreateDirectoryIfNeeded(h_, dataPath.mFilePath);
-			if (result.first == file::kCreateDirectoryIfNeededStatus_Success) {
-				completion->Call(h_, datastore::CreateDataStoreLocationIfNeededResult::kSuccess);
-                return;
-			}
-            if (result.first == file::kCreateDirectoryIfNeededStatus_ConflictAtPath) {
-                completion->Call(h_, datastore::CreateDataStoreLocationIfNeededResult::kConflictAtPath);
-                return;
-			}
-            if (result.first == file::kCreateDirectoryIfNeededStatus_DiskFull) {
-				completion->Call(h_, datastore::CreateDataStoreLocationIfNeededResult::kStorageFull);
-                return;
-			}
+			completion->Call(h_, datastore::CreateDataStoreLocationIfNeededResult::kSuccess);
 
-            NOTIFY_ERROR(h_, "CreateDirectoryIfNeeded failed for path:", dataPath.mFilePath);
-			completion->Call(h_, datastore::CreateDataStoreLocationIfNeededResult::kError);
+//			FilePathDataPath& dataPath = static_cast<FilePathDataPath&>(*path);
+//			if (dataPath.mFilePath == nullptr) {
+//				NOTIFY_ERROR(h_, "dataPath.mFilePath is null.");
+//                completion->Call(h_, datastore::CreateDataStoreLocationIfNeededResult::kError);
+//                return;
+//			}
+//			
+//			auto result = file::CreateDirectoryIfNeeded(h_, dataPath.mFilePath);
+//			if (result.first == file::kCreateDirectoryIfNeededStatus_Success) {
+//				completion->Call(h_, datastore::CreateDataStoreLocationIfNeededResult::kSuccess);
+//                return;
+//			}
+//            if (result.first == file::kCreateDirectoryIfNeededStatus_ConflictAtPath) {
+//                completion->Call(h_, datastore::CreateDataStoreLocationIfNeededResult::kConflictAtPath);
+//                return;
+//			}
+//            if (result.first == file::kCreateDirectoryIfNeededStatus_DiskFull) {
+//				completion->Call(h_, datastore::CreateDataStoreLocationIfNeededResult::kStorageFull);
+//                return;
+//			}
+//
+//            NOTIFY_ERROR(h_, "CreateDirectoryIfNeeded failed for path:", dataPath.mFilePath);
+//			completion->Call(h_, datastore::CreateDataStoreLocationIfNeededResult::kError);
 		}
 		
 	} // namespace filedatastore

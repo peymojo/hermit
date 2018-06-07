@@ -13,7 +13,7 @@
 		EF2CF5CA1FF24A0000652E69 /* FileLib.m in Sources */ = {isa = PBXBuildFile; fileRef = EF2CF5C91FF24A0000652E69 /* FileLib.m */; };
 		EF2CF5D11FF24A1C00652E69 /* CountDirectoryContents.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F311D878B840056E526 /* CountDirectoryContents.cpp */; };
 		EF2CF5D21FF24A1C00652E69 /* CreateAlias_Mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F351D878B840056E526 /* CreateAlias_Mac.cpp */; };
-		EF2CF5D31FF24A1C00652E69 /* CreateDirectoryAndParentsAsNeeded.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F391D878B840056E526 /* CreateDirectoryAndParentsAsNeeded.cpp */; };
+		EF2CF5D31FF24A1C00652E69 /* CreateDirectoryParentChain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F391D878B840056E526 /* CreateDirectoryParentChain.cpp */; };
 		EF2CF5D41FF24A1C00652E69 /* CreateDirectoryIfNeeded.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F3B1D878B840056E526 /* CreateDirectoryIfNeeded.cpp */; };
 		EF2CF5D51FF24A1C00652E69 /* CreateSubDirectory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F441D878B840056E526 /* CreateSubDirectory.cpp */; };
 		EF2CF5D61FF24A1C00652E69 /* FileNotification.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F4C1D878B840056E526 /* FileNotification.cpp */; };
@@ -95,7 +95,7 @@
 		EF55F58320121CEF0087BEA3 /* CompareFinderInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF55F58020121CE40087BEA3 /* CompareFinderInfo.cpp */; };
 		EF65112A1F656EDA002D8065 /* FileKit_iOS.h in Headers */ = {isa = PBXBuildFile; fileRef = EF6511281F656EDA002D8065 /* FileKit_iOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EF6511341F656EE2002D8065 /* CreateAlias_Mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F351D878B840056E526 /* CreateAlias_Mac.cpp */; };
-		EF6511351F656EE2002D8065 /* CreateDirectoryAndParentsAsNeeded.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F391D878B840056E526 /* CreateDirectoryAndParentsAsNeeded.cpp */; };
+		EF6511351F656EE2002D8065 /* CreateDirectoryParentChain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F391D878B840056E526 /* CreateDirectoryParentChain.cpp */; };
 		EF6511361F656EE2002D8065 /* CreateDirectoryIfNeeded.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F3B1D878B840056E526 /* CreateDirectoryIfNeeded.cpp */; };
 		EF6511371F656EE2002D8065 /* CreateSubDirectory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F441D878B840056E526 /* CreateSubDirectory.cpp */; };
 		EF6511381F656EE2002D8065 /* FileNotification.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F4C1D878B840056E526 /* FileNotification.cpp */; };
@@ -142,7 +142,7 @@
 		EF92C1701F10FF180097D708 /* FileKit.h in Headers */ = {isa = PBXBuildFile; fileRef = EF92C16E1F10FF180097D708 /* FileKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EF92C1791F10FF330097D708 /* CountDirectoryContents.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F311D878B840056E526 /* CountDirectoryContents.cpp */; };
 		EF92C17A1F10FF330097D708 /* CreateAlias_Mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F351D878B840056E526 /* CreateAlias_Mac.cpp */; };
-		EF92C17B1F10FF330097D708 /* CreateDirectoryAndParentsAsNeeded.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F391D878B840056E526 /* CreateDirectoryAndParentsAsNeeded.cpp */; };
+		EF92C17B1F10FF330097D708 /* CreateDirectoryParentChain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F391D878B840056E526 /* CreateDirectoryParentChain.cpp */; };
 		EF92C17C1F10FF330097D708 /* CreateDirectoryIfNeeded.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F3B1D878B840056E526 /* CreateDirectoryIfNeeded.cpp */; };
 		EF92C17D1F10FF330097D708 /* CreateSubDirectory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F441D878B840056E526 /* CreateSubDirectory.cpp */; };
 		EF92C17E1F10FF330097D708 /* FileNotification.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F4C1D878B840056E526 /* FileNotification.cpp */; };
@@ -258,8 +258,8 @@
 		EFAD5F361D878B840056E526 /* CreateAlias.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateAlias.h; sourceTree = "<group>"; };
 		EFAD5F371D878B840056E526 /* CreateDirectory_Cocoa.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CreateDirectory_Cocoa.mm; sourceTree = "<group>"; };
 		EFAD5F381D878B840056E526 /* CreateDirectory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateDirectory.h; sourceTree = "<group>"; };
-		EFAD5F391D878B840056E526 /* CreateDirectoryAndParentsAsNeeded.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CreateDirectoryAndParentsAsNeeded.cpp; sourceTree = "<group>"; };
-		EFAD5F3A1D878B840056E526 /* CreateDirectoryAndParentsAsNeeded.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateDirectoryAndParentsAsNeeded.h; sourceTree = "<group>"; };
+		EFAD5F391D878B840056E526 /* CreateDirectoryParentChain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CreateDirectoryParentChain.cpp; sourceTree = "<group>"; };
+		EFAD5F3A1D878B840056E526 /* CreateDirectoryParentChain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateDirectoryParentChain.h; sourceTree = "<group>"; };
 		EFAD5F3B1D878B840056E526 /* CreateDirectoryIfNeeded.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CreateDirectoryIfNeeded.cpp; sourceTree = "<group>"; };
 		EFAD5F3C1D878B840056E526 /* CreateDirectoryIfNeeded.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateDirectoryIfNeeded.h; sourceTree = "<group>"; };
 		EFAD5F3D1D878B840056E526 /* CreateEmptyFile_Cocoa.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CreateEmptyFile_Cocoa.mm; sourceTree = "<group>"; };
@@ -495,8 +495,8 @@
 				EFAD5F361D878B840056E526 /* CreateAlias.h */,
 				EFAD5F371D878B840056E526 /* CreateDirectory_Cocoa.mm */,
 				EFAD5F381D878B840056E526 /* CreateDirectory.h */,
-				EFAD5F391D878B840056E526 /* CreateDirectoryAndParentsAsNeeded.cpp */,
-				EFAD5F3A1D878B840056E526 /* CreateDirectoryAndParentsAsNeeded.h */,
+				EFAD5F391D878B840056E526 /* CreateDirectoryParentChain.cpp */,
+				EFAD5F3A1D878B840056E526 /* CreateDirectoryParentChain.h */,
 				EFAD5F3B1D878B840056E526 /* CreateDirectoryIfNeeded.cpp */,
 				EFAD5F3C1D878B840056E526 /* CreateDirectoryIfNeeded.h */,
 				EFAD5F3D1D878B840056E526 /* CreateEmptyFile_Cocoa.mm */,
@@ -850,7 +850,7 @@
 				EF2CF6151FF24A2400652E69 /* StreamOutFileData_Cocoa.mm in Sources */,
 				EF2CF5D11FF24A1C00652E69 /* CountDirectoryContents.cpp in Sources */,
 				EF2CF5D21FF24A1C00652E69 /* CreateAlias_Mac.cpp in Sources */,
-				EF2CF5D31FF24A1C00652E69 /* CreateDirectoryAndParentsAsNeeded.cpp in Sources */,
+				EF2CF5D31FF24A1C00652E69 /* CreateDirectoryParentChain.cpp in Sources */,
 				EF2CF5D41FF24A1C00652E69 /* CreateDirectoryIfNeeded.cpp in Sources */,
 				EF2CF5D51FF24A1C00652E69 /* CreateSubDirectory.cpp in Sources */,
 				EF2CF5D61FF24A1C00652E69 /* FileNotification.cpp in Sources */,
@@ -909,7 +909,7 @@
 				EF65117B1F656EE8002D8065 /* StreamInFileData_Cocoa.mm in Sources */,
 				EF65117D1F656EE8002D8065 /* StreamOutFileData_Cocoa.mm in Sources */,
 				EF6511341F656EE2002D8065 /* CreateAlias_Mac.cpp in Sources */,
-				EF6511351F656EE2002D8065 /* CreateDirectoryAndParentsAsNeeded.cpp in Sources */,
+				EF6511351F656EE2002D8065 /* CreateDirectoryParentChain.cpp in Sources */,
 				EF6511361F656EE2002D8065 /* CreateDirectoryIfNeeded.cpp in Sources */,
 				EF6511371F656EE2002D8065 /* CreateSubDirectory.cpp in Sources */,
 				EF6511381F656EE2002D8065 /* FileNotification.cpp in Sources */,
@@ -981,7 +981,7 @@
 				EF92C1C21F10FF510097D708 /* StreamOutFileData_Cocoa.mm in Sources */,
 				EF92C1791F10FF330097D708 /* CountDirectoryContents.cpp in Sources */,
 				EF92C17A1F10FF330097D708 /* CreateAlias_Mac.cpp in Sources */,
-				EF92C17B1F10FF330097D708 /* CreateDirectoryAndParentsAsNeeded.cpp in Sources */,
+				EF92C17B1F10FF330097D708 /* CreateDirectoryParentChain.cpp in Sources */,
 				EF92C17C1F10FF330097D708 /* CreateDirectoryIfNeeded.cpp in Sources */,
 				EF92C17D1F10FF330097D708 /* CreateSubDirectory.cpp in Sources */,
 				EF92C17E1F10FF330097D708 /* FileNotification.cpp in Sources */,

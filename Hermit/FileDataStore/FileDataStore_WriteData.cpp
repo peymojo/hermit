@@ -17,6 +17,8 @@
 //
 
 #include <string>
+#include "Hermit/File/CreateDirectoryParentChain.h"
+#include "Hermit/File/GetFilePathParent.h"
 #include "Hermit/File/WriteFileData.h"
 #include "Hermit/Foundation/AsyncTaskQueue.h"
 #include "Hermit/Foundation/Notification.h"
@@ -54,19 +56,34 @@ namespace hermit {
 			
 			//
 			void PerformWork(const HermitPtr& h_,
-							 const datastore::DataStorePtr& inDataStore,
-							 const datastore::DataPathPtr& inPath,
-							 const SharedBufferPtr& inData,
-							 const datastore::EncryptionSetting& inEncryptionSetting,
-							 const datastore::WriteDataStoreDataCompletionFunctionPtr& inCompletionFunction) {
+							 const datastore::DataStorePtr& dataStore,
+							 const datastore::DataPathPtr& path,
+							 const SharedBufferPtr& data,
+							 const datastore::EncryptionSetting& encryptionSetting,
+							 const datastore::WriteDataStoreDataCompletionFunctionPtr& completion) {
 				if (CHECK_FOR_ABORT(h_)) {
-					inCompletionFunction->Call(h_, datastore::WriteDataStoreDataResult::kCanceled);
+					completion->Call(h_, datastore::WriteDataStoreDataResult::kCanceled);
 					return;
 				}
 				
-				FilePathDataPath& dataPath = static_cast<FilePathDataPath&>(*inPath);
-				auto completion = std::make_shared<Completion>(inCompletionFunction);
-				file::WriteFileData(h_, dataPath.mFilePath, DataBuffer(inData->Data(), inData->Size()), completion);
+				FilePathDataPath& fileDataPath = static_cast<FilePathDataPath&>(*path);
+				
+				file::FilePathPtr parentPath;
+				file::GetFilePathParent(h_, fileDataPath.mFilePath, parentPath);
+				if (parentPath == nullptr) {
+					NOTIFY_ERROR(h_, "GetFilePathParent failed.");
+					completion->Call(h_, datastore::WriteDataStoreDataResult::kError);
+					return;
+				}
+				auto createResult = file::CreateDirectoryParentChain(h_, parentPath);
+				if (createResult != file::CreateDirectoryParentChainResult::kSuccess) {
+					NOTIFY_ERROR(h_, "CreateDirectoryParentChain failed.");
+					completion->Call(h_, datastore::WriteDataStoreDataResult::kError);
+					return;
+				}
+				
+				auto writeCompletion = std::make_shared<Completion>(completion);
+				file::WriteFileData(h_, fileDataPath.mFilePath, DataBuffer(data->Data(), data->Size()), writeCompletion);
 			}
 			
 			//
