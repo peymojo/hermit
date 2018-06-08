@@ -44,11 +44,6 @@ namespace hermit {
 			
 			
 			//
-			virtual void CreateLocationIfNeeded(const HermitPtr& h_,
-                                                const datastore::DataPathPtr& path,
-                                                const datastore::CreateDataStoreLocationIfNeededCompletionPtr& completion) override;
-			
-			//
 			virtual void LoadData(const HermitPtr& h_,
 								  const datastore::DataPathPtr& path,
 								  const datastore::EncryptionSetting& encryptionSetting,

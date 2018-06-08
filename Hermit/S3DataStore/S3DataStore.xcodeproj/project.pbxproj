@@ -16,7 +16,6 @@
 		EF16AB6C202C2F5900AF9DAE /* S3DataPath_GetLastPathComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD613D1D878C960056E526 /* S3DataPath_GetLastPathComponent.cpp */; };
 		EF16AB6D202C2F5900AF9DAE /* S3DataPath_GetStringRepresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD613E1D878C960056E526 /* S3DataPath_GetStringRepresentation.cpp */; };
 		EF16AB6E202C2F5900AF9DAE /* S3DataPath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD613F1D878C960056E526 /* S3DataPath.cpp */; };
-		EF16AB6F202C2F5900AF9DAE /* S3DataStore_CreateLocationIfNeeded.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD612E1D878C960056E526 /* S3DataStore_CreateLocationIfNeeded.cpp */; };
 		EF16AB70202C2F5900AF9DAE /* S3DataStore_DeleteItem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD61301D878C960056E526 /* S3DataStore_DeleteItem.cpp */; };
 		EF16AB71202C2F5900AF9DAE /* S3DataStore_ItemExists.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD61321D878C960056E526 /* S3DataStore_ItemExists.cpp */; };
 		EF16AB72202C2F5900AF9DAE /* S3DataStore_ListContents.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD61361D878C960056E526 /* S3DataStore_ListContents.cpp */; };
@@ -28,7 +27,6 @@
 		EF16AB78202C2F5900AF9DAE /* WithS3DataStore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD61471D878C960056E526 /* WithS3DataStore.cpp */; };
 		EF72564B1F18D6DF0054DCE0 /* S3DataStoreKit.h in Headers */ = {isa = PBXBuildFile; fileRef = EF7256491F18D6DF0054DCE0 /* S3DataStoreKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EF72564F1F18D6F20054DCE0 /* AES256EncryptedS3DataStore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD612C1D878C960056E526 /* AES256EncryptedS3DataStore.cpp */; };
-		EF7256501F18D6F20054DCE0 /* S3DataStore_CreateLocationIfNeeded.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD612E1D878C960056E526 /* S3DataStore_CreateLocationIfNeeded.cpp */; };
 		EF7256511F18D6F20054DCE0 /* S3DataStore_DeleteItem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD61301D878C960056E526 /* S3DataStore_DeleteItem.cpp */; };
 		EF7256521F18D6F20054DCE0 /* S3DataStore_ItemExists.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD61321D878C960056E526 /* S3DataStore_ItemExists.cpp */; };
 		EF7256531F18D6F20054DCE0 /* S3DataStore_ListContents.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD61361D878C960056E526 /* S3DataStore_ListContents.cpp */; };
@@ -50,7 +48,6 @@
 		EF7256681F18D7860054DCE0 /* DataStoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF7256671F18D7860054DCE0 /* DataStoreKit.framework */; };
 		EFF398A61F6555D900B1BD33 /* S3DataStoreKit_iOS.h in Headers */ = {isa = PBXBuildFile; fileRef = EFF398A41F6555D900B1BD33 /* S3DataStoreKit_iOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EFF398BE1F65564B00B1BD33 /* AES256EncryptedS3DataStore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD612C1D878C960056E526 /* AES256EncryptedS3DataStore.cpp */; };
-		EFF398BF1F65564B00B1BD33 /* S3DataStore_CreateLocationIfNeeded.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD612E1D878C960056E526 /* S3DataStore_CreateLocationIfNeeded.cpp */; };
 		EFF398C01F65564B00B1BD33 /* S3DataStore_DeleteItem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD61301D878C960056E526 /* S3DataStore_DeleteItem.cpp */; };
 		EFF398C11F65564B00B1BD33 /* S3DataStore_ItemExists.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD61321D878C960056E526 /* S3DataStore_ItemExists.cpp */; };
 		EFF398C21F65564B00B1BD33 /* S3DataStore_ListContents.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD61361D878C960056E526 /* S3DataStore_ListContents.cpp */; };
@@ -85,7 +82,6 @@
 		EF7256671F18D7860054DCE0 /* DataStoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DataStoreKit.framework; path = "../../../../Library/Developer/Xcode/DerivedData/Vault_Browser-etrnbxqipwhocnapsvsbsqbjzmyg/Build/Products/Debug/DataStoreKit.framework"; sourceTree = "<group>"; };
 		EFAD612C1D878C960056E526 /* AES256EncryptedS3DataStore.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AES256EncryptedS3DataStore.cpp; sourceTree = "<group>"; };
 		EFAD612D1D878C960056E526 /* AES256EncryptedS3DataStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AES256EncryptedS3DataStore.h; sourceTree = "<group>"; };
-		EFAD612E1D878C960056E526 /* S3DataStore_CreateLocationIfNeeded.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = S3DataStore_CreateLocationIfNeeded.cpp; sourceTree = "<group>"; };
 		EFAD61301D878C960056E526 /* S3DataStore_DeleteItem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = S3DataStore_DeleteItem.cpp; sourceTree = "<group>"; };
 		EFAD61321D878C960056E526 /* S3DataStore_ItemExists.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = S3DataStore_ItemExists.cpp; sourceTree = "<group>"; };
 		EFAD61341D878C960056E526 /* LibS3DataStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LibS3DataStore.h; sourceTree = "<group>"; };
@@ -200,7 +196,6 @@
 				EFAD613E1D878C960056E526 /* S3DataPath_GetStringRepresentation.cpp */,
 				EFAD613F1D878C960056E526 /* S3DataPath.cpp */,
 				EFAD61401D878C960056E526 /* S3DataPath.h */,
-				EFAD612E1D878C960056E526 /* S3DataStore_CreateLocationIfNeeded.cpp */,
 				EFAD61301D878C960056E526 /* S3DataStore_DeleteItem.cpp */,
 				EFAD61321D878C960056E526 /* S3DataStore_ItemExists.cpp */,
 				EFAD61361D878C960056E526 /* S3DataStore_ListContents.cpp */,
@@ -393,7 +388,6 @@
 				EF16AB6C202C2F5900AF9DAE /* S3DataPath_GetLastPathComponent.cpp in Sources */,
 				EF16AB6D202C2F5900AF9DAE /* S3DataPath_GetStringRepresentation.cpp in Sources */,
 				EF16AB6E202C2F5900AF9DAE /* S3DataPath.cpp in Sources */,
-				EF16AB6F202C2F5900AF9DAE /* S3DataStore_CreateLocationIfNeeded.cpp in Sources */,
 				EF16AB70202C2F5900AF9DAE /* S3DataStore_DeleteItem.cpp in Sources */,
 				EF16AB71202C2F5900AF9DAE /* S3DataStore_ItemExists.cpp in Sources */,
 				EF16AB72202C2F5900AF9DAE /* S3DataStore_ListContents.cpp in Sources */,
@@ -412,7 +406,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				EF72564F1F18D6F20054DCE0 /* AES256EncryptedS3DataStore.cpp in Sources */,
-				EF7256501F18D6F20054DCE0 /* S3DataStore_CreateLocationIfNeeded.cpp in Sources */,
 				EF7256511F18D6F20054DCE0 /* S3DataStore_DeleteItem.cpp in Sources */,
 				EF7256521F18D6F20054DCE0 /* S3DataStore_ItemExists.cpp in Sources */,
 				EF7256531F18D6F20054DCE0 /* S3DataStore_ListContents.cpp in Sources */,
@@ -436,7 +429,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				EFF398BE1F65564B00B1BD33 /* AES256EncryptedS3DataStore.cpp in Sources */,
-				EFF398BF1F65564B00B1BD33 /* S3DataStore_CreateLocationIfNeeded.cpp in Sources */,
 				EFF398C01F65564B00B1BD33 /* S3DataStore_DeleteItem.cpp in Sources */,
 				EFF398C11F65564B00B1BD33 /* S3DataStore_ItemExists.cpp in Sources */,
 				EFF398C21F65564B00B1BD33 /* S3DataStore_ListContents.cpp in Sources */,

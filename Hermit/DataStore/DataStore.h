@@ -73,20 +73,6 @@ namespace hermit {
                                  ItemExistsInDataStoreResult,		// inResult
                                  bool);						    	// inExists
 		
-		//
-		enum class CreateDataStoreLocationIfNeededResult {
-			kUnknown,
-			kSuccess,
-			kConflictAtPath,
-			kStorageFull,
-			kError
-		};
-
-        //
-        DEFINE_ASYNC_FUNCTION_2A(CreateDataStoreLocationIfNeededCompletion,
-                                 HermitPtr,
-                                 CreateDataStoreLocationIfNeededResult);
-
         //
         DEFINE_ASYNC_FUNCTION_2A(LoadDataStoreDataDataBlock,
                                  HermitPtr,
@@ -170,11 +156,6 @@ namespace hermit {
 									const DataPathPtr& itemPath,
 									const ItemExistsInDataStoreCompletionPtr& completion);
 			
-			//
-			virtual void CreateLocationIfNeeded(const HermitPtr& h_,
-                                                const DataPathPtr& path,
-                                                const CreateDataStoreLocationIfNeededCompletionPtr& completion);
-
 			//
 			virtual void LoadData(const HermitPtr& h_,
 								  const DataPathPtr& path,

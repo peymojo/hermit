@@ -12,7 +12,6 @@
 		EF16AB36202C2F0E00AF9DAE /* AES256EncryptedFileDataStore_LoadData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF680A291EB49A160025DA02 /* AES256EncryptedFileDataStore_LoadData.cpp */; };
 		EF16AB37202C2F0E00AF9DAE /* AES256EncryptedFileDataStore_WriteData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF680A371EB49A160025DA02 /* AES256EncryptedFileDataStore_WriteData.cpp */; };
 		EF16AB38202C2F0E00AF9DAE /* AES256EncryptedFileDataStore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF680A151EB49A160025DA02 /* AES256EncryptedFileDataStore.cpp */; };
-		EF16AB39202C2F0E00AF9DAE /* FileDataStore_CreateLocationIfNeeded.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF680A171EB49A160025DA02 /* FileDataStore_CreateLocationIfNeeded.cpp */; };
 		EF16AB3A202C2F0E00AF9DAE /* FileDataStore_DeleteItem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF680A191EB49A160025DA02 /* FileDataStore_DeleteItem.cpp */; };
 		EF16AB3B202C2F0E00AF9DAE /* FileDataStore_ItemExists.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF680A241EB49A160025DA02 /* FileDataStore_ItemExists.cpp */; };
 		EF16AB3C202C2F0E00AF9DAE /* FileDataStore_ListContents.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF680A271EB49A160025DA02 /* FileDataStore_ListContents.cpp */; };
@@ -29,7 +28,6 @@
 		EF16AB47202C2F0E00AF9DAE /* WithFileDataStore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF680A351EB49A160025DA02 /* WithFileDataStore.cpp */; };
 		EF7255CD1F18D49E0054DCE0 /* FileDataStoreKit.h in Headers */ = {isa = PBXBuildFile; fileRef = EF7255CB1F18D49E0054DCE0 /* FileDataStoreKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EF7255D11F18D4BD0054DCE0 /* AES256EncryptedFileDataStore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF680A151EB49A160025DA02 /* AES256EncryptedFileDataStore.cpp */; };
-		EF7255D21F18D4BD0054DCE0 /* FileDataStore_CreateLocationIfNeeded.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF680A171EB49A160025DA02 /* FileDataStore_CreateLocationIfNeeded.cpp */; };
 		EF7255D31F18D4BD0054DCE0 /* FileDataStore_DeleteItem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF680A191EB49A160025DA02 /* FileDataStore_DeleteItem.cpp */; };
 		EF7255D41F18D4BD0054DCE0 /* FileDataStore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF680A1B1EB49A160025DA02 /* FileDataStore.cpp */; };
 		EF7255D51F18D4BD0054DCE0 /* FilePathDataPath_AppendPathComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF680A1D1EB49A160025DA02 /* FilePathDataPath_AppendPathComponent.cpp */; };
@@ -58,7 +56,6 @@
 		EF16AB31202C2F0700AF9DAE /* FileDataStore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FileDataStore.m; sourceTree = "<group>"; };
 		EF680A151EB49A160025DA02 /* AES256EncryptedFileDataStore.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AES256EncryptedFileDataStore.cpp; sourceTree = SOURCE_ROOT; };
 		EF680A161EB49A160025DA02 /* AES256EncryptedFileDataStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AES256EncryptedFileDataStore.h; sourceTree = SOURCE_ROOT; };
-		EF680A171EB49A160025DA02 /* FileDataStore_CreateLocationIfNeeded.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileDataStore_CreateLocationIfNeeded.cpp; sourceTree = SOURCE_ROOT; };
 		EF680A191EB49A160025DA02 /* FileDataStore_DeleteItem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileDataStore_DeleteItem.cpp; sourceTree = SOURCE_ROOT; };
 		EF680A1B1EB49A160025DA02 /* FileDataStore.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileDataStore.cpp; sourceTree = SOURCE_ROOT; };
 		EF680A1C1EB49A160025DA02 /* FileDataStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileDataStore.h; sourceTree = SOURCE_ROOT; };
@@ -150,7 +147,6 @@
 				EF680A371EB49A160025DA02 /* AES256EncryptedFileDataStore_WriteData.cpp */,
 				EF680A151EB49A160025DA02 /* AES256EncryptedFileDataStore.cpp */,
 				EF680A161EB49A160025DA02 /* AES256EncryptedFileDataStore.h */,
-				EF680A171EB49A160025DA02 /* FileDataStore_CreateLocationIfNeeded.cpp */,
 				EF680A191EB49A160025DA02 /* FileDataStore_DeleteItem.cpp */,
 				EF680A241EB49A160025DA02 /* FileDataStore_ItemExists.cpp */,
 				EF680A271EB49A160025DA02 /* FileDataStore_ListContents.cpp */,
@@ -309,7 +305,6 @@
 				EF16AB36202C2F0E00AF9DAE /* AES256EncryptedFileDataStore_LoadData.cpp in Sources */,
 				EF16AB37202C2F0E00AF9DAE /* AES256EncryptedFileDataStore_WriteData.cpp in Sources */,
 				EF16AB38202C2F0E00AF9DAE /* AES256EncryptedFileDataStore.cpp in Sources */,
-				EF16AB39202C2F0E00AF9DAE /* FileDataStore_CreateLocationIfNeeded.cpp in Sources */,
 				EF16AB3A202C2F0E00AF9DAE /* FileDataStore_DeleteItem.cpp in Sources */,
 				EF16AB3B202C2F0E00AF9DAE /* FileDataStore_ItemExists.cpp in Sources */,
 				EF16AB3C202C2F0E00AF9DAE /* FileDataStore_ListContents.cpp in Sources */,
@@ -333,7 +328,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				EF7255D11F18D4BD0054DCE0 /* AES256EncryptedFileDataStore.cpp in Sources */,
-				EF7255D21F18D4BD0054DCE0 /* FileDataStore_CreateLocationIfNeeded.cpp in Sources */,
 				EF7255D31F18D4BD0054DCE0 /* FileDataStore_DeleteItem.cpp in Sources */,
 				EF7255D41F18D4BD0054DCE0 /* FileDataStore.cpp in Sources */,
 				EF7255D51F18D4BD0054DCE0 /* FilePathDataPath_AppendPathComponent.cpp in Sources */,

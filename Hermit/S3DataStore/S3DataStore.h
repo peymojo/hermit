@@ -42,12 +42,7 @@ namespace hermit {
 			virtual void ItemExists(const HermitPtr& h_,
 									const datastore::DataPathPtr& itemPath,
 									const datastore::ItemExistsInDataStoreCompletionPtr& completion) override;
-			
-			//
-			virtual void CreateLocationIfNeeded(const HermitPtr& h_,
-                                                const datastore::DataPathPtr& inPath,
-                                                const datastore::CreateDataStoreLocationIfNeededCompletionPtr& completion) override;
-			
+						
 			//
 			virtual void LoadData(const HermitPtr& h_,
 								  const datastore::DataPathPtr& path,

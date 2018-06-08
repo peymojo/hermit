@@ -38,15 +38,7 @@ namespace hermit {
 			NOTIFY_ERROR(h_, "unimplemented");
             completion->Call(h_, ItemExistsInDataStoreResult::kError, false);
 		}
-		
-		//
-		void DataStore::CreateLocationIfNeeded(const HermitPtr& h_,
-                                               const DataPathPtr& path,
-                                               const CreateDataStoreLocationIfNeededCompletionPtr& completion) {
-			NOTIFY_ERROR(h_, "unimplemented");
-            completion->Call(h_, CreateDataStoreLocationIfNeededResult::kError);
-		}
-		
+				
 		//
 		void DataStore::LoadData(const HermitPtr& h_,
 								 const DataPathPtr& path,
