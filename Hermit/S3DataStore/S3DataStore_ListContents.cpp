@@ -24,33 +24,28 @@
 
 namespace hermit {
 	namespace s3datastore {
-		namespace S3DataStore_ListContents_Impl {
+		namespace S3DataStore_ListItems_Impl {
 			
 			//
 			class ListObjectsCallback : public s3::ObjectKeyReceiver {
 			public:
 				//
-				ListObjectsCallback(const datastore::DataPathPtr& rootPath,
-									const std::string& baseS3Prefix,
-									const datastore::ListDataStoreContentsItemCallbackPtr& itemCallback) :
-				mRootPath(rootPath),
-				mBaseS3Prefix(baseS3Prefix),
+				ListObjectsCallback(const datastore::ListDataStoreItemsItemCallbackPtr& itemCallback) :
 				mItemCallback(itemCallback) {
 				}
 				
 				//
 				virtual bool OnOneKey(const HermitPtr& h_, const std::string& objectKey) override {
-					std::string partialObjectKey(objectKey);
-					if (partialObjectKey.find(mBaseS3Prefix) == 0) {
-						partialObjectKey = partialObjectKey.substr(mBaseS3Prefix.size());
+					datastore::DataPathPtr itemPath;
+					if (!S3PathToDataPath(h_, objectKey, itemPath)) {
+						NOTIFY_ERROR(h_, "S3PathToDataPath failed for objectKey:", objectKey);
+						return true;
 					}
-					return mItemCallback->OnOneItem(h_, mRootPath, partialObjectKey);
+					return mItemCallback->OnOneItem(h_, itemPath);
 				}
 				
 				//
-				datastore::DataPathPtr mRootPath;
-				std::string mBaseS3Prefix;
-                datastore::ListDataStoreContentsItemCallbackPtr mItemCallback;
+                datastore::ListDataStoreItemsItemCallbackPtr mItemCallback;
 			};
 			
             //
@@ -58,7 +53,7 @@ namespace hermit {
             public:
                 //
                 ListCompletion(const datastore::DataPathPtr& rootPath,
-                               const datastore::ListDataStoreContentsCompletionPtr& completion) :
+                               const datastore::ListDataStoreItemsCompletionPtr& completion) :
                 mRootPath(rootPath),
                 mCompletion(completion) {
                 }
@@ -66,45 +61,42 @@ namespace hermit {
                 //
                 virtual void Call(const HermitPtr& h_, const s3::S3Result& result) override {
                     if (result == s3::S3Result::kCanceled) {
-                        mCompletion->Call(h_, datastore::ListDataStoreContentsResult::kCanceled);
+                        mCompletion->Call(h_, datastore::ListDataStoreItemsResult::kCanceled);
                         return;
                     }
                     if (result == s3::S3Result::kSuccess) {
-                        mCompletion->Call(h_, datastore::ListDataStoreContentsResult::kSuccess);
+                        mCompletion->Call(h_, datastore::ListDataStoreItemsResult::kSuccess);
                         return;
                     }
                     if (result == s3::S3Result::k403AccessDenied) {
                         NOTIFY_ERROR(h_, "k403AccessDenied for:", mRootPath);
-                        mCompletion->Call(h_, datastore::ListDataStoreContentsResult::kPermissionDenied);
+                        mCompletion->Call(h_, datastore::ListDataStoreItemsResult::kPermissionDenied);
                         return;
                     }
                     if (result == s3::S3Result::k404NoSuchBucket) {
                         NOTIFY_ERROR(h_, "k404NoSuchBucket for:", mRootPath);
-                        mCompletion->Call(h_, datastore::ListDataStoreContentsResult::kDataStoreMissing);
+                        mCompletion->Call(h_, datastore::ListDataStoreItemsResult::kDataStoreMissing);
                         return;
                     }
                     NOTIFY_ERROR(h_, "mBucket->ListObjects failed for:", mRootPath, "result:", (int32_t)result);
-                    mCompletion->Call(h_, datastore::ListDataStoreContentsResult::kError);
+                    mCompletion->Call(h_, datastore::ListDataStoreItemsResult::kError);
                 }
                 
                 //
                 datastore::DataPathPtr mRootPath;
-                datastore::ListDataStoreContentsCompletionPtr mCompletion;
+                datastore::ListDataStoreItemsCompletionPtr mCompletion;
             };
             
-		} // namespace S3DataStore_ListContents_Impl
-        using namespace S3DataStore_ListContents_Impl;
+		} // namespace S3DataStore_ListItems_Impl
+        using namespace S3DataStore_ListItems_Impl;
 		
 		//
-        void S3DataStore::ListContents(const HermitPtr& h_,
-                                       const datastore::DataPathPtr& rootPath,
-                                       const datastore::ListDataStoreContentsItemCallbackPtr& itemCallback,
-                                       const datastore::ListDataStoreContentsCompletionPtr& completion) {
-			S3DataPath& dataPath = static_cast<S3DataPath&>(*rootPath);
-			
-			std::string pathWithTrailingSlash;
-			string::AddTrailingSlash(dataPath.mPath, pathWithTrailingSlash);
-            auto listCallback = std::make_shared<ListObjectsCallback>(rootPath, pathWithTrailingSlash, itemCallback);
+        void S3DataStore::ListItems(const HermitPtr& h_,
+									const datastore::DataPathPtr& rootPath,
+									const datastore::ListDataStoreItemsItemCallbackPtr& itemCallback,
+									const datastore::ListDataStoreItemsCompletionPtr& completion) {
+			S3DataPath& dataPath = static_cast<S3DataPath&>(*rootPath);			
+            auto listCallback = std::make_shared<ListObjectsCallback>(itemCallback);
             auto listCompletion = std::make_shared<ListCompletion>(rootPath, completion);
 			mBucket->ListObjects(h_, dataPath.mPath, listCallback, listCompletion);
 		}

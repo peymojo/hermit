@@ -19,6 +19,7 @@
 #include "Hermit/File/ListDirectoryContents.h"
 #include "Hermit/Foundation/Notification.h"
 #include "FileDataStore.h"
+#include "FilePathToDataPath.h"
 #include "FilePathDataPath.h"
 
 namespace hermit {
@@ -29,9 +30,7 @@ namespace hermit {
 			class ListItemsCallback : public file::ListDirectoryContentsItemCallback {
 			public:
 				//
-				ListItemsCallback(datastore::DataPathPtr rootPath,
-								  const datastore::ListDataStoreContentsItemCallbackPtr& itemCallback) :
-				mRootPath(rootPath),
+				ListItemsCallback(const datastore::ListDataStoreItemsItemCallbackPtr& itemCallback) :
 				mItemCallback(itemCallback) {
 				}
 				
@@ -40,46 +39,56 @@ namespace hermit {
 									const file::ListDirectoryContentsResult& result,
 									const file::FilePathPtr& parentFilePath,
 									const std::string& itemName) override {
-					return mItemCallback->OnOneItem(h_, mRootPath, itemName);
+					datastore::DataPathPtr parentPath;
+					if (!FilePathToDataPath(h_, parentFilePath, parentPath)) {
+						NOTIFY_ERROR(h_, "FilePathToDataPath failed for:", parentFilePath);
+						return true;
+					}
+					datastore::DataPathPtr itemPath;
+					if (!parentPath->AppendPathComponent(h_, itemName, itemPath)) {
+						NOTIFY_ERROR(h_, "parentPath->AppendPathComponent failed for:", itemName);
+						return true;
+					}
+					
+					return mItemCallback->OnOneItem(h_, itemPath);
 				}
 				
 				//
-				datastore::DataPathPtr mRootPath;
-                datastore::ListDataStoreContentsItemCallbackPtr mItemCallback;
+                datastore::ListDataStoreItemsItemCallbackPtr mItemCallback;
 			};
 			
 		} // namespace FileDataStore_ListContents_Impl
         using namespace FileDataStore_ListContents_Impl;
 		
 		//
-        void FileDataStore::ListContents(const HermitPtr& h_,
-                                         const datastore::DataPathPtr& rootPath,
-                                         const datastore::ListDataStoreContentsItemCallbackPtr& itemCallback,
-                                         const datastore::ListDataStoreContentsCompletionPtr& completion) {
+        void FileDataStore::ListItems(const HermitPtr& h_,
+									  const datastore::DataPathPtr& rootPath,
+									  const datastore::ListDataStoreItemsItemCallbackPtr& itemCallback,
+									  const datastore::ListDataStoreItemsCompletionPtr& completion) {
 			FilePathDataPath& dataPath = static_cast<FilePathDataPath&>(*rootPath);
 			
-			ListItemsCallback listItemsCallback(rootPath, itemCallback);
-			auto result = file::ListDirectoryContents(h_, dataPath.mFilePath, false, listItemsCallback);
+			ListItemsCallback listItemsCallback(itemCallback);
+			auto result = file::ListDirectoryContents(h_, dataPath.mFilePath, true, listItemsCallback);
 			if (result == file::ListDirectoryContentsResult::kCanceled) {
-				completion->Call(h_, datastore::ListDataStoreContentsResult::kCanceled);
+				completion->Call(h_, datastore::ListDataStoreItemsResult::kCanceled);
                 return;
 			}
 			if (result == file::ListDirectoryContentsResult::kSuccess) {
-				completion->Call(h_, datastore::ListDataStoreContentsResult::kSuccess);
+				completion->Call(h_, datastore::ListDataStoreItemsResult::kSuccess);
                 return;
 			}
 			if (result == file::ListDirectoryContentsResult::kDirectoryNotFound) {
 				// we treat this as a success ... just no items there
-				completion->Call(h_, datastore::ListDataStoreContentsResult::kSuccess);
+				completion->Call(h_, datastore::ListDataStoreItemsResult::kSuccess);
                 return;
 			}
 			if (result == file::ListDirectoryContentsResult::kPermissionDenied) {
 				NOTIFY_ERROR(h_, "PermissionDenied for:", dataPath.mFilePath);
-				completion->Call(h_, datastore::ListDataStoreContentsResult::kPermissionDenied);
+				completion->Call(h_, datastore::ListDataStoreItemsResult::kPermissionDenied);
                 return;
 			}
 			NOTIFY_ERROR(h_, "ListDirectoryContents failed for:", dataPath.mFilePath);
-			completion->Call(h_, datastore::ListDataStoreContentsResult::kError);
+			completion->Call(h_, datastore::ListDataStoreItemsResult::kError);
 		}
 		
 	} // namespace filedatastore

@@ -31,19 +31,19 @@ namespace hermit {
 	namespace datastore {
 
         //
-        class ListDataStoreContentsItemCallback {
+        class ListDataStoreItemsItemCallback {
         protected:
             //
-            ~ListDataStoreContentsItemCallback() = default;
+            ~ListDataStoreItemsItemCallback() = default;
             
         public:
             //
-            virtual bool OnOneItem(const HermitPtr& h_, const DataPathPtr& parentPath, const std::string& itemName) = 0;
+            virtual bool OnOneItem(const HermitPtr& h_, const DataPathPtr& itemPath) = 0;
         };
-        typedef std::shared_ptr<ListDataStoreContentsItemCallback> ListDataStoreContentsItemCallbackPtr;
+        typedef std::shared_ptr<ListDataStoreItemsItemCallback> ListDataStoreItemsItemCallbackPtr;
 
 		//
-		enum class ListDataStoreContentsResult {
+		enum class ListDataStoreItemsResult {
 			kUnknown,
 			kSuccess,
 			kCanceled,
@@ -53,9 +53,9 @@ namespace hermit {
 		};
 		
         //
-        DEFINE_ASYNC_FUNCTION_2A(ListDataStoreContentsCompletion,
+        DEFINE_ASYNC_FUNCTION_2A(ListDataStoreItemsCompletion,
                                  HermitPtr,
-                                 ListDataStoreContentsResult);
+                                 ListDataStoreItemsResult);
         
         //
 		enum class ItemExistsInDataStoreResult {
@@ -146,10 +146,10 @@ namespace hermit {
 		//
 		struct DataStore {
 			//
-			virtual void ListContents(const HermitPtr& h_,
-                                      const DataPathPtr& rootPath,
-                                      const ListDataStoreContentsItemCallbackPtr& itemCallback,
-                                      const ListDataStoreContentsCompletionPtr& completion);
+			virtual void ListItems(const HermitPtr& h_,
+								   const DataPathPtr& rootPath,
+								   const ListDataStoreItemsItemCallbackPtr& itemCallback,
+								   const ListDataStoreItemsCompletionPtr& completion);
 			
 			//
 			virtual void ItemExists(const HermitPtr& h_,

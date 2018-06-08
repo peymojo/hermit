@@ -23,12 +23,12 @@ namespace hermit {
 	namespace datastore {
 		
 		//
-		void DataStore::ListContents(const HermitPtr& h_,
-                                     const DataPathPtr& rootPath,
-                                     const ListDataStoreContentsItemCallbackPtr& itemCallback,
-                                     const ListDataStoreContentsCompletionPtr& completion) {
+		void DataStore::ListItems(const HermitPtr& h_,
+								  const DataPathPtr& rootPath,
+								  const ListDataStoreItemsItemCallbackPtr& itemCallback,
+								  const ListDataStoreItemsCompletionPtr& completion) {
 			NOTIFY_ERROR(h_, "unimplemented");
-            completion->Call(h_, ListDataStoreContentsResult::kError);
+            completion->Call(h_, ListDataStoreItemsResult::kError);
 		}
 		
 		//

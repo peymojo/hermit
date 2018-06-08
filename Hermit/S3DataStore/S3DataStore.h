@@ -33,10 +33,10 @@ namespace hermit {
 			S3DataStore(const s3bucket::S3BucketPtr& bucket, bool useReducedRedundancyStorage);
 			
 			//
-			virtual void ListContents(const HermitPtr& h_,
-                                      const datastore::DataPathPtr& rootPath,
-                                      const datastore::ListDataStoreContentsItemCallbackPtr& itemCallback,
-                                      const datastore::ListDataStoreContentsCompletionPtr& completion) override;
+			virtual void ListItems(const HermitPtr& h_,
+								   const datastore::DataPathPtr& rootPath,
+								   const datastore::ListDataStoreItemsItemCallbackPtr& itemCallback,
+								   const datastore::ListDataStoreItemsCompletionPtr& completion) override;
 			
 			//
 			virtual void ItemExists(const HermitPtr& h_,
