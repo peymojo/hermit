@@ -53,9 +53,7 @@ namespace hermit {
 		};
 		
         //
-        DEFINE_ASYNC_FUNCTION_2A(ListDataStoreItemsCompletion,
-                                 HermitPtr,
-                                 ListDataStoreItemsResult);
+        DEFINE_ASYNC_FUNCTION_2A(ListDataStoreItemsCompletion, HermitPtr, ListDataStoreItemsResult);
         
         //
 		enum class ItemExistsInDataStoreResult {
