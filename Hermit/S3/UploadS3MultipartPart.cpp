@@ -61,7 +61,8 @@ namespace hermit {
 				class SendCommandCompletion : public SendS3CommandCompletion {
 				public:
 					//
-					SendCommandCompletion(const std::string& url,
+					SendCommandCompletion(const http::HTTPSessionPtr& session,
+										  const std::string& url,
 										  int redirectCount,
 										  const std::string& host,
 										  const std::string& s3Path,
@@ -74,6 +75,7 @@ namespace hermit {
 										  const std::string& partSizeString,
 										  const std::string& dataSHA256Hex,
 										  const UploadS3MultipartPartCompletionPtr& completion) :
+					mSession(session),
 					mURL(url),
 					mRedirectCount(redirectCount),
 					mHost(host),
@@ -116,6 +118,7 @@ namespace hermit {
 								return;
 							}
 							UploadS3MultipartPart(h_,
+												  mSession,
 												  mRedirectCount + 1,
 												  newEndpoint,
 												  mS3Path,
@@ -156,6 +159,7 @@ namespace hermit {
 					}
 					
 					//
+					http::HTTPSessionPtr mSession;
 					std::string mURL;
 					int mRedirectCount;
 					std::string mHost;
@@ -174,6 +178,7 @@ namespace hermit {
 			public:
 				//
 				static void UploadS3MultipartPart(const HermitPtr& h_,
+												  const http::HTTPSessionPtr& session,
 												  int redirectCount,
 												  const std::string& host,
 												  const std::string& s3Path,
@@ -277,7 +282,8 @@ namespace hermit {
 					url += "&uploadId=";
 					url += uploadId;
 					
-					auto commandCompletion = std::make_shared<SendCommandCompletion>(url,
+					auto commandCompletion = std::make_shared<SendCommandCompletion>(session,
+																					 url,
 																					 redirectCount,
 																					 host,
 																					 s3Path,
@@ -290,7 +296,7 @@ namespace hermit {
 																					 partSizeString,
 																					 dataSHA256Hex,
 																					 completion);
-					SendS3CommandWithData(h_, url, method, params, partData, commandCompletion);
+					SendS3CommandWithData(h_, session, url, method, params, partData, commandCompletion);
 				}
 			};
 
@@ -299,6 +305,7 @@ namespace hermit {
 		
 		//
 		void UploadS3MultipartPart(const HermitPtr& h_,
+								   const http::HTTPSessionPtr& session,
 								   const std::string& awsPublicKey,
 								   const std::string& awsSigningKey,
 								   const std::string& awsRegion,
@@ -348,6 +355,7 @@ namespace hermit {
 			}
 			
 			Redirector::UploadS3MultipartPart(h_,
+											  session,
 											  0,
 											  host,
 											  s3Path,

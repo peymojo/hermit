@@ -210,6 +210,7 @@ namespace hermit {
 		
 		//
 		void S3SetBucketVersioning(const HermitPtr& h_,
+								   const http::HTTPSessionPtr& session,
 								   const std::string& s3PublicKey,
 								   const std::string& s3PrivateKey,
 								   const std::string& bucketName,
@@ -260,6 +261,7 @@ namespace hermit {
 			
 			auto commandCompletion = std::make_shared<CommandCompletion>(completion);
 			SendS3CommandWithData(h_,
+								  session,
 								  url,
 								  method,
 								  params,

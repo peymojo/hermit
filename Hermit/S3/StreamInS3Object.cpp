@@ -187,7 +187,8 @@ namespace hermit {
 				class StreamInCompletion : public StreamInS3RequestCompletion {
 				public:
 					//
-					StreamInCompletion(const std::string& url,
+					StreamInCompletion(const http::HTTPSessionPtr& session,
+									   const std::string& url,
 									   int redirectCount,
 									   const std::string& host,
 									   const std::string& s3Path,
@@ -197,6 +198,7 @@ namespace hermit {
 									   const DataHandlerPtr& ourDataHandler,
 									   const DataHandlerBlockPtr& theirDataHandler,
 									   const S3CompletionBlockPtr& completion) :
+					mSession(session),
 					mURL(url),
 					mRedirectCount(redirectCount),
 					mHost(host),
@@ -275,6 +277,7 @@ namespace hermit {
 									// Reset the data buffer, otherwise the result of the redirect will be appended.
 									mOurDataHandler->mData.clear();
 									StreamInS3Object(h_,
+													 mSession,
 													 mRedirectCount + 1,
 													 pc.mEndpoint,
 													 mS3Path,
@@ -337,6 +340,7 @@ namespace hermit {
 					}
 					
 					//
+					http::HTTPSessionPtr mSession;
 					std::string mURL;
 					int mRedirectCount;
 					std::string mHost;
@@ -352,6 +356,7 @@ namespace hermit {
 			public:
 				//
 				static void StreamInS3Object(const HermitPtr& h_,
+											 const http::HTTPSessionPtr& session,
 											 int redirectCount,
 											 const std::string& host,
 											 const std::string& s3Path,
@@ -441,7 +446,8 @@ namespace hermit {
 					url += host;
 					url += s3Path;
 					
-					auto streamCompletion = std::make_shared<StreamInCompletion>(url,
+					auto streamCompletion = std::make_shared<StreamInCompletion>(session,
+																				 url,
 																				 redirectCount,
 																				 host,
 																				 s3Path,
@@ -451,7 +457,7 @@ namespace hermit {
 																				 ourDataHandler,
 																				 theirDataHandler,
 																				 completion);
-					StreamInS3Request(h_, url, method, params, ourDataHandler, streamCompletion);
+					StreamInS3Request(h_, session, url, method, params, ourDataHandler, streamCompletion);
 				}
 			};
 			
@@ -460,6 +466,7 @@ namespace hermit {
 		
 		//
 		void StreamInS3Object(const HermitPtr& h_,
+							  const http::HTTPSessionPtr& session,
 							  const std::string& awsPublicKey,
 							  const std::string& awsSigningKey,
 							  const std::string& awsRegion,
@@ -479,6 +486,7 @@ namespace hermit {
 			
 			auto ourDataHandler = std::make_shared<DataHandler>();
 			Redirector::StreamInS3Object(h_,
+										 session,
 										 0,
 										 host,
 										 s3Path,

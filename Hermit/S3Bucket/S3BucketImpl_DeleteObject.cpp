@@ -81,6 +81,7 @@ namespace hermit {
                         
                         auto completion = std::make_shared<DeleteObjectCompletion>(shared_from_this());
                         s3::S3DeleteObject(h_,
+										   mBucket->mHTTPSession,
                                            mBucket->mAWSPublicKey,
                                            mBucket->mAWSSigningKey,
                                            mBucket->mAWSRegion,

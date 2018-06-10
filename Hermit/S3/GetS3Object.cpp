@@ -74,6 +74,7 @@ namespace hermit {
 		
 		//
 		void GetS3Object(const HermitPtr& h_,
+						 const http::HTTPSessionPtr& session,
 						 const std::string& awsPublicKey,
 						 const std::string& awsSigningKey,
 						 const std::string& awsRegion,
@@ -84,6 +85,7 @@ namespace hermit {
 			auto dataHandler = std::make_shared<DataHandler>();
 			auto streamCompletion = std::make_shared<StreamCompletion>(dataHandler, response, completion);
 			StreamInS3Object(h_,
+							 session,
 							 awsPublicKey,
 							 awsSigningKey,
 							 awsRegion,

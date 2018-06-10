@@ -328,6 +328,7 @@ namespace hermit {
 		
 		//
 		void GetS3BucketLocation(const HermitPtr& h_,
+								 const http::HTTPSessionPtr& session,
 								 const std::string& bucketName,
 								 const std::string& awsPublicKey,
 								 const std::string& awsPrivateKey,
@@ -421,7 +422,7 @@ namespace hermit {
 			url += "?location";
 			
 			auto commandCompletion = std::make_shared<CommandCompletion>(bucketName, url, completion);
-			SendS3Command(h_, url, method, params, commandCompletion);
+			SendS3Command(h_, session, url, method, params, commandCompletion);
 		}
 		
 	} // namespace s3

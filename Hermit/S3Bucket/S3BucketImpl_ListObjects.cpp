@@ -83,6 +83,7 @@ namespace hermit {
                         
                         auto completion = std::make_shared<ListObjectsCompletion>(shared_from_this());
                         s3::S3ListObjects(h_,
+										  mBucket->mHTTPSession,
                                           mBucket->mAWSPublicKey,
                                           mBucket->mAWSSigningKey,
                                           mBucket->mAWSRegion,

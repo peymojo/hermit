@@ -22,6 +22,7 @@
 #include <string>
 #include "Hermit/Foundation/Hermit.h"
 #include "Hermit/Foundation/StreamDataFunction.h"
+#include "Hermit/HTTP/HTTPSession.h"
 #include "S3Result.h"
 
 namespace hermit {
@@ -29,6 +30,7 @@ namespace hermit {
 		
 		//
 		void StreamInS3Object(const HermitPtr& h_,
+							  const http::HTTPSessionPtr& session,
 							  const std::string& awsPublicKey,
 							  const std::string& awsSigningKey,
 							  const std::string& awsRegion,

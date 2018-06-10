@@ -21,6 +21,7 @@
 
 #include "Hermit/Foundation/AsyncFunction.h"
 #include "Hermit/Foundation/Hermit.h"
+#include "Hermit/HTTP/HTTPSession.h"
 
 namespace hermit {
 	namespace s3 {
@@ -41,6 +42,7 @@ namespace hermit {
 		
 		//
 		void GetS3BucketACLXML(const HermitPtr& h_,
+							   const http::HTTPSessionPtr& session,
 							   const std::string& bucketName,
 							   const std::string& s3PublicKey,
 							   const std::string& s3PrivateKey,

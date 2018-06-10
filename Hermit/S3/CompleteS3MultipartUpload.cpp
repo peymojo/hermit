@@ -45,7 +45,8 @@ namespace hermit {
 				class SendCommandCompletion : public SendS3CommandCompletion {
 				public:
 					//
-					SendCommandCompletion(const std::string& url,
+					SendCommandCompletion(const http::HTTPSessionPtr& session,
+										  const std::string& url,
 										  int redirectCount,
 										  const std::string& host,
 										  const std::string& s3Path,
@@ -56,6 +57,7 @@ namespace hermit {
 										  const std::string& awsRegion,
 										  const std::string& uploadId,
 										  const S3CompletionBlockPtr& completion) :
+					mSession(session),
 					mURL(url),
 					mRedirectCount(redirectCount),
 					mHost(host),
@@ -96,6 +98,7 @@ namespace hermit {
 								return;
 							}
 							CompleteS3MultipartUpload(h_,
+													  mSession,
 													  mRedirectCount + 1,
 													  newEndpoint,
 													  mS3Path,
@@ -127,6 +130,7 @@ namespace hermit {
 					}
 					
 					//
+					http::HTTPSessionPtr mSession;
 					std::string mURL;
 					int mRedirectCount;
 					std::string mHost;
@@ -143,6 +147,7 @@ namespace hermit {
 			public:
 				//
 				static void CompleteS3MultipartUpload(const HermitPtr& h_,
+													  const http::HTTPSessionPtr& session,
 													  int redirectCount,
 													  const std::string& host,
 													  const std::string& s3Path,
@@ -236,7 +241,8 @@ namespace hermit {
 					url += "?uploadId=";
 					url += uploadId;
 					
-					auto commandCompletion = std::make_shared<SendCommandCompletion>(url,
+					auto commandCompletion = std::make_shared<SendCommandCompletion>(session,
+																					 url,
 																					 redirectCount,
 																					 host,
 																					 s3Path,
@@ -248,6 +254,7 @@ namespace hermit {
 																					 uploadId,
 																					 completion);
 					SendS3CommandWithData(h_,
+										  session,
 										  url,
 										  method,
 										  params,
@@ -261,6 +268,7 @@ namespace hermit {
 		
 		//
 		void CompleteS3MultipartUpload(const HermitPtr& h_,
+									   const http::HTTPSessionPtr& session,
 									   const std::string& awsPublicKey,
 									   const std::string& awsSigningKey,
 									   const std::string& awsRegion,
@@ -307,6 +315,7 @@ namespace hermit {
 			}
 			
 			Redirector::CompleteS3MultipartUpload(h_,
+												  session,
 												  0,
 												  host,
 												  s3Path,

@@ -17,6 +17,7 @@
 //
 
 #include "Hermit/Foundation/Notification.h"
+#include "Hermit/HTTP/CreateHTTPSession.h"
 #include "Hermit/S3/GenerateAWS4SigningKey.h"
 #include "Hermit/S3/GetS3BucketLocation.h"
 #include "Hermit/S3/S3RetryClass.h"
@@ -111,6 +112,7 @@ namespace hermit {
                         
                         auto completion = std::make_shared<GetBucketLocationCompletion>(shared_from_this());
                         GetS3BucketLocation(h_,
+											mBucket->mHTTPSession,
                                             mBucket->mBucketName,
                                             mBucket->mAWSPublicKey,
                                             mBucket->mAWSPrivateKey,
@@ -207,9 +209,19 @@ namespace hermit {
 
             } // namespace S3BucketImpl_Impl
             using namespace S3BucketImpl_Impl;
-            
-            //
+			
+			//
+			S3BucketImpl::S3BucketImpl(const std::string& awsPublicKey,
+									   const std::string& awsPrivateKey,
+									   const std::string& bucketName) :
+			mAWSPublicKey(awsPublicKey),
+			mAWSPrivateKey(awsPrivateKey),
+			mBucketName(bucketName) {
+			}
+
+			//
             void S3BucketImpl::Init(const HermitPtr& h_, const InitS3BucketCompletionPtr& completion) {
+				mHTTPSession = hermit::http::CreateHTTPSession();
                 auto getBucketLocation = std::make_shared<GetBucketLocationClass>(shared_from_this(), completion);
                 getBucketLocation->GetBucketLocationWithRetry(h_);
             }

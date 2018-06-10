@@ -34,6 +34,7 @@
 		EF72563D1F18D6B10054DCE0 /* S3Kit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF72563C1F18D6B10054DCE0 /* S3Kit.framework */; };
 		EF72563F1F18D6BF0054DCE0 /* StringKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF72563E1F18D6BF0054DCE0 /* StringKit.framework */; };
 		EF7256411F18D6C40054DCE0 /* EncodingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF7256401F18D6C40054DCE0 /* EncodingKit.framework */; };
+		EF92892F20CCBCA40032FC4C /* HTTPKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF92892E20CCBCA40032FC4C /* HTTPKit.framework */; };
 		EFF397D41F6552C400B1BD33 /* S3BucketKit_iOS.h in Headers */ = {isa = PBXBuildFile; fileRef = EFF397D21F6552C400B1BD33 /* S3BucketKit_iOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EFF3985C1F65549100B1BD33 /* PutMultipartObjectToS3Bucket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD59C21D86B74B0056E526 /* PutMultipartObjectToS3Bucket.cpp */; };
 		EFF3985D1F65549100B1BD33 /* S3Bucket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD59C41D86B74B0056E526 /* S3Bucket.cpp */; };
@@ -62,6 +63,7 @@
 		EF72563C1F18D6B10054DCE0 /* S3Kit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = S3Kit.framework; path = "../../../../Library/Developer/Xcode/DerivedData/Vault_Browser-etrnbxqipwhocnapsvsbsqbjzmyg/Build/Products/Debug/S3Kit.framework"; sourceTree = "<group>"; };
 		EF72563E1F18D6BF0054DCE0 /* StringKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StringKit.framework; path = "../../../../Library/Developer/Xcode/DerivedData/Vault_Browser-etrnbxqipwhocnapsvsbsqbjzmyg/Build/Products/Debug/StringKit.framework"; sourceTree = "<group>"; };
 		EF7256401F18D6C40054DCE0 /* EncodingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EncodingKit.framework; path = "../../../../Library/Developer/Xcode/DerivedData/Vault_Browser-etrnbxqipwhocnapsvsbsqbjzmyg/Build/Products/Debug/EncodingKit.framework"; sourceTree = "<group>"; };
+		EF92892E20CCBCA40032FC4C /* HTTPKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = HTTPKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EFAD59C01D86B74B0056E526 /* LibS3Bucket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LibS3Bucket.h; sourceTree = "<group>"; };
 		EFAD59C11D86B74B0056E526 /* LibS3Bucket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LibS3Bucket.m; sourceTree = "<group>"; };
 		EFAD59C21D86B74B0056E526 /* PutMultipartObjectToS3Bucket.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PutMultipartObjectToS3Bucket.cpp; sourceTree = "<group>"; };
@@ -99,6 +101,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EF92892F20CCBCA40032FC4C /* HTTPKit.framework in Frameworks */,
 				EF7256411F18D6C40054DCE0 /* EncodingKit.framework in Frameworks */,
 				EF72563F1F18D6BF0054DCE0 /* StringKit.framework in Frameworks */,
 				EF72563D1F18D6B10054DCE0 /* S3Kit.framework in Frameworks */,
@@ -141,6 +144,7 @@
 		EF7256391F18D6A30054DCE0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				EF92892E20CCBCA40032FC4C /* HTTPKit.framework */,
 				EFF3986C1F6554D400B1BD33 /* StringKit_iOS.framework */,
 				EFF3986A1F6554BE00B1BD33 /* EncodingKit_iOS.framework */,
 				EFF398681F6554B800B1BD33 /* FoundationKit_iOS.framework */,

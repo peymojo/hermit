@@ -78,6 +78,7 @@ namespace hermit {
                                                 
                         auto completion = std::make_shared<IsVersioningEnabledCompletion>(shared_from_this());
                         s3::S3GetBucketVersioning(h_,
+												  mBucket->mHTTPSession,
                                                   mBucket->mBucketName,
                                                   mBucket->mAWSPublicKey,
                                                   mBucket->mAWSPrivateKey,

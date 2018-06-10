@@ -21,6 +21,7 @@
 
 #include <memory>
 #include "Hermit/Foundation/Hermit.h"
+#include "Hermit/HTTP/HTTPSession.h"
 #include "S3Result.h"
 
 namespace hermit {
@@ -35,6 +36,7 @@ namespace hermit {
 		
 		//
 		void S3ListBuckets(const HermitPtr& h_,
+						   const http::HTTPSessionPtr& session,
 						   const std::string& awsPublicKey,
 						   const std::string& awsPrivateKey,
 						   const BucketNameReceiverPtr& receiver,

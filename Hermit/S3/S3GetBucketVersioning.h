@@ -21,6 +21,7 @@
 
 #include "Hermit/Foundation/AsyncFunction.h"
 #include "Hermit/Foundation/Hermit.h"
+#include "Hermit/HTTP/HTTPSession.h"
 #include "S3Result.h"
 
 namespace hermit {
@@ -42,6 +43,7 @@ namespace hermit {
 		
 		//
 		void S3GetBucketVersioning(const HermitPtr& h_,
+								   const http::HTTPSessionPtr& session,
 								   const std::string& bucketName,
 								   const std::string& s3PublicKey,
 								   const std::string& s3PrivateKey,

@@ -117,6 +117,7 @@ namespace hermit {
 						
 						auto completion = std::make_shared<GetObjectVersionCompletion>(shared_from_this());
 						s3::GetS3Object(h_,
+										mBucket->mHTTPSession,
 										mBucket->mAWSPublicKey,
 										mBucket->mAWSSigningKey,
 										mBucket->mAWSRegion,
@@ -204,6 +205,7 @@ namespace hermit {
 							// the auth info.
                             auto locationCompletion = std::make_shared<GetBucketLocationCompletion>(result, mCompletion);
 							GetS3BucketLocation(h_,
+												mBucket->mHTTPSession,
 												mBucket->mBucketName,
 												mBucket->mAWSPublicKey,
 												mBucket->mAWSPrivateKey,

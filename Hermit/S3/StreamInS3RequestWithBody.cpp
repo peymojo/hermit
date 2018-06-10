@@ -310,14 +310,13 @@ namespace hermit {
 		
 		//
 		void StreamInS3RequestWithBody(const HermitPtr& h_,
+									   const http::HTTPSessionPtr& session,
 									   const std::string& url,
 									   const std::string& method,
 									   const S3ParamVector& params,
 									   const SharedBufferPtr& body,
 									   const DataHandlerBlockPtr& dataHandler,
 									   const StreamInS3RequestCompletionPtr& completion) {
-			http::HTTPSessionPtr session(http::CreateHTTPSession());
-			
 			auto dataHandlerProxy = std::make_shared<DataHandler>(dataHandler);
 			auto status = std::make_shared<http::HTTPRequestStatus>();
 			auto httpCompletion = std::make_shared<HTTPCompletion>(session,

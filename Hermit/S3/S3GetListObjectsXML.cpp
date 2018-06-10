@@ -48,7 +48,8 @@ namespace hermit {
 				class SendCommandCompletion : public SendS3CommandCompletion {
 				public:
 					//
-					SendCommandCompletion(const std::string& url,
+					SendCommandCompletion(const http::HTTPSessionPtr& session,
+										  const std::string& url,
 										  int redirectCount,
 										  const std::string& host,
 										  const std::string& s3Path,
@@ -58,6 +59,7 @@ namespace hermit {
 										  const std::string& objectPrefix,
 										  const std::string& marker,
 										  const S3GetListObjectsXMLCompletionPtr& completion) :
+					mSession(session),
 					mURL(url),
 					mRedirectCount(redirectCount),
 					mHost(host),
@@ -97,6 +99,7 @@ namespace hermit {
 								return;
 							}
 							S3GetListObjectsXML(h_,
+												mSession,
 												mRedirectCount + 1,
 												newEndpoint,
 												mS3Path,
@@ -127,6 +130,7 @@ namespace hermit {
 					}
 					
 					//
+					http::HTTPSessionPtr mSession;
 					std::string mURL;
 					int mRedirectCount;
 					std::string mHost;
@@ -142,6 +146,7 @@ namespace hermit {
 			public:
 				//
 				static void S3GetListObjectsXML(const HermitPtr& h_,
+												const http::HTTPSessionPtr& session,
 												int redirectCount,
 												const std::string& host,
 												const std::string& s3Path,
@@ -245,7 +250,8 @@ namespace hermit {
 						url += objectPrefix;
 					}
 					
-					auto commandCompletion = std::make_shared<SendCommandCompletion>(url,
+					auto commandCompletion = std::make_shared<SendCommandCompletion>(session,
+																					 url,
 																					 redirectCount,
 																					 host,
 																					 s3Path,
@@ -255,7 +261,7 @@ namespace hermit {
 																					 objectPrefix,
 																					 marker,
 																					 completion);
-					SendS3Command(h_, url, method, params, commandCompletion);
+					SendS3Command(h_, session, url, method, params, commandCompletion);
 				}
 			};
 			
@@ -264,6 +270,7 @@ namespace hermit {
 		
 		//
 		void S3GetListObjectsXML(const HermitPtr& h_,
+								 const http::HTTPSessionPtr& session,
 								 const std::string& awsPublicKey,
 								 const std::string& awsSigningKey,
 								 const std::string& awsRegion,
@@ -281,6 +288,7 @@ namespace hermit {
 			std::string s3Path("/");
 			
 			Redirector::S3GetListObjectsXML(h_,
+											session,
 											0,
 											host,
 											s3Path,

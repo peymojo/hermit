@@ -40,11 +40,9 @@ namespace hermit {
 				static const int kMaxRetries = 8;
 				
 				//
-				S3BucketImpl(const std::string& inAWSPublicKey, const std::string& inAWSPrivateKey, const std::string& inBucketName) :
-				mAWSPublicKey(inAWSPublicKey),
-				mAWSPrivateKey(inAWSPrivateKey),
-				mBucketName(inBucketName) {
-				}
+				S3BucketImpl(const std::string& awsPublicKey,
+							 const std::string& awsPrivateKey,
+							 const std::string& bucketName);
 				
                 //
                 void Init(const HermitPtr& h_, const InitS3BucketCompletionPtr& completion);
@@ -94,6 +92,7 @@ namespace hermit {
 				void RefreshSigningKeyIfNeeded();
 				
 				//
+				http::HTTPSessionPtr mHTTPSession;
 				std::string mAWSPublicKey;
 				std::string mAWSPrivateKey;
 				std::string mAWSSigningKey;

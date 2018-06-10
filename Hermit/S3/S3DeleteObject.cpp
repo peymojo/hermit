@@ -48,7 +48,8 @@ namespace hermit {
 				class SendCommandCompletion : public SendS3CommandCompletion {
 				public:
 					//
-					SendCommandCompletion(const std::string& url,
+					SendCommandCompletion(const http::HTTPSessionPtr& session,
+										  const std::string& url,
 										  int redirectCount,
 										  const std::string& host,
 										  const std::string& s3Path,
@@ -56,6 +57,7 @@ namespace hermit {
 										  const std::string& awsSigningKey,
 										  const std::string& awsRegion,
 										  const S3CompletionBlockPtr& completion) :
+					mSession(session),
 					mURL(url),
 					mRedirectCount(redirectCount),
 					mHost(host),
@@ -93,13 +95,14 @@ namespace hermit {
 								return;
 							}
 							S3DeleteObject(h_,
-										mRedirectCount + 1,
-										newEndpoint,
-										mS3Path,
-										mAWSPublicKey,
-										mAWSSigningKey,
-										mAWSRegion,
-										mCompletion);
+										   mSession,
+										   mRedirectCount + 1,
+										   newEndpoint,
+										   mS3Path,
+										   mAWSPublicKey,
+										   mAWSSigningKey,
+										   mAWSRegion,
+										   mCompletion);
 							return;
 						}
 						if ((result == S3Result::kTimedOut) ||
@@ -127,6 +130,7 @@ namespace hermit {
 					}
 					
 					//
+					http::HTTPSessionPtr mSession;
 					std::string mURL;
 					int mRedirectCount;
 					std::string mHost;
@@ -140,13 +144,14 @@ namespace hermit {
 			public:
 				//
 				static void S3DeleteObject(const HermitPtr& h_,
-										int redirectCount,
-										const std::string& host,
-										const std::string& s3Path,
-										const std::string& awsPublicKey,
-										const std::string& awsSigningKey,
-										const std::string& awsRegion,
-										const S3CompletionBlockPtr& completion) {
+										   const http::HTTPSessionPtr& session,
+										   int redirectCount,
+										   const std::string& host,
+										   const std::string& s3Path,
+										   const std::string& awsPublicKey,
+										   const std::string& awsSigningKey,
+										   const std::string& awsRegion,
+										   const S3CompletionBlockPtr& completion) {
 					if (redirectCount > 5) {
 						NOTIFY_ERROR(h_, "Too many temporary redirects for s3Path:", s3Path);
 						completion->Call(h_, S3Result::kError);
@@ -227,7 +232,8 @@ namespace hermit {
 					url += host;
 					url += s3Path;
 					
-					auto commandCompletion = std::make_shared<SendCommandCompletion>(url,
+					auto commandCompletion = std::make_shared<SendCommandCompletion>(session,
+																					 url,
 																					 redirectCount,
 																					 host,
 																					 s3Path,
@@ -236,6 +242,7 @@ namespace hermit {
 																					 awsRegion,
 																					 completion);
 					SendS3Command(h_,
+								  session,
 								  url,
 								  method,
 								  params,
@@ -248,6 +255,7 @@ namespace hermit {
 		
 		//
 		void S3DeleteObject(const HermitPtr& h_,
+							const http::HTTPSessionPtr& session,
 							const std::string& awsPublicKey,
 							const std::string& awsSigningKey,
 							const std::string& awsRegion,
@@ -262,7 +270,7 @@ namespace hermit {
 			}			
 			http::URLEncode(s3Path, false, s3Path);
 			
-			Redirector::S3DeleteObject(h_, 0, host, s3Path, awsPublicKey, awsSigningKey, awsRegion, completion);
+			Redirector::S3DeleteObject(h_, session, 0, host, s3Path, awsPublicKey, awsSigningKey, awsRegion, completion);
 		}
 		
 	} // namespace s3

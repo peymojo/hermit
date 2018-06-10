@@ -112,6 +112,7 @@ namespace hermit {
                         
                         auto completion = std::make_shared<AbortUploadCompletion>(shared_from_this());
                         s3::AbortS3MultipartUpload(h_,
+												   mBucket->mHTTPSession,
                                                    mBucket->mAWSPublicKey,
                                                    mBucket->mAWSSigningKey,
                                                    mBucket->mAWSRegion,
@@ -266,6 +267,7 @@ namespace hermit {
                         
                         auto completion = std::make_shared<CompleteUploadCompletion>(shared_from_this());
                         CompleteS3MultipartUpload(h_,
+												  mBucket->mHTTPSession,
                                                   mBucket->mAWSPublicKey,
                                                   mBucket->mAWSSigningKey,
                                                   mBucket->mAWSRegion,
@@ -441,6 +443,7 @@ namespace hermit {
                         }
                         auto completion = std::make_shared<UploadPartCompletion>(shared_from_this());
                         UploadS3MultipartPart(h_,
+											  mBucket->mHTTPSession,
                                               mBucket->mAWSPublicKey,
                                               mBucket->mAWSSigningKey,
                                               mBucket->mAWSRegion,
@@ -631,6 +634,7 @@ namespace hermit {
                         
                         auto completion = std::make_shared<InitiateUploadCompletion>(shared_from_this());
                         InitiateS3MultipartUpload(h_,
+												  mBucket->mHTTPSession,
                                                   mBucket->mAWSPublicKey,
                                                   mBucket->mAWSSigningKey,
                                                   mBucket->mAWSRegion,

@@ -168,10 +168,12 @@ namespace hermit {
 				
 			public:
 				//
-				ListBucketsClass(const std::string& awsPublicKey,
+				ListBucketsClass(const http::HTTPSessionPtr& session,
+								 const std::string& awsPublicKey,
 								 const std::string& awsPrivateKey,
 								 const BucketNameReceiverPtr& receiver,
 								 const S3CompletionBlockPtr& completion) :
+				mSession(session),
 				mAWSPublicKey(awsPublicKey),
 				mAWSPrivateKey(awsPrivateKey),
 				mReceiver(receiver),
@@ -222,7 +224,7 @@ namespace hermit {
 					std::string url("https://s3.amazonaws.com/");
 					
 					auto commandCompletion = std::make_shared<ListBucketsCompletion>(shared_from_this());
-					SendS3Command(h_, url, method, params, commandCompletion);
+					SendS3Command(h_, mSession, url, method, params, commandCompletion);
 				}
 				
 				//
@@ -304,6 +306,7 @@ namespace hermit {
 				}
 				
 				//
+				http::HTTPSessionPtr mSession;
 				std::string mAWSPublicKey;
 				std::string mAWSPrivateKey;
 				BucketNameReceiverPtr mReceiver;
@@ -328,11 +331,12 @@ namespace hermit {
 		
 		//
 		void S3ListBuckets(const HermitPtr& h_,
+						   const http::HTTPSessionPtr& session,
 						   const std::string& awsPublicKey,
 						   const std::string& awsPrivateKey,
 						   const BucketNameReceiverPtr& receiver,
 						   const S3CompletionBlockPtr& completion) {
-			auto lister = std::make_shared<ListBucketsClass>(awsPublicKey, awsPrivateKey, receiver, completion);
+			auto lister = std::make_shared<ListBucketsClass>(session, awsPublicKey, awsPrivateKey, receiver, completion);
 			lister->S3ListBuckets(h_);
 		}
 		

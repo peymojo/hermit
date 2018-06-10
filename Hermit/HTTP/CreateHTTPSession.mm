@@ -83,6 +83,10 @@ static void* const TASK_PARAMS_KEY = (void*)&TASK_PARAMS_KEY;
 	return self;
 }
 
+- (void)dealloc {
+	
+}
+
 - (void)status:(NSURLSessionTask*) task {
 	NSURLResponse* response = task.response;
 	if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
@@ -124,6 +128,9 @@ static void* const TASK_PARAMS_KEY = (void*)&TASK_PARAMS_KEY;
 		}
 	}
 	_completion->Call(_h_, result);
+	
+	// We must clear this to resolve a potential circular reference.
+	_completion.reset();
 }
 
 @end
@@ -263,6 +270,7 @@ namespace hermit {
 				
 				//
 				~URLSessionHTTPSession() {
+					mSession = nil;
 				}
 				
 				//

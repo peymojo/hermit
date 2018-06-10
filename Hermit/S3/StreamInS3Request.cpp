@@ -23,13 +23,15 @@ namespace hermit {
 	namespace s3 {
 		
 		//
-		void StreamInS3Request(const HermitPtr& h_,							   
+		void StreamInS3Request(const HermitPtr& h_,
+							   const http::HTTPSessionPtr& session,
 							   const std::string& url,
 							   const std::string& method,
 							   const S3ParamVector& params,
 							   const DataHandlerBlockPtr& dataHandler,
 							   const StreamInS3RequestCompletionPtr& completion) {
 			StreamInS3RequestWithBody(h_,
+									  session,
 									  url,
 									  method,
 									  params,

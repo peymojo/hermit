@@ -22,6 +22,7 @@
 #include <string>
 #include <vector>
 #include "Hermit/Foundation/Hermit.h"
+#include "Hermit/HTTP/HTTPSession.h"
 #include "S3Result.h"
 
 namespace hermit {
@@ -32,6 +33,7 @@ namespace hermit {
 		
 		//
 		void CompleteS3MultipartUpload(const HermitPtr& h_,
+									   const http::HTTPSessionPtr& session,
 									   const std::string& awsPublicKey,
 									   const std::string& awsSigningKey,
 									   const std::string& awsRegion,

@@ -189,11 +189,13 @@ namespace hermit {
 				
 			public:
 				//
-				CreateBucketClass(const std::string& bucketName,
+				CreateBucketClass(const http::HTTPSessionPtr& session,
+								  const std::string& bucketName,
 								  const std::string& region,
 								  const std::string& awsPublicKey,
 								  const std::string& awsPrivateKey,
 								  const S3CompletionBlockPtr& completion) :
+				mSession(session),
 				mBucketName(bucketName),
 				mRegion(region),
 				mAWSPublicKey(awsPublicKey),
@@ -258,6 +260,7 @@ namespace hermit {
 					
 					auto commandCompletion = std::make_shared<CreateBucketCompletion>(shared_from_this());
 					SendS3CommandWithData(h_,
+										  mSession,
 										  url,
 										  method,
 										  params,
@@ -349,6 +352,7 @@ namespace hermit {
 				}
 				
 				//
+				http::HTTPSessionPtr mSession;
 				std::string mBucketName;
 				std::string mRegion;
 				std::string mAWSPublicKey;
@@ -374,12 +378,13 @@ namespace hermit {
 		
 		//
 		void S3CreateBucket(const HermitPtr& h_,
+							const http::HTTPSessionPtr& session,
 							const std::string& bucketName,
 							const std::string& region,
 							const std::string& awsPublicKey,
 							const std::string& awsPrivateKey,
 							const S3CompletionBlockPtr& completion) {
-			auto creator = std::make_shared<CreateBucketClass>(bucketName, region, awsPublicKey, awsPrivateKey, completion);
+			auto creator = std::make_shared<CreateBucketClass>(session, bucketName, region, awsPublicKey, awsPrivateKey, completion);
 			creator->S3CreateBucket(h_);
 		}
 		

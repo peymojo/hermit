@@ -71,6 +71,7 @@ namespace hermit {
 		
 		//
 		void SendS3CommandWithData(const HermitPtr& h_,
+								   const http::HTTPSessionPtr& session,
 								   const std::string& url,
 								   const std::string& method,
 								   const S3ParamVector& params,
@@ -79,6 +80,7 @@ namespace hermit {
 			auto dataHandler = std::make_shared<DataHandler>();
 			auto streamCompletion = std::make_shared<StreamInCompletion>(dataHandler, completion);
 			StreamInS3RequestWithBody(h_,
+									  session,
 									  url,
 									  method,
 									  params,

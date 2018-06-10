@@ -157,13 +157,15 @@ namespace hermit {
 				class ListCompletion : public S3GetListObjectsXMLCompletion {
 				public:
 					//
-					ListCompletion(const std::string& awsPublicKey,
+					ListCompletion(const http::HTTPSessionPtr& session,
+								   const std::string& awsPublicKey,
 								   const std::string& awsSigningKey,
 								   const std::string& awsRegion,
 								   const std::string& bucketName,
 								   const std::string& objectPrefix,
 								   const ObjectKeyReceiverPtr& receiver,
 								   const S3CompletionBlockPtr& completion) :
+					mSession(session),
 					mAWSPublicKey(awsPublicKey),
 					mAWSSigningKey(awsSigningKey),
 					mAWSRegion(awsRegion),
@@ -202,6 +204,7 @@ namespace hermit {
 
 						if (pc.GetIsTruncated() == "true") {
 							S3ListObjects(h_,
+										  mSession,
 										  mAWSPublicKey,
 										  mAWSSigningKey,
 										  mAWSRegion,
@@ -217,6 +220,7 @@ namespace hermit {
 					}
 					
 					//
+					http::HTTPSessionPtr mSession;
 					std::string mAWSPublicKey;
 					std::string mAWSSigningKey;
 					std::string mAWSRegion;
@@ -229,6 +233,7 @@ namespace hermit {
 			public:
 				//
 				static void S3ListObjects(const HermitPtr& h_,
+										  const http::HTTPSessionPtr& session,
 										  const std::string& awsPublicKey,
 										  const std::string& awsSigningKey,
 										  const std::string& awsRegion,
@@ -237,7 +242,8 @@ namespace hermit {
 										  const std::string& marker,
 										  const ObjectKeyReceiverPtr& receiver,
 										  const S3CompletionBlockPtr& completion) {
-					auto listCompletion = std::make_shared<ListCompletion>(awsPublicKey,
+					auto listCompletion = std::make_shared<ListCompletion>(session,
+																		   awsPublicKey,
 																		   awsSigningKey,
 																		   awsRegion,
 																		   bucketName,
@@ -245,6 +251,7 @@ namespace hermit {
 																		   receiver,
 																		   completion);
 					S3GetListObjectsXML(h_,
+										session,
 										awsPublicKey,
 										awsSigningKey,
 										awsRegion,
@@ -261,6 +268,7 @@ namespace hermit {
 		
 		//
 		void S3ListObjects(const HermitPtr& h_,
+						   const http::HTTPSessionPtr& session,
 						   const std::string& awsPublicKey,
 						   const std::string& awsSigningKey,
 						   const std::string& awsRegion,
@@ -269,6 +277,7 @@ namespace hermit {
 						   const ObjectKeyReceiverPtr& receiver,
 						   const S3CompletionBlockPtr& completion) {
 			Lister::S3ListObjects(h_,
+								  session,
 								  awsPublicKey,
 								  awsSigningKey,
 								  awsRegion,

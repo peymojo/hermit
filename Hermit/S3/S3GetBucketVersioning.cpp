@@ -179,6 +179,7 @@ namespace hermit {
 		
 		//
 		void S3GetBucketVersioning(const HermitPtr& h_,
+								   const http::HTTPSessionPtr& session,
 								   const std::string& bucketName,
 								   const std::string& s3PublicKey,
 								   const std::string& s3PrivateKey,
@@ -214,7 +215,7 @@ namespace hermit {
 			url += ".s3.amazonaws.com/?versioning";
 			
 			auto commandCompletion = std::make_shared<CommandCompletion>(url, bucketName, completion);
-			SendS3Command(h_, url, method, params, commandCompletion);
+			SendS3Command(h_, session, url, method, params, commandCompletion);
 		}
 		
 	} // namespace s3

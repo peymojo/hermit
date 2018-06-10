@@ -20,6 +20,7 @@
 #define SendS3Command_h
 
 #include "Hermit/Foundation/Hermit.h"
+#include "Hermit/HTTP/HTTPSession.h"
 #include "S3ParamVector.h"
 #include "SendS3CommandCompletion.h"
 
@@ -28,6 +29,7 @@ namespace hermit {
 		
 		//
 		void SendS3Command(const HermitPtr& h_,
+						   const http::HTTPSessionPtr& session,
 						   const std::string& url,
 						   const std::string& method,
 						   const S3ParamVector& params,

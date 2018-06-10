@@ -21,6 +21,7 @@
 
 #include <string>
 #include "Hermit/Foundation/Hermit.h"
+#include "Hermit/HTTP/HTTPSession.h"
 #include "S3Result.h"
 
 namespace hermit {
@@ -28,6 +29,7 @@ namespace hermit {
 		
 		//
 		void AbortS3MultipartUpload(const HermitPtr& h_,
+									const http::HTTPSessionPtr& session,
 									const std::string& awsPublicKey,
 									const std::string& awsSigningKey,
 									const std::string& awsRegion,
