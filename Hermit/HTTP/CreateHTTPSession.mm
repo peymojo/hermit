@@ -83,10 +83,6 @@ static void* const TASK_PARAMS_KEY = (void*)&TASK_PARAMS_KEY;
 	return self;
 }
 
-- (void)dealloc {
-	
-}
-
 - (void)status:(NSURLSessionTask*) task {
 	NSURLResponse* response = task.response;
 	if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
@@ -266,11 +262,6 @@ namespace hermit {
 			public:
 				//
 				URLSessionHTTPSession(NSURLSession* session) : mSession(session) {
-				}
-				
-				//
-				~URLSessionHTTPSession() {
-					mSession = nil;
 				}
 				
 				//

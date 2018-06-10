@@ -86,7 +86,9 @@ namespace hermit {
 				}
 				pthread_mutex_unlock(&sMutex);
 				
-				nextTask->mTask->PerformTask(nextTask->mH_);
+				@autoreleasepool {
+					nextTask->mTask->PerformTask(nextTask->mH_);
+				}
 			}
 			
 			pthread_mutex_lock(&sMutex);

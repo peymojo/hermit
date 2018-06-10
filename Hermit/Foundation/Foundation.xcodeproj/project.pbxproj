@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		EF2CF5AE1FF249C200652E69 /* FoundationLib.h in Headers */ = {isa = PBXBuildFile; fileRef = EF2CF5AD1FF249C200652E69 /* FoundationLib.h */; };
 		EF2CF5B01FF249C200652E69 /* FoundationLib.m in Sources */ = {isa = PBXBuildFile; fileRef = EF2CF5AF1FF249C200652E69 /* FoundationLib.m */; };
-		EF2CF5B41FF249D500652E69 /* AsyncTaskQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFE49F481D86AFE60044BC06 /* AsyncTaskQueue.cpp */; };
+		EF2CF5B41FF249D500652E69 /* AsyncTaskQueue.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFE49F481D86AFE60044BC06 /* AsyncTaskQueue.mm */; };
 		EF2CF5B51FF249D500652E69 /* CompareMemory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF59A6401F5911A500902A12 /* CompareMemory.cpp */; };
 		EF2CF5B61FF249D500652E69 /* GenerateSecureRandomBytes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFE49F3E1D86AFE60044BC06 /* GenerateSecureRandomBytes.cpp */; };
 		EF2CF5B71FF249D500652E69 /* GetCurrentUTCAndLocalTimeStrings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF59A6421F5911A500902A12 /* GetCurrentUTCAndLocalTimeStrings.cpp */; };
@@ -35,7 +35,7 @@
 		EF92C0E41F10F7200097D708 /* FoundationKit.h in Headers */ = {isa = PBXBuildFile; fileRef = EF92C0E21F10F7200097D708 /* FoundationKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EF92C0E91F10F72D0097D708 /* GenerateSecureRandomBytes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFE49F3E1D86AFE60044BC06 /* GenerateSecureRandomBytes.cpp */; };
 		EF92C0EA1F10F72D0097D708 /* Notification.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFE49F451D86AFE60044BC06 /* Notification.cpp */; };
-		EF92C0EB1F10F72D0097D708 /* AsyncTaskQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFE49F481D86AFE60044BC06 /* AsyncTaskQueue.cpp */; };
+		EF92C0EB1F10F72D0097D708 /* AsyncTaskQueue.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFE49F481D86AFE60044BC06 /* AsyncTaskQueue.mm */; };
 		EF92C0EC1F10F72D0097D708 /* SharedBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFE49F4A1D86AFE60044BC06 /* SharedBuffer.cpp */; };
 		EF92C0ED1F10F72D0097D708 /* TaskQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFE49F511D86AFE60044BC06 /* TaskQueue.cpp */; };
 		EF92C0EF1F10F72D0097D708 /* ThreadLock_Mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFE49F551D86AFE60044BC06 /* ThreadLock_Mac.cpp */; };
@@ -61,7 +61,7 @@
 		EFF396FC1F65507700B1BD33 /* LoggingHermit.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFE49F411D86AFE60044BC06 /* LoggingHermit.mm */; };
 		EFF396FD1F65507700B1BD33 /* MemXOR.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF59A6481F5911A500902A12 /* MemXOR.cpp */; };
 		EFF396FF1F65507700B1BD33 /* Notification.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFE49F451D86AFE60044BC06 /* Notification.cpp */; };
-		EFF397041F65507700B1BD33 /* AsyncTaskQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFE49F481D86AFE60044BC06 /* AsyncTaskQueue.cpp */; };
+		EFF397041F65507700B1BD33 /* AsyncTaskQueue.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFE49F481D86AFE60044BC06 /* AsyncTaskQueue.mm */; };
 		EFF397061F65507700B1BD33 /* SharedBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFE49F4A1D86AFE60044BC06 /* SharedBuffer.cpp */; };
 		EFF3970A1F65507700B1BD33 /* StaticLog.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFE49F4E1D86AFE60044BC06 /* StaticLog.mm */; };
 		EFF3970C1F65507700B1BD33 /* TaskQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFE49F511D86AFE60044BC06 /* TaskQueue.cpp */; };
@@ -102,7 +102,7 @@
 		EFE49F411D86AFE60044BC06 /* LoggingHermit.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LoggingHermit.mm; sourceTree = "<group>"; };
 		EFE49F451D86AFE60044BC06 /* Notification.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Notification.cpp; sourceTree = "<group>"; };
 		EFE49F461D86AFE60044BC06 /* Notification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Notification.h; sourceTree = "<group>"; };
-		EFE49F481D86AFE60044BC06 /* AsyncTaskQueue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AsyncTaskQueue.cpp; sourceTree = "<group>"; };
+		EFE49F481D86AFE60044BC06 /* AsyncTaskQueue.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AsyncTaskQueue.mm; sourceTree = "<group>"; };
 		EFE49F491D86AFE60044BC06 /* AsyncTaskQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncTaskQueue.h; sourceTree = "<group>"; };
 		EFE49F4A1D86AFE60044BC06 /* SharedBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SharedBuffer.cpp; sourceTree = "<group>"; };
 		EFE49F4B1D86AFE60044BC06 /* SharedBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedBuffer.h; sourceTree = "<group>"; };
@@ -178,7 +178,7 @@
 			isa = PBXGroup;
 			children = (
 				EFE49F331D86AFE60044BC06 /* AsyncFunction.h */,
-				EFE49F481D86AFE60044BC06 /* AsyncTaskQueue.cpp */,
+				EFE49F481D86AFE60044BC06 /* AsyncTaskQueue.mm */,
 				EFE49F491D86AFE60044BC06 /* AsyncTaskQueue.h */,
 				EFE49F391D86AFE60044BC06 /* Callback.h */,
 				EF59A6401F5911A500902A12 /* CompareMemory.cpp */,
@@ -401,7 +401,7 @@
 			files = (
 				EF55F572201218D90087BEA3 /* LoggingHermit.mm in Sources */,
 				EF2CF6161FF24A8400652E69 /* StaticLog.mm in Sources */,
-				EF2CF5B41FF249D500652E69 /* AsyncTaskQueue.cpp in Sources */,
+				EF2CF5B41FF249D500652E69 /* AsyncTaskQueue.mm in Sources */,
 				EF2CF5B51FF249D500652E69 /* CompareMemory.cpp in Sources */,
 				EF2CF5B61FF249D500652E69 /* GenerateSecureRandomBytes.cpp in Sources */,
 				EFECA4C4204705D4006F73DF /* SimpleTaskQueue.cpp in Sources */,
@@ -429,7 +429,7 @@
 				EFECA4C2204705D4006F73DF /* SimpleTaskQueue.cpp in Sources */,
 				EF59A6521F5911A500902A12 /* MemXOR.cpp in Sources */,
 				EF92C0EA1F10F72D0097D708 /* Notification.cpp in Sources */,
-				EF92C0EB1F10F72D0097D708 /* AsyncTaskQueue.cpp in Sources */,
+				EF92C0EB1F10F72D0097D708 /* AsyncTaskQueue.mm in Sources */,
 				EF59A64C1F5911A500902A12 /* GetCurrentUTCAndLocalTimeStrings.cpp in Sources */,
 				EF92C0EC1F10F72D0097D708 /* SharedBuffer.cpp in Sources */,
 				EF59A64A1F5911A500902A12 /* CompareMemory.cpp in Sources */,
@@ -453,7 +453,7 @@
 				EFF396FC1F65507700B1BD33 /* LoggingHermit.mm in Sources */,
 				EFF396FD1F65507700B1BD33 /* MemXOR.cpp in Sources */,
 				EFF396FF1F65507700B1BD33 /* Notification.cpp in Sources */,
-				EFF397041F65507700B1BD33 /* AsyncTaskQueue.cpp in Sources */,
+				EFF397041F65507700B1BD33 /* AsyncTaskQueue.mm in Sources */,
 				EFF397061F65507700B1BD33 /* SharedBuffer.cpp in Sources */,
 				EFF3970A1F65507700B1BD33 /* StaticLog.mm in Sources */,
 				EFF3970C1F65507700B1BD33 /* TaskQueue.cpp in Sources */,
