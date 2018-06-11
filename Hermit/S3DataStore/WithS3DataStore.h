@@ -20,7 +20,6 @@
 #define WithS3DataStore_h
 
 #include "Hermit/DataStore/DataStore.h"
-#include "Hermit/Foundation/Callback.h"
 #include "Hermit/S3Bucket/S3Bucket.h"
 
 namespace hermit {
