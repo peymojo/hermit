@@ -16,7 +16,7 @@
 //	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#include "Hermit/File/ListDirectoryContents.h"
+#include "Hermit/File/ListDirectoryContentsWithType.h"
 #include "Hermit/Foundation/Notification.h"
 #include "FileDataStore.h"
 #include "FilePathToDataPath.h"
@@ -27,7 +27,7 @@ namespace hermit {
 		namespace FileDataStore_ListContents_Impl {
 			
 			//
-			class ListItemsCallback : public file::ListDirectoryContentsItemCallback {
+			class ListItemsCallback : public file::ListDirectoryContentsWithTypeItemCallback {
 			public:
 				//
 				ListItemsCallback(const datastore::ListDataStoreItemsItemCallbackPtr& itemCallback) :
@@ -38,7 +38,12 @@ namespace hermit {
 				virtual bool OnItem(const HermitPtr& h_,
 									const file::ListDirectoryContentsResult& result,
 									const file::FilePathPtr& parentFilePath,
-									const std::string& itemName) override {
+									const std::string& itemName,
+									const file::FileType& itemType) override {
+					if (itemType != file::FileType::kFile) {
+						return true;
+					}
+
 					datastore::DataPathPtr parentPath;
 					if (!FilePathToDataPath(h_, parentFilePath, parentPath)) {
 						NOTIFY_ERROR(h_, "FilePathToDataPath failed for:", parentFilePath);
@@ -68,7 +73,7 @@ namespace hermit {
 			FilePathDataPath& dataPath = static_cast<FilePathDataPath&>(*rootPath);
 			
 			ListItemsCallback listItemsCallback(itemCallback);
-			auto result = file::ListDirectoryContents(h_, dataPath.mFilePath, true, listItemsCallback);
+			auto result = file::ListDirectoryContentsWithType(h_, dataPath.mFilePath, true, listItemsCallback);
 			if (result == file::ListDirectoryContentsResult::kCanceled) {
 				completion->Call(h_, datastore::ListDataStoreItemsResult::kCanceled);
                 return;
