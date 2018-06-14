@@ -56,15 +56,18 @@ namespace hermit {
 			class HardLinkInfo {
 			public:
 				//
-				HardLinkInfo() : mStatus(HardLinkInfoStatus::kUnknown), mDataSize(0) {
+				HardLinkInfo() : mProcessing(false), mResult(HardLinkInfoResult::kUnknown), mDataSize(0) {
 				}
 				
 				//
-				HardLinkInfoStatus mStatus;
+				bool mProcessing;
+				HardLinkInfoResult mResult;
+				std::vector<GetHardLinkInfoCompletionFunctionPtr> mClients;
 				std::string mDataObjectId;
 				uint64_t mDataSize;
 				std::string mDataHash;
 				std::vector<std::string> mPaths;
+				std::mutex mMutex;
 			};
 			typedef std::shared_ptr<HardLinkInfo> HardLinkInfoPtr;
 			
@@ -234,25 +237,31 @@ namespace hermit {
 			class ProcessCallback : public ProcessHardLinkCompletionFunction {
 			public:
 				//
-				ProcessCallback(const HardLinkInfoPtr& inHardLinkInfo,
-								const GetHardLinkInfoCompletionFunctionPtr& inCompletion) :
-				mHardLinkInfo(inHardLinkInfo),
-				mCompletionFunction(inCompletion) {
+				ProcessCallback(const HardLinkInfoPtr& hardLinkInfo) :
+				mHardLinkInfo(hardLinkInfo) {
 				}
 				
 				//
 				virtual void Call(const HermitPtr& h_,
-								  const HardLinkInfoStatus& status,
+								  const HardLinkInfoResult& result,
 								  const std::string& dataObjectId,
 								  const uint64_t& dataSize,
 								  const std::string& dataHash) override {
-					mHardLinkInfo->mStatus = status;
-					if (status == HardLinkInfoStatus::kSuccess) {
-						mHardLinkInfo->mDataObjectId = dataObjectId;
-						mHardLinkInfo->mDataSize = dataSize;
-						mHardLinkInfo->mDataHash = dataHash;
+					auto clients = std::vector<GetHardLinkInfoCompletionFunctionPtr>();
+					{
+						std::lock_guard<std::mutex> lock(mHardLinkInfo->mMutex);
+						mHardLinkInfo->mResult = result;
+						if (result == HardLinkInfoResult::kSuccess) {
+							mHardLinkInfo->mDataObjectId = dataObjectId;
+							mHardLinkInfo->mDataSize = dataSize;
+							mHardLinkInfo->mDataHash = dataHash;
+						}
+						clients = mHardLinkInfo->mClients;
 					}
-					mCompletionFunction->Call(h_, status, mHardLinkInfo->mPaths, dataObjectId, dataSize, dataHash);
+					
+					for (auto it = begin(clients); it != end(clients); ++it) {
+						(*it)->Call(h_, result, mHardLinkInfo->mPaths, dataObjectId, dataSize, dataHash);
+					}
 				}
 				
 				//
@@ -273,47 +282,82 @@ namespace hermit {
 			class HardLinkInfoContext {
 			public:
 				//
-				HardLinkInfoContext(const FilePathPtr& root) : mRoot(root), mBuildMapResult(BuildHardLinkMapResult::kUnknown) {
+				HardLinkInfoContext(const FilePathPtr& root) :
+				mRoot(root),
+				mBuildMapResult(BuildHardLinkMapResult::kUnknown) {
 				}
 				
 				//
 				FilePathPtr mRoot;
 				BuildHardLinkMapResult mBuildMapResult;
-				HardLinkLookupMap mLookupMap;
 				HardLinkInfoMap mInfoMap;
+				std::mutex mMutex;
 			};
 			typedef std::shared_ptr<HardLinkInfoContext> HardLinkInfoContextPtr;
 			
 			//
 			void ProcessOneItem(const HermitPtr& h_,
-								const HardLinkInfoContextPtr& context,
 								const FilePathPtr& item,
+								const FilePathPtr& root,
+								const HardLinkInfoMap& infoMap,
 								const ProcessHardLinkFunctionPtr& processFunction,
 								const GetHardLinkInfoCompletionFunctionPtr& completion) {
 				std::string relativePath;
-				if (!GetRelativePath(h_, context->mRoot, item, relativePath)) {
-					NOTIFY_ERROR(h_, "GetRelativePath failed for item:", item, "root:", context->mRoot);
-					completion->Call(h_, HardLinkInfoStatus::kError, std::vector<std::string>(), "", 0, "");
+				if (!GetRelativePath(h_, root, item, relativePath)) {
+					NOTIFY_ERROR(h_, "GetRelativePath failed for item:", item, "root:", root);
+					completion->Call(h_, HardLinkInfoResult::kError, std::vector<std::string>(), "", 0, "");
 					return;
 				}
-				auto it = context->mInfoMap.find(relativePath);
-				if (it == context->mInfoMap.end()) {
+				auto it = infoMap.find(relativePath);
+				if (it == end(infoMap)) {
 					NOTIFY_ERROR(h_, "it == context->mInfoMap.end() for relative path:", relativePath);
-					completion->Call(h_, HardLinkInfoStatus::kError, std::vector<std::string>(), "", 0, "");
+					completion->Call(h_, HardLinkInfoResult::kError, std::vector<std::string>(), "", 0, "");
 					return;
 				}
 				HardLinkInfoPtr hardLinkInfo = it->second;
-				if (hardLinkInfo->mStatus == HardLinkInfoStatus::kUnknown) {
-					auto processCompletion = std::make_shared<ProcessCallback>(hardLinkInfo, completion);
+				
+				auto result = HardLinkInfoResult::kUnknown;
+				bool weShouldProcessItem = false;
+				{
+					std::lock_guard<std::mutex> lock(hardLinkInfo->mMutex);
+					result = hardLinkInfo->mResult;
+					if ((result == HardLinkInfoResult::kUnknown) || (result == HardLinkInfoResult::kDeferred)) {
+						hardLinkInfo->mClients.push_back(completion);
+						if (!hardLinkInfo->mProcessing) {
+							weShouldProcessItem = true;
+							hardLinkInfo->mProcessing = true;
+						}
+					}
+				}
+				if (weShouldProcessItem) {
+					auto processCompletion = std::make_shared<ProcessCallback>(hardLinkInfo);
 					processFunction->Call(h_, processCompletion);
 					return;
 				}
-				completion->Call(h_,
-								 hardLinkInfo->mStatus,
-								 hardLinkInfo->mPaths,
-								 hardLinkInfo->mDataObjectId,
-								 hardLinkInfo->mDataSize,
-								 hardLinkInfo->mDataHash);
+
+				if (result == HardLinkInfoResult::kUnknown) {
+					// will be handled upon process completion
+					return;
+				}
+				if (result == HardLinkInfoResult::kDeferred) {
+					completion->Call(h_, HardLinkInfoResult::kDeferred, std::vector<std::string>(), "", 0, "");
+					return;
+				}
+				if (result == HardLinkInfoResult::kCanceled) {
+					completion->Call(h_, HardLinkInfoResult::kCanceled, std::vector<std::string>(), "", 0, "");
+					return;
+				}
+				if (result == HardLinkInfoResult::kSuccess) {
+					completion->Call(h_,
+									 HardLinkInfoResult::kSuccess,
+									 hardLinkInfo->mPaths,
+									 hardLinkInfo->mDataObjectId,
+									 hardLinkInfo->mDataSize,
+									 hardLinkInfo->mDataHash);
+					return;
+				}
+				NOTIFY_ERROR(h_, "HardLinkInfoResult error");
+				completion->Call(h_, result, std::vector<std::string>(), "", 0, "");
 			}
 			
 			//
@@ -322,100 +366,41 @@ namespace hermit {
 							 const FilePathPtr& item,
 							 const ProcessHardLinkFunctionPtr& processFunction,
 							 const GetHardLinkInfoCompletionFunctionPtr& completion) {
-				if (context->mBuildMapResult == BuildHardLinkMapResult::kUnknown) {
-					HardLinkLookupMap lookupMap;
-					HardLinkInfoMap infoMap;
-					auto status = BuildHardLinkMap(h_, context->mRoot, lookupMap);
-					if (status == BuildHardLinkMapResult::kSuccess) {
-						status = BuildHardLinkInfoMap(h_, context->mRoot, lookupMap, infoMap);
-						if (status == BuildHardLinkMapResult::kError) {
-							NOTIFY_ERROR(h_, "BuildHardLinkInfoMap failed.");
+				auto result = BuildHardLinkMapResult::kUnknown;
+				{
+					std::lock_guard<std::mutex> lock(context->mMutex);
+					if (context->mBuildMapResult == BuildHardLinkMapResult::kUnknown) {
+						HardLinkLookupMap lookupMap;
+						HardLinkInfoMap infoMap;
+						auto result = BuildHardLinkMap(h_, context->mRoot, lookupMap);
+						if (result == BuildHardLinkMapResult::kSuccess) {
+							result = BuildHardLinkInfoMap(h_, context->mRoot, lookupMap, infoMap);
+							if (result == BuildHardLinkMapResult::kError) {
+								NOTIFY_ERROR(h_, "BuildHardLinkInfoMap failed.");
+							}
 						}
+						else if (result != BuildHardLinkMapResult::kCanceled) {
+							NOTIFY_ERROR(h_, "BuildHardLinkMap failed.");
+						}
+						if (result == BuildHardLinkMapResult::kSuccess) {
+							context->mInfoMap.swap(infoMap);
+						}
+						context->mBuildMapResult = result;
 					}
-					else if (status != BuildHardLinkMapResult::kCanceled) {
-						NOTIFY_ERROR(h_, "BuildHardLinkMap failed.");
-					}
-					context->mBuildMapResult = status;
-					
-					if (status == BuildHardLinkMapResult::kCanceled) {
-						completion->Call(h_, HardLinkInfoStatus::kCanceled, std::vector<std::string>(), "", 0, "");
-						return;
-					}
-					if (status != BuildHardLinkMapResult::kSuccess) {
-						completion->Call(h_, HardLinkInfoStatus::kError, std::vector<std::string>(), "", 0, "");
-						return;
-					}
-					context->mLookupMap.swap(lookupMap);
-					context->mInfoMap.swap(infoMap);
+					result = context->mBuildMapResult;
 				}
-				
-				if ((context->mBuildMapResult == BuildHardLinkMapResult::kCanceled) || (CHECK_FOR_ABORT(h_))) {
-					completion->Call(h_, HardLinkInfoStatus::kCanceled, std::vector<std::string>(), "", 0, "");
+				if ((result == BuildHardLinkMapResult::kCanceled) || (CHECK_FOR_ABORT(h_))) {
+					completion->Call(h_, HardLinkInfoResult::kCanceled, std::vector<std::string>(), "", 0, "");
 					return;
 				}
-				if (context->mBuildMapResult == BuildHardLinkMapResult::kError) {
-					completion->Call(h_, HardLinkInfoStatus::kError, std::vector<std::string>(), "", 0, "");
+				if (result != BuildHardLinkMapResult::kSuccess) {
+					NOTIFY_ERROR(h_, "result != BuildHardLinkMapResult::kSuccess");
+					completion->Call(h_, HardLinkInfoResult::kError, std::vector<std::string>(), "", 0, "");
 					return;
 				}
 				
-				ProcessOneItem(h_, context, item, processFunction, completion);
+				ProcessOneItem(h_, item, context->mRoot, context->mInfoMap, processFunction, completion);
 			}
-			
-			//
-			class Task : public AsyncTask {
-			public:
-				//
-				Task(const HardLinkInfoContextPtr& inContext,
-					 const FilePathPtr& item,
-					 const ProcessHardLinkFunctionPtr& processFunction,
-					 const GetHardLinkInfoCompletionFunctionPtr& completion) :
-				mContext(inContext),
-				mItem(item),
-				mProcessFunction(processFunction),
-				mCompletion(completion) {
-				}
-				
-				//
-				virtual void PerformTask(const HermitPtr& h_) override {
-					PerformWork(h_,
-								mContext,
-								mItem,
-								mProcessFunction,
-								mCompletion);
-				}
-				
-				//
-				HardLinkInfoContextPtr mContext;
-				FilePathPtr mItem;
-				ProcessHardLinkFunctionPtr mProcessFunction;
-				GetHardLinkInfoCompletionFunctionPtr mCompletion;
-			};
-			
-			//
-			class CompletionProxy : public GetHardLinkInfoCompletionFunction {
-			public:
-				//
-				CompletionProxy(const HardLinkMapPtr& hardLinkMap,
-								const GetHardLinkInfoCompletionFunctionPtr& completion) :
-				mHardLinkMap(hardLinkMap),
-				mCompletion(completion) {
-				}
-				
-				//
-				virtual void Call(const HermitPtr& h_,
-								  const HardLinkInfoStatus& status,
-								  const std::vector<std::string>& paths,
-								  const std::string& objectDataId,
-								  const uint64_t& dataSize,
-								  const std::string& dataHash) override {
-					mCompletion->Call(h_, status, paths, objectDataId, dataSize, dataHash);
-					mHardLinkMap->TaskComplete();
-				}
-
-				//
-				HardLinkMapPtr mHardLinkMap;
-				GetHardLinkInfoCompletionFunctionPtr mCompletion;
-			};
 			
 		} // namespace HardLinkMap_Impl
 		using namespace HardLinkMap_Impl;
@@ -446,12 +431,7 @@ namespace hermit {
 							   const FilePathPtr& item,
 							   const ProcessHardLinkFunctionPtr& processFunction,
 							   const GetHardLinkInfoCompletionFunctionPtr& completion) {
-			auto completionProxy = std::make_shared<CompletionProxy>(shared_from_this(), completion);
-			auto task = std::make_shared<Task>(mImpl->mContext, item, processFunction, completionProxy);
-			if (!QueueTask(h_, task)) {
-				NOTIFY_ERROR(h_, "QueueTask failed");
-				completion->Call(h_, HardLinkInfoStatus::kError, std::vector<std::string>(), "", 0, "");
-			}
+			PerformWork(h_, mImpl->mContext, item, processFunction, completion);
 		}
 		
 	} // namespace file

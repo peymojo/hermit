@@ -22,15 +22,15 @@
 #include "Hermit/File/FilePath.h"
 #include "Hermit/Foundation/AsyncFunction.h"
 #include "Hermit/Foundation/Hermit.h"
-#include "Hermit/Foundation/TaskQueue.h"
 
 namespace hermit {
 	namespace file {
 		
 		//
-		enum class HardLinkInfoStatus {
+		enum class HardLinkInfoResult {
 			kUnknown,
 			kSuccess,
+			kDeferred,
 			kCanceled,
 			kStorageFull,
 			kError
@@ -39,7 +39,7 @@ namespace hermit {
 		//
 		DEFINE_ASYNC_FUNCTION_5A(ProcessHardLinkCompletionFunction,
 								 HermitPtr,
-								 HardLinkInfoStatus,							// status
+								 HardLinkInfoResult,							// result
 								 std::string,									// objectDataId
 								 uint64_t,										// dataSize
 								 std::string);									// dataHash
@@ -52,7 +52,7 @@ namespace hermit {
 		//
 		DEFINE_ASYNC_FUNCTION_6A(GetHardLinkInfoCompletionFunction,
 								 HermitPtr,
-								 HardLinkInfoStatus,							// status
+								 HardLinkInfoResult,							// result
 								 std::vector<std::string>,						// paths
 								 std::string,									// objectDataId
 								 uint64_t,										// dataSize
@@ -70,7 +70,7 @@ namespace hermit {
 		typedef std::shared_ptr<HardLinkMapImpl> HardLinkMapImplPtr;
 		
 		//
-		class HardLinkMap : public GetHardLinkInfoFunction, public TaskQueue, public std::enable_shared_from_this<HardLinkMap> {
+		class HardLinkMap : public GetHardLinkInfoFunction, public std::enable_shared_from_this<HardLinkMap> {
 		public:
 			//
 			HardLinkMap(const FilePathPtr& rootItem);

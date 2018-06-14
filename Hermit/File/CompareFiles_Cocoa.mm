@@ -658,38 +658,38 @@ namespace hermit {
 				mIgnoreDates(ignoreDates),
 				mIgnoreFinderInfo(ignoreFinderInfo),
 				mCompletion(completion),
-				mStatus1(HardLinkInfoStatus::kUnknown),
+				mResult1(HardLinkInfoResult::kUnknown),
 				mDataSize1(0),
-				mStatus2(HardLinkInfoStatus::kUnknown),
+				mResult2(HardLinkInfoResult::kUnknown),
 				mDataSize2(0) {
 				}
 
 				//
 				void HandleResult(const HermitPtr &h_,
 								  const int& whichFile,
-								  const HardLinkInfoStatus& status,
+								  const HardLinkInfoResult& result,
 								  const std::vector<std::string>& paths,
 								  const uint64_t& dataSize) {
 					std::lock_guard<std::mutex> guard(mMutex);
 					
 					if (whichFile == 1) {
-						mStatus1 = status;
+						mResult1 = result;
 						mPaths1 = paths;
 						mDataSize1 = dataSize;
 					}
 					else {
-						mStatus2 = status;
+						mResult2 = result;
 						mPaths2 = paths;
 						mDataSize2 = dataSize;
 					}
 					
-					if ((mStatus1 != HardLinkInfoStatus::kUnknown) && (mStatus2 != HardLinkInfoStatus::kUnknown)) {
-						if ((mStatus1 == HardLinkInfoStatus::kCanceled) || (mStatus2 == HardLinkInfoStatus::kCanceled)) {
+					if ((mResult1 != HardLinkInfoResult::kUnknown) && (mResult2 != HardLinkInfoResult::kUnknown)) {
+						if ((mResult1 == HardLinkInfoResult::kCanceled) || (mResult2 == HardLinkInfoResult::kCanceled)) {
 							mCompletion->Call(CompareFilesStatus::kCancel);
 							return;
 						}
-						if ((mStatus1 != HardLinkInfoStatus::kSuccess) || (mStatus2 != HardLinkInfoStatus::kSuccess)) {
-							NOTIFY_ERROR(h_, "HardLinkInfoStatus != kSuccess");
+						if ((mResult1 != HardLinkInfoResult::kSuccess) || (mResult2 != HardLinkInfoResult::kSuccess)) {
+							NOTIFY_ERROR(h_, "HardLinkInfoResult != kSuccess");
 							mCompletion->Call(CompareFilesStatus::kError);
 							return;
 						}
@@ -716,10 +716,10 @@ namespace hermit {
 				
 				//
 				std::mutex mMutex;
-				HardLinkInfoStatus mStatus1;
+				HardLinkInfoResult mResult1;
 				std::vector<std::string> mPaths1;
 				uint64_t mDataSize1;
-				HardLinkInfoStatus mStatus2;
+				HardLinkInfoResult mResult2;
 				std::vector<std::string> mPaths2;
 				uint64_t mDataSize2;
 			};
@@ -738,10 +738,10 @@ namespace hermit {
 					GetFileTotalSize(h_, mFilePath, sizeCallback);
 					if (!sizeCallback.mSuccess) {
 						NOTIFY_ERROR(h_, "GetFileTotalSize failed.");
-						completion->Call(h_, HardLinkInfoStatus::kError, "", 0, "");
+						completion->Call(h_, HardLinkInfoResult::kError, "", 0, "");
 						return;
 					}
-					completion->Call(h_, HardLinkInfoStatus::kSuccess, "", sizeCallback.mTotalSize, "");
+					completion->Call(h_, HardLinkInfoResult::kSuccess, "", sizeCallback.mTotalSize, "");
 				}
 				
 				//
@@ -759,12 +759,12 @@ namespace hermit {
 				
 				//
 				virtual void Call(const HermitPtr &h_,
-								  const HardLinkInfoStatus& status,
+								  const HardLinkInfoResult& result,
 								  const std::vector<std::string>& paths,
 								  const std::string& objectDataId,
 								  const uint64_t& dataSize,
 								  const std::string& dataHash) override {
-					mCompareClass->HandleResult(h_, mWhichFile, status, paths, dataSize);
+					mCompareClass->HandleResult(h_, mWhichFile, result, paths, dataSize);
 				}
 				
 				//
