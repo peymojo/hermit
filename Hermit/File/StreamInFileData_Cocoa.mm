@@ -28,110 +28,6 @@
 namespace hermit {
 	namespace file {
 		
-		namespace {
-			
-			//
-			class FileStreamer : public std::enable_shared_from_this<FileStreamer> {
-				//
-				typedef std::shared_ptr<FileStreamer> FileStreamerPtr;
-				
-			public:
-				//
-				FileStreamer(const FilePathPtr& filePath,
-							 NSFileHandle* fileHandle,
-							 std::uint64_t chunkSize,
-							 const DataHandlerBlockPtr& dataHandler,
-							 const StreamResultBlockPtr& completion) :
-				mFilePath(filePath),
-				mFileHandle(fileHandle),
-				mChunkSize(chunkSize),
-				mIsLastChunk(false),
-				mDataHandler(dataHandler),
-				mCompletion(completion) {
-				}
-				
-				//
-				class StreamTask : public AsyncTask {
-				public:
-					//
-					StreamTask(const FileStreamerPtr& streamer) : mStreamer(streamer) {
-					}
-					
-					//
-					virtual void PerformTask(const HermitPtr& h_) override {
-						mStreamer->PerformStreamTask(h_);
-					}
-					
-					//
-					FileStreamerPtr mStreamer;
-				};
-				
-				//
-				void StreamNextChunk(const HermitPtr& h_) {
-					auto task = std::make_shared<StreamTask>(shared_from_this());
-					if (!QueueAsyncTask(h_, task, 1)) {
-						NOTIFY_ERROR(h_, "StreamInFileData: QueueAsyncTask failed.");
-						mCompletion->Call(h_, StreamDataResult::kError);
-						return;
-					}
-				}
-				//
-				void PerformStreamTask(const HermitPtr& h_) {
-					@autoreleasepool {
-						@try {
-							NSData* data = [mFileHandle readDataOfLength:(size_t)mChunkSize];
-							uint64_t actualCount = [data length];
-							const char* dataP = nullptr;
-							if (actualCount > 0) {
-								dataP = (const char*)[data bytes];
-							}
-							
-							mIsLastChunk = (actualCount < mChunkSize);
-							auto result = mDataHandler->HandleData(h_, DataBuffer(dataP, actualCount), mIsLastChunk);
-							ChunkComplete(h_, result);
-						}
-						@catch (NSException* ex) {
-							NOTIFY_ERROR(h_,
-										 "StreamInFileData: inner exception:", mFilePath,
-										 "name:", [[ex name] UTF8String],
-										 "reason:", [[ex reason] UTF8String]);
-							mCompletion->Call(h_, StreamDataResult::kError);
-						}
-					}
-				}
-				
-				//
-				void ChunkComplete(const HermitPtr& h_, StreamDataResult result) {
-					if (result == StreamDataResult::kCanceled) {
-						[mFileHandle closeFile];
-						mCompletion->Call(h_, result);
-						return;
-					}
-					if (result != StreamDataResult::kSuccess) {
-						NOTIFY_ERROR(h_, "StreamInFileData: inDataHandler failed, path:", mFilePath);
-						[mFileHandle closeFile];
-						mCompletion->Call(h_, result);
-						return;
-					}
-					if (mIsLastChunk) {
-						[mFileHandle closeFile];
-						mCompletion->Call(h_, result);
-						return;
-					}
-					StreamNextChunk(h_);
-				}
-
-				//
-				FilePathPtr mFilePath;
-				NSFileHandle* mFileHandle;
-				std::uint64_t mChunkSize;
-				bool mIsLastChunk;
-				DataHandlerBlockPtr mDataHandler;
-				StreamResultBlockPtr mCompletion;
-			};
-			
-		} // private namespace
-		
 		//
 		void StreamInFileData(const HermitPtr& h_,
 							  const FilePathPtr& filePath,
@@ -159,8 +55,34 @@ namespace hermit {
 					if (chunkSize == 0) {
 						chunkSize = 1024 * 1024;
 					}
-					auto streamer = std::make_shared<FileStreamer>(filePath, fileHandle, chunkSize, dataHandler, completion);
-					streamer->StreamNextChunk(h_);
+					
+					while (true) {
+						NSData* data = [fileHandle readDataOfLength:(size_t)chunkSize];
+						uint64_t actualCount = [data length];
+						const char* dataP = nullptr;
+						if (actualCount > 0) {
+							dataP = (const char*)[data bytes];
+						}
+						
+						bool isLastChunk = (actualCount < chunkSize);
+						auto result = dataHandler->HandleData(h_, DataBuffer(dataP, actualCount), isLastChunk);
+						if (result == StreamDataResult::kCanceled) {
+							[fileHandle closeFile];
+							completion->Call(h_, result);
+							break;
+						}
+						if (result != StreamDataResult::kSuccess) {
+							NOTIFY_ERROR(h_, "StreamInFileData: inDataHandler failed, path:", filePath);
+							[fileHandle closeFile];
+							completion->Call(h_, result);
+							break;
+						}
+						if (isLastChunk) {
+							[fileHandle closeFile];
+							completion->Call(h_, result);
+							break;
+						}
+					}
 				}
 				@catch (NSException* ex) {
 					NOTIFY_ERROR(h_, "StreamInFileData: outer exception:", filePath);
