@@ -128,14 +128,11 @@ namespace hermit {
 				}
 				
 				//
-				virtual void HandleData(const HermitPtr& h_,
-										const DataBuffer& data,
-										bool isEndOfData,
-										const StreamResultBlockPtr& resultBlock) override {
+				virtual StreamDataResult HandleData(const HermitPtr& h_, const DataBuffer& data, bool isEndOfData) override {
 					if (data.second > 0) {
 						mData.append(data.first, data.second);
 					}
-					mDataHandler->HandleData(h_, data, isEndOfData, resultBlock);
+					return mDataHandler->HandleData(h_, data, isEndOfData);
 				}
 				
 				//

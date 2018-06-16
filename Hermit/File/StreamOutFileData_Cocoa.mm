@@ -40,10 +40,7 @@ namespace hermit {
 				}
 				
 				//
-				virtual void HandleData(const HermitPtr& h_,
-										const DataBuffer& data,
-										bool isEndOfData,
-										const StreamResultBlockPtr& resultBlock) override {
+				virtual StreamDataResult HandleData(const HermitPtr& h_, const DataBuffer& data, bool isEndOfData) override {
 					if (data.second > 0) {
 						const uint64_t kBlockSize = 1024 * 1024 * 64;
 						
@@ -63,15 +60,13 @@ namespace hermit {
 							@catch (NSException* exception) {
 								//	Fugly... but does Cocoa provide a structured way of figuring out what the actual error is?
 								if ([exception.reason containsString:@"No space left on device"]) {
-									resultBlock->Call(h_, StreamDataResult::kDiskFull);
-									return;
+									return StreamDataResult::kDiskFull;
 								}
 
 								NOTIFY_ERROR(h_,
 											 "DataWriter: exception during writeData:", [exception.name UTF8String],
 											 "reason:", [exception.reason UTF8String]);
-								resultBlock->Call(h_, StreamDataResult::kError);
-								return;
+								return StreamDataResult::kError;
 							}
 							
 							mBytesWritten += bytesToWrite;
@@ -82,7 +77,7 @@ namespace hermit {
 							bytesRemaining -= bytesToWrite;
 						}
 					}
-					resultBlock->Call(h_, StreamDataResult::kSuccess);
+					return StreamDataResult::kSuccess;
 				}
 				
 				//

@@ -56,22 +56,6 @@ namespace hermit {
 			}
 			
 			//
-			class ResultBlock : public StreamResultBlock {
-			public:
-				//
-				ResultBlock(const DataLoaderPtr& dataLoader) : mDataLoader(dataLoader) {
-				}
-				
-				//
-				virtual void Call(const HermitPtr& h_, StreamDataResult result) override {
-					mDataLoader->DataHandled(h_, result);
-				}
-				
-				//
-				DataLoaderPtr mDataLoader;
-			};
-			
-			//
 			class LoadTask : public AsyncTask {
 			public:
 				//
@@ -129,8 +113,8 @@ namespace hermit {
 					mCompletion->Call(h_, LoadFileDataResult::kError);
 					return;
 				}
-				auto resultBlock = std::make_shared<ResultBlock>(shared_from_this());
-				mDataHandler->HandleData(h_, DataBuffer(mBuf, bytesRead), false, resultBlock);
+				auto result = mDataHandler->HandleData(h_, DataBuffer(mBuf, bytesRead), false);
+				DataHandled(h_, result);
 			}
 			
 			//
@@ -149,9 +133,9 @@ namespace hermit {
 					return;
 				}
 				if (::feof(mFileHandle)) {
-					auto resultBlock = std::make_shared<ResultBlock>(shared_from_this());
 					mDone = true;
-					mDataHandler->HandleData(h_, DataBuffer("", 0), true, resultBlock);
+					auto dataResult = mDataHandler->HandleData(h_, DataBuffer("", 0), true);
+					DataHandled(h_, dataResult);
 					return;
 				}
 				LoadNextChunk(h_);

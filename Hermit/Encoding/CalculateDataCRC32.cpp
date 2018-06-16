@@ -33,12 +33,9 @@ namespace hermit {
 				}
 				
 				//
-				virtual void HandleData(const HermitPtr& h_,
-										const DataBuffer& data,
-										bool isEndOfData,
-										const StreamResultBlockPtr& resultBlock) override {
+				virtual StreamDataResult HandleData(const HermitPtr& h_, const DataBuffer& data, bool isEndOfData) override {
 					mCRC = UpdateCRC32(mCRC, data.first, data.second);
-					resultBlock->Call(h_, StreamDataResult::kSuccess);
+					return StreamDataResult::kSuccess;
 				}
 				
 				//

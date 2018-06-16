@@ -26,17 +26,14 @@ namespace hermit {
 		namespace FileDataStore_LoadData_Impl {
 			
 			//
-			class DataBlock : public hermit::DataHandlerBlock {
+			class DataBlock : public DataHandlerBlock {
 			public:
 				//
-				virtual void HandleData(const hermit::HermitPtr& h_,
-										const hermit::DataBuffer& data,
-										bool isEndOfData,
-										const hermit::StreamResultBlockPtr& resultBlock) override {
+				virtual StreamDataResult HandleData(const HermitPtr& h_, const DataBuffer& data, bool isEndOfData) override {
 					if (data.second > 0) {
 						mData.append(data.first, data.second);
 					}
-					resultBlock->Call(h_, hermit::StreamDataResult::kSuccess);
+					return StreamDataResult::kSuccess;
 				}
 				
 				//

@@ -48,14 +48,11 @@ namespace hermit {
 			class DataHandler : public DataHandlerBlock {
 			public:
 				//
-				virtual void HandleData(const HermitPtr& h_,
-										const DataBuffer& data,
-										bool isEndOfData,
-										const StreamResultBlockPtr& resultBlock) override {
+				virtual StreamDataResult HandleData(const HermitPtr& h_, const DataBuffer& data, bool isEndOfData) override {
 					if (data.second > 0) {
 						mData.append(data.first, data.second);
 					}
-					resultBlock->Call(h_, StreamDataResult::kSuccess);
+					return StreamDataResult::kSuccess;
 				}
 				
 				//
@@ -154,31 +151,6 @@ namespace hermit {
 				ParseStateStack mParseStateStack;
 				std::string mCode;
 				std::string mEndpoint;
-			};
-			
-			//
-			class StreamResult : public StreamResultBlock {
-			public:
-				//
-				StreamResult(const S3CompletionBlockPtr& completion) : mCompletion(completion) {
-				}
-				
-				//
-				virtual void Call(const HermitPtr& h_, StreamDataResult result) {
-					if (result == StreamDataResult::kCanceled) {
-						mCompletion->Call(h_, S3Result::kCanceled);
-						return;
-					}
-					if (result != StreamDataResult::kSuccess) {
-						NOTIFY_ERROR(h_, "StreamData failed.");
-						mCompletion->Call(h_, S3Result::kError);
-						return;
-					}
-					mCompletion->Call(h_, S3Result::kSuccess);
-				}
-				
-				//
-				S3CompletionBlockPtr mCompletion;
 			};
 			
 			//
@@ -331,11 +303,18 @@ namespace hermit {
 								}
 							}
 							
-							auto resultBlock = std::make_shared<StreamResult>(mCompletion);
-							mTheirDataHandler->HandleData(h_,
-														  DataBuffer(mOurDataHandler->mData.data(), mOurDataHandler->mData.size()),
-														  true,
-														  resultBlock);
+							auto buffer = DataBuffer(mOurDataHandler->mData.data(), mOurDataHandler->mData.size());
+							auto result = mTheirDataHandler->HandleData(h_, buffer, true);
+							if (result == StreamDataResult::kCanceled) {
+								mCompletion->Call(h_, S3Result::kCanceled);
+								return;
+							}
+							if (result != StreamDataResult::kSuccess) {
+								NOTIFY_ERROR(h_, "StreamData failed.");
+								mCompletion->Call(h_, S3Result::kError);
+								return;
+							}
+							mCompletion->Call(h_, S3Result::kSuccess);
 						}
 					}
 					

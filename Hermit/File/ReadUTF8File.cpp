@@ -29,14 +29,13 @@ namespace hermit {
 			class DataBlock : public hermit::DataHandlerBlock {
 			public:
 				//
-				virtual void HandleData(const hermit::HermitPtr& h_,
-										const hermit::DataBuffer& data,
-										bool isEndOfData,
-										const hermit::StreamResultBlockPtr& resultBlock) override {
+				virtual StreamDataResult HandleData(const hermit::HermitPtr& h_,
+													const hermit::DataBuffer& data,
+													bool isEndOfData) override {
 					if (data.second > 0) {
 						mData.append(data.first, data.second);
 					}
-					resultBlock->Call(h_, hermit::StreamDataResult::kSuccess);
+					return hermit::StreamDataResult::kSuccess;
 				}
 				
 				//

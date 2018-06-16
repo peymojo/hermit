@@ -313,10 +313,7 @@ namespace hermit {
 				}
 				
 				//
-				virtual void HandleData(const HermitPtr& h_,
-										const DataBuffer& data,
-										bool isEndOfData,
-										const StreamResultBlockPtr& resultBlock) override {
+				virtual StreamDataResult HandleData(const HermitPtr& h_, const DataBuffer& data, bool isEndOfData) override {
 					mTotalBytes += data.second;
 					
 					size_t bytesRemaining = (size_t)data.second;
@@ -383,7 +380,7 @@ namespace hermit {
 						ProcessBlocks(mCarryoverBuffer.data(), mCarryoverBuffer.size(), bytesConsumed);
 						mCarryoverBuffer = mCarryoverBuffer.substr((size_t)bytesConsumed);
 					}
-					resultBlock->Call(h_, StreamDataResult::kSuccess);
+					return StreamDataResult::kSuccess;
 				}
 				
 				//

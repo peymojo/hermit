@@ -45,10 +45,7 @@ namespace hermit {
 	class DataHandlerBlock {
 	public:
 		//
-		virtual void HandleData(const HermitPtr& h_,
-								const DataBuffer& data,
-								bool isEndOfData,
-								const StreamResultBlockPtr& resultBlock) = 0;
+		virtual StreamDataResult HandleData(const HermitPtr& h_, const DataBuffer& data, bool isEndOfData) = 0;
 	};
 	typedef std::shared_ptr<DataHandlerBlock> DataHandlerBlockPtr;
 

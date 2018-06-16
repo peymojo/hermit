@@ -35,22 +35,6 @@ namespace hermit {
 				//
 				typedef std::shared_ptr<FileStreamer> FileStreamerPtr;
 				
-				//
-				class Completion : public StreamResultBlock {
-				public:
-					//
-					Completion(const FileStreamerPtr& fileStreamer) : mFileStreamer(fileStreamer) {
-					}
-					
-					//
-					virtual void Call(const HermitPtr& h_, StreamDataResult result) override {
-						mFileStreamer->ChunkComplete(h_, result);
-					}
-					
-					//
-					FileStreamerPtr mFileStreamer;
-				};
-
 			public:
 				//
 				FileStreamer(const FilePathPtr& filePath,
@@ -102,9 +86,9 @@ namespace hermit {
 								dataP = (const char*)[data bytes];
 							}
 							
-							auto completion = std::make_shared<Completion>(shared_from_this());
 							mIsLastChunk = (actualCount < mChunkSize);
-							mDataHandler->HandleData(h_, DataBuffer(dataP, actualCount), mIsLastChunk, completion);
+							auto result = mDataHandler->HandleData(h_, DataBuffer(dataP, actualCount), mIsLastChunk);
+							ChunkComplete(h_, result);
 						}
 						@catch (NSException* ex) {
 							NOTIFY_ERROR(h_,

@@ -21,32 +21,6 @@
 #import "Hermit/Foundation/Notification.h"
 #import "CreateHTTPSession.h"
 
-namespace hermit {
-	namespace http {
-		namespace CreateHTTPSession_Impl {
-			
-			//
-			class StreamResult : public StreamResultBlock {
-			public:
-				//
-				StreamResult() : mResult(StreamDataResult::kUnknown) {
-				}
-				
-				//
-				virtual void Call(const HermitPtr& h_, StreamDataResult result) override {
-					mResult = result;
-				}
-				
-				//
-				StreamDataResult mResult;
-			};
-
-		} // namespace CreateHTTPSession_Impl
-		using namespace CreateHTTPSession_Impl;
-	} // namespace http
-} // namespace hermit
-
-
 // magic key for objc_setAssociatedObject
 static void* const TASK_PARAMS_KEY = (void*)&TASK_PARAMS_KEY;
 
@@ -101,8 +75,10 @@ static void* const TASK_PARAMS_KEY = (void*)&TASK_PARAMS_KEY;
 
 - (void)sendData:(NSData*)data {
 	[data enumerateByteRangesUsingBlock:^(const void *bytes, NSRange byteRange, BOOL *stop) {
-		auto completion = std::make_shared<hermit::http::StreamResult>();
-		self->_dataHandler->HandleData(self->_h_, hermit::DataBuffer((const char*)bytes, byteRange.length), false, completion);
+		auto result = self->_dataHandler->HandleData(self->_h_, hermit::DataBuffer((const char*)bytes, byteRange.length), false);
+		if (result != hermit::StreamDataResult::kSuccess) {
+			NOTIFY_ERROR(self->_h_, "result != StreamDataResult::kSuccess");
+		}
 	}];
 }
 
@@ -210,14 +186,11 @@ namespace hermit {
 			class DataHandler : public DataHandlerBlock {
 			public:
 				//
-				virtual void HandleData(const HermitPtr& h_,
-										const DataBuffer& data,
-										bool isEndOfData,
-										const StreamResultBlockPtr& resultBlock) override {
+				virtual StreamDataResult HandleData(const HermitPtr& h_, const DataBuffer& data, bool isEndOfData) override {
 					if (data.second > 0) {
 						mData.append(data.first, data.second);
 					}
-					resultBlock->Call(h_, StreamDataResult::kSuccess);
+					return StreamDataResult::kSuccess;
 				}
 				
 				//

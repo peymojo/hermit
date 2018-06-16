@@ -42,59 +42,7 @@ namespace hermit {
 				int mLastPercentDone;
 			};
 			typedef std::shared_ptr<Progress> ProgressPtr;
-			
-			//
-			class DataCompletion : public StreamResultBlock {
-			public:
-				//
-				DataCompletion(const ProgressPtr& progress,
-							   uint64_t partSize,
-							   bool isEndOfData,
-							   const StreamResultBlockPtr& resultBlock) :
-				mProgress(progress),
-				mPartSize(partSize),
-				mIsEndOfData(isEndOfData),
-				mResultBlock(resultBlock) {
-				}
-				
-				//
-				virtual void Call(const HermitPtr& h_, StreamDataResult result) override {
-					if (result == StreamDataResult::kCanceled) {
-						mResultBlock->Call(h_, result);
-						return;
-					}
-					if (result != StreamDataResult::kSuccess) {
-						NOTIFY_ERROR(h_, "GetFileMD5WithProgress: mDataHandler returned an error.");
-						mResultBlock->Call(h_, result);
-						return;
-					}
-					
-					mProgress->mBytesProcessed += mPartSize;
-					double percent = mProgress->mBytesProcessed / (double)mProgress->mDataSize;
-					int percentDone = (int)(percent * 100);
-					if ((!mIsEndOfData) && (percentDone > 99)) {
-						percentDone = 99;
-					}
-					if (percentDone > mProgress->mLastPercentDone) {
-						if (CHECK_FOR_ABORT(h_)) {
-							mResultBlock->Call(h_, StreamDataResult::kCanceled);
-							return;
-						}
-						mProgress->mLastPercentDone = percentDone;
 						
-						// [???] not actually reporting the progress here any more, notification mechanism
-						// should be used to do so
-					}
-					mResultBlock->Call(h_, StreamDataResult::kSuccess);
-				}
-				
-				//
-				ProgressPtr mProgress;
-				uint64_t mPartSize;
-				bool mIsEndOfData;
-				StreamResultBlockPtr mResultBlock;
-			};
-			
 			//
 			class DataHandlerProxy : public DataHandlerBlock {
 			public:
@@ -105,12 +53,32 @@ namespace hermit {
 				}
 				
 				//
-				virtual void HandleData(const HermitPtr& h_,
-										const DataBuffer& data,
-										bool isEndOfData,
-										const StreamResultBlockPtr& resultBlock) override {
-					auto dataCompletion = std::make_shared<DataCompletion>(mProgress, data.second, isEndOfData, resultBlock);
-					mDataHandler->HandleData(h_, data, isEndOfData, dataCompletion);
+				virtual StreamDataResult HandleData(const HermitPtr& h_, const DataBuffer& data, bool isEndOfData) override {
+					auto result = mDataHandler->HandleData(h_, data, isEndOfData);
+					if (result == StreamDataResult::kCanceled) {
+						return result;
+					}
+					if (result != StreamDataResult::kSuccess) {
+						NOTIFY_ERROR(h_, "GetFileMD5WithProgress: mDataHandler returned an error.");
+						return result;
+					}
+					
+					mProgress->mBytesProcessed += data.second;
+					double percent = mProgress->mBytesProcessed / (double)mProgress->mDataSize;
+					int percentDone = (int)(percent * 100);
+					if ((!isEndOfData) && (percentDone > 99)) {
+						percentDone = 99;
+					}
+					if (percentDone > mProgress->mLastPercentDone) {
+						if (CHECK_FOR_ABORT(h_)) {
+							return StreamDataResult::kCanceled;
+						}
+						mProgress->mLastPercentDone = percentDone;
+						
+						// [???] not actually reporting the progress here any more, notification mechanism
+						// should be used to do so
+					}
+					return StreamDataResult::kSuccess;
 				}
 				
 				//

@@ -35,7 +35,8 @@ namespace hermit {
 				virtual void ProvideData(const HermitPtr& h_,
 										 const DataHandlerBlockPtr& dataHandler,
 										 const StreamResultBlockPtr& resultBlock) override {
-					return dataHandler->HandleData(h_, mData, true, resultBlock);
+					auto result = dataHandler->HandleData(h_, mData, true);
+					resultBlock->Call(h_, result);
 				}
 				
 				//
