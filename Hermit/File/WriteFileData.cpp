@@ -62,6 +62,10 @@ namespace hermit {
 						mCompletion->Call(h_, WriteFileDataResult::kDiskFull);
 						return;
 					}
+					if (result == StreamDataResult::kNoSuchFile) {
+						mCompletion->Call(h_, WriteFileDataResult::kNoSuchFile);
+						return;
+					}
 					if (result != StreamDataResult::kSuccess) {
 						NOTIFY_ERROR(h_, "WriteFileData: StreamOutFileData failed.");
 						mCompletion->Call(h_, WriteFileDataResult::kError);

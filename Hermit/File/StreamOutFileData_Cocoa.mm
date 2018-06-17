@@ -156,6 +156,12 @@ namespace hermit {
 							resultBlock->Call(h_, StreamDataResult::kDiskFull);
 							return;
 						}
+						if ((error != nil) &&
+							[error.domain isEqualToString:NSCocoaErrorDomain] &&
+							(error.code == NSFileNoSuchFileError)) {
+							resultBlock->Call(h_, StreamDataResult::kNoSuchFile);
+							return;
+						}
 						
 						if (error != nil) {
 							NSInteger errorCode = [error code];

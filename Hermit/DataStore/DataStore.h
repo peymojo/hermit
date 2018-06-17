@@ -116,10 +116,11 @@ namespace hermit {
 		enum class WriteDataStoreDataResult {
 			kUnknown,
 			kSuccess,
+			kCanceled,
 			kAccessDenied,
 			kTimedOut,
 			kStorageFull,
-			kCanceled,
+			kNoSuchFile,
 			kError
 		};
 		

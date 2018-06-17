@@ -39,11 +39,20 @@ namespace hermit {
 				
 				//
 				virtual void Call(const HermitPtr& h_, const file::WriteFileDataResult& result) override {
+					if (result == file::WriteFileDataResult::kCanceled) {
+						mCompletion->Call(h_, datastore::WriteDataStoreDataResult::kCanceled);
+						return;
+					}
 					if (result == file::WriteFileDataResult::kDiskFull) {
                         mCompletion->Call(h_, datastore::WriteDataStoreDataResult::kStorageFull);
 						return;
 					}
+					if (result == file::WriteFileDataResult::kNoSuchFile) {
+						mCompletion->Call(h_, datastore::WriteDataStoreDataResult::kNoSuchFile);
+						return;
+					}
 					if (result != file::WriteFileDataResult::kSuccess) {
+						NOTIFY_ERROR(h_, "WriteFileData failed.");
 						mCompletion->Call(h_, datastore::WriteDataStoreDataResult::kError);
 						return;
 					}

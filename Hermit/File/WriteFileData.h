@@ -33,6 +33,7 @@ namespace hermit {
 			kSuccess,
 			kCanceled,
 			kDiskFull,
+			kNoSuchFile,
 			kError
 		};
 		//
