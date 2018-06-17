@@ -50,7 +50,9 @@ namespace hermit {
 					NSArray* items = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:pathString error:&error];
 					if (error != nil) {
 						auto result = ListDirectoryContentsResult::kError;
-						if (error.code == NSFileReadNoPermissionError) {
+						if (error.code == NSFileReadNoSuchFileError) {
+							result = ListDirectoryContentsResult::kDirectoryNotFound;
+						} else if (error.code == NSFileReadNoPermissionError) {
 							result = ListDirectoryContentsResult::kPermissionDenied;
 						}
 						else {
