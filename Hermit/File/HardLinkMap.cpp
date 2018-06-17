@@ -321,7 +321,7 @@ namespace hermit {
 				{
 					std::lock_guard<std::mutex> lock(hardLinkInfo->mMutex);
 					result = hardLinkInfo->mResult;
-					if ((result == HardLinkInfoResult::kUnknown) || (result == HardLinkInfoResult::kDeferred)) {
+					if (result == HardLinkInfoResult::kUnknown) {
 						hardLinkInfo->mClients.push_back(completion);
 						if (!hardLinkInfo->mProcessing) {
 							weShouldProcessItem = true;
@@ -337,10 +337,6 @@ namespace hermit {
 
 				if (result == HardLinkInfoResult::kUnknown) {
 					// will be handled upon process completion
-					return;
-				}
-				if (result == HardLinkInfoResult::kDeferred) {
-					completion->Call(h_, HardLinkInfoResult::kDeferred, std::vector<std::string>(), "", 0, "");
 					return;
 				}
 				if (result == HardLinkInfoResult::kCanceled) {

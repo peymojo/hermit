@@ -30,7 +30,6 @@ namespace hermit {
 		enum class HardLinkInfoResult {
 			kUnknown,
 			kSuccess,
-			kDeferred,
 			kCanceled,
 			kStorageFull,
 			kError
