@@ -20,7 +20,6 @@
 #include "Hermit/File/CreateDirectoryParentChain.h"
 #include "Hermit/File/GetFilePathParent.h"
 #include "Hermit/File/WriteFileData.h"
-#include "Hermit/Foundation/AsyncTaskQueue.h"
 #include "Hermit/Foundation/Notification.h"
 #include "FileDataStore.h"
 #include "FilePathDataPath.h"
@@ -63,72 +62,6 @@ namespace hermit {
 				datastore::WriteDataStoreDataCompletionFunctionPtr mCompletion;
 			};
 			
-			//
-			void PerformWork(const HermitPtr& h_,
-							 const datastore::DataStorePtr& dataStore,
-							 const datastore::DataPathPtr& path,
-							 const SharedBufferPtr& data,
-							 const datastore::EncryptionSetting& encryptionSetting,
-							 const datastore::WriteDataStoreDataCompletionFunctionPtr& completion) {
-				if (CHECK_FOR_ABORT(h_)) {
-					completion->Call(h_, datastore::WriteDataStoreDataResult::kCanceled);
-					return;
-				}
-				
-				FilePathDataPath& fileDataPath = static_cast<FilePathDataPath&>(*path);
-				
-				file::FilePathPtr parentPath;
-				file::GetFilePathParent(h_, fileDataPath.mFilePath, parentPath);
-				if (parentPath == nullptr) {
-					NOTIFY_ERROR(h_, "GetFilePathParent failed.");
-					completion->Call(h_, datastore::WriteDataStoreDataResult::kError);
-					return;
-				}
-				auto createResult = file::CreateDirectoryParentChain(h_, parentPath);
-				if (createResult != file::CreateDirectoryParentChainResult::kSuccess) {
-					NOTIFY_ERROR(h_, "CreateDirectoryParentChain failed.");
-					completion->Call(h_, datastore::WriteDataStoreDataResult::kError);
-					return;
-				}
-				
-				auto writeCompletion = std::make_shared<Completion>(completion);
-				file::WriteFileData(h_, fileDataPath.mFilePath, DataBuffer(data->Data(), data->Size()), writeCompletion);
-			}
-			
-			//
-			class Task : public AsyncTask {
-			public:
-				//
-				Task(const datastore::DataStorePtr& dataStore,
-					 const datastore::DataPathPtr& path,
-					 const SharedBufferPtr& data,
-					 const datastore::EncryptionSetting& encryptionSetting,
-					 const datastore::WriteDataStoreDataCompletionFunctionPtr& completion) :
-				mDataStore(dataStore),
-				mPath(path),
-				mData(data),
-				mEncryptionSetting(encryptionSetting),
-				mCompletion(completion) {
-				}
-				
-				//
-				virtual void PerformTask(const HermitPtr& h_) override {
-					PerformWork(h_,
-								mDataStore,
-								mPath,
-								mData,
-								mEncryptionSetting,
-								mCompletion);
-				}
-				
-				//
-				datastore::DataStorePtr mDataStore;
-				datastore::DataPathPtr mPath;
-				SharedBufferPtr mData;
-				datastore::EncryptionSetting mEncryptionSetting;
-				datastore::WriteDataStoreDataCompletionFunctionPtr mCompletion;
-			};
-			
 		} // namespace FileDataStore_WriteData_Impl
         using namespace FileDataStore_WriteData_Impl;
 		
@@ -138,15 +71,29 @@ namespace hermit {
                                       const SharedBufferPtr& data,
                                       const datastore::EncryptionSetting& encryptionSetting,
                                       const datastore::WriteDataStoreDataCompletionFunctionPtr& completion) {
-			auto task = std::make_shared<Task>(shared_from_this(),
-											   path,
-											   data,
-											   encryptionSetting,
-											   completion);
-			if (!QueueAsyncTask(h_, task, 15)) {
-				NOTIFY_ERROR(h_, "QueueAsyncTask failed.");
-				completion->Call(h_, datastore::WriteDataStoreDataResult::kError);
+			if (CHECK_FOR_ABORT(h_)) {
+				completion->Call(h_, datastore::WriteDataStoreDataResult::kCanceled);
+				return;
 			}
+			
+			FilePathDataPath& fileDataPath = static_cast<FilePathDataPath&>(*path);
+			
+			file::FilePathPtr parentPath;
+			file::GetFilePathParent(h_, fileDataPath.mFilePath, parentPath);
+			if (parentPath == nullptr) {
+				NOTIFY_ERROR(h_, "GetFilePathParent failed.");
+				completion->Call(h_, datastore::WriteDataStoreDataResult::kError);
+				return;
+			}
+			auto createResult = file::CreateDirectoryParentChain(h_, parentPath);
+			if (createResult != file::CreateDirectoryParentChainResult::kSuccess) {
+				NOTIFY_ERROR(h_, "CreateDirectoryParentChain failed.");
+				completion->Call(h_, datastore::WriteDataStoreDataResult::kError);
+				return;
+			}
+			
+			auto writeCompletion = std::make_shared<Completion>(completion);
+			file::WriteFileData(h_, fileDataPath.mFilePath, DataBuffer(data->Data(), data->Size()), writeCompletion);
 		}
 		
 	} // namespace filedatastore
