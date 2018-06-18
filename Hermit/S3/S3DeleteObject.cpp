@@ -120,12 +120,6 @@ namespace hermit {
 							mCompletion->Call(h_, S3Result::kError);
 							return;
 						}
-						if ((responseData.first == nullptr) || (responseData.second == 0)) {
-							NOTIFY_ERROR(h_, "No response data? URL:", mURL);
-							mCompletion->Call(h_, S3Result::kError);
-							return;
-						}
-						
 						mCompletion->Call(h_, S3Result::kSuccess);
 					}
 					
