@@ -178,8 +178,18 @@ namespace hermit {
 					canonicalRequest += "\n";
 					canonicalRequest += s3Path;
 					canonicalRequest += "\n";
-					canonicalRequest += "prefix=";
-					canonicalRequest += objectPrefix;
+					if (!marker.empty()) {
+						canonicalRequest += "marker=";
+						canonicalRequest += marker;
+						if (!objectPrefix.empty()) {
+							canonicalRequest += "&prefix=";
+							canonicalRequest += objectPrefix;
+						}
+					}
+					else if (!objectPrefix.empty()) {
+						canonicalRequest += "prefix=";
+						canonicalRequest += objectPrefix;
+					}
 					canonicalRequest += "\n";
 					canonicalRequest += "host:";
 					canonicalRequest += host;
