@@ -93,6 +93,9 @@ static void* const TASK_PARAMS_KEY = (void*)&TASK_PARAMS_KEY;
 		else if (isNSURLError && (errorCode == kCFURLErrorTimedOut)) {
 			result = hermit::http::HTTPRequestResult::kTimedOut;
 		}
+		else if (isNSURLError && (errorCode == kCFURLErrorNotConnectedToInternet)) {
+			result = hermit::http::HTTPRequestResult::kNoNetworkConnection;
+		}
 		else {
 			NSLog(@"error: %@", error);
 			NOTIFY_ERROR(_h_, "DataSessionTask failed, error:", [error localizedDescription]);
