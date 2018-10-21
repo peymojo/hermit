@@ -10,12 +10,10 @@
 		EF16AB4F202C2F2900AF9DAE /* EncodingFile.h in Headers */ = {isa = PBXBuildFile; fileRef = EF16AB4E202C2F2900AF9DAE /* EncodingFile.h */; };
 		EF16AB51202C2F2900AF9DAE /* EncodingFile.m in Sources */ = {isa = PBXBuildFile; fileRef = EF16AB50202C2F2900AF9DAE /* EncodingFile.m */; };
 		EF16AB55202C2F3100AF9DAE /* CalculateFileCRC32.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5EE51D878A320056E526 /* CalculateFileCRC32.cpp */; };
-		EF16AB56202C2F3700AF9DAE /* CalculateFileMurmur3_128.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5EE91D878A320056E526 /* CalculateFileMurmur3_128.cpp */; };
 		EF16AB57202C2F3700AF9DAE /* GetFileMD5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5EEB1D878A320056E526 /* GetFileMD5.cpp */; };
 		EF16AB58202C2F3700AF9DAE /* GetFileMD5WithProgress.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5EED1D878A320056E526 /* GetFileMD5WithProgress.cpp */; };
 		EF7255931F18D33E0054DCE0 /* EncodingFileKit.h in Headers */ = {isa = PBXBuildFile; fileRef = EF7255911F18D33E0054DCE0 /* EncodingFileKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EF7255981F18D3500054DCE0 /* CalculateFileCRC32.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5EE51D878A320056E526 /* CalculateFileCRC32.cpp */; };
-		EF72559A1F18D3500054DCE0 /* CalculateFileMurmur3_128.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5EE91D878A320056E526 /* CalculateFileMurmur3_128.cpp */; };
 		EF72559B1F18D3500054DCE0 /* GetFileMD5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5EEB1D878A320056E526 /* GetFileMD5.cpp */; };
 		EF72559C1F18D3500054DCE0 /* GetFileMD5WithProgress.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5EED1D878A320056E526 /* GetFileMD5WithProgress.cpp */; };
 		EF7255A11F18D39C0054DCE0 /* FoundationKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF7255A01F18D39C0054DCE0 /* FoundationKit.framework */; };
@@ -39,8 +37,6 @@
 		EF7255A81F18D3D20054DCE0 /* EncodingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EncodingKit.framework; path = "../../../../Library/Developer/Xcode/DerivedData/Vault_Browser-etrnbxqipwhocnapsvsbsqbjzmyg/Build/Products/Debug/EncodingKit.framework"; sourceTree = "<group>"; };
 		EFAD5EE51D878A320056E526 /* CalculateFileCRC32.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CalculateFileCRC32.cpp; sourceTree = "<group>"; };
 		EFAD5EE61D878A320056E526 /* CalculateFileCRC32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalculateFileCRC32.h; sourceTree = "<group>"; };
-		EFAD5EE91D878A320056E526 /* CalculateFileMurmur3_128.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CalculateFileMurmur3_128.cpp; sourceTree = "<group>"; };
-		EFAD5EEA1D878A320056E526 /* CalculateFileMurmur3_128.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalculateFileMurmur3_128.h; sourceTree = "<group>"; };
 		EFAD5EEB1D878A320056E526 /* GetFileMD5.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GetFileMD5.cpp; sourceTree = "<group>"; };
 		EFAD5EEC1D878A320056E526 /* GetFileMD5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetFileMD5.h; sourceTree = "<group>"; };
 		EFAD5EED1D878A320056E526 /* GetFileMD5WithProgress.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GetFileMD5WithProgress.cpp; sourceTree = "<group>"; };
@@ -107,8 +103,6 @@
 			children = (
 				EFAD5EE51D878A320056E526 /* CalculateFileCRC32.cpp */,
 				EFAD5EE61D878A320056E526 /* CalculateFileCRC32.h */,
-				EFAD5EE91D878A320056E526 /* CalculateFileMurmur3_128.cpp */,
-				EFAD5EEA1D878A320056E526 /* CalculateFileMurmur3_128.h */,
 				EFAD5EEB1D878A320056E526 /* GetFileMD5.cpp */,
 				EFAD5EEC1D878A320056E526 /* GetFileMD5.h */,
 				EFAD5EED1D878A320056E526 /* GetFileMD5WithProgress.cpp */,
@@ -240,7 +234,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EF16AB56202C2F3700AF9DAE /* CalculateFileMurmur3_128.cpp in Sources */,
 				EF16AB57202C2F3700AF9DAE /* GetFileMD5.cpp in Sources */,
 				EF16AB58202C2F3700AF9DAE /* GetFileMD5WithProgress.cpp in Sources */,
 				EF16AB55202C2F3100AF9DAE /* CalculateFileCRC32.cpp in Sources */,
@@ -253,7 +246,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				EF7255981F18D3500054DCE0 /* CalculateFileCRC32.cpp in Sources */,
-				EF72559A1F18D3500054DCE0 /* CalculateFileMurmur3_128.cpp in Sources */,
 				EF72559B1F18D3500054DCE0 /* GetFileMD5.cpp in Sources */,
 				EF72559C1F18D3500054DCE0 /* GetFileMD5WithProgress.cpp in Sources */,
 			);
