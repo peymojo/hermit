@@ -16,20 +16,16 @@
 //	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#include <iostream>
 #include <math.h>
 #include "Hermit/Foundation/Notification.h"
 #include "CalculateMD5FromStream.h"
 
 namespace hermit {
 	namespace encoding {
-		
-		namespace {
+		namespace CalculateMD5FromStream_Impl {
 			
 			//
-			//
-			struct MD5Result
-			{
+			struct MD5Result {
 				uint32_t m0;
 				uint32_t m1;
 				uint32_t m2;
@@ -37,15 +33,15 @@ namespace hermit {
 			};
 			
 			//
-			//
-			static const uint32_t sR[64] = { 7, 12, 17, 22,  7, 12, 17, 22,  7, 12, 17, 22,  7, 12, 17, 22,
+			static const uint32_t sR[64] = {
+				7, 12, 17, 22,  7, 12, 17, 22,  7, 12, 17, 22,  7, 12, 17, 22,
 				5,  9, 14, 20,  5,  9, 14, 20,  5,  9, 14, 20,  5,  9, 14, 20,
 				4, 11, 16, 23,  4, 11, 16, 23,  4, 11, 16, 23,  4, 11, 16, 23,
 				6, 10, 15, 21,  6, 10, 15, 21,  6, 10, 15, 21,  6, 10, 15, 21 };
 			
 			//
-			//
-			static const uint32_t sK[64] = {	3614090360ul,
+			static const uint32_t sK[64] = {
+				3614090360ul,
 				3905402710ul,
 				606105819ul,
 				3250441966ul,
@@ -111,192 +107,9 @@ namespace hermit {
 				3951481745ul  };
 			
 			//
-			//
-			uint32_t RotateLeft(
-								uint32_t inX,
-								uint32_t inC)
-			{
+			uint32_t RotateLeft(uint32_t inX, uint32_t inC) {
 				return (inX << inC) | ((inX >> (32 - inC)));
 			}
-			
-#if 0
-			//
-			//
-			class StringSource
-			{
-			public:
-				//
-				//
-				StringSource(
-							 const char* inInputString,
-							 uint64_t inInputStringSize,
-							 const std::string& inPadding)
-				:
-				mInputString(inInputString),
-				mInputStringSize(inInputStringSize),
-				mPadding(inPadding)
-				{
-				}
-				
-				//
-				//
-				char operator [](
-								 size_t inIndex) const
-				{
-					if (inIndex < mInputStringSize)
-					{
-						return mInputString[inIndex];
-					}
-					return mPadding[inIndex - mInputStringSize];
-				}
-				
-			private:
-				//
-				//
-				const char* mInputString;
-				size_t mInputStringSize;
-				const std::string& mPadding;
-			};
-			
-			//
-			//
-			void CalculateMD5(
-							  const StringSource& inStringSource,
-							  uint64_t inTotalBits,
-							  MD5Result& outResult)
-			{
-				MD5Result result;
-				result.m0 = 0x67452301;
-				result.m1 = 0xEFCDAB89;
-				result.m2 = 0x98BADCFE;
-				result.m3 = 0x10325476;
-				
-				std::string::size_type offset = 0;
-				uint64_t chunks = (inTotalBits / 512) + 1;
-				for (uint64_t chunk = 0; chunk < chunks; ++chunk)
-				{
-					uint32_t w[16];
-					for (int j = 0; j < 16; ++j)
-					{
-						w[j] = inStringSource[offset];
-						//				++offset;
-						uint32_t byte0 = inStringSource[offset] & 0xff;
-						uint32_t byte1 = inStringSource[offset + 1] & 0xff;
-						uint32_t byte2 = inStringSource[offset + 2] & 0xff;
-						uint32_t byte3 = inStringSource[offset + 3] & 0xff;
-						
-						w[j] = (byte3 << 24) | (byte2 << 16) | (byte1 << 8) | byte0;
-						
-						offset += 4;
-					}
-					
-					uint32_t a = result.m0;
-					uint32_t b = result.m1;
-					uint32_t c = result.m2;
-					uint32_t d = result.m3;
-					
-					//			printf("-> a: %08x, b: %08x, c: %08x, d: %08x\n", a, b, c, d);
-					
-					uint32_t f = 0;
-					uint32_t g = 0;
-					for (int i = 0; i < 64; ++i)
-					{
-						if (i < 16)
-						{
-							f = (b & c) | ((~b) & d);
-							g = i;
-						}
-						else if (i < 32)
-						{
-							f = (d & b) | ((~d) & c);
-							g = ((5 * i) + 1) % 16;
-						}
-						else if (i < 48)
-						{
-							f = b ^ c ^ d;
-							g = ((3 * i) + 5) % 16;
-						}
-						else
-						{
-							f = c ^ (b | (~d));
-							g = (7 * i) % 16;
-						}
-						
-						//				printf("zzz: %08x\n", f);
-						//				printf("kk: %08x\n", sK[i]);
-						//				printf("w[g]: %08x\n", w[g]);
-						//				uint32_t qqq = (a + f + sK[i] + w[g]);
-						//				printf("qqq: %08x\n", qqq);
-						
-						uint32_t tmp = d;
-						d = c;
-						c = b;
-						b = b + RotateLeft((a + f + sK[i] + w[g]), sR[i]);
-						a = tmp;
-						
-						//				printf("-[%02d]- a: %08x, b: %08x, c: %08x, d: %08x\n", i, a, b, c, d);
-					}
-					
-					//			printf("<- a: %08x, b: %08x, c: %08x, d: %08x\n", a, b, c, d);
-					
-					result.m0 += a;
-					result.m1 += b;
-					result.m2 += c;
-					result.m3 += d;
-					
-					//			printf("result: %08x, b: %08x, c: %08x, d: %08x\n", result.m0, result.m1, result.m2, result.m3);
-					//			std::cout << "result.m0: " << result.m0 << " m1:" << result.m1 << " m2:" << result.m2 << " m3:" << result.m3 <<"\n";
-				}
-				outResult = result;
-			}
-#endif
-			
-#if 0
-			//
-			//
-			void CalculateMD5(
-							  const char* inData,
-							  uint64_t inDataSize,
-							  MD5Result& outResult)
-			{
-				uint64_t inputStringLengthInBits = inDataSize * 8;
-				uint64_t totalBits = inputStringLengthInBits + 65;
-				uint64_t remainderBits = totalBits % 512;
-				uint64_t paddingBits = 512 - remainderBits;
-				uint64_t paddingBytes = (paddingBits / 8) + 1;
-				
-				std::string str;
-				str.push_back(0x80);
-				--paddingBytes;
-				for (int i = 0; i < paddingBytes; ++i)
-				{
-					str.push_back(0);
-				}
-				
-				char stringLength0 = inputStringLengthInBits & 0xff;
-				char stringLength1 = (inputStringLengthInBits >> 8) & 0xff;
-				char stringLength2 = (inputStringLengthInBits >> 16) & 0xff;
-				char stringLength3 = (inputStringLengthInBits >> 24) & 0xff;
-				char stringLength4 = (inputStringLengthInBits >> 32) & 0xff;
-				char stringLength5 = (inputStringLengthInBits >> 40) & 0xff;
-				char stringLength6 = (inputStringLengthInBits >> 48) & 0xff;
-				char stringLength7 = (inputStringLengthInBits >> 56) & 0xff;
-				
-				str.push_back(stringLength0);
-				str.push_back(stringLength1);
-				str.push_back(stringLength2);
-				str.push_back(stringLength3);
-				str.push_back(stringLength4);
-				str.push_back(stringLength5);
-				str.push_back(stringLength6);
-				str.push_back(stringLength7);
-				
-				//		std::cout << "String length: " << str.size() << "\n";
-				
-				StringSource source(inData, inDataSize, str);
-				CalculateMD5(source, totalBits, outResult);
-			}
-#endif
 			
 			//
 			class MD5StreamCalculator : public DataHandlerBlock {
@@ -493,7 +306,7 @@ namespace hermit {
 			class Completion : public StreamResultBlock {
 			public:
 				//
-				Completion(const MD5StreamCalculatorPtr& calculator, const CalculateMD5CompletionPtr& completion) :
+				Completion(const MD5StreamCalculatorPtr& calculator, const CalculateHashCompletionPtr& completion) :
 				mCalculator(calculator),
 				mCompletion(completion) {
 				}
@@ -501,28 +314,29 @@ namespace hermit {
 				//
 				virtual void Call(const HermitPtr& h_, StreamDataResult result) override {
 					if (result == StreamDataResult::kCanceled) {
-						mCompletion->Call(h_, CalculateMD5Result::kCanceled, "");
+						mCompletion->Call(h_, CalculateHashResult::kCanceled, "");
 						return;
 					}
 					if (result != StreamDataResult::kSuccess) {
 						NOTIFY_ERROR(h_, "CalculateMD5FromStream: dataProvider return an error.");
-						mCompletion->Call(h_, CalculateMD5Result::kError, "");
+						mCompletion->Call(h_, CalculateHashResult::kError, "");
 					}
 					std::string md5Hex = MD5ResultToString(mCalculator->mResult);
-					mCompletion->Call(h_, CalculateMD5Result::kSuccess, md5Hex);
+					mCompletion->Call(h_, CalculateHashResult::kSuccess, md5Hex);
 				}
 				
 				//
 				MD5StreamCalculatorPtr mCalculator;
-				CalculateMD5CompletionPtr mCompletion;
+				CalculateHashCompletionPtr mCompletion;
 			};
 			
-		} // private namespace
+		} // namespace CalculateMD5FromStream_Impl
+		using namespace CalculateMD5FromStream_Impl;
 		
 		//
 		void CalculateMD5FromStream(const HermitPtr& h_,
 									const DataProviderBlockPtr& dataProvider,
-									const CalculateMD5CompletionPtr& completion) {
+									const CalculateHashCompletionPtr& completion) {
 			auto calculator = std::make_shared<MD5StreamCalculator>();
 			auto dataCompletion = std::make_shared<Completion>(calculator, completion);
 			dataProvider->ProvideData(h_, calculator, dataCompletion);

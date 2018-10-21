@@ -1,6 +1,6 @@
 //
 //	Hermit
-//	Copyright (C) 2017 Paul Young (aka peymojo)
+//	Copyright (C) 2018 Paul Young (aka peymojo)
 //
 //	This program is free software: you can redistribute it and/or modify
 //	it under the terms of the GNU General Public License as published by
@@ -16,27 +16,22 @@
 //	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef CalculateMurmurResult_h
-#define CalculateMurmurResult_h
+#ifndef CalculateSHA256FromStream_h
+#define CalculateSHA256FromStream_h
 
-#include <string>
-#include "Hermit/Foundation/AsyncFunction.h"
 #include "Hermit/Foundation/Hermit.h"
+#include "Hermit/Foundation/StreamDataFunction.h"
+#include "CalculateHashResult.h"
 
 namespace hermit {
 	namespace encoding {
 		
 		//
-		enum class CalculateMurmurResult {
-			kUnknown,
-			kSuccess,
-			kCanceled,
-			kError
-		};
-		//
-		DEFINE_ASYNC_FUNCTION_3A(CalculateMurmurCompletion, HermitPtr, CalculateMurmurResult, std::string);
+		void CalculateSHA256FromStream(const HermitPtr& h_,
+									   const DataProviderBlockPtr& dataProvider,
+									   const CalculateHashCompletionPtr& completion);
 		
 	} // namespace encoding
 } // namespace hermit
 
-#endif
+#endif /* CalculateSHA256FromStream_h */

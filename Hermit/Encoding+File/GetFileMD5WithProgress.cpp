@@ -114,11 +114,11 @@ namespace hermit {
 		//
 		void GetFileMD5WithProgress(const HermitPtr& h_,
 									const file::FilePathPtr& filePath,
-									const encoding::CalculateMD5CompletionPtr& completion) {
+									const encoding::CalculateHashCompletionPtr& completion) {
 			uint64_t dataSize = 0;
 			if (!file::GetFileDataSize(h_, filePath, dataSize)) {
 				NOTIFY_ERROR(h_, "GetFileMD5WithProgress: GetFileDataSize failed for:", filePath);
-				completion->Call(h_, encoding::CalculateMD5Result::kError, "");
+				completion->Call(h_, encoding::CalculateHashResult::kError, "");
 				return;
 			}
 

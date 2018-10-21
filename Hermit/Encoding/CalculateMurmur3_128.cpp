@@ -210,7 +210,7 @@ namespace hermit {
 			class Completion : public StreamResultBlock {
 			public:
 				//
-				Completion(const MurmurCalculatorPtr& calculator, const CalculateMurmurCompletionPtr& completion) :
+				Completion(const MurmurCalculatorPtr& calculator, const CalculateHashCompletionPtr& completion) :
 				mCalculator(calculator),
 				mCompletion(completion) {
 				}
@@ -218,22 +218,22 @@ namespace hermit {
 				//
 				virtual void Call(const HermitPtr& h_, StreamDataResult result) override {
 					if (result == StreamDataResult::kCanceled) {
-						mCompletion->Call(h_, CalculateMurmurResult::kCanceled, "");
+						mCompletion->Call(h_, CalculateHashResult::kCanceled, "");
 						return;
 					}
 					if (result != StreamDataResult::kSuccess) {
 						NOTIFY_ERROR(h_, "CalculateMurmur3_128: dataProvider failed.");
-						mCompletion->Call(h_, CalculateMurmurResult::kError, "");
+						mCompletion->Call(h_, CalculateHashResult::kError, "");
 						return;
 					}
 					std::string murmurHex;
 					MurmurResultToHex((const char*)mCalculator->mResult, murmurHex);
-					mCompletion->Call(h_, CalculateMurmurResult::kSuccess, murmurHex);
+					mCompletion->Call(h_, CalculateHashResult::kSuccess, murmurHex);
 				}
 				
 				//
 				MurmurCalculatorPtr mCalculator;
-				CalculateMurmurCompletionPtr mCompletion;
+				CalculateHashCompletionPtr mCompletion;
 			};
 			
 		} // private namespace
@@ -241,7 +241,7 @@ namespace hermit {
 		//
 		void CalculateMurmur3_128(const HermitPtr& h_,
 								  const DataProviderBlockPtr& dataProvider,
-								  const CalculateMurmurCompletionPtr& completion) {
+								  const CalculateHashCompletionPtr& completion) {
 			auto calculator = std::make_shared<MurmurCalculator>(0);
 			auto dataCompletion = std::make_shared<Completion>(calculator, completion);
 			dataProvider->ProvideData(h_, calculator, dataCompletion);

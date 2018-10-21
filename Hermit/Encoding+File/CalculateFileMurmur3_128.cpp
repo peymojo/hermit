@@ -23,14 +23,13 @@
 
 namespace hermit {
 	namespace encoding_file {
-		
-		namespace {
+		namespace CalculateFileMurmur3_128_Impl {
 
 			//
 			class Streamer : public DataProviderBlock {
 			public:
 				//
-				Streamer(const file::FilePathPtr& inFilePath) : mFilePath(inFilePath) {
+				Streamer(const file::FilePathPtr& filePath) : mFilePath(filePath) {
 				}
 				
 				//
@@ -44,12 +43,13 @@ namespace hermit {
 				file::FilePathPtr mFilePath;
 			};
 			
-		} // private namespace
+		} // namespace CalculateFileMurmur3_128_Impl
+		using namespace CalculateFileMurmur3_128_Impl;
 		
 		//
 		void CalculateFileMurmur3_128(const HermitPtr& h_,
 									  const file::FilePathPtr& filePath,
-									  const encoding::CalculateMurmurCompletionPtr& completion) {
+									  const encoding::CalculateHashCompletionPtr& completion) {
 			auto streamer = std::make_shared<Streamer>(filePath);
 			encoding::CalculateMurmur3_128(h_, streamer, completion);
 		}

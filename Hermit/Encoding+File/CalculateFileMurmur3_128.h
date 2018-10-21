@@ -20,7 +20,7 @@
 #define CalculateFileMurmur3_128_h
 
 #include <string>
-#include "Hermit/Encoding/CalculateMurmurResult.h"
+#include "Hermit/Encoding/CalculateHashResult.h"
 #include "Hermit/File/FilePath.h"
 #include "Hermit/Foundation/Hermit.h"
 
@@ -30,7 +30,7 @@ namespace hermit {
 		//
 		void CalculateFileMurmur3_128(const HermitPtr& h_,
 									  const file::FilePathPtr& filePath,
-									  const encoding::CalculateMurmurCompletionPtr& completion);
+									  const encoding::CalculateHashCompletionPtr& completion);
 		
 	} // namespace encoding_file
 } // namespace hermit

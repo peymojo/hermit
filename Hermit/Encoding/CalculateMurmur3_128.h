@@ -21,7 +21,7 @@
 
 #include "Hermit/Foundation/Hermit.h"
 #include "Hermit/Foundation/StreamDataFunction.h"
-#include "CalculateMurmurResult.h"
+#include "CalculateHashResult.h"
 
 namespace hermit {
 	namespace encoding {
@@ -29,7 +29,7 @@ namespace hermit {
 		//
 		void CalculateMurmur3_128(const HermitPtr& h_,
 								  const DataProviderBlockPtr& dataProvider,
-								  const CalculateMurmurCompletionPtr& completion);
+								  const CalculateHashCompletionPtr& completion);
 		
 	} // namespace encoding
 } // namespace hermit

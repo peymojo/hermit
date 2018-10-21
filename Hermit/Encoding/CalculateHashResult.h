@@ -16,8 +16,8 @@
 //	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef CalculateMD5Callback_h
-#define CalculateMD5Callback_h
+#ifndef CalculateHashResult_h
+#define CalculateHashResult_h
 
 #include <string>
 #include "Hermit/Foundation/AsyncFunction.h"
@@ -27,7 +27,7 @@ namespace hermit {
 	namespace encoding {
 		
 		//
-		enum class CalculateMD5Result {
+		enum class CalculateHashResult {
 			kUnknown,
 			kSuccess,
 			kCanceled,
@@ -35,8 +35,8 @@ namespace hermit {
 		};
 		
 		//
-		DEFINE_ASYNC_FUNCTION_3A(CalculateMD5Completion, HermitPtr, CalculateMD5Result, std::string);
-
+		DEFINE_ASYNC_FUNCTION_3A(CalculateHashCompletion, HermitPtr, CalculateHashResult, std::string);
+		
 	} // namespace encoding
 } // namespace hermit
 

@@ -46,7 +46,7 @@ namespace hermit {
 		} // private namespace
 		
 		//
-		void CalculateMD5(const HermitPtr& h_, const DataBuffer& data, const CalculateMD5CompletionPtr& completion) {
+		void CalculateMD5(const HermitPtr& h_, const DataBuffer& data, const CalculateHashCompletionPtr& completion) {
 			auto getDataFunction = std::make_shared<GetDataFunction>(data);
 			CalculateMD5FromStream(h_, getDataFunction, completion);
 		}

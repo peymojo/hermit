@@ -16,6 +16,7 @@
 //	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+#include "Hermit/String/BinaryStringToHex.h"
 #include "CalculateSHA256.h"
 #include "SHA256.h"
 
@@ -26,7 +27,8 @@ namespace hermit {
 		void CalculateSHA256(const std::string& data, std::string& outSHA256) {
 			char buf[32] = { 0 };
 			CalculateSHA256(data.data(), data.size(), buf);
-			outSHA256 = std::string(buf, 32);
+			std::string sha256 = std::string(buf, 32);
+			string::BinaryStringToHex(sha256, outSHA256);
 		}
 		
 	} // namespace encoding

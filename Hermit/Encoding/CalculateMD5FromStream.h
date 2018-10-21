@@ -21,7 +21,7 @@
 
 #include "Hermit/Foundation/Hermit.h"
 #include "Hermit/Foundation/StreamDataFunction.h"
-#include "CalculateMD5Result.h"
+#include "CalculateHashResult.h"
 
 namespace hermit {
 	namespace encoding {
@@ -29,7 +29,7 @@ namespace hermit {
 		//
 		void CalculateMD5FromStream(const HermitPtr& h_,
 									const DataProviderBlockPtr& dataProvider,
-									const CalculateMD5CompletionPtr& completion);
+									const CalculateHashCompletionPtr& completion);
 		
 	} // namespace encoding
 } // namespace hermit

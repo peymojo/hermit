@@ -38,6 +38,12 @@
 		EF2CF6A41FF24C7100652E69 /* SHA1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58AA1D86B2E20056E526 /* SHA1.cpp */; };
 		EF2CF6A51FF24C7100652E69 /* SHA256.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58AC1D86B2E20056E526 /* SHA256.cpp */; };
 		EF2CF6A61FF24C7100652E69 /* UpdateCRC32.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58AE1D86B2E20056E526 /* UpdateCRC32.cpp */; };
+		EF5662DE2174181F005512F3 /* CalculateSHA256FromStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF5662DC2174181F005512F3 /* CalculateSHA256FromStream.cpp */; };
+		EF5662DF2174181F005512F3 /* CalculateSHA256FromStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF5662DC2174181F005512F3 /* CalculateSHA256FromStream.cpp */; };
+		EF5662E02174181F005512F3 /* CalculateSHA256FromStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF5662DC2174181F005512F3 /* CalculateSHA256FromStream.cpp */; };
+		EF5662E12174181F005512F3 /* CalculateSHA256FromStream.h in Headers */ = {isa = PBXBuildFile; fileRef = EF5662DD2174181F005512F3 /* CalculateSHA256FromStream.h */; };
+		EF5662E22174181F005512F3 /* CalculateSHA256FromStream.h in Headers */ = {isa = PBXBuildFile; fileRef = EF5662DD2174181F005512F3 /* CalculateSHA256FromStream.h */; };
+		EF5662E32174181F005512F3 /* CalculateSHA256FromStream.h in Headers */ = {isa = PBXBuildFile; fileRef = EF5662DD2174181F005512F3 /* CalculateSHA256FromStream.h */; };
 		EF92C1D31F11006E0097D708 /* EncodingKit.h in Headers */ = {isa = PBXBuildFile; fileRef = EF92C1D11F11006E0097D708 /* EncodingKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EF92C1D71F11007B0097D708 /* AES256.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD586D1D86B2E10056E526 /* AES256.cpp */; };
 		EF92C1D81F11007B0097D708 /* AES256DecryptCBC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD58701D86B2E10056E526 /* AES256DecryptCBC.cpp */; };
@@ -108,6 +114,8 @@
 		EF2CF67F1FF24C6600652E69 /* libEncodingLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libEncodingLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF2CF6811FF24C6600652E69 /* EncodingLib.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EncodingLib.h; sourceTree = "<group>"; };
 		EF2CF6831FF24C6600652E69 /* EncodingLib.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EncodingLib.m; sourceTree = "<group>"; };
+		EF5662DC2174181F005512F3 /* CalculateSHA256FromStream.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CalculateSHA256FromStream.cpp; sourceTree = "<group>"; };
+		EF5662DD2174181F005512F3 /* CalculateSHA256FromStream.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CalculateSHA256FromStream.h; sourceTree = "<group>"; };
 		EF92C1CF1F11006E0097D708 /* EncodingKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = EncodingKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF92C1D11F11006E0097D708 /* EncodingKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EncodingKit.h; sourceTree = "<group>"; };
 		EF92C1D21F11006E0097D708 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -145,12 +153,11 @@
 		EFAD58881D86B2E10056E526 /* CalculateHMACSHA256.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalculateHMACSHA256.h; sourceTree = "<group>"; };
 		EFAD58891D86B2E10056E526 /* CalculateMD5.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CalculateMD5.cpp; sourceTree = "<group>"; };
 		EFAD588A1D86B2E10056E526 /* CalculateMD5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalculateMD5.h; sourceTree = "<group>"; };
-		EFAD588B1D86B2E10056E526 /* CalculateMD5Result.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalculateMD5Result.h; sourceTree = "<group>"; };
 		EFAD588C1D86B2E10056E526 /* CalculateMD5FromStream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CalculateMD5FromStream.cpp; sourceTree = "<group>"; };
 		EFAD588D1D86B2E10056E526 /* CalculateMD5FromStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalculateMD5FromStream.h; sourceTree = "<group>"; };
 		EFAD588E1D86B2E10056E526 /* CalculateMurmur3_128.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CalculateMurmur3_128.cpp; sourceTree = "<group>"; };
 		EFAD588F1D86B2E10056E526 /* CalculateMurmur3_128.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalculateMurmur3_128.h; sourceTree = "<group>"; };
-		EFAD58901D86B2E10056E526 /* CalculateMurmurResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalculateMurmurResult.h; sourceTree = "<group>"; };
+		EFAD58901D86B2E10056E526 /* CalculateHashResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalculateHashResult.h; sourceTree = "<group>"; };
 		EFAD58911D86B2E10056E526 /* CalculateSHA1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CalculateSHA1.cpp; sourceTree = "<group>"; };
 		EFAD58921D86B2E10056E526 /* CalculateSHA1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalculateSHA1.h; sourceTree = "<group>"; };
 		EFAD58931D86B2E10056E526 /* CalculateSHA256.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CalculateSHA256.cpp; sourceTree = "<group>"; };
@@ -276,22 +283,23 @@
 				EFAD58821D86B2E10056E526 /* CalculateCRC32.h */,
 				EFAD58831D86B2E10056E526 /* CalculateDataCRC32.cpp */,
 				EFAD58841D86B2E10056E526 /* CalculateDataCRC32.h */,
+				EFAD58901D86B2E10056E526 /* CalculateHashResult.h */,
 				EFAD58851D86B2E10056E526 /* CalculateHMACSHA1.cpp */,
 				EFAD58861D86B2E10056E526 /* CalculateHMACSHA1.h */,
 				EFAD58871D86B2E10056E526 /* CalculateHMACSHA256.cpp */,
 				EFAD58881D86B2E10056E526 /* CalculateHMACSHA256.h */,
 				EFAD58891D86B2E10056E526 /* CalculateMD5.cpp */,
 				EFAD588A1D86B2E10056E526 /* CalculateMD5.h */,
-				EFAD588B1D86B2E10056E526 /* CalculateMD5Result.h */,
 				EFAD588C1D86B2E10056E526 /* CalculateMD5FromStream.cpp */,
 				EFAD588D1D86B2E10056E526 /* CalculateMD5FromStream.h */,
 				EFAD588E1D86B2E10056E526 /* CalculateMurmur3_128.cpp */,
 				EFAD588F1D86B2E10056E526 /* CalculateMurmur3_128.h */,
-				EFAD58901D86B2E10056E526 /* CalculateMurmurResult.h */,
 				EFAD58911D86B2E10056E526 /* CalculateSHA1.cpp */,
 				EFAD58921D86B2E10056E526 /* CalculateSHA1.h */,
 				EFAD58931D86B2E10056E526 /* CalculateSHA256.cpp */,
 				EFAD58941D86B2E10056E526 /* CalculateSHA256.h */,
+				EF5662DC2174181F005512F3 /* CalculateSHA256FromStream.cpp */,
+				EF5662DD2174181F005512F3 /* CalculateSHA256FromStream.h */,
 				EFAD58951D86B2E10056E526 /* CRC32.cpp */,
 				EFAD58961D86B2E10056E526 /* CRC32.h */,
 				EFAD58971D86B2E10056E526 /* CreateAlphaNumericID.cpp */,
@@ -305,21 +313,21 @@
 				EFAD589F1D86B2E10056E526 /* CreateUUIDStringBase64Modified.h */,
 				EFAD58A01D86B2E10056E526 /* EncodeHMACSHA1PBKDF2.cpp */,
 				EFAD58A11D86B2E10056E526 /* EncodeHMACSHA1PBKDF2.h */,
+				EF92C1D01F11006E0097D708 /* EncodingKit */,
+				EFF397C41F6552AB00B1BD33 /* EncodingKit_iOS */,
+				EF2CF6801FF24C6600652E69 /* EncodingLib */,
+				EF92C1F71F11046B0097D708 /* Frameworks */,
 				EFAD58A41D86B2E10056E526 /* HexToBase64Modified.cpp */,
 				EFAD58A51D86B2E10056E526 /* HexToBase64Modified.h */,
 				EFAD58A81D86B2E20056E526 /* LibEncoding.h */,
 				EFAD58A91D86B2E20056E526 /* LibEncoding.m */,
+				EFAD58621D86B2AF0056E526 /* Products */,
 				EFAD58AA1D86B2E20056E526 /* SHA1.cpp */,
 				EFAD58AB1D86B2E20056E526 /* SHA1.h */,
 				EFAD58AC1D86B2E20056E526 /* SHA256.cpp */,
 				EFAD58AD1D86B2E20056E526 /* SHA256.h */,
 				EFAD58AE1D86B2E20056E526 /* UpdateCRC32.cpp */,
 				EFAD58AF1D86B2E20056E526 /* UpdateCRC32.h */,
-				EF92C1D01F11006E0097D708 /* EncodingKit */,
-				EFF397C41F6552AB00B1BD33 /* EncodingKit_iOS */,
-				EF2CF6801FF24C6600652E69 /* EncodingLib */,
-				EFAD58621D86B2AF0056E526 /* Products */,
-				EF92C1F71F11046B0097D708 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -349,6 +357,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EF5662E32174181F005512F3 /* CalculateSHA256FromStream.h in Headers */,
 				EF2CF6821FF24C6600652E69 /* EncodingLib.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -357,6 +366,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EF5662E12174181F005512F3 /* CalculateSHA256FromStream.h in Headers */,
 				EF92C1D31F11006E0097D708 /* EncodingKit.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -365,6 +375,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EF5662E22174181F005512F3 /* CalculateSHA256FromStream.h in Headers */,
 				EFF397C71F6552AB00B1BD33 /* EncodingKit_iOS.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -501,6 +512,7 @@
 				EF2CF6901FF24C7100652E69 /* BinaryToBase64Modified.cpp in Sources */,
 				EF2CF6911FF24C7100652E69 /* CalculateCRC32.cpp in Sources */,
 				EF2CF6921FF24C7100652E69 /* CalculateDataCRC32.cpp in Sources */,
+				EF5662E02174181F005512F3 /* CalculateSHA256FromStream.cpp in Sources */,
 				EF2CF6931FF24C7100652E69 /* CalculateHMACSHA1.cpp in Sources */,
 				EF2CF6941FF24C7100652E69 /* CalculateHMACSHA256.cpp in Sources */,
 				EF2CF6951FF24C7100652E69 /* CalculateMD5.cpp in Sources */,
@@ -548,6 +560,7 @@
 				EF92C1E91F11007B0097D708 /* CRC32.cpp in Sources */,
 				EF92C1EA1F11007B0097D708 /* CreateAlphaNumericID.cpp in Sources */,
 				EF92C1EB1F11007B0097D708 /* CreateInputVector.cpp in Sources */,
+				EF5662DE2174181F005512F3 /* CalculateSHA256FromStream.cpp in Sources */,
 				EF92C1EC1F11007B0097D708 /* CreateUUIDString_Mac.cpp in Sources */,
 				EF92C1EE1F11007B0097D708 /* CreateUUIDStringBase64Modified.cpp in Sources */,
 				EF92C1EF1F11007B0097D708 /* EncodeHMACSHA1PBKDF2.cpp in Sources */,
@@ -583,6 +596,7 @@
 				EFF397F71F6552E500B1BD33 /* CRC32.cpp in Sources */,
 				EFF397F81F6552E500B1BD33 /* CreateAlphaNumericID.cpp in Sources */,
 				EFF397F91F6552E500B1BD33 /* CreateInputVector.cpp in Sources */,
+				EF5662DF2174181F005512F3 /* CalculateSHA256FromStream.cpp in Sources */,
 				EFF397FA1F6552E500B1BD33 /* CreateUUIDString_Mac.cpp in Sources */,
 				EFF397FC1F6552E500B1BD33 /* CreateUUIDStringBase64Modified.cpp in Sources */,
 				EFF397FD1F6552E500B1BD33 /* EncodeHMACSHA1PBKDF2.cpp in Sources */,

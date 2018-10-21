@@ -19,7 +19,7 @@
 #ifndef GetFileMD5_h
 #define GetFileMD5_h
 
-#include "Hermit/Encoding/CalculateMD5Result.h"
+#include "Hermit/Encoding/CalculateHashResult.h"
 #include "Hermit/File/FilePath.h"
 #include "Hermit/Foundation/Hermit.h"
 
@@ -29,7 +29,7 @@ namespace hermit {
 		//
 		void GetFileMD5(const HermitPtr& h_,
 						const file::FilePathPtr& filePath,
-						const encoding::CalculateMD5CompletionPtr& completion);
+						const encoding::CalculateHashCompletionPtr& completion);
 		
 	} // namespace encoding_file
 } // namespace hermit

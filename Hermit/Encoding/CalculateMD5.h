@@ -21,13 +21,13 @@
 
 #include "Hermit/Foundation/DataBuffer.h"
 #include "Hermit/Foundation/Hermit.h"
-#include "CalculateMD5Result.h"
+#include "CalculateHashResult.h"
 
 namespace hermit {
 	namespace encoding {
 		
 		//
-		void CalculateMD5(const HermitPtr& h_, const DataBuffer& data, const CalculateMD5CompletionPtr& completion);
+		void CalculateMD5(const HermitPtr& h_, const DataBuffer& data, const CalculateHashCompletionPtr& completion);
 		
 	} // namespace encoding
 } // namespace hermit

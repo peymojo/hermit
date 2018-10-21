@@ -25,7 +25,7 @@ namespace hermit {
 		//
 		void GetFileMD5(const HermitPtr& h_,
 						const file::FilePathPtr& filePath,
-						const encoding::CalculateMD5CompletionPtr& completion) {
+						const encoding::CalculateHashCompletionPtr& completion) {
 			GetFileMD5WithProgress(h_, filePath, completion);
 		}
 		
