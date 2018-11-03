@@ -733,15 +733,15 @@ namespace hermit {
 				}
 				
 				//
-				virtual void Call(const HermitPtr& h_, const ProcessHardLinkCompletionFunctionPtr& completion) override {
+				virtual void Call(const HermitPtr& h_, const ProcessHardLinkCompletionPtr& completion) override {
 					GetFileTotalSizeCallbackClass sizeCallback;
 					GetFileTotalSize(h_, mFilePath, sizeCallback);
 					if (!sizeCallback.mSuccess) {
 						NOTIFY_ERROR(h_, "GetFileTotalSize failed.");
-						completion->Call(h_, HardLinkInfoResult::kError, "", 0, "");
+						completion->Call(h_, HardLinkInfoResult::kError, "", 0, "", "");
 						return;
 					}
-					completion->Call(h_, HardLinkInfoResult::kSuccess, "", sizeCallback.mTotalSize, "");
+					completion->Call(h_, HardLinkInfoResult::kSuccess, "", sizeCallback.mTotalSize, "", "");
 				}
 				
 				//
@@ -749,7 +749,7 @@ namespace hermit {
 			};
 
 			//
-			class HardLinkCompletion : public GetHardLinkInfoCompletionFunction {
+			class HardLinkCompletion : public GetHardLinkInfoCompletion {
 			public:
 				//
 				HardLinkCompletion(const HardLinkCompareClassPtr& compareClass, int whichFile) :
@@ -763,7 +763,8 @@ namespace hermit {
 								  const std::vector<std::string>& paths,
 								  const std::string& objectDataId,
 								  const uint64_t& dataSize,
-								  const std::string& dataHash) override {
+								  const std::string& dataHash,
+								  const std::string& hashAlgorithm) override {
 					mCompareClass->HandleResult(h_, mWhichFile, result, paths, dataSize);
 				}
 				

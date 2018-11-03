@@ -62,10 +62,11 @@ namespace hermit {
 				//
 				bool mProcessing;
 				HardLinkInfoResult mResult;
-				std::vector<GetHardLinkInfoCompletionFunctionPtr> mClients;
+				std::vector<GetHardLinkInfoCompletionPtr> mClients;
 				std::string mDataObjectId;
 				uint64_t mDataSize;
 				std::string mDataHash;
+				std::string mHashAlgorithm;
 				std::vector<std::string> mPaths;
 				std::mutex mMutex;
 			};
@@ -234,7 +235,7 @@ namespace hermit {
 			}
 			
 			//
-			class ProcessCallback : public ProcessHardLinkCompletionFunction {
+			class ProcessCallback : public ProcessHardLinkCompletion {
 			public:
 				//
 				ProcessCallback(const HardLinkInfoPtr& hardLinkInfo) :
@@ -246,8 +247,9 @@ namespace hermit {
 								  const HardLinkInfoResult& result,
 								  const std::string& dataObjectId,
 								  const uint64_t& dataSize,
-								  const std::string& dataHash) override {
-					auto clients = std::vector<GetHardLinkInfoCompletionFunctionPtr>();
+								  const std::string& dataHash,
+								  const std::string& hashAlgorithm) override {
+					auto clients = std::vector<GetHardLinkInfoCompletionPtr>();
 					{
 						std::lock_guard<std::mutex> lock(mHardLinkInfo->mMutex);
 						mHardLinkInfo->mResult = result;
@@ -255,18 +257,19 @@ namespace hermit {
 							mHardLinkInfo->mDataObjectId = dataObjectId;
 							mHardLinkInfo->mDataSize = dataSize;
 							mHardLinkInfo->mDataHash = dataHash;
+							mHardLinkInfo->mHashAlgorithm = hashAlgorithm;
 						}
 						clients = mHardLinkInfo->mClients;
 					}
 					
 					for (auto it = begin(clients); it != end(clients); ++it) {
-						(*it)->Call(h_, result, mHardLinkInfo->mPaths, dataObjectId, dataSize, dataHash);
+						(*it)->Call(h_, result, mHardLinkInfo->mPaths, dataObjectId, dataSize, dataHash, hashAlgorithm);
 					}
 				}
 				
 				//
 				HardLinkInfoPtr mHardLinkInfo;
-				GetHardLinkInfoCompletionFunctionPtr mCompletionFunction;
+				GetHardLinkInfoCompletionPtr mCompletionFunction;
 			};
 			
 			//
@@ -274,7 +277,7 @@ namespace hermit {
 				HermitPtr mH_;
 				FilePathPtr mItem;
 				ProcessHardLinkFunctionPtr mProcessFunction;
-				GetHardLinkInfoCompletionFunctionPtr mCompletion;
+				GetHardLinkInfoCompletionPtr mCompletion;
 			};
 			typedef std::vector<HardLinkInfoParams> HardLinkInfoFunctionVector;
 			
@@ -301,17 +304,17 @@ namespace hermit {
 								const FilePathPtr& root,
 								const HardLinkInfoMap& infoMap,
 								const ProcessHardLinkFunctionPtr& processFunction,
-								const GetHardLinkInfoCompletionFunctionPtr& completion) {
+								const GetHardLinkInfoCompletionPtr& completion) {
 				std::string relativePath;
 				if (!GetRelativePath(h_, root, item, relativePath)) {
 					NOTIFY_ERROR(h_, "GetRelativePath failed for item:", item, "root:", root);
-					completion->Call(h_, HardLinkInfoResult::kError, std::vector<std::string>(), "", 0, "");
+					completion->Call(h_, HardLinkInfoResult::kError, std::vector<std::string>(), "", 0, "", "");
 					return;
 				}
 				auto it = infoMap.find(relativePath);
 				if (it == end(infoMap)) {
 					NOTIFY_ERROR(h_, "it == context->mInfoMap.end() for relative path:", relativePath);
-					completion->Call(h_, HardLinkInfoResult::kError, std::vector<std::string>(), "", 0, "");
+					completion->Call(h_, HardLinkInfoResult::kError, std::vector<std::string>(), "", 0, "", "");
 					return;
 				}
 				HardLinkInfoPtr hardLinkInfo = it->second;
@@ -340,7 +343,7 @@ namespace hermit {
 					return;
 				}
 				if (result == HardLinkInfoResult::kCanceled) {
-					completion->Call(h_, HardLinkInfoResult::kCanceled, std::vector<std::string>(), "", 0, "");
+					completion->Call(h_, HardLinkInfoResult::kCanceled, std::vector<std::string>(), "", 0, "", "");
 					return;
 				}
 				if (result == HardLinkInfoResult::kSuccess) {
@@ -349,11 +352,12 @@ namespace hermit {
 									 hardLinkInfo->mPaths,
 									 hardLinkInfo->mDataObjectId,
 									 hardLinkInfo->mDataSize,
-									 hardLinkInfo->mDataHash);
+									 hardLinkInfo->mDataHash,
+									 hardLinkInfo->mHashAlgorithm);
 					return;
 				}
 				NOTIFY_ERROR(h_, "HardLinkInfoResult error");
-				completion->Call(h_, result, std::vector<std::string>(), "", 0, "");
+				completion->Call(h_, result, std::vector<std::string>(), "", 0, "", "");
 			}
 			
 			//
@@ -361,7 +365,7 @@ namespace hermit {
 							 const HardLinkInfoContextPtr& context,
 							 const FilePathPtr& item,
 							 const ProcessHardLinkFunctionPtr& processFunction,
-							 const GetHardLinkInfoCompletionFunctionPtr& completion) {
+							 const GetHardLinkInfoCompletionPtr& completion) {
 				auto result = BuildHardLinkMapResult::kUnknown;
 				{
 					std::lock_guard<std::mutex> lock(context->mMutex);
@@ -386,12 +390,12 @@ namespace hermit {
 					result = context->mBuildMapResult;
 				}
 				if ((result == BuildHardLinkMapResult::kCanceled) || (CHECK_FOR_ABORT(h_))) {
-					completion->Call(h_, HardLinkInfoResult::kCanceled, std::vector<std::string>(), "", 0, "");
+					completion->Call(h_, HardLinkInfoResult::kCanceled, std::vector<std::string>(), "", 0, "", "");
 					return;
 				}
 				if (result != BuildHardLinkMapResult::kSuccess) {
 					NOTIFY_ERROR(h_, "result != BuildHardLinkMapResult::kSuccess");
-					completion->Call(h_, HardLinkInfoResult::kError, std::vector<std::string>(), "", 0, "");
+					completion->Call(h_, HardLinkInfoResult::kError, std::vector<std::string>(), "", 0, "", "");
 					return;
 				}
 				
@@ -426,7 +430,7 @@ namespace hermit {
 		void HardLinkMap::Call(const HermitPtr& h_,
 							   const FilePathPtr& item,
 							   const ProcessHardLinkFunctionPtr& processFunction,
-							   const GetHardLinkInfoCompletionFunctionPtr& completion) {
+							   const GetHardLinkInfoCompletionPtr& completion) {
 			PerformWork(h_, mImpl->mContext, item, processFunction, completion);
 		}
 		
