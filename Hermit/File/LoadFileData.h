@@ -42,7 +42,7 @@ namespace hermit {
 		//
 		void LoadFileData(const HermitPtr& h_,
 						  const FilePathPtr& filePath,
-						  const DataHandlerBlockPtr& dataHandler,
+						  const DataReceiverPtr& dataReceiver,
 						  const LoadFileDataCompletionPtr& completion);
 		
 	} // namespace file

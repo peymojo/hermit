@@ -22,44 +22,44 @@
 
 namespace hermit {
 	namespace s3 {
-		
 		namespace SendS3CommandWithData_Impl {
 
 			//
-			class DataHandler : public DataHandlerBlock {
+			class Receiver : public DataReceiver {
 			public:
 				//
-				virtual StreamDataResult HandleData(const HermitPtr& h_, const DataBuffer& data, bool isEndOfData) override {
+				virtual void Call(const HermitPtr& h_,
+								  const DataBuffer& data,
+								  const bool& isEndOfData,
+								  const DataCompletionPtr& completion) override {
 					if (data.second > 0) {
 						mData.append(data.first, data.second);
 					}
-					return StreamDataResult::kSuccess;
+					completion->Call(h_, StreamDataResult::kSuccess);
 				}
 				
 				//
 				std::string mData;
 			};
-			typedef std::shared_ptr<DataHandler> DataHandlerPtr;
+			typedef std::shared_ptr<Receiver> ReceiverPtr;
 			
 			//
 			class StreamInCompletion : public StreamInS3RequestCompletion {
 			public:
 				//
-				StreamInCompletion(const DataHandlerPtr& dataHandler, const SendS3CommandCompletionPtr& completion) :
-				mDataHandler(dataHandler),
+				StreamInCompletion(const ReceiverPtr& dataReceiver, const SendS3CommandCompletionPtr& completion) :
+				mDataReceiver(dataReceiver),
 				mCompletion(completion) {
 				}
 				
 				//
 				virtual void Call(const HermitPtr& h_, const S3Result& result, const S3ParamVector& params) override {
-					mCompletion->Call(h_,
-									  result,
-									  params,
-									  DataBuffer(mDataHandler->mData.data(), mDataHandler->mData.size()));
+					auto buffer = DataBuffer(mDataReceiver->mData.data(), mDataReceiver->mData.size());
+					mCompletion->Call(h_, result, params, buffer);
 				}
 				
 				//
-				DataHandlerPtr mDataHandler;
+				ReceiverPtr mDataReceiver;
 				SendS3CommandCompletionPtr mCompletion;
 			};
 			
@@ -74,15 +74,15 @@ namespace hermit {
 								   const S3ParamVector& params,
 								   const SharedBufferPtr& data,
 								   const SendS3CommandCompletionPtr& completion) {
-			auto dataHandler = std::make_shared<DataHandler>();
-			auto streamCompletion = std::make_shared<StreamInCompletion>(dataHandler, completion);
+			auto dataReceiver = std::make_shared<Receiver>();
+			auto streamCompletion = std::make_shared<StreamInCompletion>(dataReceiver, completion);
 			StreamInS3RequestWithBody(h_,
 									  session,
 									  url,
 									  method,
 									  params,
 									  data,
-									  dataHandler,
+									  dataReceiver,
 									  streamCompletion);
 		}
 		

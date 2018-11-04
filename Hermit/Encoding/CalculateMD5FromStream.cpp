@@ -112,7 +112,7 @@ namespace hermit {
 			}
 			
 			//
-			class MD5StreamCalculator : public DataHandlerBlock {
+			class MD5StreamCalculator : public DataReceiver {
 				//
 				static const uint64_t kBlockSize = 64;
 				
@@ -126,7 +126,10 @@ namespace hermit {
 				}
 				
 				//
-				virtual StreamDataResult HandleData(const HermitPtr& h_, const DataBuffer& data, bool isEndOfData) override {
+				virtual void Call(const HermitPtr& h_,
+								  const DataBuffer& data,
+								  const bool& isEndOfData,
+								  const DataCompletionPtr& completion) override {
 					mTotalBytes += data.second;
 					
 					size_t bytesRemaining = (size_t)data.second;
@@ -193,7 +196,7 @@ namespace hermit {
 						ProcessBlocks(mCarryoverBuffer.data(), mCarryoverBuffer.size(), bytesConsumed);
 						mCarryoverBuffer = mCarryoverBuffer.substr((size_t)bytesConsumed);
 					}
-					return StreamDataResult::kSuccess;
+					completion->Call(h_, StreamDataResult::kSuccess);
 				}
 				
 				//
@@ -303,7 +306,7 @@ namespace hermit {
 			}
 			
 			//
-			class Completion : public StreamResultBlock {
+			class Completion : public DataCompletion {
 			public:
 				//
 				Completion(const MD5StreamCalculatorPtr& calculator, const CalculateHashCompletionPtr& completion) :
@@ -312,7 +315,7 @@ namespace hermit {
 				}
 				
 				//
-				virtual void Call(const HermitPtr& h_, StreamDataResult result) override {
+				virtual void Call(const HermitPtr& h_, const StreamDataResult& result) override {
 					if (result == StreamDataResult::kCanceled) {
 						mCompletion->Call(h_, CalculateHashResult::kCanceled, "");
 						return;
@@ -335,11 +338,11 @@ namespace hermit {
 		
 		//
 		void CalculateMD5FromStream(const HermitPtr& h_,
-									const DataProviderBlockPtr& dataProvider,
+									const DataProviderPtr& dataProvider,
 									const CalculateHashCompletionPtr& completion) {
 			auto calculator = std::make_shared<MD5StreamCalculator>();
 			auto dataCompletion = std::make_shared<Completion>(calculator, completion);
-			dataProvider->ProvideData(h_, calculator, dataCompletion);
+			dataProvider->Call(h_, calculator, dataCompletion);
 		}
 		
 	} // namespace encoding

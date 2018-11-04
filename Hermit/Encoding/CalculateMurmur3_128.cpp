@@ -58,7 +58,7 @@ namespace hermit {
 			}
 			
 			//
-			class MurmurCalculator : public DataHandlerBlock {
+			class MurmurCalculator : public DataReceiver {
 				//
 				const uint64_t kBlockSize = 16;
 				const uint64_t c1 = BIG_CONSTANT(0x87c37b91114253d5);
@@ -72,7 +72,10 @@ namespace hermit {
 				}
 				
 				//
-				virtual StreamDataResult HandleData(const HermitPtr& h_, const DataBuffer& data, bool isEndOfData) override {
+				virtual void Call(const HermitPtr& h_,
+								  const DataBuffer& data,
+								  const bool& isEndOfData,
+								  const DataCompletionPtr& completion) override {
 					mTotalBytes += data.second;
 					
 					size_t bytesRemaining = (size_t)data.second;
@@ -146,7 +149,7 @@ namespace hermit {
 						mResult[0] = h1;
 						mResult[1] = h2;
 					}
-					return StreamDataResult::kSuccess;
+					completion->Call(h_, StreamDataResult::kSuccess);
 				}
 				
 				//
@@ -207,7 +210,7 @@ namespace hermit {
 			typedef std::shared_ptr<MurmurCalculator> MurmurCalculatorPtr;
 			
 			//
-			class Completion : public StreamResultBlock {
+			class Completion : public DataCompletion {
 			public:
 				//
 				Completion(const MurmurCalculatorPtr& calculator, const CalculateHashCompletionPtr& completion) :
@@ -216,7 +219,7 @@ namespace hermit {
 				}
 				
 				//
-				virtual void Call(const HermitPtr& h_, StreamDataResult result) override {
+				virtual void Call(const HermitPtr& h_, const StreamDataResult& result) override {
 					if (result == StreamDataResult::kCanceled) {
 						mCompletion->Call(h_, CalculateHashResult::kCanceled, "");
 						return;
@@ -240,11 +243,11 @@ namespace hermit {
 		
 		//
 		void CalculateMurmur3_128(const HermitPtr& h_,
-								  const DataProviderBlockPtr& dataProvider,
+								  const DataProviderPtr& dataProvider,
 								  const CalculateHashCompletionPtr& completion) {
 			auto calculator = std::make_shared<MurmurCalculator>(0);
 			auto dataCompletion = std::make_shared<Completion>(calculator, completion);
-			dataProvider->ProvideData(h_, calculator, dataCompletion);
+			dataProvider->Call(h_, calculator, dataCompletion);
 		}
 		
 	} // namespace encoding

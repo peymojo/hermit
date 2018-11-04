@@ -50,7 +50,7 @@ namespace hermit {
 										  const std::string& url,
 										  const std::string& method,
 										  const HTTPParamVector& headerParams,
-										  const DataHandlerBlockPtr& dataHandler,
+										  const DataReceiverPtr& dataReceiver,
 										  const HTTPRequestStatusBlockPtr& status,
 										  const HTTPRequestCompletionBlockPtr& completion) {
 			NOTIFY_ERROR(h_, "HTTPSession::StreamInRequest unimplemented");
@@ -63,7 +63,7 @@ namespace hermit {
 												  const std::string& method,
 												  const HTTPParamVector& headerParams,
 												  const SharedBufferPtr& body,
-												  const DataHandlerBlockPtr& dataHandler,
+												  const DataReceiverPtr& dataReceiver,
 												  const HTTPRequestStatusBlockPtr& status,
 												  const HTTPRequestCompletionBlockPtr& completion) {
 			NOTIFY_ERROR(h_, "HTTPSession::StreamInRequestWithBody unimplemented");

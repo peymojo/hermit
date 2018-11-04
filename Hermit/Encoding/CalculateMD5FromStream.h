@@ -28,7 +28,7 @@ namespace hermit {
 		
 		//
 		void CalculateMD5FromStream(const HermitPtr& h_,
-									const DataProviderBlockPtr& dataProvider,
+									const DataProviderPtr& dataProvider,
 									const CalculateHashCompletionPtr& completion);
 		
 	} // namespace encoding

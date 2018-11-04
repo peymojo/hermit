@@ -36,7 +36,7 @@ namespace hermit {
 									   const std::string& method,
 									   const S3ParamVector& params,
 									   const SharedBufferPtr& body,
-									   const DataHandlerBlockPtr& dataHandler,
+									   const DataReceiverPtr& dataReceiver,
 									   const StreamInS3RequestCompletionPtr& completion);
 		
 	} // namespace s3

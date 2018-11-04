@@ -22,35 +22,35 @@
 
 namespace hermit {
 	namespace file {
-		
-		namespace {
+		namespace ReadUTF8File_Impl {
 			
 			//
-			class DataBlock : public hermit::DataHandlerBlock {
+			class Receiver : public DataReceiver {
 			public:
 				//
-				virtual StreamDataResult HandleData(const hermit::HermitPtr& h_,
-													const hermit::DataBuffer& data,
-													bool isEndOfData) override {
+				virtual void Call(const HermitPtr& h_,
+								  const DataBuffer& data,
+								  const bool& isEndOfData,
+								  const DataCompletionPtr& completion) override {
 					if (data.second > 0) {
 						mData.append(data.first, data.second);
 					}
-					return hermit::StreamDataResult::kSuccess;
+					completion->Call(h_, StreamDataResult::kSuccess);
 				}
 				
 				//
 				std::string mData;
 			};
-			typedef std::shared_ptr<DataBlock> DataBlockPtr;
+			typedef std::shared_ptr<Receiver> ReceiverPtr;
 
 			//
 			class LoadCompletion : public LoadFileDataCompletion {
 			public:
 				//
-				LoadCompletion(const DataBlockPtr& data,
+				LoadCompletion(const ReceiverPtr& receiver,
 							   const ReadUTF8FileLineBlockPtr& lineBlock,
 							   const ReadUTF8FileCompletionPtr& completion) :
-				mData(data),
+				mReceiver(receiver),
 				mLineBlock(lineBlock),
 				mCompletion(completion) {
 				}
@@ -66,7 +66,7 @@ namespace hermit {
 						return;
 					}
 					
-					std::string utf8FileData(mData->mData);
+					std::string utf8FileData(mReceiver->mData);
 					std::string::size_type begin = 0;
 					while (true) {
 						std::string::size_type end = utf8FileData.find("\n", begin);
@@ -87,21 +87,22 @@ namespace hermit {
 				}
 				
 				//
-				DataBlockPtr mData;
+				ReceiverPtr mReceiver;
 				ReadUTF8FileLineBlockPtr mLineBlock;
 				ReadUTF8FileCompletionPtr mCompletion;
 			};
 			
-		} // private namespace
+		} // namespace ReadUTF8File_Impl
+		using namespace ReadUTF8File_Impl;
 
 		//
 		void ReadUTF8File(const HermitPtr& h_,
 						  const FilePathPtr& filePath,
 						  const ReadUTF8FileLineBlockPtr& lineBlock,
 						  const ReadUTF8FileCompletionPtr& completion) {
-			auto dataBlock = std::make_shared<DataBlock>();
-			auto loadCompletion = std::make_shared<LoadCompletion>(dataBlock, lineBlock, completion);
-			LoadFileData(h_, filePath, dataBlock, loadCompletion);
+			auto receiver = std::make_shared<Receiver>();
+			auto loadCompletion = std::make_shared<LoadCompletion>(receiver, lineBlock, completion);
+			LoadFileData(h_, filePath, receiver, loadCompletion);
 		}
 		
 	} // namespace file

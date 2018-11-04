@@ -23,22 +23,20 @@
 
 namespace hermit {
 	namespace file {
-		
-		namespace {
+		namespace WriteFileData_Impl {
 
 			//
-			class StreamOutBlock : public DataProviderBlock {
+			class StreamOutProvider : public DataProvider {
 			public:
 				//
-				StreamOutBlock(const DataBuffer& inData) : mData(inData) {
+				StreamOutProvider(const DataBuffer& inData) : mData(inData) {
 				}
 				
 				//
-				virtual void ProvideData(const HermitPtr& h_,
-										 const DataHandlerBlockPtr& dataHandler,
-										 const StreamResultBlockPtr& resultBlock) override {
-					auto result = dataHandler->HandleData(h_, mData, true);
-					resultBlock->Call(h_, result);
+				virtual void Call(const HermitPtr& h_,
+								  const DataReceiverPtr& dataReceiver,
+								  const DataCompletionPtr& completion) override {
+					dataReceiver->Call(h_, mData, true, completion);
 				}
 				
 				//
@@ -46,14 +44,14 @@ namespace hermit {
 			};
 			
 			//
-			class Completion : public StreamResultBlock {
+			class Completion : public DataCompletion {
 			public:
 				//
 				Completion(const WriteFileDataCompletionPtr& completion) : mCompletion(completion) {
 				}
 				
 				//
-				virtual void Call(const HermitPtr& h_, StreamDataResult result) override {
+				virtual void Call(const HermitPtr& h_, const StreamDataResult& result) override {
 					if (result == StreamDataResult::kCanceled) {
 						mCompletion->Call(h_, WriteFileDataResult::kCanceled);
 						return;
@@ -78,14 +76,15 @@ namespace hermit {
 				WriteFileDataCompletionPtr mCompletion;
 			};
 			
-		} // private namespace
+		} // namespace WriteFileData_Impl
+		using namespace WriteFileData_Impl;
 		
 		//
 		void WriteFileData(const HermitPtr& h_,
 						   const FilePathPtr& filePath,
 						   const DataBuffer& data,
 						   const WriteFileDataCompletionPtr& completion) {
-			auto streamOutBlock = std::make_shared<StreamOutBlock>(data);
+			auto streamOutBlock = std::make_shared<StreamOutProvider>(data);
 			auto streamCompletion = std::make_shared<Completion>(completion);
 			StreamOutFileData(h_, filePath, streamOutBlock, streamCompletion);
 		}

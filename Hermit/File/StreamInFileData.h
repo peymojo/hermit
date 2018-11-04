@@ -30,8 +30,8 @@ namespace hermit {
 		void StreamInFileData(const HermitPtr& h_,
 							  const FilePathPtr& filePath,
 							  std::uint64_t chunkSize,
-							  const DataHandlerBlockPtr& dataHandler,
-							  const StreamResultBlockPtr& completion);
+							  const DataReceiverPtr& dataReceiver,
+							  const DataCompletionPtr& completion);
 		
 	} // namespace file
 } // namespace hermit

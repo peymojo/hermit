@@ -34,10 +34,10 @@ namespace hermit {
 		public:
 			//
 			DataLoader(const std::string& filePathUTF8,
-					   const DataHandlerBlockPtr& dataHandler,
+					   const DataReceiverPtr& dataReceiver,
 					   const LoadFileDataCompletionPtr& completion) :
 			mFilePathUTF8(filePathUTF8),
-			mDataHandler(dataHandler),
+			mDataReceiver(dataReceiver),
 			mCompletion(completion),
 			mFileHandle(nullptr),
 			mBuf(nullptr),
@@ -80,7 +80,23 @@ namespace hermit {
 					return;
 				}
 			}
-					
+			
+			//
+			class ReceiveCompletion : public DataCompletion {
+			public:
+				//
+				ReceiveCompletion(const DataLoaderPtr& loader) : mLoader(loader) {
+				}
+				
+				//
+				virtual void Call(const HermitPtr& h_, const StreamDataResult& result) override {
+					mLoader->DataHandled(h_, result);
+				}
+				
+				//
+				DataLoaderPtr mLoader;
+			};
+			
 			//
 			void PerformLoadTask(const HermitPtr& h_) {
 				if (mFileHandle == nullptr) {
@@ -113,8 +129,8 @@ namespace hermit {
 					mCompletion->Call(h_, LoadFileDataResult::kError);
 					return;
 				}
-				auto result = mDataHandler->HandleData(h_, DataBuffer(mBuf, bytesRead), false);
-				DataHandled(h_, result);
+				auto receiveCompletion = std::make_shared<ReceiveCompletion>(shared_from_this());
+				mDataReceiver->Call(h_, DataBuffer(mBuf, bytesRead), false, receiveCompletion);
 			}
 			
 			//
@@ -134,8 +150,8 @@ namespace hermit {
 				}
 				if (::feof(mFileHandle)) {
 					mDone = true;
-					auto dataResult = mDataHandler->HandleData(h_, DataBuffer("", 0), true);
-					DataHandled(h_, dataResult);
+					auto receiveCompletion = std::make_shared<ReceiveCompletion>(shared_from_this());
+					mDataReceiver->Call(h_, DataBuffer("", 0), true, receiveCompletion);
 					return;
 				}
 				LoadNextChunk(h_);
@@ -143,7 +159,7 @@ namespace hermit {
 			
 			//
 			std::string mFilePathUTF8;
-			DataHandlerBlockPtr mDataHandler;
+			DataReceiverPtr mDataReceiver;
 			LoadFileDataCompletionPtr mCompletion;
 			FILE* mFileHandle;
 			char* mBuf;
@@ -154,11 +170,11 @@ namespace hermit {
 		//
 		void LoadFileData(const HermitPtr& h_,
 						  const FilePathPtr& filePath,
-						  const DataHandlerBlockPtr& dataHandler,
+						  const DataReceiverPtr& dataReceiver,
 						  const LoadFileDataCompletionPtr& completion) {
 			std::string pathUTF8;
 			GetFilePathUTF8String(h_, filePath, pathUTF8);
-			auto dataLoader = std::make_shared<DataLoader>(pathUTF8, dataHandler, completion);
+			auto dataLoader = std::make_shared<DataLoader>(pathUTF8, dataReceiver, completion);
 			dataLoader->LoadNextChunk(h_);
 		}
 		

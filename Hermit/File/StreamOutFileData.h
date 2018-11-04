@@ -29,8 +29,8 @@ namespace hermit {
 		//
 		void StreamOutFileData(const HermitPtr& h_,
 							   const FilePathPtr& filePath,
-							   const DataProviderBlockPtr& dataProvider,
-							   const StreamResultBlockPtr& resultBlock);
+							   const DataProviderPtr& dataProvider,
+							   const DataCompletionPtr& completion);
 		
 	} // namespace file
 } // namespace hermit

@@ -19,6 +19,7 @@
 #ifndef StreamDataFunction_h
 #define StreamDataFunction_h
 
+#include "AsyncFunction.h"
 #include "DataBuffer.h"
 #include "Hermit.h"
 
@@ -35,40 +36,28 @@ namespace hermit {
 	};
 
 	//
-	class StreamResultBlock {
-	public:
-		//
-		virtual void Call(const HermitPtr& h_, StreamDataResult result) = 0;
-	};
-	typedef std::shared_ptr<StreamResultBlock> StreamResultBlockPtr;
-
+	DEFINE_ASYNC_FUNCTION_2A(DataCompletion,
+							 HermitPtr,
+							 StreamDataResult);				// result
+	
 	//
-	class DataHandlerBlock {
-	public:
-		//
-		virtual StreamDataResult HandleData(const HermitPtr& h_, const DataBuffer& data, bool isEndOfData) = 0;
-	};
-	typedef std::shared_ptr<DataHandlerBlock> DataHandlerBlockPtr;
-
+	DEFINE_ASYNC_FUNCTION_4A(DataReceiver,
+							 HermitPtr,
+							 DataBuffer,					// data
+							 bool,							// isEndOfData
+							 DataCompletionPtr);			// completion
+	
 	//
-	class DataProviderBlock {
-	public:
-		//
-		virtual void ProvideData(const HermitPtr& h_,
-								 const DataHandlerBlockPtr& dataHandler,
-								 const StreamResultBlockPtr& resultBlock) = 0;
-	};
-	typedef std::shared_ptr<DataProviderBlock> DataProviderBlockPtr;
-
+	DEFINE_ASYNC_FUNCTION_3A(DataProvider,
+							 HermitPtr,
+							 DataReceiverPtr,				// receiver
+							 DataCompletionPtr);			// completion
+	
 	//
-	class DataProviderClientBlock {
-	public:
-		//
-		virtual void WithDataProvider(const HermitPtr& h_,
-									  const DataProviderBlockPtr& dataProvider,
-									  const StreamResultBlockPtr& resultBlock) = 0;
-	};
-	typedef std::shared_ptr<DataProviderClientBlock> DataProviderClientBlockPtr;
+	DEFINE_ASYNC_FUNCTION_3A(DataProviderClient,
+							 HermitPtr,
+							 DataProviderPtr,				// provider
+							 DataCompletionPtr);			// completion
 	
 } // namespace hermit
 

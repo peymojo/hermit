@@ -26,31 +26,34 @@ namespace hermit {
 		namespace FileDataStore_LoadData_Impl {
 			
 			//
-			class DataBlock : public DataHandlerBlock {
+			class Receiver : public DataReceiver {
 			public:
 				//
-				virtual StreamDataResult HandleData(const HermitPtr& h_, const DataBuffer& data, bool isEndOfData) override {
+				virtual void Call(const HermitPtr& h_,
+								  const DataBuffer& data,
+								  const bool& isEndOfData,
+								  const DataCompletionPtr& completion) override {
 					if (data.second > 0) {
 						mData.append(data.first, data.second);
 					}
-					return StreamDataResult::kSuccess;
+					completion->Call(h_, StreamDataResult::kSuccess);
 				}
 				
 				//
 				std::string mData;
 			};
-			typedef std::shared_ptr<DataBlock> DataBlockPtr;
+			typedef std::shared_ptr<Receiver> ReceiverPtr;
 
 			//
 			class LoadDataCompletion : public file::LoadFileDataCompletion {
 			public:
 				//
 				LoadDataCompletion(const file::FilePathPtr& filePath,
-								   const DataBlockPtr& data,
+								   const ReceiverPtr& dataReceiver,
 								   const datastore::LoadDataStoreDataDataBlockPtr& dataBlock,
 								   const datastore::LoadDataStoreDataCompletionBlockPtr& completion) :
 				mFilePath(filePath),
-				mData(data),
+				mDataReceiver(dataReceiver),
 				mDataBlock(dataBlock),
 				mCompletion(completion) {
 				}
@@ -66,14 +69,14 @@ namespace hermit {
 						mCompletion->Call(h_, datastore::LoadDataStoreDataResult::kError);
 						return;
 					}
-					mDataBlock->Call(h_, DataBuffer(mData->mData.data(), mData->mData.size()));
+					mDataBlock->Call(h_, DataBuffer(mDataReceiver->mData.data(), mDataReceiver->mData.size()));
 					mCompletion->Call(h_, datastore::LoadDataStoreDataResult::kSuccess);
 					return;
 				}
 				
 				//
 				file::FilePathPtr mFilePath;
-				DataBlockPtr mData;
+				ReceiverPtr mDataReceiver;
 				datastore::LoadDataStoreDataDataBlockPtr mDataBlock;
 				datastore::LoadDataStoreDataCompletionBlockPtr mCompletion;
 			};
@@ -88,12 +91,12 @@ namespace hermit {
                                      const datastore::LoadDataStoreDataDataBlockPtr& dataBlock,
                                      const datastore::LoadDataStoreDataCompletionBlockPtr& completion) {
 			FilePathDataPath& filePath = static_cast<FilePathDataPath&>(*path);
-			auto fileDataBlock = std::make_shared<DataBlock>();
+			auto fileReceiver = std::make_shared<Receiver>();
 			auto fileCompletion = std::make_shared<LoadDataCompletion>(filePath.mFilePath,
-																	   fileDataBlock,
+																	   fileReceiver,
 																	   dataBlock,
 																	   completion);
-			file::LoadFileData(h_, filePath.mFilePath, fileDataBlock, fileCompletion);
+			file::LoadFileData(h_, filePath.mFilePath, fileReceiver, fileCompletion);
 		}
 		
 	} // namespace filedatastore

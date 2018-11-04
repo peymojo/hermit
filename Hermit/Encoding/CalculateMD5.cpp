@@ -21,29 +21,28 @@
 
 namespace hermit {
 	namespace encoding {
-		
-		namespace {
+		namespace CalculateMD5_Impl {
 
 			//
-			class GetDataFunction : public DataProviderBlock {
+			class GetDataFunction : public DataProvider {
 			public:
 				//
 				GetDataFunction(const DataBuffer& data) : mData(data) {
 				}
 				
 				//
-				virtual void ProvideData(const HermitPtr& h_,
-										 const DataHandlerBlockPtr& dataHandler,
-										 const StreamResultBlockPtr& resultBlock) override {
-					auto result = dataHandler->HandleData(h_, mData, true);
-					resultBlock->Call(h_, result);
+				virtual void Call(const HermitPtr& h_,
+								  const DataReceiverPtr& dataReceiver,
+								  const DataCompletionPtr& completion) override {
+					dataReceiver->Call(h_, mData, true, completion);
 				}
 				
 				//
 				DataBuffer mData;
 			};
 			
-		} // private namespace
+		} // namespace CalculateMD5_Impl
+		using namespace CalculateMD5_Impl;
 		
 		//
 		void CalculateMD5(const HermitPtr& h_, const DataBuffer& data, const CalculateHashCompletionPtr& completion) {

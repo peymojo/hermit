@@ -26,11 +26,10 @@
 
 namespace hermit {
 	namespace file {
-		
-		namespace {
+		namespace StreamOutFileData_Impl {
 			
 			//
-			class DataWriter : public DataHandlerBlock {
+			class DataWriter : public DataReceiver {
 			public:
 				//
 				DataWriter(const FilePathPtr& inFilePath, NSFileHandle* inFileHandle) :
@@ -40,7 +39,10 @@ namespace hermit {
 				}
 				
 				//
-				virtual StreamDataResult HandleData(const HermitPtr& h_, const DataBuffer& data, bool isEndOfData) override {
+				virtual void Call(const HermitPtr& h_,
+								  const DataBuffer& data,
+								  const bool& isEndOfData,
+								  const DataCompletionPtr& completion) override {
 					if (data.second > 0) {
 						const uint64_t kBlockSize = 1024 * 1024 * 64;
 						
@@ -60,13 +62,15 @@ namespace hermit {
 							@catch (NSException* exception) {
 								//	Fugly... but does Cocoa provide a structured way of figuring out what the actual error is?
 								if ([exception.reason containsString:@"No space left on device"]) {
-									return StreamDataResult::kDiskFull;
+									completion->Call(h_, StreamDataResult::kDiskFull);
+									return;
 								}
 
 								NOTIFY_ERROR(h_,
 											 "DataWriter: exception during writeData:", [exception.name UTF8String],
 											 "reason:", [exception.reason UTF8String]);
-								return StreamDataResult::kError;
+								completion->Call(h_, StreamDataResult::kError);
+								return;
 							}
 							
 							mBytesWritten += bytesToWrite;
@@ -77,7 +81,7 @@ namespace hermit {
 							bytesRemaining -= bytesToWrite;
 						}
 					}
-					return StreamDataResult::kSuccess;
+					completion->Call(h_, StreamDataResult::kSuccess);
 				}
 				
 				//
@@ -88,21 +92,21 @@ namespace hermit {
 			typedef std::shared_ptr<DataWriter> DataWriterPtr;
 			
 			//
-			class Completion : public StreamResultBlock {
+			class Completion : public DataCompletion {
 			public:
 				//
 				Completion(const FilePathPtr& filePath,
 						   NSFileHandle* fileHandle,
 						   const DataWriterPtr& dataWriter,
-						   const StreamResultBlockPtr& resultBlock) :
+						   const DataCompletionPtr& completion) :
 				mFilePath(filePath),
 				mFileHandle(fileHandle),
 				mDataWriter(dataWriter),
-				mResultBlock(resultBlock) {
+				mCompletion(completion) {
 				}
 				
 				//
-				virtual void Call(const HermitPtr& h_, StreamDataResult result) {
+				virtual void Call(const HermitPtr& h_, const StreamDataResult& result) override {
 					if (result == StreamDataResult::kCanceled) {
 						//	delete the file if we created it? what about partially overwritten file?
 					}
@@ -116,24 +120,24 @@ namespace hermit {
 						[mFileHandle truncateFileAtOffset:mDataWriter->mBytesWritten];
 					}
 					[mFileHandle closeFile];
-					mResultBlock->Call(h_, result);
+					mCompletion->Call(h_, result);
 				}
 				
 				//
 				FilePathPtr mFilePath;
 				NSFileHandle* mFileHandle;
 				DataWriterPtr mDataWriter;
-				StreamResultBlockPtr mResultBlock;
-					 
+				DataCompletionPtr mCompletion;
 			};
 			
-		} // private namespace
+		} // namespace StreamOutFileData_Impl
+		using namespace StreamOutFileData_Impl;
 		
 		//
 		void StreamOutFileData(const HermitPtr& h_,
 							   const FilePathPtr& inFilePath,
-							   const DataProviderBlockPtr& dataProvider,
-							   const StreamResultBlockPtr& resultBlock) {
+							   const DataProviderPtr& dataProvider,
+							   const DataCompletionPtr& completion) {
 			@autoreleasepool {
 				try {
 					std::string pathUTF8;
@@ -153,13 +157,13 @@ namespace hermit {
 						if ((error != nil) &&
 							[error.domain isEqualToString:NSCocoaErrorDomain] &&
 							(error.code == NSFileWriteOutOfSpaceError)) {
-							resultBlock->Call(h_, StreamDataResult::kDiskFull);
+							completion->Call(h_, StreamDataResult::kDiskFull);
 							return;
 						}
 						if ((error != nil) &&
 							[error.domain isEqualToString:NSCocoaErrorDomain] &&
 							(error.code == NSFileNoSuchFileError)) {
-							resultBlock->Call(h_, StreamDataResult::kNoSuchFile);
+							completion->Call(h_, StreamDataResult::kNoSuchFile);
 							return;
 						}
 						
@@ -175,20 +179,20 @@ namespace hermit {
 							NOTIFY_ERROR(h_, "StreamOutFileData: NSFileHandle fileHandleForWritingToURL failed for:", inFilePath);
 						}
 						
-						resultBlock->Call(h_, StreamDataResult::kError);
+						completion->Call(h_, StreamDataResult::kError);
 						return;
 					}
 					
 					auto writer = std::make_shared<DataWriter>(inFilePath, fileHandle);
-					auto completion = std::make_shared<Completion>(inFilePath, fileHandle, writer, resultBlock);
-					dataProvider->ProvideData(h_, writer, completion);
+					auto providerCompletion = std::make_shared<Completion>(inFilePath, fileHandle, writer, completion);
+					dataProvider->Call(h_, writer, providerCompletion);
 				}
 				catch (NSException* ex) {
 					NOTIFY_ERROR(h_,
 								 "StreamOutFileData: Outer Exception processing file:", inFilePath,
 								 "name:", [[ex name] UTF8String],
 								 "reason:", [[ex reason] UTF8String]);
-					resultBlock->Call(h_, StreamDataResult::kError);
+					completion->Call(h_, StreamDataResult::kError);
 				}
 			}
 		}

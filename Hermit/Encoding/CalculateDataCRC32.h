@@ -39,7 +39,7 @@ namespace hermit {
 		
 		//
 		void CalculateDataCRC32(const HermitPtr& h_,
-								const DataProviderBlockPtr& dataProvider,
+								const DataProviderPtr& dataProvider,
 								const CalculateDataCRC32CompletionPtr& completion);
 		
 	} // namespace encoding

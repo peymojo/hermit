@@ -45,20 +45,23 @@ namespace hermit {
 			}
 
 			//
-			class DataHandler : public DataHandlerBlock {
+			class Receiver : public DataReceiver {
 			public:
 				//
-				virtual StreamDataResult HandleData(const HermitPtr& h_, const DataBuffer& data, bool isEndOfData) override {
+				virtual void Call(const HermitPtr& h_,
+								  const DataBuffer& data,
+								  const bool& isEndOfData,
+								  const DataCompletionPtr& completion) override {
 					if (data.second > 0) {
 						mData.append(data.first, data.second);
 					}
-					return StreamDataResult::kSuccess;
+					completion->Call(h_, StreamDataResult::kSuccess);
 				}
 				
 				//
 				std::string mData;
 			};
-			typedef std::shared_ptr<DataHandler> DataHandlerPtr;
+			typedef std::shared_ptr<Receiver> ReceiverPtr;
 
 			//
 			class ProcessXMLClass : xml::ParseXMLClient {
@@ -167,8 +170,8 @@ namespace hermit {
 									   const std::string& awsPublicKey,
 									   const std::string& awsSigningKey,
 									   const std::string& awsRegion,
-									   const DataHandlerPtr& ourDataHandler,
-									   const DataHandlerBlockPtr& theirDataHandler,
+									   const ReceiverPtr& ourDataReceiver,
+									   const DataReceiverPtr& theirDataReceiver,
 									   const S3CompletionBlockPtr& completion) :
 					mSession(session),
 					mURL(url),
@@ -178,10 +181,35 @@ namespace hermit {
 					mAWSPublicKey(awsPublicKey),
 					mAWSSigningKey(awsSigningKey),
 					mAWSRegion(awsRegion),
-					mOurDataHandler(ourDataHandler),
-					mTheirDataHandler(theirDataHandler),
+					mOurDataReceiver(ourDataReceiver),
+					mTheirDataReceiver(theirDataReceiver),
 					mCompletion(completion) {
 					}
+					
+					//
+					class Completion : public DataCompletion {
+					public:
+						//
+						Completion(const S3CompletionBlockPtr& completion) : mCompletion(completion) {
+						}
+						
+						//
+						virtual void Call(const HermitPtr& h_, const StreamDataResult& result) override {
+							if (result == StreamDataResult::kCanceled) {
+								mCompletion->Call(h_, S3Result::kCanceled);
+								return;
+							}
+							if (result != StreamDataResult::kSuccess) {
+								NOTIFY_ERROR(h_, "StreamData failed.");
+								mCompletion->Call(h_, S3Result::kError);
+								return;
+							}
+							mCompletion->Call(h_, S3Result::kSuccess);
+						}
+						
+						//
+						S3CompletionBlockPtr mCompletion;
+					};
 					
 					//
 					virtual void Call(const HermitPtr& h_, const S3Result& result, const S3ParamVector& params) override {
@@ -230,7 +258,7 @@ namespace hermit {
 							}
 							if (result == S3Result::k307TemporaryRedirect) {
 								ProcessXMLClass pc(h_);
-								pc.Process(mOurDataHandler->mData);
+								pc.Process(mOurDataReceiver->mData);
 								if (pc.mCode == "TemporaryRedirect") {
 									if (pc.mEndpoint.empty()) {
 										NOTIFY_ERROR(h_,
@@ -247,7 +275,7 @@ namespace hermit {
 										return;
 									}
 									// Reset the data buffer, otherwise the result of the redirect will be appended.
-									mOurDataHandler->mData.clear();
+									mOurDataReceiver->mData.clear();
 									StreamInS3Object(h_,
 													 mSession,
 													 mRedirectCount + 1,
@@ -256,15 +284,15 @@ namespace hermit {
 													 mAWSPublicKey,
 													 mAWSSigningKey,
 													 mAWSRegion,
-													 mOurDataHandler,
-													 mTheirDataHandler,
+													 mOurDataReceiver,
+													 mTheirDataReceiver,
 													 mCompletion);
 									return;
 								}
 
 								NOTIFY_ERROR(h_,
 											 "Unparsed 307 Temporary Redirect for host:", mHost,
-											 "response:", mOurDataHandler->mData);
+											 "response:", mOurDataReceiver->mData);
 								mCompletion->Call(h_, S3Result::kError);
 								return;
 							}
@@ -272,50 +300,40 @@ namespace hermit {
 							mCompletion->Call(h_, result);
 							return;
 						}
-						else {
-							//	We currently put this value when we put an s3 object, but we can't assume it's
-							//	there for any given s3 object we're asked to fetch. So this checksum step is optional.
-							std::string s3sha256hex(GetSHA256(params));
-							if (!s3sha256hex.empty()) {
-								std::string dataSHA256;
-								encoding::CalculateSHA256(mOurDataHandler->mData, dataSHA256);
-								if (dataSHA256.empty()) {
-									NOTIFY_ERROR(h_, "CalculateSHA256 failed.");
-									mCompletion->Call(h_, S3Result::kError);
-									return;
-								}
-								std::string dataSHA256Hex;
-								string::BinaryStringToHex(dataSHA256, dataSHA256Hex);
-								if (dataSHA256Hex.empty()) {
-									NOTIFY_ERROR(h_, "BinaryStringToHex failed.");
-									mCompletion->Call(h_, S3Result::kError);
-									return;
-								}
-								
-								if (s3sha256hex != dataSHA256Hex) {
-									NOTIFY_ERROR(h_,
-												 "checksum mismatch for for URL:", mURL,
-												 "s3 value:", s3sha256hex,
-												 "local value:", dataSHA256Hex);
-									
-									mCompletion->Call(h_, S3Result::kChecksumMismatch);
-									return;
-								}
-							}
-							
-							auto buffer = DataBuffer(mOurDataHandler->mData.data(), mOurDataHandler->mData.size());
-							auto result = mTheirDataHandler->HandleData(h_, buffer, true);
-							if (result == StreamDataResult::kCanceled) {
-								mCompletion->Call(h_, S3Result::kCanceled);
-								return;
-							}
-							if (result != StreamDataResult::kSuccess) {
-								NOTIFY_ERROR(h_, "StreamData failed.");
+
+						//	We currently put this value when we put an s3 object, but we can't assume it's
+						//	there for any given s3 object we're asked to fetch. So this checksum step is optional.
+						std::string s3sha256hex(GetSHA256(params));
+						if (!s3sha256hex.empty()) {
+							std::string dataSHA256;
+							encoding::CalculateSHA256(mOurDataReceiver->mData, dataSHA256);
+							if (dataSHA256.empty()) {
+								NOTIFY_ERROR(h_, "CalculateSHA256 failed.");
 								mCompletion->Call(h_, S3Result::kError);
 								return;
 							}
-							mCompletion->Call(h_, S3Result::kSuccess);
+							std::string dataSHA256Hex;
+							string::BinaryStringToHex(dataSHA256, dataSHA256Hex);
+							if (dataSHA256Hex.empty()) {
+								NOTIFY_ERROR(h_, "BinaryStringToHex failed.");
+								mCompletion->Call(h_, S3Result::kError);
+								return;
+							}
+								
+							if (s3sha256hex != dataSHA256Hex) {
+								NOTIFY_ERROR(h_,
+											 "checksum mismatch for for URL:", mURL,
+											 "s3 value:", s3sha256hex,
+											 "local value:", dataSHA256Hex);
+									
+								mCompletion->Call(h_, S3Result::kChecksumMismatch);
+								return;
+							}
 						}
+							
+						auto buffer = DataBuffer(mOurDataReceiver->mData.data(), mOurDataReceiver->mData.size());
+						auto receiveCompletion = std::make_shared<Completion>(mCompletion);
+						mTheirDataReceiver->Call(h_, buffer, true, receiveCompletion);
 					}
 					
 					//
@@ -327,8 +345,8 @@ namespace hermit {
 					std::string mAWSPublicKey;
 					std::string mAWSSigningKey;
 					std::string mAWSRegion;
-					DataHandlerPtr mOurDataHandler;
-					DataHandlerBlockPtr mTheirDataHandler;
+					ReceiverPtr mOurDataReceiver;
+					DataReceiverPtr mTheirDataReceiver;
 					S3CompletionBlockPtr mCompletion;
 				};
 				
@@ -342,8 +360,8 @@ namespace hermit {
 											 const std::string& awsPublicKey,
 											 const std::string& awsSigningKey,
 											 const std::string& awsRegion,
-											 const DataHandlerPtr& ourDataHandler,
-											 const DataHandlerBlockPtr& theirDataHandler,
+											 const ReceiverPtr& ourDataReceiver,
+											 const DataReceiverPtr& theirDataReceiver,
 											 const S3CompletionBlockPtr& completion) {
 					if (redirectCount > 5) {
 						NOTIFY_ERROR(h_, "Too many temporary redirects for s3Path:", s3Path);
@@ -433,10 +451,10 @@ namespace hermit {
 																				 awsPublicKey,
 																				 awsSigningKey,
 																				 awsRegion,
-																				 ourDataHandler,
-																				 theirDataHandler,
+																				 ourDataReceiver,
+																				 theirDataReceiver,
 																				 completion);
-					StreamInS3Request(h_, session, url, method, params, ourDataHandler, streamCompletion);
+					StreamInS3Request(h_, session, url, method, params, ourDataReceiver, streamCompletion);
 				}
 			};
 			
@@ -451,7 +469,7 @@ namespace hermit {
 							  const std::string& awsRegion,
 							  const std::string& s3BucketName,
 							  const std::string& s3ObjectKey,
-							  const DataHandlerBlockPtr& dataHandler,
+							  const DataReceiverPtr& dataReceiver,
 							  const S3CompletionBlockPtr& completion) {
 			std::string host(s3BucketName);
 			host += ".s3.amazonaws.com";
@@ -463,7 +481,7 @@ namespace hermit {
 				s3Path = "/" + s3Path;
 			}
 			
-			auto ourDataHandler = std::make_shared<DataHandler>();
+			auto ourDataReceiver = std::make_shared<Receiver>();
 			Redirector::StreamInS3Object(h_,
 										 session,
 										 0,
@@ -472,8 +490,8 @@ namespace hermit {
 										 awsPublicKey,
 										 awsSigningKey,
 										 awsRegion,
-										 ourDataHandler,
-										 dataHandler,
+										 ourDataReceiver,
+										 dataReceiver,
 										 completion);
 		}
 		

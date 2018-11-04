@@ -129,7 +129,7 @@ namespace hermit {
 			}
 			
 			//
-			class CopyDataCompletion : public StreamResultBlock {
+			class CopyDataCompletion : public DataCompletion {
 			public:
 				//
 				CopyDataCompletion(const FilePathPtr& source,
@@ -141,7 +141,7 @@ namespace hermit {
 				}
 				
 				//
-				virtual void Call(const HermitPtr& h_, StreamDataResult result) override {
+				virtual void Call(const HermitPtr& h_, const StreamDataResult& result) override {
 					if (result != StreamDataResult::kSuccess) {
 						NOTIFY_ERROR(h_, "CopyFileData failed for source path:", mSource, "dest path:", mDest);
 						mCompletion->Call(h_, FileSystemCopyResult::kError);
@@ -158,17 +158,17 @@ namespace hermit {
 			};
 
 			//
-			class DataProvider : public DataProviderBlock {
+			class FileDataProvider : public DataProvider {
 			public:
 				//
-				DataProvider(FilePathPtr sourceFile) : mSourceFile(sourceFile) {
+				FileDataProvider(FilePathPtr sourceFile) : mSourceFile(sourceFile) {
 				}
 				
 				//
-				virtual void ProvideData(const HermitPtr& h_,
-										 const DataHandlerBlockPtr& dataHandler,
-										 const StreamResultBlockPtr& resultBlock) override {
-					StreamInFileData(h_, mSourceFile, kChunkSize, dataHandler, resultBlock);
+				virtual void Call(const HermitPtr& h_,
+								  const DataReceiverPtr& dataReceiver,
+								  const DataCompletionPtr& completion) override {
+					StreamInFileData(h_, mSourceFile, kChunkSize, dataReceiver, completion);
 				}
 				
 				//
@@ -214,7 +214,7 @@ namespace hermit {
 					return;
 				}
 				
-				auto dataProvider = std::make_shared<DataProvider>(sourcePath);
+				auto dataProvider = std::make_shared<FileDataProvider>(sourcePath);
 				auto dataCompletion = std::make_shared<CopyDataCompletion>(sourcePath, destPath, completion);
 				StreamOutFileData(h_, destPath, dataProvider, dataCompletion);
 			}

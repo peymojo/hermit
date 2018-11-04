@@ -28,7 +28,7 @@ namespace hermit {
 		
 		//
 		void CalculateSHA256FromStream(const HermitPtr& h_,
-									   const DataProviderBlockPtr& dataProvider,
+									   const DataProviderPtr& dataProvider,
 									   const CalculateHashCompletionPtr& completion);
 		
 	} // namespace encoding

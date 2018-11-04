@@ -25,29 +25,32 @@ namespace hermit {
 		namespace GetS3Object_Impl {
 
 			//
-			class DataHandler : public DataHandlerBlock {
+			class Receiver : public DataReceiver {
 			public:
 				//
-				virtual StreamDataResult HandleData(const HermitPtr& h_, const DataBuffer& data, bool isEndOfData) override {
+				virtual void Call(const HermitPtr& h_,
+								  const DataBuffer& data,
+								  const bool& isEndOfData,
+								  const DataCompletionPtr& completion) override {
 					if (data.second > 0) {
 						mData.append(data.first, data.second);
 					}
-					return StreamDataResult::kSuccess;
+					completion->Call(h_, StreamDataResult::kSuccess);
 				}
 				
 				//
 				std::string mData;
 			};
-			typedef std::shared_ptr<DataHandler> DataHandlerPtr;
+			typedef std::shared_ptr<Receiver> ReceiverPtr;
 
 			//
 			class StreamCompletion : public S3CompletionBlock {
 			public:
 				//
-				StreamCompletion(const DataHandlerPtr& dataHandler,
+				StreamCompletion(const ReceiverPtr& dataReceiver,
 								 const GetS3ObjectResponseBlockPtr& response,
 								 const S3CompletionBlockPtr& completion) :
-				mDataHandler(dataHandler),
+				mDataReceiver(dataReceiver),
 				mResponse(response),
 				mCompletion(completion) {
 				}
@@ -55,13 +58,13 @@ namespace hermit {
 				//
 				virtual void Call(const HermitPtr& h_, const S3Result& result) override {
 					if (result == S3Result::kSuccess) {
-						mResponse->Call(DataBuffer(mDataHandler->mData.data(), mDataHandler->mData.size()));
+						mResponse->Call(DataBuffer(mDataReceiver->mData.data(), mDataReceiver->mData.size()));
 					}
 					mCompletion->Call(h_, result);
 				}
 				
 				//
-				DataHandlerPtr mDataHandler;
+				ReceiverPtr mDataReceiver;
 				GetS3ObjectResponseBlockPtr mResponse;
 				S3CompletionBlockPtr mCompletion;
 			};
@@ -79,8 +82,8 @@ namespace hermit {
 						 const std::string& s3ObjectKey,
 						 const GetS3ObjectResponseBlockPtr& response,
 						 const S3CompletionBlockPtr& completion) {
-			auto dataHandler = std::make_shared<DataHandler>();
-			auto streamCompletion = std::make_shared<StreamCompletion>(dataHandler, response, completion);
+			auto dataReceiver = std::make_shared<Receiver>();
+			auto streamCompletion = std::make_shared<StreamCompletion>(dataReceiver, response, completion);
 			StreamInS3Object(h_,
 							 session,
 							 awsPublicKey,
@@ -88,7 +91,7 @@ namespace hermit {
 							 awsRegion,
 							 s3BucketName,
 							 s3ObjectKey,
-							 dataHandler,
+							 dataReceiver,
 							 streamCompletion);
 		}
 		

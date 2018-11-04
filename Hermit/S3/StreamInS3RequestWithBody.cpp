@@ -120,26 +120,29 @@ namespace hermit {
 			};
 			
 			//
-			class DataHandler : public DataHandlerBlock {
+			class Receiver : public DataReceiver {
 			public:
 				//
-				DataHandler(const DataHandlerBlockPtr& dataHandler) :
-				mDataHandler(dataHandler) {
+				Receiver(const DataReceiverPtr& dataReceiver) :
+				mDataReceiver(dataReceiver) {
 				}
 				
 				//
-				virtual StreamDataResult HandleData(const HermitPtr& h_, const DataBuffer& data, bool isEndOfData) override {
+				virtual void Call(const HermitPtr& h_,
+								  const DataBuffer& data,
+								  const bool& isEndOfData,
+								  const DataCompletionPtr& completion) override {
 					if (data.second > 0) {
 						mData.append(data.first, data.second);
 					}
-					return mDataHandler->HandleData(h_, data, isEndOfData);
+					mDataReceiver->Call(h_, data, isEndOfData, completion);
 				}
 				
 				//
-				DataHandlerBlockPtr mDataHandler;
+				DataReceiverPtr mDataReceiver;
 				std::string mData;
 			};
-			typedef std::shared_ptr<DataHandler> DataHandlerPtr;
+			typedef std::shared_ptr<Receiver> ReceiverPtr;
 
 			//
 			class HTTPCompletion : public http::HTTPRequestCompletionBlock {
@@ -147,12 +150,12 @@ namespace hermit {
 				//
 				HTTPCompletion(const http::HTTPSessionPtr& httpSession,
 							   const std::string& url,
-							   const DataHandlerPtr& dataHandler,
+							   const ReceiverPtr& dataReceiver,
 							   const http::HTTPRequestStatusPtr& httpStatus,
 							   const StreamInS3RequestCompletionPtr& completion) :
 				mHTTPSession(httpSession),
 				mURL(url),
-				mDataHandler(dataHandler),
+				mDataReceiver(dataReceiver),
 				mHTTPStatus(httpStatus),
 				mCompletion(completion) {
 				}
@@ -188,7 +191,7 @@ namespace hermit {
 					if ((mHTTPStatus->mStatusCode < 200) || (mHTTPStatus->mStatusCode >= 300)) {
 						if (mHTTPStatus->mStatusCode == 301) {
 							ProcessXMLClass pc(h_);
-							pc.Process(mDataHandler->mData);
+							pc.Process(mDataReceiver->mData);
 							if (pc.mCode == "PermanentRedirect") {
 								NOTIFY_ERROR(h_,
 											 "301 Permanent Redirect for URL:", mURL,
@@ -200,13 +203,13 @@ namespace hermit {
 							}
 							NOTIFY_ERROR(h_,
 										 "Unparsed 301 Permanent Redirect for URL:", mURL,
-										 "response:", mDataHandler->mData);
+										 "response:", mDataReceiver->mData);
 							mCompletion->Call(h_, S3Result::kError, S3ParamVector());
 							return;
 						}
 						if (mHTTPStatus->mStatusCode == 307) {
 							ProcessXMLClass pc(h_);
-							pc.Process(mDataHandler->mData);
+							pc.Process(mDataReceiver->mData);
 							if (pc.mCode == "TemporaryRedirect") {
 								http::HTTPParamVector endpointParams;
 								endpointParams.push_back(std::make_pair("Endpoint", pc.mEndpoint));
@@ -216,13 +219,13 @@ namespace hermit {
 
 							NOTIFY_ERROR(h_,
 										 "Unparsed 307 Temporary Redirect for URL:", mURL,
-										 "response:", mDataHandler->mData);
+										 "response:", mDataReceiver->mData);
 							mCompletion->Call(h_, S3Result::kError, S3ParamVector());
 							return;
 						}
 						if (mHTTPStatus->mStatusCode == 400) {
 							ProcessXMLClass pc(h_);
-							pc.Process(mDataHandler->mData);
+							pc.Process(mDataReceiver->mData);
 							if (pc.mCode == "RequestTimeout") {
 								//	server-side timeout, seen when paused in the debugger so a bit artificial but still
 								//	worth having a special path for so we get a retry out of it.
@@ -232,30 +235,30 @@ namespace hermit {
 							if (pc.mCode == "AuthorizationHeaderMalformed") {
 								NOTIFY_ERROR(h_,
 											 "S3Result::kAuthorizationHeaderMalformed; response:",
-											 mDataHandler->mData);
+											 mDataReceiver->mData);
 								mCompletion->Call(h_, S3Result::kAuthorizationHeaderMalformed, S3ParamVector());
 								return;
 							}
 							
-							NOTIFY_ERROR(h_, "400 Bad Request, response:", mDataHandler->mData);
+							NOTIFY_ERROR(h_, "400 Bad Request, response:", mDataReceiver->mData);
 							mCompletion->Call(h_, S3Result::k400BadRequest, S3ParamVector());
 							return;
 						}
 						if (mHTTPStatus->mStatusCode == 403) {
 							ProcessXMLClass pc(h_);
-							pc.Process(mDataHandler->mData);
+							pc.Process(mDataReceiver->mData);
 							if (pc.mCode == "SignatureDoesNotMatch") {
 								NOTIFY_ERROR(h_, "403 - SignatureDoesNotMatch");
 							}
 							else {
-								NOTIFY_ERROR(h_, "403, response:", mDataHandler->mData);
+								NOTIFY_ERROR(h_, "403, response:", mDataReceiver->mData);
 							}
 							mCompletion->Call(h_, S3Result::k403AccessDenied, S3ParamVector());
 							return;
 						}
 						if (mHTTPStatus->mStatusCode == 404) {
 							ProcessXMLClass pc(h_);
-							pc.Process(mDataHandler->mData);
+							pc.Process(mDataReceiver->mData);
 							if (pc.mCode == "NoSuchBucket") {
 								mCompletion->Call(h_, S3Result::k404NoSuchBucket, S3ParamVector());
 								return;
@@ -265,14 +268,14 @@ namespace hermit {
 						}
 						if (mHTTPStatus->mStatusCode == 500) {
 							ProcessXMLClass pc(h_);
-							pc.Process(mDataHandler->mData);
+							pc.Process(mDataReceiver->mData);
 							if (pc.mCode == "InternalError") {
 								mCompletion->Call(h_, S3Result::kS3InternalError, S3ParamVector());
 								return;
 							}
 							NOTIFY_ERROR(h_,
 										 "Non-standard 500 error for URL:", mURL,
-										 "response:", mDataHandler->mData);
+										 "response:", mDataReceiver->mData);
 							mCompletion->Call(h_, S3Result::k500InternalServerError, S3ParamVector());
 							return;
 						}
@@ -285,7 +288,7 @@ namespace hermit {
 						NOTIFY_ERROR(h_,
 									 "Unexpected responseCode for URL:", mURL,
 									 "status code:", mHTTPStatus->mStatusCode,
-									 "response:", mDataHandler->mData);
+									 "response:", mDataReceiver->mData);
 							
 						mCompletion->Call(h_, S3Result::kError, S3ParamVector());
 						return;
@@ -297,7 +300,7 @@ namespace hermit {
 				//
 				http::HTTPSessionPtr mHTTPSession;
 				std::string mURL;
-				DataHandlerPtr mDataHandler;
+				ReceiverPtr mDataReceiver;
 				http::HTTPRequestStatusPtr mHTTPStatus;
 				StreamInS3RequestCompletionPtr mCompletion;
 			};
@@ -312,13 +315,13 @@ namespace hermit {
 									   const std::string& method,
 									   const S3ParamVector& params,
 									   const SharedBufferPtr& body,
-									   const DataHandlerBlockPtr& dataHandler,
+									   const DataReceiverPtr& dataReceiver,
 									   const StreamInS3RequestCompletionPtr& completion) {
-			auto dataHandlerProxy = std::make_shared<DataHandler>(dataHandler);
+			auto dataReceiverProxy = std::make_shared<Receiver>(dataReceiver);
 			auto status = std::make_shared<http::HTTPRequestStatus>();
 			auto httpCompletion = std::make_shared<HTTPCompletion>(session,
 																   url,
-																   dataHandlerProxy,
+																   dataReceiverProxy,
 																   status,
 																   completion);
 			
@@ -327,7 +330,7 @@ namespace hermit {
 											 method,
 											 params,
 											 body,
-											 dataHandlerProxy,
+											 dataReceiverProxy,
 											 status,
 											 httpCompletion);
 		}

@@ -28,7 +28,7 @@ namespace hermit {
 							   const std::string& url,
 							   const std::string& method,
 							   const S3ParamVector& params,
-							   const DataHandlerBlockPtr& dataHandler,
+							   const DataReceiverPtr& dataReceiver,
 							   const StreamInS3RequestCompletionPtr& completion) {
 			StreamInS3RequestWithBody(h_,
 									  session,
@@ -36,7 +36,7 @@ namespace hermit {
 									  method,
 									  params,
 									  SharedBufferPtr(),
-									  dataHandler,
+									  dataReceiver,
 									  completion);
 		}
 		

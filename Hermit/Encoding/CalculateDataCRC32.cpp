@@ -26,16 +26,19 @@ namespace hermit {
 		namespace {
 			
 			//
-			class Calculator : public DataHandlerBlock {
+			class Calculator : public DataReceiver {
 			public:
 				//
 				Calculator() : mCRC(0xffffffff) {
 				}
 				
 				//
-				virtual StreamDataResult HandleData(const HermitPtr& h_, const DataBuffer& data, bool isEndOfData) override {
+				virtual void Call(const HermitPtr& h_,
+								  const DataBuffer& data,
+								  const bool& isEndOfData,
+								  const DataCompletionPtr& completion) override {
 					mCRC = UpdateCRC32(mCRC, data.first, data.second);
-					return StreamDataResult::kSuccess;
+					completion->Call(h_, StreamDataResult::kSuccess);
 				}
 				
 				//
@@ -44,7 +47,7 @@ namespace hermit {
 			typedef std::shared_ptr<Calculator> CalculatorPtr;
 			
 			//
-			class Completion : public StreamResultBlock {
+			class Completion : public DataCompletion {
 			public:
 				//
 				Completion(const CalculatorPtr& calculator, const CalculateDataCRC32CompletionPtr& completion) :
@@ -53,7 +56,7 @@ namespace hermit {
 				}
 				
 				//
-				virtual void Call(const HermitPtr& h_, StreamDataResult result) override {
+				virtual void Call(const HermitPtr& h_, const StreamDataResult& result) override {
 					if (result == StreamDataResult::kCanceled) {
 						mCompletion->Call(h_, CalculateDataCRC32Result::kCanceled, 0);
 						return;
@@ -74,11 +77,11 @@ namespace hermit {
 		
 		//
 		void CalculateDataCRC32(const HermitPtr& h_,
-								const DataProviderBlockPtr& dataProvider,
+								const DataProviderPtr& dataProvider,
 								const CalculateDataCRC32CompletionPtr& completion) {
 			auto calculator = std::make_shared<Calculator>();
 			auto dataCompletion = std::make_shared<Completion>(calculator, completion);
-			dataProvider->ProvideData(h_, calculator, dataCompletion);
+			dataProvider->Call(h_, calculator, dataCompletion);
 		}
 		
 	} // namespace encoding
