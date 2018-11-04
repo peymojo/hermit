@@ -67,7 +67,33 @@ namespace hermit {
 				};
 				
 				//
-				void StreamSomeData(const HermitPtr& h_) {
+				void StreamSomeData(const hermit::HermitPtr& h_) {
+					auto task = std::make_shared<StreamDataTask>(shared_from_this());
+					if (!hermit::QueueAsyncTask(h_, task, 1)) {
+						NOTIFY_ERROR(h_, "hermit::QueueAsyncTask failed");
+						mCompletion->Call(h_, StreamDataResult::kError);
+					}
+				}
+				
+				//
+				class StreamDataTask : public hermit::AsyncTask {
+				public:
+					//
+					StreamDataTask(const FileStreamerPtr& streamer) :
+					mStreamer(streamer) {
+					}
+					
+					//
+					virtual void PerformTask(const hermit::HermitPtr& h_) {
+						mStreamer->StreamSomeDataTask(h_);
+					}
+					
+					//
+					FileStreamerPtr mStreamer;
+				};
+
+				//
+				void StreamSomeDataTask(const HermitPtr& h_) {
 					@try {
 						NSData* data = [mFileHandle readDataOfLength:(size_t)mChunkSize];
 						uint64_t actualCount = [data length];
