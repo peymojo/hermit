@@ -218,6 +218,12 @@
 		EFCA3CEB2015DEDC00801984 /* CompareXAttrs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFCA3CE82015DEDC00801984 /* CompareXAttrs.cpp */; };
 		EFCA3CEC2015DEDC00801984 /* CompareXAttrs.h in Headers */ = {isa = PBXBuildFile; fileRef = EFCA3CE92015DEDC00801984 /* CompareXAttrs.h */; };
 		EFCA3CED2015DEDC00801984 /* CompareXAttrs.h in Headers */ = {isa = PBXBuildFile; fileRef = EFCA3CE92015DEDC00801984 /* CompareXAttrs.h */; };
+		EFE254E721944F4800BCD2F1 /* DirectoryEnumerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFE254E521944F4800BCD2F1 /* DirectoryEnumerator.cpp */; };
+		EFE254E821944F4800BCD2F1 /* DirectoryEnumerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFE254E521944F4800BCD2F1 /* DirectoryEnumerator.cpp */; };
+		EFE254E921944F4800BCD2F1 /* DirectoryEnumerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFE254E521944F4800BCD2F1 /* DirectoryEnumerator.cpp */; };
+		EFE254EA21944F4800BCD2F1 /* DirectoryEnumerator.h in Headers */ = {isa = PBXBuildFile; fileRef = EFE254E621944F4800BCD2F1 /* DirectoryEnumerator.h */; };
+		EFE254EB21944F4800BCD2F1 /* DirectoryEnumerator.h in Headers */ = {isa = PBXBuildFile; fileRef = EFE254E621944F4800BCD2F1 /* DirectoryEnumerator.h */; };
+		EFE254EC21944F4800BCD2F1 /* DirectoryEnumerator.h in Headers */ = {isa = PBXBuildFile; fileRef = EFE254E621944F4800BCD2F1 /* DirectoryEnumerator.h */; };
 		EFEAC6141F6763C3004B8151 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EFEAC6131F6763C3004B8151 /* AppKit.framework */; };
 /* End PBXBuildFile section */
 
@@ -397,6 +403,8 @@
 		EFAD5FCD1D878B840056E526 /* WriteFileData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WriteFileData.h; sourceTree = "<group>"; };
 		EFCA3CE82015DEDC00801984 /* CompareXAttrs.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CompareXAttrs.cpp; sourceTree = "<group>"; };
 		EFCA3CE92015DEDC00801984 /* CompareXAttrs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CompareXAttrs.h; sourceTree = "<group>"; };
+		EFE254E521944F4800BCD2F1 /* DirectoryEnumerator.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = DirectoryEnumerator.cpp; sourceTree = "<group>"; };
+		EFE254E621944F4800BCD2F1 /* DirectoryEnumerator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DirectoryEnumerator.h; sourceTree = "<group>"; };
 		EFEAC6131F6763C3004B8151 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -495,10 +503,10 @@
 				EFAD5F361D878B840056E526 /* CreateAlias.h */,
 				EFAD5F371D878B840056E526 /* CreateDirectory_Cocoa.mm */,
 				EFAD5F381D878B840056E526 /* CreateDirectory.h */,
-				EFAD5F391D878B840056E526 /* CreateDirectoryParentChain.cpp */,
-				EFAD5F3A1D878B840056E526 /* CreateDirectoryParentChain.h */,
 				EFAD5F3B1D878B840056E526 /* CreateDirectoryIfNeeded.cpp */,
 				EFAD5F3C1D878B840056E526 /* CreateDirectoryIfNeeded.h */,
+				EFAD5F391D878B840056E526 /* CreateDirectoryParentChain.cpp */,
+				EFAD5F3A1D878B840056E526 /* CreateDirectoryParentChain.h */,
 				EFAD5F3D1D878B840056E526 /* CreateEmptyFile_Cocoa.mm */,
 				EFAD5F3E1D878B840056E526 /* CreateEmptyFile.h */,
 				EFAD5F3F1D878B840056E526 /* CreateFilePathFromCanonicalString.h */,
@@ -512,6 +520,8 @@
 				EFAD5F471D878B840056E526 /* CreateSymbolicLink.h */,
 				EFAD5F481D878B840056E526 /* DeleteFile_Cocoa.mm */,
 				EFAD5F491D878B840056E526 /* DeleteFile.h */,
+				EFE254E521944F4800BCD2F1 /* DirectoryEnumerator.cpp */,
+				EFE254E621944F4800BCD2F1 /* DirectoryEnumerator.h */,
 				EFAD5F4A1D878B840056E526 /* FileExists_Cocoa.mm */,
 				EFAD5F4B1D878B840056E526 /* FileExists.h */,
 				EF92C16D1F10FF180097D708 /* FileKit */,
@@ -659,6 +669,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EFE254EC21944F4800BCD2F1 /* DirectoryEnumerator.h in Headers */,
 				EFAD0807202AB917000B3D32 /* HardLinkMap.h in Headers */,
 				EFCA3CED2015DEDC00801984 /* CompareXAttrs.h in Headers */,
 				EF51C74B201AD2540028B7D4 /* CopyXAttrs.h in Headers */,
@@ -671,6 +682,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EFAD0806202AB917000B3D32 /* HardLinkMap.h in Headers */,
+				EFE254EB21944F4800BCD2F1 /* DirectoryEnumerator.h in Headers */,
 				EF65112A1F656EDA002D8065 /* FileKit_iOS.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -683,6 +695,7 @@
 				EF55F57D20121CCD0087BEA3 /* CompareLinks.h in Headers */,
 				EF55F56F2012183C0087BEA3 /* CompareFiles.h in Headers */,
 				EF51C74A201AD2540028B7D4 /* CopyXAttrs.h in Headers */,
+				EFE254EA21944F4800BCD2F1 /* DirectoryEnumerator.h in Headers */,
 				EFCA3CEC2015DEDC00801984 /* CompareXAttrs.h in Headers */,
 				EF92C1701F10FF180097D708 /* FileKit.h in Headers */,
 				EF55F57820121C630087BEA3 /* CompareDirectories.h in Headers */,
@@ -851,6 +864,7 @@
 				EF2CF5D11FF24A1C00652E69 /* CountDirectoryContents.cpp in Sources */,
 				EF2CF5D21FF24A1C00652E69 /* CreateAlias_Mac.cpp in Sources */,
 				EF2CF5D31FF24A1C00652E69 /* CreateDirectoryParentChain.cpp in Sources */,
+				EFE254E921944F4800BCD2F1 /* DirectoryEnumerator.cpp in Sources */,
 				EF2CF5D41FF24A1C00652E69 /* CreateDirectoryIfNeeded.cpp in Sources */,
 				EF2CF5D51FF24A1C00652E69 /* CreateSubDirectory.cpp in Sources */,
 				EF2CF5D61FF24A1C00652E69 /* FileNotification.cpp in Sources */,
@@ -900,6 +914,7 @@
 				EF6511631F656EE8002D8065 /* DeleteFile_Cocoa.mm in Sources */,
 				EF6511641F656EE8002D8065 /* FileExists_Cocoa.mm in Sources */,
 				EF6511651F656EE8002D8065 /* FileSystemRename_Cocoa.mm in Sources */,
+				EFE254E821944F4800BCD2F1 /* DirectoryEnumerator.cpp in Sources */,
 				EF6511661F656EE8002D8065 /* GetApplicationSettingsPath_iOS.mm in Sources */,
 				EF6511691F656EE8002D8065 /* GetFileDataSize_Cocoa.mm in Sources */,
 				EF6511711F656EE8002D8065 /* PathIsAlias_Cocoa.mm in Sources */,
@@ -948,6 +963,7 @@
 				EF92C1A31F10FF510097D708 /* CopySymbolicLink_Cocoa.mm in Sources */,
 				EF92C1A41F10FF510097D708 /* CountDirectoryContentsWithSize_Cocoa.mm in Sources */,
 				EF55F5702012183C0087BEA3 /* CompareFiles_Cocoa.mm in Sources */,
+				EFE254E721944F4800BCD2F1 /* DirectoryEnumerator.cpp in Sources */,
 				EF92C1A51F10FF510097D708 /* CreateDirectory_Cocoa.mm in Sources */,
 				EF92C1A61F10FF510097D708 /* CreateEmptyFile_Cocoa.mm in Sources */,
 				EF92C1A71F10FF510097D708 /* CreateHardLink_Cocoa.mm in Sources */,
