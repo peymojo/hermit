@@ -138,11 +138,15 @@ namespace hermit {
 								break;
 							}
 							if (result == GetNextDirectoryItemResult::kPermissionDenied) {
+								// Pass the parent info so the client knows where the permission error occurred.
+								itemPath = mStack.top()->mDirectoryPath;
+								itemType = FileType::kDirectory;
 								break;
 							}
 							if (result == GetNextDirectoryItemResult::kNoMoreItems) {
 								mStack.pop();
-								continue;
+								result = GetNextDirectoryItemResult::kEndOfDirectory;
+								break;
 							}
 							if (result != GetNextDirectoryItemResult::kSuccess) {
 								NOTIFY_ERROR(h_, "mStack.top()->NextItem failed");

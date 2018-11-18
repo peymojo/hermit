@@ -31,6 +31,7 @@ namespace hermit {
 		enum class GetNextDirectoryItemResult {
 			kUnknown,
 			kSuccess,
+			kEndOfDirectory,
 			kNoMoreItems,
 			kCanceled,
 			kNotADirectory,
