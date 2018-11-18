@@ -133,7 +133,7 @@ namespace hermit {
 								result = GetNextDirectoryItemResult::kNoMoreItems;
 								break;
 							}
-							auto result = mStack.top()->NextItem(h_, itemPath, itemType);
+							result = mStack.top()->NextItem(h_, itemPath, itemType);
 							if (result == GetNextDirectoryItemResult::kCanceled) {
 								break;
 							}
