@@ -74,6 +74,7 @@ namespace hermit {
 
 					if (!mLoaded) {
 						auto result = LoadItems(h_);
+						mLoaded = true;
 						if (result == ListDirectoryContentsResult::kCanceled) {
 							return GetNextDirectoryItemResult::kCanceled;
 						}
@@ -84,7 +85,6 @@ namespace hermit {
 							NOTIFY_ERROR(h_, "ListDirectoryContentsWithType failed for:", mDirectoryPath);
 							return GetNextDirectoryItemResult::kError;
 						}
-						mLoaded = true;
 					}
 					
 					if (mItems.empty()) {
@@ -141,6 +141,7 @@ namespace hermit {
 								// Pass the parent info so the client knows where the permission error occurred.
 								itemPath = mStack.top()->mDirectoryPath;
 								itemType = FileType::kDirectory;
+								mStack.pop();
 								break;
 							}
 							if (result == GetNextDirectoryItemResult::kNoMoreItems) {
