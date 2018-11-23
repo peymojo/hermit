@@ -16,6 +16,7 @@
 //	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+#include <map>
 #include <memory>
 #include <stack>
 #include <vector>
@@ -30,13 +31,59 @@ namespace hermit {
 		namespace NewDirectoryEnumerator_Impl {
 			
 			//
+			int CompareChar(const char& c1, const char& c2) {
+				if (c1 == c2) {
+					return 0;
+				}
+				if (std::toupper(c1) == std::toupper(c2)) {
+					return 0;
+				}
+				if (std::toupper(c1) < std::toupper(c2)) {
+					return -1;
+				}
+				return 1;
+			}
+			
+			//
+			int CaseInsensitiveStringCompare(const std::string& str1, const std::string& str2) {
+				std::string::size_type i = 0;
+				while (true) {
+					if ((i >= str1.size()) || (i >= str2.size())) {
+						break;
+					}
+					int chVal = CompareChar(str1[i], str2[i]);
+					if (chVal != 0) {
+						return chVal;
+					}
+					i++;
+				}
+				if (i < str2.size()) {
+					return -1;
+				}
+				if (i < str1.size()) {
+					return 1;
+				}
+				return 0;
+			}
+			
+			//
+			struct CaseInsensitiveCompare {
+				bool operator() (const std::string& a, const std::string& b) const {
+					return CaseInsensitiveStringCompare(a, b) < 0;
+				}
+			};
+
+			//
 			typedef std::pair<FilePathPtr, FileType> FileItem;
 			
+			//
+			typedef std::map<std::string, FileItem, CaseInsensitiveCompare> CaseInsensitiveItemMap;
+
 			//
 			class ItemCallback : public ListDirectoryContentsWithTypeItemCallback {
 			public:
 				//
-				ItemCallback(std::deque<FileItem>& items) : mItems(items) {
+				ItemCallback(CaseInsensitiveItemMap& items) : mItems(items) {
 				}
 				
 				//
@@ -53,12 +100,12 @@ namespace hermit {
 						return true;
 					}
 					auto item = std::make_pair(filePath, itemType);
-					mItems.push_back(item);
+					mItems.insert(std::make_pair(itemName, item));
 					return true;
 				}
 				
 				//
-				std::deque<FileItem>& mItems;
+				CaseInsensitiveItemMap& mItems;
 			};
 
 			//
@@ -85,15 +132,16 @@ namespace hermit {
 							NOTIFY_ERROR(h_, "ListDirectoryContentsWithType failed for:", mDirectoryPath);
 							return GetNextDirectoryItemResult::kError;
 						}
+						mIt = begin(mItems);
 					}
 					
-					if (mItems.empty()) {
+					if (mIt == end(mItems)) {
 						return GetNextDirectoryItemResult::kNoMoreItems;
 					}
-					auto item = mItems.front();
-					mItems.pop_front();
-					outPath = item.first;
-					outType = item.second;
+					auto item = *mIt;
+					mIt++;
+					outPath = item.second.first;
+					outType = item.second.second;
 					return GetNextDirectoryItemResult::kSuccess;
 				}
 				
@@ -107,7 +155,8 @@ namespace hermit {
 				FilePathPtr mDirectoryPath;
 				std::mutex mMutex;
 				bool mLoaded;
-				std::deque<FileItem> mItems;
+				CaseInsensitiveItemMap mItems;
+				CaseInsensitiveItemMap::const_iterator mIt;
 			};
 			typedef std::shared_ptr<DirectoryEnumerator> DirectoryEnumeratorPtr;
 			
