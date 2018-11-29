@@ -17,6 +17,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import <set>
 #import <string>
 #import <vector>
 #import "Hermit/Foundation/CompareMemory.h"
@@ -75,7 +76,7 @@ namespace hermit {
 				GetFileIsLocked(h_, filePath1, lockedCallback1);
 				if (!lockedCallback1.mSuccess) {
 					NOTIFY_ERROR(h_, "CompareFiles: GetFileIsLocked failed for:", filePath1);
-					completion->Call(CompareFilesStatus::kError);
+					completion->Call(h_, CompareFilesStatus::kError);
 					return;
 				}
 				
@@ -83,7 +84,7 @@ namespace hermit {
 				GetFileIsLocked(h_, filePath2, lockedCallback2);
 				if (!lockedCallback2.mSuccess) {
 					NOTIFY_ERROR(h_, "CompareFiles: GetFileIsLocked failed for:", filePath2);
-					completion->Call(CompareFilesStatus::kError);
+					completion->Call(h_, CompareFilesStatus::kError);
 					return;
 				}
 				
@@ -97,7 +98,7 @@ namespace hermit {
 				GetFileBSDFlags(h_, filePath1, bsdFlagsCallback1);
 				if (!bsdFlagsCallback1.mSuccess) {
 					NOTIFY_ERROR(h_, "CompareFiles: GetFileBSDFlags failed for:", filePath1);
-					completion->Call(CompareFilesStatus::kError);
+					completion->Call(h_, CompareFilesStatus::kError);
 					return;
 				}
 				
@@ -105,7 +106,7 @@ namespace hermit {
 				GetFileBSDFlags(h_, filePath2, bsdFlagsCallback2);
 				if (!bsdFlagsCallback2.mSuccess) {
 					NOTIFY_ERROR(h_, "CompareFiles: GetFileBSDFlags failed for:", filePath2);
-					completion->Call(CompareFilesStatus::kError);
+					completion->Call(h_, CompareFilesStatus::kError);
 					return;
 				}
 				
@@ -119,7 +120,7 @@ namespace hermit {
 				GetFileACL(h_, filePath1, aclCallback1);
 				if (!aclCallback1.mSuccess) {
 					NOTIFY_ERROR(h_, "CompareFiles: GetFileACL failed for:", filePath1);
-					completion->Call(CompareFilesStatus::kError);
+					completion->Call(h_, CompareFilesStatus::kError);
 					return;
 				}
 				
@@ -127,7 +128,7 @@ namespace hermit {
 				GetFileACL(h_, filePath2, aclCallback2);
 				if (!aclCallback2.mSuccess) {
 					NOTIFY_ERROR(h_, "CompareFiles: GetFileACL failed for:", filePath2);
-					completion->Call(CompareFilesStatus::kError);
+					completion->Call(h_, CompareFilesStatus::kError);
 					return;
 				}
 				
@@ -142,7 +143,7 @@ namespace hermit {
 					auto result = CompareXAttrs(h_, filePath1, filePath2, xattrsMatch);
 					if (result != CompareXAttrsResult::kSuccess) {
 						NOTIFY_ERROR(h_, "CompareXAttrs failed for:", filePath1);
-						completion->Call(CompareFilesStatus::kError);
+						completion->Call(h_, CompareFilesStatus::kError);
 						return;
 					}
 					if (!xattrsMatch) {
@@ -153,14 +154,14 @@ namespace hermit {
 				uint32_t permissions1 = 0;
 				if (!GetFilePosixPermissions(h_, filePath1, permissions1)) {
 					NOTIFY_ERROR(h_, "CompareFiles: GetFilePosixPermissions failed for path 1:", filePath1);
-					completion->Call(CompareFilesStatus::kError);
+					completion->Call(h_, CompareFilesStatus::kError);
 					return;
 				}
 				
 				uint32_t permissions2 = 0;
 				if (!GetFilePosixPermissions(h_, filePath2, permissions2)) {
 					NOTIFY_ERROR(h_, "CompareFiles: GetFilePosixPermissions failed for path 2:", filePath2);
-					completion->Call(CompareFilesStatus::kError);
+					completion->Call(h_, CompareFilesStatus::kError);
 					return;
 				}
 				
@@ -174,7 +175,7 @@ namespace hermit {
 				std::string groupOwner1;
 				if (!GetFilePosixOwnership(h_, filePath1, userOwner1, groupOwner1)) {
 					NOTIFY_ERROR(h_, "CompareFiles: GetFilePosixOwnership failed for path 1:", filePath1);
-					completion->Call(CompareFilesStatus::kError);
+					completion->Call(h_, CompareFilesStatus::kError);
 					return;
 				}
 				
@@ -182,7 +183,7 @@ namespace hermit {
 				std::string groupOwner2;
 				if (!GetFilePosixOwnership(h_, filePath2, userOwner2, groupOwner2)) {
 					NOTIFY_ERROR(h_, "CompareFiles: GetFilePosixOwnership failed for path 2:", filePath2);
-					completion->Call(CompareFilesStatus::kError);
+					completion->Call(h_, CompareFilesStatus::kError);
 					return;
 				}
 				
@@ -214,7 +215,7 @@ namespace hermit {
 									 "and path 2:", filePath2);
 						FileNotificationParams params(kErrorComparingFinderInfo, filePath1, filePath2);
 						NOTIFY(h_, kFileErrorNotification, &params);
-						completion->Call(CompareFilesStatus::kError);
+						completion->Call(h_, CompareFilesStatus::kError);
 						return;
 					}
 					
@@ -230,7 +231,7 @@ namespace hermit {
 					GetFileDates(h_, filePath1, datesCallback1);
 					if (!datesCallback1.mSuccess) {
 						NOTIFY_ERROR(h_, "CompareFiles: GetFileDates failed for:", filePath1);
-						completion->Call(CompareFilesStatus::kError);
+						completion->Call(h_, CompareFilesStatus::kError);
 						return;
 					}
 					
@@ -238,7 +239,7 @@ namespace hermit {
 					GetFileDates(h_, filePath2, datesCallback2);
 					if (!datesCallback2.mSuccess) {
 						NOTIFY_ERROR(h_, "CompareFiles: GetFileDates failed for:", filePath2);
-						completion->Call(CompareFilesStatus::kError);
+						completion->Call(h_, CompareFilesStatus::kError);
 						return;
 					}
 					
@@ -268,7 +269,7 @@ namespace hermit {
 					NOTIFY(h_, kFilesMatchNotification, &params);
 				}
 				
-				completion->Call(CompareFilesStatus::kSuccess);
+				completion->Call(h_, CompareFilesStatus::kSuccess);
 			}
 			
 			//
@@ -430,7 +431,7 @@ namespace hermit {
 				GetFileTotalSize(h_, filePath1, sizeCallback);
 				if (!sizeCallback.mSuccess) {
 					NOTIFY_ERROR(h_, "CompareFiles: GetFileForkSize failed for:", filePath1);
-					completion->Call(CompareFilesStatus::kError);
+					completion->Call(h_, CompareFilesStatus::kError);
 					return;
 				}
 				uint64_t fileSize1 = sizeCallback.mTotalSize;
@@ -438,7 +439,7 @@ namespace hermit {
 				GetFileTotalSize(h_, filePath2, sizeCallback);
 				if (!sizeCallback.mSuccess) {
 					NOTIFY_ERROR(h_, "CompareFiles: GetFileForkSize failed for:", filePath2);
-					completion->Call(CompareFilesStatus::kError);
+					completion->Call(h_, CompareFilesStatus::kError);
 					return;
 				}
 				uint64_t fileSize2 = sizeCallback.mTotalSize;
@@ -454,7 +455,7 @@ namespace hermit {
 						bool dataMatch = false;
 						bool result = CompareData(h_, filePath1, filePath2, dataMatch, differenceOffset);
 						if (!result) {
-							completion->Call(CompareFilesStatus::kError);
+							completion->Call(h_, CompareFilesStatus::kError);
 							return;
 						}
 						if (!dataMatch) {
@@ -592,7 +593,7 @@ namespace hermit {
 				PathIsAlias(h_, filePath1, isAlias1Callback);
 				if (!isAlias1Callback.mSuccess) {
 					NOTIFY_ERROR(h_, "CompareFiles: PathIsAlias failed for:", filePath1);
-					completion->Call(CompareFilesStatus::kError);
+					completion->Call(h_, CompareFilesStatus::kError);
 					return;
 				}
 				
@@ -600,14 +601,14 @@ namespace hermit {
 				PathIsAlias(h_, filePath2, isAlias2Callback);
 				if (!isAlias2Callback.mSuccess) {
 					NOTIFY_ERROR(h_, "CompareFiles: PathIsAlias failed for:", filePath2);
-					completion->Call(CompareFilesStatus::kError);
+					completion->Call(h_, CompareFilesStatus::kError);
 					return;
 				}
 				
 				if (isAlias1Callback.mIsAlias != isAlias2Callback.mIsAlias) {
 					FileNotificationParams params(kIsAliasDiffers, filePath1, filePath2);
 					NOTIFY(h_, kFilesDifferNotification, &params);
-					completion->Call(CompareFilesStatus::kSuccess);
+					completion->Call(h_, CompareFilesStatus::kSuccess);
 					return;
 				}
 				
@@ -620,7 +621,7 @@ namespace hermit {
 					CompareAliasFileStatus compareAliasStatus = CompareAliasFiles(h_, filePath1, filePath2);
 					if (compareAliasStatus == CompareAliasFileStatus::kError) {
 						NOTIFY_ERROR(h_, "CompareFiles: CompareAliasFiles failed for:", filePath1, "and:", filePath2);
-						completion->Call(CompareFilesStatus::kError);
+						completion->Call(h_, CompareFilesStatus::kError);
 						return;
 					}
 					
@@ -668,7 +669,7 @@ namespace hermit {
 				void HandleResult(const HermitPtr &h_,
 								  const int& whichFile,
 								  const HardLinkInfoResult& result,
-								  const std::vector<std::string>& paths,
+								  const std::set<std::string>& paths,
 								  const uint64_t& dataSize) {
 					std::lock_guard<std::mutex> guard(mMutex);
 					
@@ -685,12 +686,12 @@ namespace hermit {
 					
 					if ((mResult1 != HardLinkInfoResult::kUnknown) && (mResult2 != HardLinkInfoResult::kUnknown)) {
 						if ((mResult1 == HardLinkInfoResult::kCanceled) || (mResult2 == HardLinkInfoResult::kCanceled)) {
-							mCompletion->Call(CompareFilesStatus::kCancel);
+							mCompletion->Call(h_, CompareFilesStatus::kCancel);
 							return;
 						}
 						if ((mResult1 != HardLinkInfoResult::kSuccess) || (mResult2 != HardLinkInfoResult::kSuccess)) {
 							NOTIFY_ERROR(h_, "HardLinkInfoResult != kSuccess");
-							mCompletion->Call(CompareFilesStatus::kError);
+							mCompletion->Call(h_, CompareFilesStatus::kError);
 							return;
 						}
 						
@@ -717,10 +718,10 @@ namespace hermit {
 				//
 				std::mutex mMutex;
 				HardLinkInfoResult mResult1;
-				std::vector<std::string> mPaths1;
+				std::set<std::string> mPaths1;
 				uint64_t mDataSize1;
 				HardLinkInfoResult mResult2;
-				std::vector<std::string> mPaths2;
+				std::set<std::string> mPaths2;
 				uint64_t mDataSize2;
 			};
 			typedef std::shared_ptr<HardLinkCompareClass> HardLinkCompareClassPtr;
@@ -760,7 +761,7 @@ namespace hermit {
 				//
 				virtual void Call(const HermitPtr &h_,
 								  const HardLinkInfoResult& result,
-								  const std::vector<std::string>& paths,
+								  const std::set<std::string>& paths,
 								  const std::string& objectDataId,
 								  const uint64_t& dataSize,
 								  const std::string& dataHash,
@@ -818,14 +819,14 @@ namespace hermit {
 				PathIsHardLink(h_, filePath1, hardLinkCallback1);
 				if (!hardLinkCallback1.mSuccess) {
 					NOTIFY_ERROR(h_, "CompareFiles: PathIsHardLink failed for:", filePath1);
-					completion->Call(CompareFilesStatus::kError);
+					completion->Call(h_, CompareFilesStatus::kError);
 					return;
 				}
 				PathIsHardLinkCallbackClass hardLinkCallback2;
 				PathIsHardLink(h_, filePath2, hardLinkCallback2);
 				if (!hardLinkCallback2.mSuccess) {
 					NOTIFY_ERROR(h_, "CompareFiles: PathIsHardLink failed for:", filePath2);
-					completion->Call(CompareFilesStatus::kError);
+					completion->Call(h_, CompareFilesStatus::kError);
 					return;
 				}
 				
@@ -875,14 +876,14 @@ namespace hermit {
 				GetFileIsDevice(h_, filePath1, isDeviceCallback1);
 				if (!isDeviceCallback1.mSuccess) {
 					NOTIFY_ERROR(h_, "CompareFiles: GetFileIsDevice failed for:", filePath1);
-					completion->Call(CompareFilesStatus::kError);
+					completion->Call(h_, CompareFilesStatus::kError);
 					return;
 				}
 				GetFileIsDeviceCallbackClass isDeviceCallback2;
 				GetFileIsDevice(h_, filePath2, isDeviceCallback2);
 				if (!isDeviceCallback2.mSuccess) {
 					NOTIFY_ERROR(h_, "CompareFiles: GetFileIsDevice failed for:", filePath2);
-					completion->Call(CompareFilesStatus::kError);
+					completion->Call(h_, CompareFilesStatus::kError);
 					return;
 				}
 				
@@ -901,7 +902,7 @@ namespace hermit {
 						NOTIFY(h_, kFilesDifferNotification, &params);
 						
 						// Doesn't really make sense to compare a device with a non-device, so we're done.
-						completion->Call(CompareFilesStatus::kSuccess);
+						completion->Call(h_, CompareFilesStatus::kSuccess);
 						return;
 					}
 
@@ -943,32 +944,29 @@ namespace hermit {
 			class DirectoriesCompletion : public CompareDirectoriesCompletion {
 			public:
 				//
-				DirectoriesCompletion(const HermitPtr& h_,
-									  const FilePathPtr& filePath1,
+				DirectoriesCompletion(const FilePathPtr& filePath1,
 									  const FilePathPtr& filePath2,
 									  const CompareFilesCompletionPtr& completion) :
-				mH_(h_),
 				mFilePath1(filePath1),
 				mFilePath2(filePath2),
 				mCompletion(completion) {
 				}
 				
 				//
-				virtual void Call(const CompareDirectoriesStatus& status) override {
+				virtual void Call(const HermitPtr& h_, const CompareDirectoriesStatus& status) override {
 					if (status == CompareDirectoriesStatus::kCancel) {
-						mCompletion->Call(CompareFilesStatus::kCancel);
+						mCompletion->Call(h_, CompareFilesStatus::kCancel);
 						return;
 					}
 					if (status != CompareDirectoriesStatus::kSuccess) {
-						NOTIFY_ERROR(mH_, "CompareFiles: CompareDirectories failed, path 1:", mFilePath1, "path 2:", mFilePath2);
-						mCompletion->Call(CompareFilesStatus::kError);
+						NOTIFY_ERROR(h_, "CompareFiles: CompareDirectories failed, path 1:", mFilePath1, "path 2:", mFilePath2);
+						mCompletion->Call(h_, CompareFilesStatus::kError);
 						return;
 					}
-					mCompletion->Call(CompareFilesStatus::kSuccess);
+					mCompletion->Call(h_, CompareFilesStatus::kSuccess);
 				}
 				
 				//
-				HermitPtr mH_;
 				FilePathPtr mFilePath1;
 				FilePathPtr mFilePath2;
 				CompareFilesCompletionPtr mCompletion;
@@ -990,13 +988,13 @@ namespace hermit {
 			FileType fileType1 = FileType::kUnknown;
 			if (!GetFileType(h_, filePath1, fileType1)) {
 				NOTIFY_ERROR(h_, "CompareFiles: GetFileType failed for:", filePath1);
-				completion->Call(CompareFilesStatus::kError);
+				completion->Call(h_, CompareFilesStatus::kError);
 				return;
 			}
 			FileType fileType2 = FileType::kUnknown;
 			if (!GetFileType(h_, filePath2, fileType2)) {
 				NOTIFY_ERROR(h_, "CompareFiles: GetFileType failed for:", filePath2);
-				completion->Call(CompareFilesStatus::kError);
+				completion->Call(h_, CompareFilesStatus::kError);
 				return;
 			}
 			
@@ -1006,14 +1004,14 @@ namespace hermit {
 				NOTIFY(h_, kFilesDifferNotification, &params);
 				
 				// Different fundamental file types, no reason to continue comparing the details.
-				completion->Call(CompareFilesStatus::kSuccess);
+				completion->Call(h_, CompareFilesStatus::kSuccess);
 				return;
 			}
 			
 			// Fundamental file types match.
 			// Are these both directories?
 			if (fileType1 == FileType::kDirectory) {
-				auto compareCompletion = std::make_shared<DirectoriesCompletion>(h_, filePath1, filePath2, completion);
+				auto compareCompletion = std::make_shared<DirectoriesCompletion>(filePath1, filePath2, completion);
 				CompareDirectories(h_,
 								   filePath1,
 								   filePath2,
@@ -1030,22 +1028,22 @@ namespace hermit {
 			if (fileType1 == FileType::kSymbolicLink) {
 				auto status = CompareLinks(h_, filePath1, filePath2, ignoreDates);
 				if (status == CompareLinksStatus::kCancel) {
-					completion->Call(CompareFilesStatus::kCancel);
+					completion->Call(h_, CompareFilesStatus::kCancel);
 					return;
 				}
 				if (status != CompareLinksStatus::kSuccess) {
 					NOTIFY_ERROR(h_, "CompareFiles: CompareLinks failed for path 1:", filePath1, "path 2:", filePath2);
-					completion->Call(CompareFilesStatus::kError);
+					completion->Call(h_, CompareFilesStatus::kError);
 					return;
 				}
-				completion->Call(CompareFilesStatus::kSuccess);
+				completion->Call(h_, CompareFilesStatus::kSuccess);
 				return;
 			}
 			
 			// Is this something we don't even know about?
 			if ((fileType1 != FileType::kFile) && (fileType1 != FileType::kDevice)) {
 				NOTIFY_ERROR(h_, "CompareFiles: Unexpected file types for path 1:", filePath1, "path 2:", filePath2);
-				completion->Call(CompareFilesStatus::kError);
+				completion->Call(h_, CompareFilesStatus::kError);
 				return;
 			}
 		

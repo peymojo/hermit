@@ -17,6 +17,7 @@
 //
 
 #include <map>
+#include <set>
 #include <string>
 #include <vector>
 #include "Hermit/Foundation/Callback.h"
@@ -62,12 +63,12 @@ namespace hermit {
 				//
 				bool mProcessing;
 				HardLinkInfoResult mResult;
-				std::vector<GetHardLinkInfoCompletionPtr> mClients;
+				std::vector<std::pair<hermit::HermitPtr, GetHardLinkInfoCompletionPtr>> mClients;
 				std::string mDataObjectId;
 				uint64_t mDataSize;
 				std::string mDataHash;
 				std::string mHashAlgorithm;
-				std::vector<std::string> mPaths;
+				std::set<std::string> mPaths;
 				std::mutex mMutex;
 			};
 			typedef std::shared_ptr<HardLinkInfo> HardLinkInfoPtr;
@@ -228,7 +229,7 @@ namespace hermit {
 						NOTIFY_ERROR(h_, "GetRelativePath failed for item:", it->second, "root item:", root);
 						return BuildHardLinkMapResult::kError;
 					}
-					numberValueIt->second->mPaths.push_back(relativePath);
+					numberValueIt->second->mPaths.insert(relativePath);
 					infoMap.insert(HardLinkInfoMap::value_type(relativePath, numberValueIt->second));
 				}
 				return BuildHardLinkMapResult::kSuccess;
@@ -249,7 +250,7 @@ namespace hermit {
 								  const uint64_t& dataSize,
 								  const std::string& dataHash,
 								  const std::string& hashAlgorithm) override {
-					auto clients = std::vector<GetHardLinkInfoCompletionPtr>();
+					auto clients = std::vector<std::pair<hermit::HermitPtr, GetHardLinkInfoCompletionPtr>>();
 					{
 						std::lock_guard<std::mutex> lock(mHardLinkInfo->mMutex);
 						mHardLinkInfo->mResult = result;
@@ -263,7 +264,13 @@ namespace hermit {
 					}
 					
 					for (auto it = begin(clients); it != end(clients); ++it) {
-						(*it)->Call(h_, result, mHardLinkInfo->mPaths, dataObjectId, dataSize, dataHash, hashAlgorithm);
+						(*it).second->Call((*it).first,
+										   result,
+										   mHardLinkInfo->mPaths,
+										   dataObjectId,
+										   dataSize,
+										   dataHash,
+										   hashAlgorithm);
 					}
 				}
 				
@@ -308,13 +315,13 @@ namespace hermit {
 				std::string relativePath;
 				if (!GetRelativePath(h_, root, item, relativePath)) {
 					NOTIFY_ERROR(h_, "GetRelativePath failed for item:", item, "root:", root);
-					completion->Call(h_, HardLinkInfoResult::kError, std::vector<std::string>(), "", 0, "", "");
+					completion->Call(h_, HardLinkInfoResult::kError, std::set<std::string>(), "", 0, "", "");
 					return;
 				}
 				auto it = infoMap.find(relativePath);
 				if (it == end(infoMap)) {
 					NOTIFY_ERROR(h_, "it == context->mInfoMap.end() for relative path:", relativePath);
-					completion->Call(h_, HardLinkInfoResult::kError, std::vector<std::string>(), "", 0, "", "");
+					completion->Call(h_, HardLinkInfoResult::kError, std::set<std::string>(), "", 0, "", "");
 					return;
 				}
 				HardLinkInfoPtr hardLinkInfo = it->second;
@@ -325,7 +332,7 @@ namespace hermit {
 					std::lock_guard<std::mutex> lock(hardLinkInfo->mMutex);
 					result = hardLinkInfo->mResult;
 					if (result == HardLinkInfoResult::kUnknown) {
-						hardLinkInfo->mClients.push_back(completion);
+						hardLinkInfo->mClients.push_back(std::make_pair(h_, completion));
 						if (!hardLinkInfo->mProcessing) {
 							weShouldProcessItem = true;
 							hardLinkInfo->mProcessing = true;
@@ -343,7 +350,7 @@ namespace hermit {
 					return;
 				}
 				if (result == HardLinkInfoResult::kCanceled) {
-					completion->Call(h_, HardLinkInfoResult::kCanceled, std::vector<std::string>(), "", 0, "", "");
+					completion->Call(h_, HardLinkInfoResult::kCanceled, std::set<std::string>(), "", 0, "", "");
 					return;
 				}
 				if (result == HardLinkInfoResult::kSuccess) {
@@ -357,7 +364,7 @@ namespace hermit {
 					return;
 				}
 				NOTIFY_ERROR(h_, "HardLinkInfoResult error");
-				completion->Call(h_, result, std::vector<std::string>(), "", 0, "", "");
+				completion->Call(h_, result, std::set<std::string>(), "", 0, "", "");
 			}
 			
 			//
@@ -390,12 +397,12 @@ namespace hermit {
 					result = context->mBuildMapResult;
 				}
 				if ((result == BuildHardLinkMapResult::kCanceled) || (CHECK_FOR_ABORT(h_))) {
-					completion->Call(h_, HardLinkInfoResult::kCanceled, std::vector<std::string>(), "", 0, "", "");
+					completion->Call(h_, HardLinkInfoResult::kCanceled, std::set<std::string>(), "", 0, "", "");
 					return;
 				}
 				if (result != BuildHardLinkMapResult::kSuccess) {
 					NOTIFY_ERROR(h_, "result != BuildHardLinkMapResult::kSuccess");
-					completion->Call(h_, HardLinkInfoResult::kError, std::vector<std::string>(), "", 0, "", "");
+					completion->Call(h_, HardLinkInfoResult::kError, std::set<std::string>(), "", 0, "", "");
 					return;
 				}
 				

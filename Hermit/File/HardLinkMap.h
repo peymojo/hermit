@@ -19,6 +19,7 @@
 #ifndef HardLinkMap_h
 #define HardLinkMap_h
 
+#include <set>
 #include "Hermit/File/FilePath.h"
 #include "Hermit/Foundation/AsyncFunction.h"
 #include "Hermit/Foundation/Hermit.h"
@@ -53,7 +54,7 @@ namespace hermit {
 		DEFINE_ASYNC_FUNCTION_7A(GetHardLinkInfoCompletion,
 								 HermitPtr,
 								 HardLinkInfoResult,							// result
-								 std::vector<std::string>,						// paths
+								 std::set<std::string>,							// paths
 								 std::string,									// objectDataId
 								 uint64_t,										// dataSize
 								 std::string,									// dataHash

@@ -49,7 +49,7 @@ namespace hermit {
 		};
 		
 		//
-		DEFINE_ASYNC_FUNCTION_1A(CompareFilesCompletion, CompareFilesStatus);
+		DEFINE_ASYNC_FUNCTION_2A(CompareFilesCompletion, HermitPtr, CompareFilesStatus);
 
 		//
 		//	NOTE: preprocessFunction is NOT called for filePath1 & filePath2.

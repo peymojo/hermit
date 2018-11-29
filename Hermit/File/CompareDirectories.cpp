@@ -46,13 +46,11 @@ namespace hermit {
 			class InternalCompletion {
 			public:
 				//
-				InternalCompletion(const HermitPtr& h_,
-								   const FilePathPtr& filePath1,
+				InternalCompletion(const FilePathPtr& filePath1,
 								   const FilePathPtr& filePath2,
 								   const IgnoreDates& ignoreDates,
 								   const IgnoreFinderInfo& ignoreFinderInfo,
 								   const CompareDirectoriesCompletionPtr& completion) :
-				mH_(h_),
 				mFilePath1(filePath1),
 				mFilePath2(filePath2),
 				mIgnoreDates(ignoreDates),
@@ -61,31 +59,31 @@ namespace hermit {
 				}
 				
 				//
-				void CompareFilesComplete(CompareFilesStatus status, bool filesMatch) {
+				void CompareFilesComplete(const HermitPtr& h_, CompareFilesStatus status, bool filesMatch) {
 					if (status == CompareFilesStatus::kCancel) {
-						mCompletion->Call(CompareDirectoriesStatus::kCancel);
+						mCompletion->Call(h_, CompareDirectoriesStatus::kCancel);
 						return;
 					}
 					if (status != CompareFilesStatus::kSuccess) {
-						NOTIFY_ERROR(mH_, "CompareDirectories: CompareFiles step failed");
-						mCompletion->Call(CompareDirectoriesStatus::kError);
+						NOTIFY_ERROR(h_, "CompareDirectories: CompareFiles step failed");
+						mCompletion->Call(h_, CompareDirectoriesStatus::kError);
 						return;
 					}
 					
 					bool attributesMatch = true;
 					PathIsPackageCallbackClass path1IsPackage;
-					PathIsPackage(mH_, mFilePath1, path1IsPackage);
+					PathIsPackage(h_, mFilePath1, path1IsPackage);
 					if (!path1IsPackage.mSuccess) {
-						NOTIFY_ERROR(mH_, "CompareDirectories: PathIsPackage failed for:", mFilePath1);
-						mCompletion->Call(CompareDirectoriesStatus::kError);
+						NOTIFY_ERROR(h_, "CompareDirectories: PathIsPackage failed for:", mFilePath1);
+						mCompletion->Call(h_, CompareDirectoriesStatus::kError);
 						return;
 					}
 					
 					PathIsPackageCallbackClass path2IsPackage;
-					PathIsPackage(mH_, mFilePath2, path2IsPackage);
+					PathIsPackage(h_, mFilePath2, path2IsPackage);
 					if (!path2IsPackage.mSuccess) {
-						NOTIFY_ERROR(mH_, "CompareDirectories: PathIsPackage failed for:", mFilePath2);
-						mCompletion->Call(CompareDirectoriesStatus::kError);
+						NOTIFY_ERROR(h_, "CompareDirectories: PathIsPackage failed for:", mFilePath2);
+						mCompletion->Call(h_, CompareDirectoriesStatus::kError);
 						return;
 					}
 					
@@ -93,15 +91,15 @@ namespace hermit {
 					if (path1IsPackage.mIsPackage != path2IsPackage.mIsPackage) {
 						attributesMatch = false;
 						FileNotificationParams params(kPackageStatesDiffer, mFilePath1, mFilePath2);
-						NOTIFY(mH_, kFilesDifferNotification, &params);
+						NOTIFY(h_, kFilesDifferNotification, &params);
 						notifiedPackageStateDifference = true;
 					}
 					
                     bool xattrsMatch = false;
-                    auto result = CompareXAttrs(mH_, mFilePath1, mFilePath2, xattrsMatch);
+                    auto result = CompareXAttrs(h_, mFilePath1, mFilePath2, xattrsMatch);
                     if (result != CompareXAttrsResult::kSuccess) {
-                        NOTIFY_ERROR(mH_, "CompareXAttrs failed for:", mFilePath1);
-                        mCompletion->Call(CompareDirectoriesStatus::kError);
+                        NOTIFY_ERROR(h_, "CompareXAttrs failed for:", mFilePath1);
+                        mCompletion->Call(h_, CompareDirectoriesStatus::kError);
                         return;
                     }
                     if (!xattrsMatch) {
@@ -109,60 +107,61 @@ namespace hermit {
                     }
 
                     uint32_t permissions1 = 0;
-					if (!GetFilePosixPermissions(mH_, mFilePath1, permissions1)) {
-						NOTIFY_ERROR(mH_, "CompareDirectories: GetFilePosixPermissions failed for path 1:", mFilePath1);
-						mCompletion->Call(CompareDirectoriesStatus::kError);
+					if (!GetFilePosixPermissions(h_, mFilePath1, permissions1)) {
+						NOTIFY_ERROR(h_, "CompareDirectories: GetFilePosixPermissions failed for path 1:", mFilePath1);
+						mCompletion->Call(h_, CompareDirectoriesStatus::kError);
 						return;
 					}
 					
 					uint32_t permissions2 = 0;
-					if (!GetFilePosixPermissions(mH_, mFilePath2, permissions2)) {
-						NOTIFY_ERROR(mH_, "CompareDirectories: GetFilePosixPermissions failed for path 2:", mFilePath2);
-						mCompletion->Call(CompareDirectoriesStatus::kError);
+					if (!GetFilePosixPermissions(h_, mFilePath2, permissions2)) {
+						NOTIFY_ERROR(h_, "CompareDirectories: GetFilePosixPermissions failed for path 2:", mFilePath2);
+						mCompletion->Call(h_, CompareDirectoriesStatus::kError);
 						return;
 					}
 					
 					if (permissions1 != permissions2) {
 						attributesMatch = false;
 						FileNotificationParams params(kPermissionsDiffer, mFilePath1, mFilePath2);
-						NOTIFY(mH_, kFilesDifferNotification, &params);
+						NOTIFY(h_, kFilesDifferNotification, &params);
 					}
 					
 					std::string userOwner1;
 					std::string groupOwner1;
-					if (!GetFilePosixOwnership(mH_, mFilePath1, userOwner1, groupOwner1)) {
-						NOTIFY_ERROR(mH_, "CompareDirectories: GetFilePosixOwnership failed for path 1:", mFilePath1);
-						mCompletion->Call(CompareDirectoriesStatus::kError);
+					if (!GetFilePosixOwnership(h_, mFilePath1, userOwner1, groupOwner1)) {
+						NOTIFY_ERROR(h_, "CompareDirectories: GetFilePosixOwnership failed for path 1:", mFilePath1);
+						mCompletion->Call(h_, CompareDirectoriesStatus::kError);
 						return;
 					}
 					
 					std::string userOwner2;
 					std::string groupOwner2;
-					if (!GetFilePosixOwnership(mH_, mFilePath2, userOwner2, groupOwner2)) {
-						NOTIFY_ERROR(mH_, "CompareDirectories: GetFilePosixOwnership failed for path 2:", mFilePath2);
-						mCompletion->Call(CompareDirectoriesStatus::kError);
+					if (!GetFilePosixOwnership(h_, mFilePath2, userOwner2, groupOwner2)) {
+						NOTIFY_ERROR(h_, "CompareDirectories: GetFilePosixOwnership failed for path 2:", mFilePath2);
+						mCompletion->Call(h_, CompareDirectoriesStatus::kError);
 						return;
 					}
 					
 					if (userOwner1 != userOwner2) {
 						attributesMatch = false;
 						FileNotificationParams params(kUserOwnersDiffer, mFilePath1, mFilePath2, userOwner1, userOwner2);
-						NOTIFY(mH_, kFilesDifferNotification, &params);
+						NOTIFY(h_, kFilesDifferNotification, &params);
 					}
 					if (groupOwner1 != groupOwner2) {
 						attributesMatch = false;
 						FileNotificationParams params(kGroupOwnersDiffer, mFilePath1, mFilePath2, groupOwner1, groupOwner2);
-						NOTIFY(mH_, kFilesDifferNotification, &params);
+						NOTIFY(h_, kFilesDifferNotification, &params);
 					}
 					
 					if (mIgnoreFinderInfo == IgnoreFinderInfo::kNo) {
-						auto compareFinderInfoStatus = CompareFinderInfo(mH_, mFilePath1, mFilePath2);
+						auto compareFinderInfoStatus = CompareFinderInfo(h_, mFilePath1, mFilePath2);
 						if ((compareFinderInfoStatus != kCompareFinderInfoStatus_Match) &&
 							(compareFinderInfoStatus != kCompareFinderInfoStatus_FinderInfosDiffer) &&
 							(compareFinderInfoStatus != kCompareFinderInfoStatus_FolderPackageStatesDiffer)) {
-							NOTIFY_ERROR(mH_, "CompareDirectories: CompareFinderInfo failed for path 1:", mFilePath1);
-							NOTIFY_ERROR(mH_, "-- and path 2:", mFilePath2);
-							mCompletion->Call(CompareDirectoriesStatus::kError);
+							NOTIFY_ERROR(h_,
+										 "CompareDirectories: CompareFinderInfo failed for path 1:", mFilePath1,
+										 "and path 2:", mFilePath2);
+							mCompletion->Call(h_, CompareDirectoriesStatus::kError);
 							return;
 						}
 						
@@ -170,31 +169,31 @@ namespace hermit {
 							if (!notifiedPackageStateDifference) {
 								attributesMatch = false;
 								FileNotificationParams params(kPackageStatesDiffer, mFilePath1, mFilePath2);
-								NOTIFY(mH_, kFilesDifferNotification, &params);
+								NOTIFY(h_, kFilesDifferNotification, &params);
 								notifiedPackageStateDifference = true;
 							}
 						}
 						else if (compareFinderInfoStatus == kCompareFinderInfoStatus_FinderInfosDiffer) {
 							attributesMatch = false;
 							FileNotificationParams params(kFinderInfosDiffer, mFilePath1, mFilePath2);
-							NOTIFY(mH_, kFilesDifferNotification, &params);
+							NOTIFY(h_, kFilesDifferNotification, &params);
 						}
 					}
 					
 					if (mIgnoreDates == IgnoreDates::kNo) {
 						GetFileDatesCallbackClassT<std::string> datesCallback1;
-						GetFileDates(mH_, mFilePath1, datesCallback1);
+						GetFileDates(h_, mFilePath1, datesCallback1);
 						if (!datesCallback1.mSuccess) {
-							NOTIFY_ERROR(mH_, "CompareDirectories: GetFileDates failed for:", mFilePath1);
-							mCompletion->Call(CompareDirectoriesStatus::kError);
+							NOTIFY_ERROR(h_, "CompareDirectories: GetFileDates failed for:", mFilePath1);
+							mCompletion->Call(h_, CompareDirectoriesStatus::kError);
 							return;
 						}
 						
 						GetFileDatesCallbackClassT<std::string> datesCallback2;
-						GetFileDates(mH_, mFilePath2, datesCallback2);
+						GetFileDates(h_, mFilePath2, datesCallback2);
 						if (!datesCallback2.mSuccess) {
-							NOTIFY_ERROR(mH_, "CompareDirectories: GetFileDates failed for:", mFilePath2);
-							mCompletion->Call(CompareDirectoriesStatus::kError);
+							NOTIFY_ERROR(h_, "CompareDirectories: GetFileDates failed for:", mFilePath2);
+							mCompletion->Call(h_, CompareDirectoriesStatus::kError);
 							return;
 						}
 						
@@ -205,7 +204,7 @@ namespace hermit {
 														  mFilePath2,
 														  datesCallback1.mCreationDate,
 														  datesCallback2.mCreationDate);
-							NOTIFY(mH_, kFilesDifferNotification, &params);
+							NOTIFY(h_, kFilesDifferNotification, &params);
 						}
 						if (datesCallback1.mModificationDate != datesCallback2.mModificationDate) {
 							attributesMatch = false;
@@ -214,23 +213,22 @@ namespace hermit {
 														  mFilePath2,
 														  datesCallback1.mModificationDate,
 														  datesCallback2.mModificationDate);
-							NOTIFY(mH_, kFilesDifferNotification, &params);
+							NOTIFY(h_, kFilesDifferNotification, &params);
 						}
 					}
 					
 					if (!filesMatch) {
 						FileNotificationParams params(kFolderContentsDiffer, mFilePath1, mFilePath2);
-						NOTIFY(mH_, kFilesDifferNotification, &params);
+						NOTIFY(h_, kFilesDifferNotification, &params);
 					}
 					else if (attributesMatch) {
 						FileNotificationParams params(kFilesMatch, mFilePath1, mFilePath2);
-						NOTIFY(mH_, kFilesMatchNotification, &params);
+						NOTIFY(h_, kFilesMatchNotification, &params);
 					}
-					mCompletion->Call(CompareDirectoriesStatus::kSuccess);
+					mCompletion->Call(h_, CompareDirectoriesStatus::kSuccess);
 				}
 				
 				//
-				HermitPtr mH_;
 				FilePathPtr mFilePath1;
 				FilePathPtr mFilePath2;
 				IgnoreDates mIgnoreDates;
@@ -240,10 +238,17 @@ namespace hermit {
 			typedef std::shared_ptr<InternalCompletion> InternalCompletionPtr;
 			
 			//
+			enum class MatchStatus {
+				kUnknown,
+				kFilesMatch,
+				kFilesDontMatch
+			};
+			
+			//
 			class HermitProxy : public Hermit {
 			public:
 				//
-				HermitProxy(const HermitPtr& h_) : mH_(h_), mFilesMatch(false) {
+				HermitProxy(const HermitPtr& h_) : mH_(h_), mMatchStatus(MatchStatus::kUnknown) {
 				}
 				
 				//
@@ -255,17 +260,17 @@ namespace hermit {
 				virtual void Notify(const char* name, const void* param) override {
 					std::string nameStr(name);
 					if (nameStr == kFilesMatchNotification) {
-						mFilesMatch = true;
+						mMatchStatus = MatchStatus::kFilesMatch;
 					}
 					else if (nameStr == kFilesDifferNotification) {
-						mFilesMatch = false;
+						mMatchStatus = MatchStatus::kFilesDontMatch;
 					}
 					NOTIFY(mH_, name, param);
 				}
 				
 				//
 				HermitPtr mH_;
-				bool mFilesMatch;
+				MatchStatus mMatchStatus;
 			};
 			typedef std::shared_ptr<HermitProxy> HermitProxyPtr;
 			
@@ -288,13 +293,13 @@ namespace hermit {
 				}
 
 				//
-				void AllTasksAdded() {
+				void AllTasksAdded(const HermitPtr& h_) {
 					mAllTasksAdded = true;
-					CheckCompletion();
+					CheckCompletion(h_);
 				}
 				
 				//
-				void TaskComplete(const CompareFilesStatus& status, bool filesMatch) {
+				void TaskComplete(const HermitPtr& h_, const CompareFilesStatus& status, MatchStatus matchStatus) {
 					if (status == CompareFilesStatus::kCancel) {
 						if (mStatus == CompareFilesStatus::kSuccess) {
 							mStatus = CompareFilesStatus::kCancel;
@@ -303,17 +308,22 @@ namespace hermit {
 					else if (status != CompareFilesStatus::kSuccess) {
 						mStatus = status;
 					}
-					
-					mFilesMatch = mFilesMatch && filesMatch;
+					if (matchStatus == MatchStatus::kUnknown) {
+						NOTIFY_ERROR(mH_, "matchStatus == MatchStatus::kUnknown");
+						mStatus = CompareFilesStatus::kError;
+					}
+					else if (matchStatus == MatchStatus::kFilesDontMatch) {
+						mFilesMatch = false;
+					}
 					
 					mPendingTasks--;
-					CheckCompletion();
+					CheckCompletion(h_);
 				}
 				
 				//
-				void CheckCompletion() {
+				void CheckCompletion(const HermitPtr& h_) {
 					if (mAllTasksAdded && (mPendingTasks == 0)) {
-						mCompletion->CompareFilesComplete(mStatus, mFilesMatch);
+						mCompletion->CompareFilesComplete(h_, mStatus, mFilesMatch);
 					}
 				}
 				
@@ -331,11 +341,11 @@ namespace hermit {
 			class CompareCompletion : public CompareFilesCompletion {
 			public:
 				//
-				CompareCompletion(const HermitProxyPtr& h_,
+				CompareCompletion(const HermitProxyPtr& proxy,
 								  const AggregatorPtr& aggregator,
 								  const FilePathPtr& filePath1,
 								  const FilePathPtr& filePath2) :
-				mH_(h_),
+				mProxy(proxy),
 				mAggregator(aggregator),
 				mFilePath1(filePath1),
 				mFilePath2(filePath2) {
@@ -343,15 +353,15 @@ namespace hermit {
 				}
 				
 				//
-				virtual void Call(const CompareFilesStatus& status) override {
+				virtual void Call(const hermit::HermitPtr& h_, const CompareFilesStatus& status) override {
 					if ((status != CompareFilesStatus::kSuccess) && (status != CompareFilesStatus::kCancel)) {
-						NOTIFY_ERROR(mH_, "CompareFiles failed for:", mFilePath1, "and:", mFilePath2);
+						NOTIFY_ERROR(h_, "CompareFiles failed for:", mFilePath1, "and:", mFilePath2);
 					}
-					mAggregator->TaskComplete(status, mH_->mFilesMatch);
+					mAggregator->TaskComplete(h_, status, mProxy->mMatchStatus);
 				}
 				
 				//
-				HermitProxyPtr mH_;
+				HermitProxyPtr mProxy;
 				AggregatorPtr mAggregator;
 				FilePathPtr mFilePath1;
 				FilePathPtr mFilePath2;
@@ -514,7 +524,7 @@ namespace hermit {
 						++it2;
 					}
 				}
-				aggregator->AllTasksAdded();
+				aggregator->AllTasksAdded(h_);
 			}
 			
 			//
@@ -530,23 +540,23 @@ namespace hermit {
 				FileType fileType1 = FileType::kUnknown;
 				if (!GetFileType(h_, filePath1, fileType1)) {
 					NOTIFY_ERROR(h_, "CompareDirectories: GetFileType failed for:", filePath1);
-					completion->Call(CompareDirectoriesStatus::kError);
+					completion->Call(h_, CompareDirectoriesStatus::kError);
 					return;
 				}
 				if (fileType1 != FileType::kDirectory) {
 					NOTIFY_ERROR(h_, "CompareDirectories: path not a directory:", filePath1);
-					completion->Call(CompareDirectoriesStatus::kError);
+					completion->Call(h_, CompareDirectoriesStatus::kError);
 					return;
 				}
 				FileType fileType2 = FileType::kUnknown;
 				if (!GetFileType(h_, filePath2, fileType2)) {
 					NOTIFY_ERROR(h_, "CompareDirectories: GetFileType failed for:", filePath2);
-					completion->Call(CompareDirectoriesStatus::kError);
+					completion->Call(h_, CompareDirectoriesStatus::kError);
 					return;
 				}
 				if (fileType2 != FileType::kDirectory) {
 					NOTIFY_ERROR(h_, "CompareDirectories: path not a directory:", filePath2);
-					completion->Call(CompareDirectoriesStatus::kError);
+					completion->Call(h_, CompareDirectoriesStatus::kError);
 					return;
 				}
 				
@@ -554,7 +564,7 @@ namespace hermit {
 				auto status1 = ListDirectoryContents(h_, filePath1, false, dir1);
 				if ((status1 != ListDirectoryContentsResult::kSuccess) && (status1 != ListDirectoryContentsResult::kPermissionDenied)) {
 					NOTIFY_ERROR(h_, "CompareDirectories: ListDirectoryContents failed for:", filePath1);
-					completion->Call(CompareDirectoriesStatus::kError);
+					completion->Call(h_, CompareDirectoriesStatus::kError);
 					return;
 				}
 				
@@ -562,7 +572,7 @@ namespace hermit {
 				auto status2 = ListDirectoryContents(h_, filePath2, false, dir2);
 				if ((status2 != ListDirectoryContentsResult::kSuccess) && (status2 != ListDirectoryContentsResult::kPermissionDenied)) {
 					NOTIFY_ERROR(h_, "CompareDirectories: ListDirectoryContents failed for:", filePath2);
-					completion->Call(CompareDirectoriesStatus::kError);
+					completion->Call(h_, CompareDirectoriesStatus::kError);
 					return;
 				}
 				
@@ -581,12 +591,11 @@ namespace hermit {
 					}
 					// Can't really continue to test attributes and so forth since those calls will
 					// likely also encounter permission denied errors.
-					completion->Call(CompareDirectoriesStatus::kSuccess);
+					completion->Call(h_, CompareDirectoriesStatus::kSuccess);
 					return;
 				}
 				
-				auto compareCompletion = std::make_shared<InternalCompletion>(h_,
-																			  filePath1,
+				auto compareCompletion = std::make_shared<InternalCompletion>(filePath1,
 																			  filePath2,
 																			  ignoreDates,
 																			  ignoreFinderInfo,
@@ -668,7 +677,7 @@ namespace hermit {
 											   completion);
 			if (!QueueAsyncTask(h_, task, 100)) {
 				NOTIFY_ERROR(h_, "CompareDirectories: QueueAsyncTask failed.");
-				completion->Call(CompareDirectoriesStatus::kError);
+				completion->Call(h_, CompareDirectoriesStatus::kError);
 			}
 		}
 		
