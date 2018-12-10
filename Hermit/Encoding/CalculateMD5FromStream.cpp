@@ -321,8 +321,9 @@ namespace hermit {
 						return;
 					}
 					if (result != StreamDataResult::kSuccess) {
-						NOTIFY_ERROR(h_, "CalculateMD5FromStream: dataProvider return an error.");
+						NOTIFY_ERROR(h_, "CalculateMD5FromStream: dataProvider returned an error.");
 						mCompletion->Call(h_, CalculateHashResult::kError, "");
+						return;
 					}
 					std::string md5Hex = MD5ResultToString(mCalculator->mResult);
 					mCompletion->Call(h_, CalculateHashResult::kSuccess, md5Hex);

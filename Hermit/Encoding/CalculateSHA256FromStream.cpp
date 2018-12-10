@@ -63,8 +63,9 @@ namespace hermit {
 						return;
 					}
 					if (result != StreamDataResult::kSuccess) {
-						NOTIFY_ERROR(h_, "CalculateMD5FromStream: dataProvider return an error.");
+						NOTIFY_ERROR(h_, "CalculateSHA256FromStream: dataProvider returned an error.");
 						mCompletion->Call(h_, CalculateHashResult::kError, "");
+						return;
 					}
 					
 					char buf[32] = { 0 };
