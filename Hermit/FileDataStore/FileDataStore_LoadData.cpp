@@ -16,7 +16,7 @@
 //	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#include "Hermit/File/LoadFileData.h"
+#include "Hermit/File/ReadFileData.h"
 #include "Hermit/Foundation/Notification.h"
 #include "FileDataStore.h"
 #include "FilePathDataPath.h"
@@ -45,10 +45,10 @@ namespace hermit {
 			typedef std::shared_ptr<Receiver> ReceiverPtr;
 
 			//
-			class LoadDataCompletion : public file::LoadFileDataCompletion {
+			class ReadDataCompletion : public DataCompletion {
 			public:
 				//
-				LoadDataCompletion(const file::FilePathPtr& filePath,
+				ReadDataCompletion(const file::FilePathPtr& filePath,
 								   const ReceiverPtr& dataReceiver,
 								   const datastore::LoadDataStoreDataDataBlockPtr& dataBlock,
 								   const datastore::LoadDataStoreDataCompletionBlockPtr& completion) :
@@ -59,13 +59,13 @@ namespace hermit {
 				}
 				
 				//
-				virtual void Call(const HermitPtr& h_, const file::LoadFileDataResult& result) override {
-					if (result == file::LoadFileDataResult::kFileNotFound) {
+				virtual void Call(const HermitPtr& h_, const StreamDataResult& result) override {
+					if (result == StreamDataResult::kFileNotFound) {
 						mCompletion->Call(h_, datastore::LoadDataStoreDataResult::kItemNotFound);
 						return;
 					}
-					if (result != file::LoadFileDataResult::kSuccess) {
-						NOTIFY_ERROR(h_, "LoadFileDataStoreData: LoadFileData failed for path:", mFilePath);
+					if (result != StreamDataResult::kSuccess) {
+						NOTIFY_ERROR(h_, "LoadFileDataStoreData: ReadFileData failed for path:", mFilePath);
 						mCompletion->Call(h_, datastore::LoadDataStoreDataResult::kError);
 						return;
 					}
@@ -92,11 +92,11 @@ namespace hermit {
                                      const datastore::LoadDataStoreDataCompletionBlockPtr& completion) {
 			FilePathDataPath& filePath = static_cast<FilePathDataPath&>(*path);
 			auto fileReceiver = std::make_shared<Receiver>();
-			auto fileCompletion = std::make_shared<LoadDataCompletion>(filePath.mFilePath,
+			auto fileCompletion = std::make_shared<ReadDataCompletion>(filePath.mFilePath,
 																	   fileReceiver,
 																	   dataBlock,
 																	   completion);
-			file::LoadFileData(h_, filePath.mFilePath, fileReceiver, fileCompletion);
+			file::ReadFileData(h_, filePath.mFilePath, fileReceiver, fileCompletion);
 		}
 		
 	} // namespace filedatastore

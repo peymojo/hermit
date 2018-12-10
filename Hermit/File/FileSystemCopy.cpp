@@ -40,12 +40,12 @@
 #include "Hermit/File/ListDirectoryContentsWithType.h"
 #include "Hermit/File/PathIsAlias.h"
 #include "Hermit/File/PathIsPackage.h"
+#include "Hermit/File/ReadFileData.h"
 #include "Hermit/File/SetDirectoryIsPackage.h"
 #include "Hermit/File/SetFileBSDFlags.h"
 #include "Hermit/File/SetFileDates.h"
 #include "Hermit/File/SetFilePosixOwnership.h"
 #include "Hermit/File/SetFilePosixPermissions.h"
-#include "Hermit/File/StreamInFileData.h"
 #include "Hermit/File/StreamOutFileData.h"
 #include "Hermit/Foundation/AsyncTaskQueue.h"
 #include "Hermit/Foundation/Hermit.h"
@@ -55,9 +55,6 @@
 namespace hermit {
 	namespace file {
 		namespace FileSystemCopy_Impl {
-			
-			//
-			const long kChunkSize = 1024 * 1024;
 			
 			//
 			void CopyAttributes(const HermitPtr& h_,
@@ -168,7 +165,7 @@ namespace hermit {
 				virtual void Call(const HermitPtr& h_,
 								  const DataReceiverPtr& dataReceiver,
 								  const DataCompletionPtr& completion) override {
-					StreamInFileData(h_, mSourceFile, kChunkSize, dataReceiver, completion);
+					ReadFileData(h_, mSourceFile, dataReceiver, completion);
 				}
 				
 				//

@@ -31,7 +31,7 @@
 		EF2CF5E41FF24A1C00652E69 /* GetFileXAttrs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F801D878B840056E526 /* GetFileXAttrs.cpp */; };
 		EF2CF5E51FF24A1C00652E69 /* GetRelativeFilePath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F821D878B840056E526 /* GetRelativeFilePath.cpp */; };
 		EF2CF5E61FF24A1C00652E69 /* GetTemporaryFilePath_Mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F861D878B840056E526 /* GetTemporaryFilePath_Mac.cpp */; };
-		EF2CF5E71FF24A1C00652E69 /* LoadFileData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F8E1D878B840056E526 /* LoadFileData.cpp */; };
+		EF2CF5E71FF24A1C00652E69 /* ReadFileData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F8E1D878B840056E526 /* ReadFileData.cpp */; };
 		EF2CF5E81FF24A1C00652E69 /* MakeDirectoryPath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F901D878B840056E526 /* MakeDirectoryPath.cpp */; };
 		EF2CF5E91FF24A1C00652E69 /* PathIsDescendantOfPath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F951D878B840056E526 /* PathIsDescendantOfPath.cpp */; };
 		EF2CF5EA1FF24A1C00652E69 /* ReadFirstLineFromFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5FA01D878B840056E526 /* ReadFirstLineFromFile.cpp */; };
@@ -75,7 +75,6 @@
 		EF2CF6111FF24A2400652E69 /* SetFileIsLocked_Cocoa.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5FB61D878B840056E526 /* SetFileIsLocked_Cocoa.mm */; };
 		EF2CF6121FF24A2400652E69 /* SetFilePosixOwnership_Cocoa.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5FB81D878B840056E526 /* SetFilePosixOwnership_Cocoa.mm */; };
 		EF2CF6131FF24A2400652E69 /* SetFilePosixPermissions_Cocoa.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5FBA1D878B840056E526 /* SetFilePosixPermissions_Cocoa.mm */; };
-		EF2CF6141FF24A2400652E69 /* StreamInFileData_Cocoa.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5FC21D878B840056E526 /* StreamInFileData_Cocoa.mm */; };
 		EF2CF6151FF24A2400652E69 /* StreamOutFileData_Cocoa.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5FC61D878B840056E526 /* StreamOutFileData_Cocoa.mm */; };
 		EF51C748201AD2540028B7D4 /* CopyXAttrs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF51C746201AD2540028B7D4 /* CopyXAttrs.cpp */; };
 		EF51C749201AD2540028B7D4 /* CopyXAttrs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF51C746201AD2540028B7D4 /* CopyXAttrs.cpp */; };
@@ -110,7 +109,7 @@
 		EF6511451F656EE2002D8065 /* GetFileType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F7E1D878B840056E526 /* GetFileType.cpp */; };
 		EF6511461F656EE2002D8065 /* GetFileXAttrs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F801D878B840056E526 /* GetFileXAttrs.cpp */; };
 		EF6511471F656EE2002D8065 /* GetRelativeFilePath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F821D878B840056E526 /* GetRelativeFilePath.cpp */; };
-		EF6511491F656EE2002D8065 /* LoadFileData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F8E1D878B840056E526 /* LoadFileData.cpp */; };
+		EF6511491F656EE2002D8065 /* ReadFileData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F8E1D878B840056E526 /* ReadFileData.cpp */; };
 		EF65114A1F656EE2002D8065 /* MakeDirectoryPath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F901D878B840056E526 /* MakeDirectoryPath.cpp */; };
 		EF65114B1F656EE2002D8065 /* PathIsDescendantOfPath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F951D878B840056E526 /* PathIsDescendantOfPath.cpp */; };
 		EF65114C1F656EE2002D8065 /* ReadFirstLineFromFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5FA01D878B840056E526 /* ReadFirstLineFromFile.cpp */; };
@@ -137,7 +136,6 @@
 		EF6511721F656EE8002D8065 /* PathIsDirectory_Cocoa.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F971D878B840056E526 /* PathIsDirectory_Cocoa.mm */; };
 		EF6511751F656EE8002D8065 /* PathIsSymbolicLink_Cocoa.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F9D1D878B840056E526 /* PathIsSymbolicLink_Cocoa.mm */; };
 		EF6511761F656EE8002D8065 /* SetFileDates_Cocoa.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5FB01D878B840056E526 /* SetFileDates_Cocoa.mm */; };
-		EF65117B1F656EE8002D8065 /* StreamInFileData_Cocoa.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5FC21D878B840056E526 /* StreamInFileData_Cocoa.mm */; };
 		EF65117D1F656EE8002D8065 /* StreamOutFileData_Cocoa.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5FC61D878B840056E526 /* StreamOutFileData_Cocoa.mm */; };
 		EF92C1701F10FF180097D708 /* FileKit.h in Headers */ = {isa = PBXBuildFile; fileRef = EF92C16E1F10FF180097D708 /* FileKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EF92C1791F10FF330097D708 /* CountDirectoryContents.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F311D878B840056E526 /* CountDirectoryContents.cpp */; };
@@ -160,7 +158,7 @@
 		EF92C18C1F10FF330097D708 /* GetFileXAttrs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F801D878B840056E526 /* GetFileXAttrs.cpp */; };
 		EF92C18D1F10FF330097D708 /* GetRelativeFilePath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F821D878B840056E526 /* GetRelativeFilePath.cpp */; };
 		EF92C18E1F10FF330097D708 /* GetTemporaryFilePath_Mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F861D878B840056E526 /* GetTemporaryFilePath_Mac.cpp */; };
-		EF92C18F1F10FF330097D708 /* LoadFileData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F8E1D878B840056E526 /* LoadFileData.cpp */; };
+		EF92C18F1F10FF330097D708 /* ReadFileData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F8E1D878B840056E526 /* ReadFileData.cpp */; };
 		EF92C1901F10FF330097D708 /* MakeDirectoryPath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F901D878B840056E526 /* MakeDirectoryPath.cpp */; };
 		EF92C1911F10FF330097D708 /* PathIsDescendantOfPath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5F951D878B840056E526 /* PathIsDescendantOfPath.cpp */; };
 		EF92C1921F10FF330097D708 /* ReadFirstLineFromFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5FA01D878B840056E526 /* ReadFirstLineFromFile.cpp */; };
@@ -204,7 +202,6 @@
 		EF92C1BC1F10FF510097D708 /* SetFileIsLocked_Cocoa.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5FB61D878B840056E526 /* SetFileIsLocked_Cocoa.mm */; };
 		EF92C1BD1F10FF510097D708 /* SetFilePosixOwnership_Cocoa.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5FB81D878B840056E526 /* SetFilePosixOwnership_Cocoa.mm */; };
 		EF92C1BE1F10FF510097D708 /* SetFilePosixPermissions_Cocoa.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5FBA1D878B840056E526 /* SetFilePosixPermissions_Cocoa.mm */; };
-		EF92C1C01F10FF510097D708 /* StreamInFileData_Cocoa.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5FC21D878B840056E526 /* StreamInFileData_Cocoa.mm */; };
 		EF92C1C21F10FF510097D708 /* StreamOutFileData_Cocoa.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFAD5FC61D878B840056E526 /* StreamOutFileData_Cocoa.mm */; };
 		EF92C1C51F10FF990097D708 /* FoundationKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF92C1C41F10FF990097D708 /* FoundationKit.framework */; };
 		EF92C1C71F10FF9E0097D708 /* StringKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF92C1C61F10FF9E0097D708 /* StringKit.framework */; };
@@ -346,8 +343,8 @@
 		EFAD5F8B1D878B840056E526 /* ListDirectoryContents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListDirectoryContents.h; sourceTree = "<group>"; };
 		EFAD5F8C1D878B840056E526 /* ListDirectoryContentsWithType_Cocoa.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ListDirectoryContentsWithType_Cocoa.mm; sourceTree = "<group>"; };
 		EFAD5F8D1D878B840056E526 /* ListDirectoryContentsWithType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListDirectoryContentsWithType.h; sourceTree = "<group>"; };
-		EFAD5F8E1D878B840056E526 /* LoadFileData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LoadFileData.cpp; sourceTree = "<group>"; };
-		EFAD5F8F1D878B840056E526 /* LoadFileData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadFileData.h; sourceTree = "<group>"; };
+		EFAD5F8E1D878B840056E526 /* ReadFileData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ReadFileData.cpp; sourceTree = "<group>"; };
+		EFAD5F8F1D878B840056E526 /* ReadFileData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReadFileData.h; sourceTree = "<group>"; };
 		EFAD5F901D878B840056E526 /* MakeDirectoryPath.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MakeDirectoryPath.cpp; sourceTree = "<group>"; };
 		EFAD5F911D878B840056E526 /* MakeDirectoryPath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MakeDirectoryPath.h; sourceTree = "<group>"; };
 		EFAD5F931D878B840056E526 /* PathIsAlias_Cocoa.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PathIsAlias_Cocoa.mm; sourceTree = "<group>"; };
@@ -393,8 +390,6 @@
 		EFAD5FBB1D878B840056E526 /* SetFilePosixPermissions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetFilePosixPermissions.h; sourceTree = "<group>"; };
 		EFAD5FBC1D878B840056E526 /* SetFileXAttr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SetFileXAttr.cpp; sourceTree = "<group>"; };
 		EFAD5FBD1D878B840056E526 /* SetFileXAttr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetFileXAttr.h; sourceTree = "<group>"; };
-		EFAD5FC21D878B840056E526 /* StreamInFileData_Cocoa.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = StreamInFileData_Cocoa.mm; sourceTree = "<group>"; };
-		EFAD5FC31D878B840056E526 /* StreamInFileData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StreamInFileData.h; sourceTree = "<group>"; };
 		EFAD5FC61D878B840056E526 /* StreamOutFileData_Cocoa.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = StreamOutFileData_Cocoa.mm; sourceTree = "<group>"; };
 		EFAD5FC71D878B840056E526 /* StreamOutFileData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StreamOutFileData.h; sourceTree = "<group>"; };
 		EFAD5FCA1D878B840056E526 /* ValidateDirectory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ValidateDirectory.cpp; sourceTree = "<group>"; };
@@ -593,8 +588,6 @@
 				EFAD5F8B1D878B840056E526 /* ListDirectoryContents.h */,
 				EFAD5F8C1D878B840056E526 /* ListDirectoryContentsWithType_Cocoa.mm */,
 				EFAD5F8D1D878B840056E526 /* ListDirectoryContentsWithType.h */,
-				EFAD5F8E1D878B840056E526 /* LoadFileData.cpp */,
-				EFAD5F8F1D878B840056E526 /* LoadFileData.h */,
 				EFAD5F901D878B840056E526 /* MakeDirectoryPath.cpp */,
 				EFAD5F911D878B840056E526 /* MakeDirectoryPath.h */,
 				EFAD5F931D878B840056E526 /* PathIsAlias_Cocoa.mm */,
@@ -611,6 +604,8 @@
 				EFAD5F9E1D878B840056E526 /* PathIsSymbolicLink.h */,
 				EFAD5F9F1D878B840056E526 /* PreprocessFileFunction.h */,
 				EFAD5F171D878B2A0056E526 /* Products */,
+				EFAD5F8E1D878B840056E526 /* ReadFileData.cpp */,
+				EFAD5F8F1D878B840056E526 /* ReadFileData.h */,
 				EFAD5FA01D878B840056E526 /* ReadFirstLineFromFile.cpp */,
 				EFAD5FA11D878B840056E526 /* ReadFirstLineFromFile.h */,
 				EFAD5FA21D878B840056E526 /* ReadFirstLineFromUTF8FilePath.cpp */,
@@ -641,8 +636,6 @@
 				EFAD5FBB1D878B840056E526 /* SetFilePosixPermissions.h */,
 				EFAD5FBC1D878B840056E526 /* SetFileXAttr.cpp */,
 				EFAD5FBD1D878B840056E526 /* SetFileXAttr.h */,
-				EFAD5FC21D878B840056E526 /* StreamInFileData_Cocoa.mm */,
-				EFAD5FC31D878B840056E526 /* StreamInFileData.h */,
 				EFAD5FC61D878B840056E526 /* StreamOutFileData_Cocoa.mm */,
 				EFAD5FC71D878B840056E526 /* StreamOutFileData.h */,
 				EFAD5FCA1D878B840056E526 /* ValidateDirectory.cpp */,
@@ -859,7 +852,6 @@
 				EF2CF6111FF24A2400652E69 /* SetFileIsLocked_Cocoa.mm in Sources */,
 				EF2CF6121FF24A2400652E69 /* SetFilePosixOwnership_Cocoa.mm in Sources */,
 				EF2CF6131FF24A2400652E69 /* SetFilePosixPermissions_Cocoa.mm in Sources */,
-				EF2CF6141FF24A2400652E69 /* StreamInFileData_Cocoa.mm in Sources */,
 				EF2CF6151FF24A2400652E69 /* StreamOutFileData_Cocoa.mm in Sources */,
 				EF2CF5D11FF24A1C00652E69 /* CountDirectoryContents.cpp in Sources */,
 				EF2CF5D21FF24A1C00652E69 /* CreateAlias_Mac.cpp in Sources */,
@@ -882,7 +874,7 @@
 				EF2CF5E41FF24A1C00652E69 /* GetFileXAttrs.cpp in Sources */,
 				EF2CF5E51FF24A1C00652E69 /* GetRelativeFilePath.cpp in Sources */,
 				EF2CF5E61FF24A1C00652E69 /* GetTemporaryFilePath_Mac.cpp in Sources */,
-				EF2CF5E71FF24A1C00652E69 /* LoadFileData.cpp in Sources */,
+				EF2CF5E71FF24A1C00652E69 /* ReadFileData.cpp in Sources */,
 				EF2CF5E81FF24A1C00652E69 /* MakeDirectoryPath.cpp in Sources */,
 				EF2CF5E91FF24A1C00652E69 /* PathIsDescendantOfPath.cpp in Sources */,
 				EF2CF5EA1FF24A1C00652E69 /* ReadFirstLineFromFile.cpp in Sources */,
@@ -921,7 +913,6 @@
 				EF6511721F656EE8002D8065 /* PathIsDirectory_Cocoa.mm in Sources */,
 				EF6511751F656EE8002D8065 /* PathIsSymbolicLink_Cocoa.mm in Sources */,
 				EF6511761F656EE8002D8065 /* SetFileDates_Cocoa.mm in Sources */,
-				EF65117B1F656EE8002D8065 /* StreamInFileData_Cocoa.mm in Sources */,
 				EF65117D1F656EE8002D8065 /* StreamOutFileData_Cocoa.mm in Sources */,
 				EF6511341F656EE2002D8065 /* CreateAlias_Mac.cpp in Sources */,
 				EF6511351F656EE2002D8065 /* CreateDirectoryParentChain.cpp in Sources */,
@@ -939,7 +930,7 @@
 				EF6511451F656EE2002D8065 /* GetFileType.cpp in Sources */,
 				EF6511461F656EE2002D8065 /* GetFileXAttrs.cpp in Sources */,
 				EF6511471F656EE2002D8065 /* GetRelativeFilePath.cpp in Sources */,
-				EF6511491F656EE2002D8065 /* LoadFileData.cpp in Sources */,
+				EF6511491F656EE2002D8065 /* ReadFileData.cpp in Sources */,
 				EF65114A1F656EE2002D8065 /* MakeDirectoryPath.cpp in Sources */,
 				EF65114B1F656EE2002D8065 /* PathIsDescendantOfPath.cpp in Sources */,
 				EF65114C1F656EE2002D8065 /* ReadFirstLineFromFile.cpp in Sources */,
@@ -993,7 +984,6 @@
 				EF92C1BC1F10FF510097D708 /* SetFileIsLocked_Cocoa.mm in Sources */,
 				EF92C1BD1F10FF510097D708 /* SetFilePosixOwnership_Cocoa.mm in Sources */,
 				EF92C1BE1F10FF510097D708 /* SetFilePosixPermissions_Cocoa.mm in Sources */,
-				EF92C1C01F10FF510097D708 /* StreamInFileData_Cocoa.mm in Sources */,
 				EF92C1C21F10FF510097D708 /* StreamOutFileData_Cocoa.mm in Sources */,
 				EF92C1791F10FF330097D708 /* CountDirectoryContents.cpp in Sources */,
 				EF92C17A1F10FF330097D708 /* CreateAlias_Mac.cpp in Sources */,
@@ -1015,7 +1005,7 @@
 				EF92C18C1F10FF330097D708 /* GetFileXAttrs.cpp in Sources */,
 				EF92C18D1F10FF330097D708 /* GetRelativeFilePath.cpp in Sources */,
 				EF92C18E1F10FF330097D708 /* GetTemporaryFilePath_Mac.cpp in Sources */,
-				EF92C18F1F10FF330097D708 /* LoadFileData.cpp in Sources */,
+				EF92C18F1F10FF330097D708 /* ReadFileData.cpp in Sources */,
 				EF92C1901F10FF330097D708 /* MakeDirectoryPath.cpp in Sources */,
 				EF92C1911F10FF330097D708 /* PathIsDescendantOfPath.cpp in Sources */,
 				EF92C1921F10FF330097D708 /* ReadFirstLineFromFile.cpp in Sources */,

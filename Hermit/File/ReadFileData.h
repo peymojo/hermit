@@ -16,34 +16,21 @@
 //	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef LoadFileData_h
-#define LoadFileData_h
+#ifndef ReadFileData_h
+#define ReadFileData_h
 
-#include "Hermit/Foundation/AsyncFunction.h"
-#include "Hermit/Foundation/StreamDataFunction.h"
 #include "Hermit/Foundation/Hermit.h"
+#include "Hermit/Foundation/StreamDataFunction.h"
 #include "FilePath.h"
 
 namespace hermit {
 	namespace file {
 		
 		//
-		enum class LoadFileDataResult {
-			kUnknown,
-			kSuccess,
-			kCanceled,
-			kFileNotFound,
-			kError
-		};
-		
-		//
-		DEFINE_ASYNC_FUNCTION_2A(LoadFileDataCompletion, HermitPtr, LoadFileDataResult);
-		
-		//
-		void LoadFileData(const HermitPtr& h_,
+		void ReadFileData(const HermitPtr& h_,
 						  const FilePathPtr& filePath,
 						  const DataReceiverPtr& dataReceiver,
-						  const LoadFileDataCompletionPtr& completion);
+						  const DataCompletionPtr& completion);
 		
 	} // namespace file
 } // namespace hermit

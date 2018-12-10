@@ -17,7 +17,7 @@
 //
 
 #include <string>
-#include "LoadFileData.h"
+#include "ReadFileData.h"
 #include "ReadUTF8File.h"
 
 namespace hermit {
@@ -44,10 +44,10 @@ namespace hermit {
 			typedef std::shared_ptr<Receiver> ReceiverPtr;
 
 			//
-			class LoadCompletion : public LoadFileDataCompletion {
+			class ReadCompletion : public DataCompletion {
 			public:
 				//
-				LoadCompletion(const ReceiverPtr& receiver,
+				ReadCompletion(const ReceiverPtr& receiver,
 							   const ReadUTF8FileLineBlockPtr& lineBlock,
 							   const ReadUTF8FileCompletionPtr& completion) :
 				mReceiver(receiver),
@@ -56,12 +56,12 @@ namespace hermit {
 				}
 				
 				//
-				virtual void Call(const HermitPtr& h_, const LoadFileDataResult& result) override {
-					if (result == LoadFileDataResult::kFileNotFound) {
+				virtual void Call(const HermitPtr& h_, const StreamDataResult& result) override {
+					if (result == StreamDataResult::kFileNotFound) {
 						mCompletion->Call(h_, ReadUTF8FileResult::kFileNotFound);
 						return;
 					}
-					if (result != LoadFileDataResult::kSuccess) {
+					if (result != StreamDataResult::kSuccess) {
 						mCompletion->Call(h_, ReadUTF8FileResult::kError);
 						return;
 					}
@@ -101,8 +101,8 @@ namespace hermit {
 						  const ReadUTF8FileLineBlockPtr& lineBlock,
 						  const ReadUTF8FileCompletionPtr& completion) {
 			auto receiver = std::make_shared<Receiver>();
-			auto loadCompletion = std::make_shared<LoadCompletion>(receiver, lineBlock, completion);
-			LoadFileData(h_, filePath, receiver, loadCompletion);
+			auto readCompletion = std::make_shared<ReadCompletion>(receiver, lineBlock, completion);
+			ReadFileData(h_, filePath, receiver, readCompletion);
 		}
 		
 	} // namespace file

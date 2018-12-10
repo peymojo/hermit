@@ -163,7 +163,7 @@ namespace hermit {
 						if ((error != nil) &&
 							[error.domain isEqualToString:NSCocoaErrorDomain] &&
 							(error.code == NSFileNoSuchFileError)) {
-							completion->Call(h_, StreamDataResult::kNoSuchFile);
+							completion->Call(h_, StreamDataResult::kFileNotFound);
 							return;
 						}
 						

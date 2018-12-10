@@ -60,7 +60,7 @@ namespace hermit {
 						mCompletion->Call(h_, WriteFileDataResult::kDiskFull);
 						return;
 					}
-					if (result == StreamDataResult::kNoSuchFile) {
+					if (result == StreamDataResult::kFileNotFound) {
 						mCompletion->Call(h_, WriteFileDataResult::kNoSuchFile);
 						return;
 					}
