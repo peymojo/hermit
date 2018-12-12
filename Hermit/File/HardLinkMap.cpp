@@ -22,7 +22,6 @@
 #include <vector>
 #include "Hermit/Foundation/Callback.h"
 #include "Hermit/Foundation/Notification.h"
-#include "Hermit/Foundation/TaskQueue.h"
 #include "AppendToFilePath.h"
 #include "GetCanonicalFilePathString.h"
 #include "GetRelativeFilePath.h"
