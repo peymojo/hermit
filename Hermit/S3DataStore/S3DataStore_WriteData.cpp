@@ -17,7 +17,6 @@
 //
 
 #include <string>
-#include "Hermit/Foundation/AsyncTaskQueue.h"
 #include "Hermit/Foundation/Notification.h"
 #include "S3DataPath.h"
 #include "S3DataStore.h"
@@ -86,63 +85,6 @@ namespace hermit {
                 datastore::WriteDataStoreDataCompletionFunctionPtr mCompletion;
             };
             
-            //
-            void PerformWork(const HermitPtr& h_,
-                             const datastore::DataStorePtr& dataStore,
-                             const datastore::DataPathPtr& path,
-                             const SharedBufferPtr& data,
-                             const datastore::EncryptionSetting& encryptionSetting,
-                             const datastore::WriteDataStoreDataCompletionFunctionPtr& completion) {
-                if (CHECK_FOR_ABORT(h_)) {
-                    completion->Call(h_, datastore::WriteDataStoreDataResult::kCanceled);
-                    return;
-                }
-                
-                S3DataStore& s3DataStore = static_cast<S3DataStore&>(*dataStore);
-                S3DataPath& dataPath = static_cast<S3DataPath&>(*path);
-                
-                auto putCompletion = std::make_shared<PutCompletion>(dataPath.mPath, completion);
-                s3DataStore.mBucket->PutObject(h_,
-                                               dataPath.mPath,
-                                               data,
-                                               s3DataStore.mUseReducedRedundancyStorage,
-                                               putCompletion);
-            }
-            
-            //
-            class Task : public AsyncTask {
-            public:
-                //
-                Task(const datastore::DataStorePtr& dataStore,
-                     const datastore::DataPathPtr& path,
-                     const SharedBufferPtr& data,
-                     const datastore::EncryptionSetting& encryptionSetting,
-                     const datastore::WriteDataStoreDataCompletionFunctionPtr& completion) :
-                mDataStore(dataStore),
-                mPath(path),
-                mData(data),
-                mEncryptionSetting(encryptionSetting),
-                mCompletionFunction(completion) {
-                }
-                
-                //
-				virtual void PerformTask(const HermitPtr& h_) override {
-                    PerformWork(h_,
-                                mDataStore,
-                                mPath,
-                                mData,
-                                mEncryptionSetting,
-                                mCompletionFunction);
-                }
-                
-                //
-                datastore::DataStorePtr mDataStore;
-                datastore::DataPathPtr mPath;
-                SharedBufferPtr mData;
-                datastore::EncryptionSetting mEncryptionSetting;
-                datastore::WriteDataStoreDataCompletionFunctionPtr mCompletionFunction;
-            };
-            
         } // namespace S3DataStore_WriteData_Impl
         using namespace S3DataStore_WriteData_Impl;
         
@@ -152,15 +94,19 @@ namespace hermit {
                                     const SharedBufferPtr& data,
                                     const datastore::EncryptionSetting& encryptionSetting,
                                     const datastore::WriteDataStoreDataCompletionFunctionPtr& completion) {
-            auto task = std::make_shared<Task>(shared_from_this(),
-                                               path,
-                                               data,
-                                               encryptionSetting,
-                                               completion);
-            if (!QueueAsyncTask(h_, task, 10)) {
-                NOTIFY_ERROR(h_, "QueueAsyncTask failed.");
-                completion->Call(h_, datastore::WriteDataStoreDataResult::kError);
-            }
+			if (CHECK_FOR_ABORT(h_)) {
+				completion->Call(h_, datastore::WriteDataStoreDataResult::kCanceled);
+				return;
+			}
+			
+			S3DataPath& dataPath = static_cast<S3DataPath&>(*path);
+			
+			auto putCompletion = std::make_shared<PutCompletion>(dataPath.mPath, completion);
+			mBucket->PutObject(h_,
+							   dataPath.mPath,
+							   data,
+							   mUseReducedRedundancyStorage,
+							   putCompletion);
         }
         
     } // namespace s3datastore

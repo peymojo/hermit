@@ -46,13 +46,6 @@ namespace hermit {
 								   const datastore::WriteDataStoreDataCompletionFunctionPtr& completion) override;
 
             //
-            void DoWriteData(const HermitPtr& h_,
-                             const datastore::DataPathPtr& path,
-                             const SharedBufferPtr& data,
-                             const datastore::EncryptionSetting& encryptionSetting,
-                             const datastore::WriteDataStoreDataCompletionFunctionPtr& completion);
-
-            //
 			std::string mAESKey;
 		};
 		typedef std::shared_ptr<AES256EncryptedFileDataStore> AES256EncryptedFileDataStorePtr;
