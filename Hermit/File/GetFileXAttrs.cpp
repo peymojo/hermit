@@ -28,13 +28,15 @@ namespace hermit {
 	namespace file {
 		
 		//
-		GetFileXAttrsResult GetFileXAttrs(const HermitPtr& h_, const FilePathPtr& filePath, const GetFileXAttrsCallbackRef& callback) {
+		GetFileXAttrsResult GetFileXAttrs(const HermitPtr& h_,
+										  const FilePathPtr& filePath,
+										  const GetFileXAttrsCallbackRef& callback) {
 			std::string pathUTF8;
 			FilePathToCocoaPathString(h_, filePath, pathUTF8);
 			
 			ssize_t namesBufActualSize = listxattr(pathUTF8.c_str(), nullptr, 0, XATTR_NOFOLLOW);
 			if (namesBufActualSize == -1) {
-				if (errno == EACCES) {
+				if ((errno == EACCES) || (errno == EPERM)) {
                     return GetFileXAttrsResult::kAccessDenied;
 				}
 				
@@ -49,6 +51,9 @@ namespace hermit {
 			std::vector<char> attrNamesBuf(namesBufActualSize);
 			namesBufActualSize = listxattr(pathUTF8.c_str(), &attrNamesBuf.at(0), attrNamesBuf.size(), XATTR_NOFOLLOW);
 			if (namesBufActualSize == -1) {
+				if ((errno == EACCES) || (errno == EPERM)) {
+					return GetFileXAttrsResult::kAccessDenied;
+				}
 				NOTIFY_ERROR(h_, "GetFileXAttrs: listxattr (2) failed for path:", filePath, "errno:", errno);
                 return GetFileXAttrsResult::kError;
 			}
@@ -67,6 +72,9 @@ namespace hermit {
 												   XATTR_NOFOLLOW);
 				
 				if (valueActualSize == -1) {
+					if ((errno == EACCES) || (errno == EPERM)) {
+						return GetFileXAttrsResult::kAccessDenied;
+					}
 					NOTIFY_ERROR(h_, "GetFileXAttrs: getxattr (1) failed for path:", filePath,
                                  "xattr name:", oneXAttrName,
                                  "errno:", errno);
@@ -84,6 +92,9 @@ namespace hermit {
 											   XATTR_NOFOLLOW);
 					
 					if (valueActualSize == -1) {
+						if ((errno == EACCES) || (errno == EPERM)) {
+							return GetFileXAttrsResult::kAccessDenied;
+						}
 						NOTIFY_ERROR(h_, "GetFileXAttrs: getxattr (2) failed for path:", filePath,
                                      "xattr name:", oneXAttrName,
                                      "errno:", errno);
