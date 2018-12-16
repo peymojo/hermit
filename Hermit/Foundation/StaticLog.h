@@ -21,11 +21,12 @@
 
 namespace hermit {
 	
-// log a message in some os-specific way; suitable for logging during
-// static init or destroy or any other time that logging via the Notification
-// mechanism is not appropriate
-void StaticLog(const char* message);
+	// log a message in some os-specific way; suitable for logging during
+	// static init or destroy or any other time that logging via the Notification
+	// mechanism is not appropriate
+	void StaticLog(const char* message);
 	
 } // namespace hermit
 
 #endif /* StaticLog_h */
+

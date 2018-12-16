@@ -1,6 +1,6 @@
 //
 //	Hermit
-//	Copyright (C) 2017 Paul Young (aka peymojo)
+//	Copyright (C) 2018 Paul Young (aka peymojo)
 //
 //	This program is free software: you can redistribute it and/or modify
 //	it under the terms of the GNU General Public License as published by
@@ -16,20 +16,14 @@
 //	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#include <Foundation/Foundation.h>
-#include "StaticLog.h"
+#ifndef IsDebuggerActive_h
+#define IsDebuggerActive_h
 
 namespace hermit {
 	
 	//
-	void StaticLog(const char* message) {
-		if (message == nullptr) {
-			NSLog(@"StaticLog: null message?");
-		}
-		else {
-			NSLog(@"%s", message);
-		}
-	}
+	bool IsDebuggerActive();
 	
 } // namespace hermit
 
+#endif /* IsDebuggerActive_h */

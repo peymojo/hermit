@@ -21,50 +21,12 @@
 #include <iostream>
 #include <mutex>
 #include <string>
-#include <sys/sysctl.h>
-#include <unistd.h>
 #include <vector>
+#include "IsDebuggerActive.h"
 #include "LoggingHermit.h"
 
 namespace hermit {
-	namespace LoggingHermit_Impl {
-		
-		// Returns true if the current process is being debugged (either
-		// running under the debugger or has a debugger attached post facto).
-		static bool IAmBeingDebugged() {
-#ifdef DEBUG
-			// Initialize the flags so that, if sysctl fails for some bizarre
-			// reason, we get a predictable result.
-			struct kinfo_proc info;
-			info.kp_proc.p_flag = 0;
-			
-			// Initialize mib, which tells sysctl the info we want, in this case
-			// we're looking for information about a specific process ID.
-			int mib[4];
-			mib[0] = CTL_KERN;
-			mib[1] = KERN_PROC;
-			mib[2] = KERN_PROC_PID;
-			mib[3] = getpid();
-			
-			// Call sysctl.
-			
-			size_t size = sizeof(info);
-			int result = sysctl(mib, sizeof(mib) / sizeof(*mib), &info, &size, NULL, 0);
-			if (result == -1) {
-				NSLog(@"IAmBeingDebugged: sysctl failed, errno: %d", errno);
-				return false;
-			}
-			
-			// We're being debugged if the P_TRACED flag is set.
-			return ( (info.kp_proc.p_flag & P_TRACED) != 0 );
-#else
-			return false;
-#endif
-		}
-		
-	} // namespace LoggingHermit_Impl
-    using namespace LoggingHermit_Impl;
-	
+
 	//
 	class LoggingHermit::impl {
 	public:
@@ -159,7 +121,7 @@ namespace hermit {
 					mFileStream.flush();
 				}
 			}
-			if (mLogFilePath.empty() || IAmBeingDebugged()) {
+			if (mLogFilePath.empty() || IsDebuggerActive()) {
 				std::cout << line << std::endl;
 			}
 		}
