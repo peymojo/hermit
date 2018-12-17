@@ -26,17 +26,18 @@ namespace hermit {
 	namespace file {
 		
 		//
-		enum CreateDirectoryIfNeededStatus {
-			kCreateDirectoryIfNeededStatus_Unknown,
-			kCreateDirectoryIfNeededStatus_Success,
-			kCreateDirectoryIfNeededStatus_ConflictAtPath,
-			kCreateDirectoryIfNeededStatus_DiskFull,
-			kCreateDirectoryIfNeededStatus_Error
+		enum class CreateDirectoryIfNeededResult {
+			kUnknown,
+			kSuccess,
+			kConflictAtPath,
+			kDiskFull,
+			kError
 		};
-		typedef std::pair<CreateDirectoryIfNeededStatus, bool> CreateDirectoryIfNeededResult;
 		
 		//
-		CreateDirectoryIfNeededResult CreateDirectoryIfNeeded(const HermitPtr& h_, const FilePathPtr& inFilePath);
+		CreateDirectoryIfNeededResult CreateDirectoryIfNeeded(const HermitPtr& h_,
+															  const FilePathPtr& path,
+															  bool& outWasCreated);
 		
 	} // namespace file
 } // namespace hermit

@@ -33,8 +33,9 @@ namespace hermit {
 				return false;
 			}
 			
-			auto result = CreateDirectoryIfNeeded(h_, dirPath);
-			if (result.first != kCreateDirectoryIfNeededStatus_Success) {
+			bool wasCreated = false;
+			auto result = CreateDirectoryIfNeeded(h_, dirPath, wasCreated);
+			if (result != CreateDirectoryIfNeededResult::kSuccess) {
 				NOTIFY_ERROR(h_, "CreateDirectoryIfNeeded for dirPath:", dirPath);
 				return false;
 			}

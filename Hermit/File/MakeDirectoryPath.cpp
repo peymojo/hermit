@@ -41,8 +41,9 @@ namespace hermit {
 			}
 			
 			if (inCreateIfMissing) {
-				auto result = CreateDirectoryIfNeeded(h_, subDirPath);
-				if (result.first != kCreateDirectoryIfNeededStatus_Success) {
+				bool wasCreated = false;
+				auto result = CreateDirectoryIfNeeded(h_, subDirPath, wasCreated);
+				if (result != CreateDirectoryIfNeededResult::kSuccess) {
 					NOTIFY_ERROR(h_,"MakeDirectoryPath(): CreateDirectoryIfNeeded failed for path:", subDirPath);
 					inCallback.Call(false, 0);
 					return;

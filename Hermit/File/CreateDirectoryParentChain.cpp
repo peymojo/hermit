@@ -59,14 +59,15 @@ namespace hermit {
 				return parentResult;
 			}
 
-			auto result = CreateDirectoryIfNeeded(h_, directorypPath);
-			if (result.first == kCreateDirectoryIfNeededStatus_Success) {
+			bool wasCreated = false;
+			auto result = CreateDirectoryIfNeeded(h_, directorypPath, wasCreated);
+			if (result == CreateDirectoryIfNeededResult::kSuccess) {
 				return CreateDirectoryParentChainResult::kSuccess;
 			}
-			if (result.first == kCreateDirectoryIfNeededStatus_ConflictAtPath) {
+			if (result == CreateDirectoryIfNeededResult::kConflictAtPath) {
 				return CreateDirectoryParentChainResult::kConflictAtPath;
 			}
-			if (result.first == kCreateDirectoryIfNeededStatus_DiskFull) {
+			if (result == CreateDirectoryIfNeededResult::kDiskFull) {
 				return CreateDirectoryParentChainResult::kDiskFull;
 			}
 			return CreateDirectoryParentChainResult::kError;

@@ -29,16 +29,18 @@ namespace hermit {
 	namespace file {
 		
 		//
-		CreateDirectoryIfNeededResult CreateDirectoryIfNeeded(const HermitPtr& h_, const FilePathPtr& path) {
+		CreateDirectoryIfNeededResult CreateDirectoryIfNeeded(const HermitPtr& h_,
+															  const FilePathPtr& path,
+															  bool& outWasCreated) {
 			if (path == nullptr) {
 				NOTIFY_ERROR(h_, "path is null");
-				return CreateDirectoryIfNeededResult(kCreateDirectoryIfNeededStatus_Error, false);
+				return CreateDirectoryIfNeededResult::kError;
 			}
 			
 			bool exists = false;
 			if (!FileExists(h_, path, exists)) {
 				NOTIFY_ERROR(h_, "FileExists failed for path:", path);
-				return CreateDirectoryIfNeededResult(kCreateDirectoryIfNeededStatus_Error, false);
+				return CreateDirectoryIfNeededResult::kError;
 			}
 			
 			if (exists) {
@@ -46,12 +48,13 @@ namespace hermit {
 				auto status = PathIsDirectory(h_, path, isDirectory);
 				if (status != PathIsDirectoryStatus::kSuccess) {
 					NOTIFY_ERROR(h_, "PathIsDirectory failed for path:", path);
-					return CreateDirectoryIfNeededResult(kCreateDirectoryIfNeededStatus_Error, false);
+					return CreateDirectoryIfNeededResult::kError;
 				}
 				if (isDirectory) {
-					return CreateDirectoryIfNeededResult(kCreateDirectoryIfNeededStatus_Success, false);
+					outWasCreated = false;
+					return CreateDirectoryIfNeededResult::kSuccess;
 				}
-				return CreateDirectoryIfNeededResult(kCreateDirectoryIfNeededStatus_ConflictAtPath, false);
+				return CreateDirectoryIfNeededResult::kConflictAtPath;
 			}
 
 			FilePathPtr parentPath;
@@ -61,19 +64,20 @@ namespace hermit {
 				GetFilePathUTF8String(h_, parentPath, filePathUTF8);
 				if (filePathUTF8 == "/Volumes") {
 					NOTIFY_ERROR(h_, "Will not attempt to create directory under /Volumes:", path);
-					return CreateDirectoryIfNeededResult(kCreateDirectoryIfNeededStatus_Error, false);
+					return CreateDirectoryIfNeededResult::kError;
 				}
 			}
 				
 			auto result = CreateDirectory(h_, path);
 			if (result == CreateDirectoryResult::kDiskFull) {
-				return CreateDirectoryIfNeededResult(kCreateDirectoryIfNeededStatus_DiskFull, false);
+				return CreateDirectoryIfNeededResult::kDiskFull;
 			}
 			if (result != CreateDirectoryResult::kSuccess) {
 				NOTIFY_ERROR(h_, "CreateDirectory failed for path:", path);
-				return CreateDirectoryIfNeededResult(kCreateDirectoryIfNeededStatus_Error, false);
+				return CreateDirectoryIfNeededResult::kError;
 			}
-			return CreateDirectoryIfNeededResult(kCreateDirectoryIfNeededStatus_Success, true);
+			outWasCreated = true;
+			return CreateDirectoryIfNeededResult::kSuccess;
 		}
 		
 	} // namespace file
