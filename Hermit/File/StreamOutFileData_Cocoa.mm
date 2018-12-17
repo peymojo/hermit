@@ -20,6 +20,7 @@
 #import <Foundation/Foundation.h>
 #import <Foundation/FoundationErrors.h>
 #import "Hermit/Foundation/Notification.h"
+#import "DeleteFile.h"
 #import "FileNotification.h"
 #import "FilePathToCocoaPathString.h"
 #import "StreamOutFileData.h"
@@ -32,9 +33,9 @@ namespace hermit {
 			class DataWriter : public DataReceiver {
 			public:
 				//
-				DataWriter(const FilePathPtr& inFilePath, NSFileHandle* inFileHandle) :
-				mFilePath(inFilePath),
-				mFileHandle(inFileHandle),
+				DataWriter(const FilePathPtr& filePath, NSFileHandle* fileHandle) :
+				mFilePath(filePath),
+				mFileHandle(fileHandle),
 				mBytesWritten(0) {
 				}
 				
@@ -107,19 +108,26 @@ namespace hermit {
 				
 				//
 				virtual void Call(const HermitPtr& h_, const StreamDataResult& result) override {
+					bool deleteFile = false;
 					if (result == StreamDataResult::kCanceled) {
-						//	delete the file if we created it? what about partially overwritten file?
+						deleteFile = true;
 					}
 					else if (result == StreamDataResult::kDiskFull) {
 						// no need to log this one, client can decide what to do.
+						deleteFile = true;
 					}
 					else if (result != StreamDataResult::kSuccess) {
 						NOTIFY_ERROR(h_, "StreamOutFileData: Error encountered while streaming data for:", mFilePath);
+						deleteFile = true;
 					}
 					else {
 						[mFileHandle truncateFileAtOffset:mDataWriter->mBytesWritten];
 					}
 					[mFileHandle closeFile];
+					
+					if (deleteFile) {
+						DeleteFile(h_, mFilePath);
+					}
 					mCompletion->Call(h_, result);
 				}
 				
@@ -135,13 +143,13 @@ namespace hermit {
 		
 		//
 		void StreamOutFileData(const HermitPtr& h_,
-							   const FilePathPtr& inFilePath,
+							   const FilePathPtr& filePath,
 							   const DataProviderPtr& dataProvider,
 							   const DataCompletionPtr& completion) {
 			@autoreleasepool {
 				try {
 					std::string pathUTF8;
-					FilePathToCocoaPathString(h_, inFilePath, pathUTF8);
+					FilePathToCocoaPathString(h_, filePath, pathUTF8);
 					NSString* pathString = [NSString stringWithUTF8String:pathUTF8.c_str()];
 					NSURL* pathURL = [NSURL fileURLWithPath:pathString];
 					NSError* error = nil;
@@ -170,26 +178,26 @@ namespace hermit {
 						if (error != nil) {
 							NSInteger errorCode = [error code];
 							NOTIFY_ERROR(h_,
-										 "StreamOutFileData: NSFileHandle fileHandleForWritingToURL failed for:", inFilePath,
+										 "StreamOutFileData: NSFileHandle fileHandleForWritingToURL failed for:", filePath,
 										 "error:", [[error localizedDescription] UTF8String],
 										 "domain:", [[error domain] UTF8String],
 										 "error code:", (int32_t)errorCode);
 						}
 						else {
-							NOTIFY_ERROR(h_, "StreamOutFileData: NSFileHandle fileHandleForWritingToURL failed for:", inFilePath);
+							NOTIFY_ERROR(h_, "StreamOutFileData: NSFileHandle fileHandleForWritingToURL failed for:", filePath);
 						}
 						
 						completion->Call(h_, StreamDataResult::kError);
 						return;
 					}
 					
-					auto writer = std::make_shared<DataWriter>(inFilePath, fileHandle);
-					auto providerCompletion = std::make_shared<Completion>(inFilePath, fileHandle, writer, completion);
+					auto writer = std::make_shared<DataWriter>(filePath, fileHandle);
+					auto providerCompletion = std::make_shared<Completion>(filePath, fileHandle, writer, completion);
 					dataProvider->Call(h_, writer, providerCompletion);
 				}
 				catch (NSException* ex) {
 					NOTIFY_ERROR(h_,
-								 "StreamOutFileData: Outer Exception processing file:", inFilePath,
+								 "StreamOutFileData: Outer Exception processing file:", filePath,
 								 "name:", [[ex name] UTF8String],
 								 "reason:", [[ex reason] UTF8String]);
 					completion->Call(h_, StreamDataResult::kError);
