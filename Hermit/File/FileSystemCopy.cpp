@@ -723,35 +723,33 @@ namespace hermit {
 							const FilePathPtr& destPath,
 							const FileSystemCopyIntermediateUpdateCallbackPtr& updateCallback,
 							const FileSystemCopyCompletionPtr& completion) {
-			FileExistsCallbackClass sourceFileExists;
-			FileExists(h_, sourcePath, sourceFileExists);
-			if (!sourceFileExists.mSuccess) {
-				NOTIFY_ERROR(h_, "FileSystemCopy(): FileExists() failed for source path:", sourcePath);
+			bool sourceFileExists = false;
+			if (!FileExists(h_, sourcePath, sourceFileExists)) {
+				NOTIFY_ERROR(h_, "FileExists failed for source path:", sourcePath);
 				completion->Call(h_, FileSystemCopyResult::kError);
 				return;
 			}
-			if (!sourceFileExists.mExists) {
-				NOTIFY_ERROR(h_, "FileSystemCopy(): Source item doesn't exist at path:", sourcePath);
+			if (!sourceFileExists) {
+				NOTIFY_ERROR(h_, "Source item doesn't exist at path:", sourcePath);
 				completion->Call(h_, FileSystemCopyResult::kSourceNotFound);
 				return;
 			}
 			
-			FileExistsCallbackClass destFileExists;
-			FileExists(h_, destPath, destFileExists);
-			if (!destFileExists.mSuccess) {
-				NOTIFY_ERROR(h_, "FileSystemCopy(): FileExists() failed for dest path:", destPath);
+			bool destFileExists = false;
+			if (!FileExists(h_, destPath, destFileExists)) {
+				NOTIFY_ERROR(h_, "FileExists failed for dest path:", destPath);
 				completion->Call(h_, FileSystemCopyResult::kError);
 				return;
 			}
-			if (destFileExists.mExists) {
-				NOTIFY_ERROR(h_, "FileSystemCopy(): Item already exists at dest path:", destPath);
+			if (destFileExists) {
+				NOTIFY_ERROR(h_, "Item already exists at dest path:", destPath);
 				completion->Call(h_, FileSystemCopyResult::kTargetAlreadyExists);
 				return;
 			}
 			
 			FileType fileType = FileType::kUnknown;
 			if (!GetFileType(h_, sourcePath, fileType)) {
-				NOTIFY_ERROR(h_, "FileSystemCopy(): GetFileType() failed for path:", sourcePath);
+				NOTIFY_ERROR(h_, "GetFileType failed for path:", sourcePath);
 				completion->Call(h_, FileSystemCopyResult::kError);
 				return;
 			}
@@ -767,7 +765,7 @@ namespace hermit {
 				CopyOneFile(h_, sourcePath, destPath, completion);
 				return;
 			}
-			NOTIFY_ERROR(h_, "FileSystemCopy(): GetFileType() returned unexpected file type for path:", sourcePath);
+			NOTIFY_ERROR(h_, "GetFileType returned unexpected file type for path:", sourcePath);
 			completion->Call(h_, FileSystemCopyResult::kError);
 		}
 		

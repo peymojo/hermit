@@ -25,26 +25,25 @@ namespace hermit {
 	namespace file {
 		
 		//
-		bool ValidateDirectory(const HermitPtr& h_, const FilePathPtr& inFilePath) {
-			FileExistsCallbackClass existsCallback;
-			FileExists(h_, inFilePath, existsCallback);
-			if (!existsCallback.mSuccess) {
-				NOTIFY_ERROR(h_, "ValidateDirectory: FileExists failed for path:", inFilePath);
+		bool ValidateDirectory(const HermitPtr& h_, const FilePathPtr& filePath) {
+			bool exists = false;
+			if (!FileExists(h_, filePath, exists)) {
+				NOTIFY_ERROR(h_, "FileExists failed for path:", filePath);
 				return false;
 			}
-			if (!existsCallback.mExists) {
-				NOTIFY_ERROR(h_, "ValidateDirectory: Folder path not found:", inFilePath);
+			if (!exists) {
+				NOTIFY_ERROR(h_, "Folder path not found:", filePath);
 				return false;
 			}
 
 			bool isDirectory = false;
-			auto status = PathIsDirectory(h_, inFilePath, isDirectory);
+			auto status = PathIsDirectory(h_, filePath, isDirectory);
 			if (status != PathIsDirectoryStatus::kSuccess) {
-				NOTIFY_ERROR(h_, "ValidateDirectory: PathIsDirectory failed for path:", inFilePath);
+				NOTIFY_ERROR(h_, "PathIsDirectory failed for path:", filePath);
 				return false;
 			}
 			if (!isDirectory) {
-				NOTIFY_ERROR(h_, "ValidateDirectory: Folder path not a directory?", inFilePath);
+				NOTIFY_ERROR(h_, "Folder path not a directory?", filePath);
 				return false;
 			}
 			return true;

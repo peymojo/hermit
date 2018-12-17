@@ -19,60 +19,14 @@
 #ifndef FileExists_h
 #define FileExists_h
 
-#include "Hermit/Foundation/Callback.h"
 #include "Hermit/Foundation/Hermit.h"
 #include "FilePath.h"
 
 namespace hermit {
 	namespace file {
-		
+				
 		//
-		//
-		DEFINE_CALLBACK_2A(
-						   FileExistsCallback,
-						   bool,					// inSuccess
-						   bool);					// inExists
-		
-		//
-		//
-		class FileExistsCallbackClass
-		:
-		public FileExistsCallback
-		{
-		public:
-			//
-			//
-			FileExistsCallbackClass()
-			:
-			mSuccess(false),
-			mExists(false)
-			{
-			}
-			
-			//
-			//
-			bool Function(
-						  const bool& inSuccess,
-						  const bool& inExists)
-			{
-				mSuccess = inSuccess;
-				if (inSuccess)
-				{
-					mExists = inExists;
-				}
-				return true;
-			}
-			
-			//
-			//
-			bool mSuccess;
-			bool mExists;
-		};
-		
-		//
-		void FileExists(const HermitPtr& h_,
-						const FilePathPtr& inFilePath,
-						const FileExistsCallbackRef& inCallback);
+		bool FileExists(const HermitPtr& h_, const FilePathPtr& filePath, bool& outExists);
 		
 	} // namespace file
 } // namespace hermit

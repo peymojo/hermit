@@ -27,22 +27,17 @@ namespace hermit {
 	namespace file {
 		
 		//
-		//
-		void FileExists(const HermitPtr& h_,
-						const FilePathPtr& inFilePath,
-						const FileExistsCallbackRef& inCallback) {
-			if (inFilePath == nullptr) {
+		bool FileExists(const HermitPtr& h_, const FilePathPtr& filePath, bool& outExists) {
+			if (filePath == nullptr) {
 				NOTIFY_ERROR(h_, "FileExists: inFilePath is null.");
-				inCallback.Call(false, false);
-				return;
+				return false;
 			}
 			
 			std::string pathUTF8;
-			FilePathToCocoaPathString(h_, inFilePath, pathUTF8);
+			FilePathToCocoaPathString(h_, filePath, pathUTF8);
 			if (pathUTF8.empty()) {
-				NOTIFY_ERROR(h_, "FileExists: FilePathToCocoaPathString failed for:", inFilePath);
-				inCallback.Call(false, false);
-				return;
+				NOTIFY_ERROR(h_, "FileExists: FilePathToCocoaPathString failed for:", filePath);
+				return false;
 			}
 			
 			struct stat fileStat = { 0 };
@@ -50,16 +45,16 @@ namespace hermit {
 			if (result != 0) {
 				int err = errno;
 				if (err == ENOENT) {
-					inCallback.Call(true, false);
-					return;
+					outExists = false;
+					return true;
 				}
 				
-				NOTIFY_ERROR(h_, "FileExists: lstat failed for path:", inFilePath, "error:", err);
-				inCallback.Call(false, false);
-				return;
+				NOTIFY_ERROR(h_, "FileExists: lstat failed for path:", filePath, "error:", err);
+				return false;
 			}
 			
-			inCallback.Call(true, true);
+			outExists = true;
+			return true;
 		}
 		
 	} // namespace file

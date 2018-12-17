@@ -28,14 +28,13 @@ namespace hermit {
 
 		//
 		CreateDirectoryParentChainResult CreateDirectoryParentChain(const HermitPtr& h_, const FilePathPtr& directorypPath) {
-			FileExistsCallbackClass existsCallback;
-			FileExists(h_, directorypPath, existsCallback);
-			if (!existsCallback.mSuccess) {
+			bool exists = false;
+			if (!FileExists(h_, directorypPath, exists)) {
 				NOTIFY_ERROR(h_, "FileExists failed for path:", directorypPath);
 				return CreateDirectoryParentChainResult::kError;
 			}
 			
-			if (existsCallback.mExists) {
+			if (exists) {
 				bool isDirectory = false;
 				auto status = PathIsDirectory(h_, directorypPath, isDirectory);
 				if (status != PathIsDirectoryStatus::kSuccess) {

@@ -30,15 +30,14 @@ namespace hermit {
 									   const datastore::ItemExistsInDataStoreCompletionPtr& completion) {
 			FilePathDataPath& filePath = static_cast<FilePathDataPath&>(*itemPath);
 			
-			file::FileExistsCallbackClass fileExistsCallback;
-			file::FileExists(h_, filePath.mFilePath, fileExistsCallback);
-			if (!fileExistsCallback.mSuccess) {
-				NOTIFY_ERROR(h_, "ItemExistsInFileDataStore: FileExists failed for:", filePath.mFilePath);
+			bool fileExists = false;
+			if (!file::FileExists(h_, filePath.mFilePath, fileExists)) {
+				NOTIFY_ERROR(h_, "FileExists failed for:", filePath.mFilePath);
 				completion->Call(h_, datastore::ItemExistsInDataStoreResult::kError, false);
 				return;
 			}
 			
-            completion->Call(h_, datastore::ItemExistsInDataStoreResult::kSuccess, fileExistsCallback.mExists);
+            completion->Call(h_, datastore::ItemExistsInDataStoreResult::kSuccess, fileExists);
 		}
 		
 	} // namespace filedatastore
