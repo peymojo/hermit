@@ -34,10 +34,7 @@ namespace hermit {
 				typedef size_t size_type;
 				
 				//
-				Buffer() :
-				mSize(0),
-				mData(nullptr),
-				mAllocatedBuf(nullptr) {
+				Buffer() : mSize(0), mData(nullptr), mAllocatedBuf(nullptr) {
 				}
 				
 				//
@@ -48,21 +45,21 @@ namespace hermit {
 				}
 				
 				//
-				void assign(const char* inData, size_t inDataSize) {
-					if (inDataSize >= 256) {
-						mAllocatedBuf = (char*)malloc(inDataSize + 1);
+				void assign(const char* data, size_t dataSize) {
+					if (dataSize >= 256) {
+						mAllocatedBuf = (char*)malloc(dataSize + 1);
 						if (mAllocatedBuf != nullptr) {
-							memcpy(mAllocatedBuf, inData, inDataSize);
-							mAllocatedBuf[inDataSize] = 0;
+							memcpy(mAllocatedBuf, data, dataSize);
+							mAllocatedBuf[dataSize] = 0;
 							mData = mAllocatedBuf;
 						}
 					}
 					else {
-						memcpy(mLocalBuf, inData, inDataSize);
-						mLocalBuf[inDataSize] = 0;
+						memcpy(mLocalBuf, data, dataSize);
+						mLocalBuf[dataSize] = 0;
 						mData = mLocalBuf;
 					}
-					mSize = inDataSize;
+					mSize = dataSize;
 				}
 				
 				//
@@ -73,7 +70,7 @@ namespace hermit {
 			};
 			
 			//
-			bool ContainsUnwantedText(const char* inString) {
+			bool ContainsUnwantedText(const char* text) {
 				static const char* sWords[] = {
 					"arse",
 					"ass",
@@ -107,7 +104,7 @@ namespace hermit {
 				const int kNumWords = 29;
 				
 				int trackers[kNumWords] = { 0 };
-				const char* p = inString;
+				const char* p = text;
 				while (*p) {
 					for (int n = 0; n < kNumWords; ++n) {
 						if (*p == sWords[n][trackers[n]]) {
@@ -130,19 +127,17 @@ namespace hermit {
 		} // private namespace
 		
 		//
-		void CreateAlphaNumericID(const HermitPtr& h_, const uint32_t& inSize, std::string& outAlphaNumericID) {
+		bool CreateAlphaNumericID(const HermitPtr& h_, const uint32_t& size, std::string& outAlphaNumericID) {
 			while (true) {
-				GenerateSecureRandomBytesCallbackClass randomBytes;
-				GenerateSecureRandomBytes(h_, inSize, randomBytes);
-				if (!randomBytes.mSuccess || (randomBytes.mValue.empty())) {
-					NOTIFY_ERROR(h_, "CreateAlphaNumericID: GenerateSecureRandomBytes failed, inSize:", inSize);
-					outAlphaNumericID = "";
-					return;
+				std::string randomBytes;
+				if (!GenerateSecureRandomBytes(h_, size, randomBytes)) {
+					NOTIFY_ERROR(h_, "GenerateSecureRandomBytes failed, size:", size);
+					return false;
 				}
 				
 				Buffer buf;
-				buf.assign(randomBytes.mValue.data(), randomBytes.mValue.size());
-				for (uint32_t n = 0; n < inSize; ++n) {
+				buf.assign(randomBytes.data(), randomBytes.size());
+				for (uint32_t n = 0; n < size; ++n) {
 					//	always start with a letter...
 					int mod = (n == 0) ? 26 : 36;
 					int r = ((uint8_t)buf.mData[n]) % mod;
@@ -158,6 +153,7 @@ namespace hermit {
 					break;
 				}
 			}
+			return true;
 		}
 		
 	} // namespace encoding

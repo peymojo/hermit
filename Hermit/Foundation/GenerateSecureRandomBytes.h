@@ -20,39 +20,12 @@
 #define GenerateSecureRandomBytes_h
 
 #include <string>
-#include "Callback.h"
 #include "Hermit.h"
 
 namespace hermit {
 	
-	// success, randomBytes
-	DEFINE_CALLBACK_2A(GenerateSecureRandomBytesCallback, bool,	std::string);
-	
 	//
-	class GenerateSecureRandomBytesCallbackClass : public GenerateSecureRandomBytesCallback {
-	public:
-		//
-		GenerateSecureRandomBytesCallbackClass() : mSuccess(false) {
-		}
-		
-		//
-		bool Function(const bool& success, const std::string& randomBytes) {
-			mSuccess = success;
-			if (success) {
-				mValue = randomBytes;
-			}
-			return true;
-		}
-		
-		//
-		bool mSuccess;
-		std::string mValue;
-	};
-	
-	//
-	void GenerateSecureRandomBytes(const HermitPtr& h_,
-								   const uint64_t& inCount,
-								   const GenerateSecureRandomBytesCallbackRef& inCallback);
+	bool GenerateSecureRandomBytes(const HermitPtr& h_, const uint64_t& length, std::string& outResult);
 	
 } // namespace hermit
 

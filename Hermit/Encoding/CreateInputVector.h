@@ -26,7 +26,7 @@ namespace hermit {
 	namespace encoding {
 		
 		//
-		void CreateInputVector(const HermitPtr& h_, const uint32_t& inLength, std::string& outInputVector);
+		bool CreateInputVector(const HermitPtr& h_, const uint32_t& length, std::string& outInputVector);
 		
 	} // namespace encoding
 } // namespace hermit

@@ -23,35 +23,32 @@
 namespace hermit {
 	
 	//
-	//
-	void GenerateSecureRandomBytes(const HermitPtr& h_,
-								   const uint64_t& inCount,
-								   const GenerateSecureRandomBytesCallbackRef& inCallback) {
+	bool GenerateSecureRandomBytes(const HermitPtr& h_, const uint64_t& length, std::string& outResult) {
 		uint8_t buf[256];
 		uint8_t* allocatedBuf = nullptr;
 		uint8_t* p = buf;
-		if (inCount > 256) {
-			allocatedBuf = (uint8_t*)malloc(inCount);
+		if (length > 256) {
+			allocatedBuf = (uint8_t*)malloc(length);
 			if (allocatedBuf == nullptr) {
-				NOTIFY_ERROR(h_, "GenerateSecureRandomBytes: malloc failed, size:", inCount);
-				inCallback.Call(false, "");
-				return;
+				NOTIFY_ERROR(h_, "GenerateSecureRandomBytes: malloc failed, size:", length);
+				return false;
 			}
 			p = allocatedBuf;
 		}
 		
-		int result = SecRandomCopyBytes(kSecRandomDefault, inCount, p);
+		bool success = false;
+		int result = SecRandomCopyBytes(kSecRandomDefault, length, p);
 		if (result != noErr) {
 			NOTIFY_ERROR(h_, "GenerateSecureRandomBytes: SecRandomCopyBytes failed, errno:", errno);
-			inCallback.Call(false, "");
 		}
 		else {
-			inCallback.Call(true, std::string((const char*)p, inCount));
+			outResult = std::string((const char*)p, length);
+			success = true;
 		}
 		if (allocatedBuf != nullptr) {
 			free(allocatedBuf);
-			allocatedBuf = nullptr;
 		}
+		return success;
 	}
 	
 } // namespace hermit

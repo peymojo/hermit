@@ -26,7 +26,7 @@ namespace hermit {
 	namespace encoding {
 		
 		//
-		void CreateAlphaNumericID(const HermitPtr& h_, const uint32_t& inSize, std::string& outAlphaNumericID);
+		bool CreateAlphaNumericID(const HermitPtr& h_, const uint32_t& size, std::string& outAlphaNumericID);
 		
 	} // namespace encoding
 } // namespace hermit

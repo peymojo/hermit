@@ -25,15 +25,14 @@ namespace hermit {
 	namespace encoding {
 		
 		//
-		void CreateInputVector(const HermitPtr& h_, const uint32_t& inLength, std::string& outInputVector) {
-			GenerateSecureRandomBytesCallbackClass randomBytes;
-			GenerateSecureRandomBytes(h_, inLength, randomBytes);
-			if (!randomBytes.mSuccess) {
-				NOTIFY_ERROR(h_, "CreateInputVector: GenerateSecureRandomBytes failed, inLength:", inLength);
-				outInputVector = "";
-				return;
+		bool CreateInputVector(const HermitPtr& h_, const uint32_t& length, std::string& outInputVector) {
+			std::string randomBytes;
+			if (!GenerateSecureRandomBytes(h_, length, randomBytes)) {
+				NOTIFY_ERROR(h_, "CreateInputVector: GenerateSecureRandomBytes failed, inLength:", length);
+				return false;
 			}
-			outInputVector = randomBytes.mValue;
+			outInputVector = randomBytes;
+			return true;
 		}
 		
 	} // namespace encoding

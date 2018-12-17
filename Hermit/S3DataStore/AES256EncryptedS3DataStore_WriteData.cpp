@@ -41,7 +41,11 @@ namespace hermit {
 			}
 			else {
 				std::string inputVector;
-				encoding::CreateInputVector(h_, 16, inputVector);
+				if (!encoding::CreateInputVector(h_, 16, inputVector)) {
+					NOTIFY_ERROR(h_, "CreateInputVector failed.");
+					completion->Call(h_, datastore::WriteDataStoreDataResult::kError);
+					return;
+				}
 				encoding::AES256EncryptCBCCallbackClass dataCallback;
 				encoding::AES256EncryptCBC(h_,
 										   DataBuffer(data->Data(), data->Size()),
@@ -54,7 +58,7 @@ namespace hermit {
 					return;
 				}
 				if (dataCallback.mStatus != encoding::kAES256EncryptCBC_Success) {
-					NOTIFY_ERROR(h_, "WriteAES256EncryptedS3DataStoreData: AES256EncryptCBC failed.");
+					NOTIFY_ERROR(h_, "AES256EncryptCBC failed.");
 					completion->Call(h_, datastore::WriteDataStoreDataResult::kError);
 					return;
 				}
