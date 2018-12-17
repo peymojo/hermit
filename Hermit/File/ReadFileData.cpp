@@ -113,7 +113,7 @@ namespace hermit {
 					}
 					mStreamResult = StreamDataResult::kUnknown;
 					auto receiveCompletion = std::make_shared<ReceiveCompletion>(shared_from_this());
-					mDataReceiver->Call(h_, DataBuffer(mBuf, bytesRead), false, receiveCompletion);
+					mDataReceiver->Call(h_, DataBuffer(mBuf, bytesRead), mDone, receiveCompletion);
 				}
 				
 				mCompletion->Call(h_, mStreamResult);
