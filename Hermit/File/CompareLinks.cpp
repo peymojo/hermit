@@ -40,9 +40,9 @@ namespace hermit {
 			std::string link1PathUTF8;
 			GetFilePathUTF8String(h_, filePath1, link1PathUTF8);
 			
-			GetSymbolicLinkTargetCallbackClassT<FilePathPtr> link1TargetCallback;
-			GetSymbolicLinkTarget(h_, filePath1, link1TargetCallback);
-			if (!link1TargetCallback.mSuccess) {
+			FilePathPtr link1Target;
+			bool link1TargetIsRelative = false;
+			if (!GetSymbolicLinkTarget(h_, filePath1, link1Target, link1TargetIsRelative)) {
 				NOTIFY_ERROR(h_, "CompareLinks: GetSymbolicLinkTarget failed for path: ", filePath1);
 				return CompareLinksStatus::kError;
 			}
@@ -50,18 +50,18 @@ namespace hermit {
 			std::string link2PathUTF8;
 			GetFilePathUTF8String(h_, filePath2, link2PathUTF8);
 			
-			GetSymbolicLinkTargetCallbackClassT<FilePathPtr> link2TargetCallback;
-			GetSymbolicLinkTarget(h_, filePath2, link2TargetCallback);
-			if (!link2TargetCallback.mSuccess) {
+			FilePathPtr link2Target;
+			bool link2TargetIsRelative = false;
+			if (!GetSymbolicLinkTarget(h_, filePath2, link2Target, link2TargetIsRelative)) {
 				NOTIFY_ERROR(h_, "CompareLinks: GetSymbolicLinkTarget failed for path: ", filePath2);
 				return CompareLinksStatus::kError;
 			}
 			
 			std::string link1TargetPathUTF8;
-			GetFilePathUTF8String(h_, link1TargetCallback.mFilePath, link1TargetPathUTF8);
+			GetFilePathUTF8String(h_, link1Target, link1TargetPathUTF8);
 			
 			std::string link2TargetPathUTF8;
-			GetFilePathUTF8String(h_, link2TargetCallback.mFilePath, link2TargetPathUTF8);
+			GetFilePathUTF8String(h_, link2Target, link2TargetPathUTF8);
 			
 			if (link1TargetPathUTF8 != link2TargetPathUTF8) {
 				std::string originalLink1TargetPathUTF8(link1TargetPathUTF8);

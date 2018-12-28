@@ -27,8 +27,8 @@ namespace hermit {
 		
 		//
 		bool PathIsDescendantOfPath(const HermitPtr& h_,
-									const FilePathPtr& inCandidateChildPath,
-									const FilePathPtr& inParentPath);
+									const FilePathPtr& candidateChildPath,
+									const FilePathPtr& parentPath);
 		
 	} // namespace file
 } // namespace hermit

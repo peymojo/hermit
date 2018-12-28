@@ -25,11 +25,11 @@ namespace hermit {
 	namespace file {
 		
 		//
-		bool PathIsDescendantOfPath(const HermitPtr& h_, const FilePathPtr& inCandidateChildPath, const FilePathPtr& inParentPath) {
+		bool PathIsDescendantOfPath(const HermitPtr& h_, const FilePathPtr& candidateChildPath, const FilePathPtr& parentPath) {
 			std::vector<std::string> childComponents;
-			GetFilePathComponents(h_, inCandidateChildPath, childComponents);
+			GetFilePathComponents(h_, candidateChildPath, childComponents);
 			std::vector<std::string> parentComponents;
-			GetFilePathComponents(h_, inParentPath, parentComponents);
+			GetFilePathComponents(h_, parentPath, parentComponents);
 			auto childEnd = childComponents.end();
 			auto childIt = childComponents.begin();
 			auto parentEnd = parentComponents.end();

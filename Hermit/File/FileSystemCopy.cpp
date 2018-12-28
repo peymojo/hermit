@@ -180,13 +180,13 @@ namespace hermit {
 				PathIsAliasCallbackClass isAliasCallback;
 				PathIsAlias(h_, sourcePath, isAliasCallback);
 				if (!isAliasCallback.mSuccess) {
-					NOTIFY_ERROR(h_, "CopyOneFile(): PathIsAlias failed for:", sourcePath);
+					NOTIFY_ERROR(h_, "PathIsAlias failed for:", sourcePath);
 					completion->Call(h_, FileSystemCopyResult::kError);
 					return;
 				}
 				if (isAliasCallback.mIsAlias) {
 					if (!CopySymbolicLink(h_, sourcePath, destPath)) {
-						NOTIFY_ERROR(h_, "CopyOneFile(): CopySymbolicLink failed for:", sourcePath);
+						NOTIFY_ERROR(h_, "CopySymbolicLink failed for:", sourcePath);
 						completion->Call(h_, FileSystemCopyResult::kError);
 						return;
 					}
@@ -197,13 +197,13 @@ namespace hermit {
 				
 				uint64_t dataSize = 0;
 				if (!GetFileDataSize(h_, sourcePath, dataSize)) {
-					NOTIFY_ERROR(h_, "CopyOneFile(): GetFileDataSize failed for:", sourcePath);
+					NOTIFY_ERROR(h_, "GetFileDataSize failed for:", sourcePath);
 					completion->Call(h_, FileSystemCopyResult::kError);
 					return;
 				}
 				if (dataSize == 0) {
 					if (!CreateEmptyFile(h_, destPath)) {
-						NOTIFY_ERROR(h_, "CopyOneFile(): CreateEmptyFile failed for:", destPath);
+						NOTIFY_ERROR(h_, "CreateEmptyFile failed for:", destPath);
 						completion->Call(h_, FileSystemCopyResult::kError);
 						return;
 					}
@@ -229,34 +229,35 @@ namespace hermit {
 					
 					std::string linkPathUTF8;
 					GetFilePathUTF8String(h_, sourcePath, linkPathUTF8);
-					GetSymbolicLinkTargetCallbackClassT<FilePathPtr> linkTargetCallback;
-					GetSymbolicLinkTarget(h_, sourcePath, linkTargetCallback);
-					if (!linkTargetCallback.mSuccess) {
-						NOTIFY_ERROR(h_, "CopyOneSymbolicLink(): GetSymbolicLinkTarget failed for path:", sourcePath);
+					
+					FilePathPtr linkTargetPath;
+					bool linkTargetIsRelative = false;
+					if (!GetSymbolicLinkTarget(h_, sourcePath, linkTargetPath, linkTargetIsRelative)) {
+						NOTIFY_ERROR(h_, "GetSymbolicLinkTarget failed for path:", sourcePath);
 						completion->Call(h_, FileSystemCopyResult::kError);
 						return;
 					}
 					
 					GetRelativeFilePathCallbackClassT<FilePathPtr> getRelativePathCallback;
-					GetRelativeFilePath(h_, sourcePath, linkTargetCallback.mFilePath, getRelativePathCallback);
+					GetRelativeFilePath(h_, sourcePath, linkTargetPath, getRelativePathCallback);
 					if (!getRelativePathCallback.mSuccess) {
 						NOTIFY_ERROR(h_,
-									 "CopyOneSymbolicLink(): GetRelativeFilePath failed for path:", sourcePath,
-									 "target:", linkTargetCallback.mFilePath);
+									 "GetRelativeFilePath failed for path:", sourcePath,
+									 "target:", linkTargetPath);
 						completion->Call(h_, FileSystemCopyResult::kError);
 						return;
 					}
 					
 					FilePathPtr targetPath = getRelativePathCallback.mFilePath;
 					if (targetPath == nullptr) {
-						targetPath = linkTargetCallback.mFilePath;
+						targetPath = linkTargetPath;
 						NOTIFY_ERROR(h_,
-									 "CopyOneSymbolicLink(): Link path has no common root to target, using absolute target path:",
+									 "Link path has no common root to target, using absolute target path:",
 									 targetPath);
 					}
 					
 					if (!CreateSymbolicLink(h_, destPath, targetPath)) {
-						NOTIFY_ERROR(h_, "CopyOneSymbolicLink(): CreateSymbolicLink() failed for:", destPath);
+						NOTIFY_ERROR(h_, "CreateSymbolicLink() failed for:", destPath);
 						completion->Call(h_, FileSystemCopyResult::kError);
 						return;
 					}

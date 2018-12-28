@@ -78,53 +78,51 @@ namespace hermit {
 			}
 			
 		} // namespace GetSymbolicLinkTarget_Cocoa_Impl
-		using namespace  GetSymbolicLinkTarget_Cocoa_Impl;
+		using namespace GetSymbolicLinkTarget_Cocoa_Impl;
 		
 		//
-		void GetSymbolicLinkTarget(const HermitPtr& h_,
-								   const FilePathPtr& inLinkPath,
-								   const GetSymbolicLinkTargetCallbackRef& inCallback) {
-			
+		bool GetSymbolicLinkTarget(const HermitPtr& h_,
+								   const FilePathPtr& linkPath,
+								   FilePathPtr& outTargetPath,
+								   bool& outIsRelativePath) {
 			@autoreleasepool {
 				std::string linkPathUTF8;
-				FilePathToCocoaPathString(h_, inLinkPath, linkPathUTF8);
+				FilePathToCocoaPathString(h_, linkPath, linkPathUTF8);
 				
 				NSString* path = [NSString stringWithUTF8String:linkPathUTF8.c_str()];
 				NSError* error = nil;
 				NSString* destination = [[NSFileManager defaultManager] destinationOfSymbolicLinkAtPath:path error:&error];
 				if (error != nil) {
 					NOTIFY_ERROR(h_,
-								 "GetSymbolicLinkTarget(): NSFileHandle destinationOfSymbolicLinkAtPath failed for path:", inLinkPath,
+								 "NSFileHandle destinationOfSymbolicLinkAtPath failed for path:", linkPath,
 								 "error code:", (int32_t)[error code],
 								 "error:", [[error localizedDescription] UTF8String]);
-					inCallback.Call(false, 0, false);
+					return false;
 				}
-				else if (destination == nil) {
-					NOTIFY_ERROR(h_, "GetSymbolicLinkTarget: no error but destination is nil path:", inLinkPath);
-					inCallback.Call(false, 0, false);
+				if (destination == nil) {
+					NOTIFY_ERROR(h_, "no error but destination is nil path:", linkPath);
+					return false;
 				}
-				else {
-					std::string destinationPathUTF8([destination UTF8String]);
-					if (destinationPathUTF8.empty()) {
-						NOTIFY_ERROR(h_, "GetSymbolicLinkTarget: destinationPathUTF8 is empty for link at path:", inLinkPath);
-						inCallback.Call(false, 0, false);
-					}
-					else {
-						StringVector nodes;
-						SplitPath(destinationPathUTF8, nodes);
+
+				std::string destinationPathUTF8([destination UTF8String]);
+				if (destinationPathUTF8.empty()) {
+					NOTIFY_ERROR(h_, "destinationPathUTF8 is empty for link at path:", linkPath);
+					return false;
+				}
+
+				StringVector nodes;
+				SplitPath(destinationPathUTF8, nodes);
 						
-						FilePathPtr destinationPath;
-						CreateFilePathFromComponents(nodes, destinationPath);
-						if (destinationPath == 0) {
-							NOTIFY_ERROR(h_, "GetSymbolicLinkTarget: CreateFilePathFromComponents failed for string:", destinationPathUTF8);
-							inCallback.Call(false, 0, false);
-							return;
-						}
-						
-						bool isRelativePath = (destinationPathUTF8[0] != '/');
-						inCallback.Call(true, destinationPath, isRelativePath);
-					}
+				FilePathPtr destinationPath;
+				CreateFilePathFromComponents(nodes, destinationPath);
+				if (destinationPath == 0) {
+					NOTIFY_ERROR(h_, "CreateFilePathFromComponents failed for string:", destinationPathUTF8);
+					return false;
 				}
+						
+				outTargetPath = destinationPath;
+				outIsRelativePath = (destinationPathUTF8[0] != '/');
+				return true;
 			}
 		}
 		

@@ -59,6 +59,7 @@ namespace hermit {
 		extern const char* kUserOwnersDiffer;
 		extern const char* kGroupOwnersDiffer;
 		extern const char* kLinkTargetsDiffer;
+		extern const char* kLinkIsLocalDiffers;
 		extern const char* kIsAliasDiffers;
 		extern const char* kAliasTargetsDiffer;
 		extern const char* kIsHardLinkDiffers;

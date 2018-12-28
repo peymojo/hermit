@@ -21,16 +21,20 @@
 #include <string>
 #include <vector>
 #include "Hermit/Foundation/Notification.h"
+#include "Hermit/String/GetRelativePath.h"
 #include "AppendToFilePath.h"
 #include "CompareFiles.h"
 #include "CompareFinderInfo.h"
 #include "CompareXAttrs.h"
 #include "FileNotification.h"
 #include "GetFileDates.h"
+#include "GetFilePathUTF8String.h"
 #include "GetFilePosixOwnership.h"
 #include "GetFilePosixPermissions.h"
 #include "GetFileType.h"
+#include "GetSymbolicLinkTarget.h"
 #include "ListDirectoryContents.h"
+#include "PathIsDescendantOfPath.h"
 #include "PathIsPackage.h"
 #include "CompareDirectories.h"
 
@@ -38,6 +42,203 @@ namespace hermit {
 	namespace file {
 		namespace CompareDirectories_Impl {
 
+			//
+			enum class CompareLinksStatus {
+				kUnknown,
+				kSuccess,
+				kCancel,
+				kError
+			};
+
+			//
+			CompareLinksStatus CompareLinks(const HermitPtr& h_,
+											const FilePathPtr& treePath1,
+											const FilePathPtr& filePath1,
+											const FilePathPtr& treePath2,
+											const FilePathPtr& filePath2,
+											const IgnoreDates& ignoreDates) {
+				FilePathPtr link1Target;
+				bool link1TargetIsRelative = false;
+				if (!GetSymbolicLinkTarget(h_, filePath1, link1Target, link1TargetIsRelative)) {
+					NOTIFY_ERROR(h_, "GetSymbolicLinkTarget failed for path:", filePath1);
+					return CompareLinksStatus::kError;
+				}
+				
+				FilePathPtr link2Target;
+				bool link2TargetIsRelative = false;
+				if (!GetSymbolicLinkTarget(h_, filePath2, link2Target, link2TargetIsRelative)) {
+					NOTIFY_ERROR(h_, "GetSymbolicLinkTarget failed for path:", filePath2);
+					return CompareLinksStatus::kError;
+				}
+				
+				std::string link2PathUTF8;
+				GetFilePathUTF8String(h_, filePath2, link2PathUTF8);
+				std::string link1PathUTF8;
+				GetFilePathUTF8String(h_, filePath1, link1PathUTF8);
+				std::string link1TargetPathUTF8;
+				GetFilePathUTF8String(h_, link1Target, link1TargetPathUTF8);
+				std::string link2TargetPathUTF8;
+				GetFilePathUTF8String(h_, link2Target, link2TargetPathUTF8);
+
+				bool match = true;
+
+				// Since we're comparing entire directory trees, links that point to other items within
+				// the directory tree should only be considered equal if they each point to the corresponding
+				// matching item -- NOT the same item, since that would imply one of the links point to a file
+				// in the OTHER tree.
+				bool link1IsLocal = PathIsDescendantOfPath(h_, link1Target, treePath1);
+				bool link2IsLocal = PathIsDescendantOfPath(h_, link2Target, treePath2);
+				if (link1IsLocal != link2IsLocal) {
+					FileNotificationParams params(kLinkIsLocalDiffers,
+												  filePath1,
+												  filePath2,
+												  link1IsLocal ? 1 : 0,
+												  link2IsLocal ? 1 : 0);
+					NOTIFY(h_, kFilesDifferNotification, &params);
+					
+					match = false;
+				}
+				else {
+					if (link1TargetPathUTF8 != link2TargetPathUTF8) {
+						std::string originalLink1TargetPathUTF8(link1TargetPathUTF8);
+						if ((link1PathUTF8.find("/Volumes/") == 0) &&
+							(link1TargetPathUTF8.find("/Volumes/") == 0)) {
+							link1PathUTF8 = link1PathUTF8.substr(8);
+							link1TargetPathUTF8 = link1TargetPathUTF8.substr(8);
+						}
+						
+						std::string link1TargetRelativePathUTF8;
+						string::GetRelativePath(link1PathUTF8, link1TargetPathUTF8, link1TargetRelativePathUTF8);
+						if (link1TargetRelativePathUTF8.empty()) {
+							link1TargetPathUTF8 = originalLink1TargetPathUTF8;
+						}
+						else {
+							link1TargetPathUTF8 = link1TargetRelativePathUTF8;
+						}
+						
+						std::string originalLink2TargetPathUTF8(link2TargetPathUTF8);
+						if ((link2PathUTF8.find("/Volumes/") == 0) &&
+							(link2TargetPathUTF8.find("/Volumes/") == 0)) {
+							link2PathUTF8 = link2PathUTF8.substr(8);
+							link2TargetPathUTF8 = link2TargetPathUTF8.substr(8);
+						}
+						
+						std::string link2TargetRelativePathUTF8;
+						string::GetRelativePath(link2PathUTF8, link2TargetPathUTF8, link2TargetRelativePathUTF8);
+						if (link2TargetRelativePathUTF8.empty()) {
+							link2TargetPathUTF8 = originalLink2TargetPathUTF8;
+						}
+						else {
+							link2TargetPathUTF8 = link2TargetRelativePathUTF8;
+						}
+					}
+					
+					if (link1TargetPathUTF8 != link2TargetPathUTF8) {
+						match = false;
+						FileNotificationParams params(kLinkTargetsDiffer,
+													  filePath1,
+													  filePath2,
+													  link1TargetPathUTF8,
+													  link2TargetPathUTF8);
+						NOTIFY(h_, kFilesDifferNotification, &params);
+					}
+				}
+				
+				bool xattrsMatch = false;
+				auto result = CompareXAttrs(h_, filePath1, filePath2, xattrsMatch);
+				if (result != CompareXAttrsResult::kSuccess) {
+					NOTIFY_ERROR(h_, "CompareXAttrs failed for:", filePath1);
+					return CompareLinksStatus::kError;
+				}
+				if (!xattrsMatch) {
+					match = false;
+				}
+				
+				uint32_t permissions1 = 0;
+				if (!GetFilePosixPermissions(h_, filePath1, permissions1)) {
+					NOTIFY_ERROR(h_, "GetFilePosixPermissions failed for path 1:", filePath1);
+					return CompareLinksStatus::kError;
+				}
+				uint32_t permissions2 = 0;
+				if (!GetFilePosixPermissions(h_, filePath2, permissions2)) {
+					NOTIFY_ERROR(h_, "GetFilePosixPermissions failed for path 2:", filePath2);
+					return CompareLinksStatus::kError;
+				}
+				if (permissions1 != permissions2) {
+					match = false;
+					FileNotificationParams params(kPermissionsDiffer, filePath1, filePath2);
+					NOTIFY(h_, kFilesDifferNotification, &params);
+				}
+				
+				std::string userOwner1;
+				std::string groupOwner1;
+				if (!GetFilePosixOwnership(h_, filePath1, userOwner1, groupOwner1)) {
+					NOTIFY_ERROR(h_, "GetFilePosixOwnership failed for path 1:", filePath1);
+					return CompareLinksStatus::kError;
+				}
+				
+				std::string userOwner2;
+				std::string groupOwner2;
+				if (!GetFilePosixOwnership(h_, filePath1, userOwner2, groupOwner2)) {
+					NOTIFY_ERROR(h_, "GetFilePosixOwnership failed for path 2:", filePath2);
+					return CompareLinksStatus::kError;
+				}
+				
+				if (userOwner1 != userOwner2) {
+					match = false;
+					FileNotificationParams params(kUserOwnersDiffer, filePath1, filePath2, userOwner1, userOwner2);
+					NOTIFY(h_, kFilesDifferNotification, &params);
+				}
+				if (groupOwner1 != groupOwner2) {
+					match = false;
+					FileNotificationParams params(kGroupOwnersDiffer, filePath1, filePath2, groupOwner1, groupOwner2);
+					NOTIFY(h_, kFilesDifferNotification, &params);
+				}
+				
+				if (ignoreDates == IgnoreDates::kNo) {
+					GetFileDatesCallbackClassT<std::string> datesCallback1;
+					GetFileDates(h_, filePath1, datesCallback1);
+					if (!datesCallback1.mSuccess) {
+						NOTIFY_ERROR(h_, "GetFileDates failed for:", filePath1);
+						return CompareLinksStatus::kError;
+					}
+					
+					GetFileDatesCallbackClassT<std::string> datesCallback2;
+					GetFileDates(h_, filePath2, datesCallback2);
+					if (!datesCallback2.mSuccess) {
+						NOTIFY_ERROR(h_, "GetFileDates failed for:", filePath2);
+						return CompareLinksStatus::kError;
+					}
+					
+					if (datesCallback1.mCreationDate != datesCallback2.mCreationDate) {
+						match = false;
+						FileNotificationParams params(kCreationDatesDiffer,
+													  filePath1,
+													  filePath2,
+													  datesCallback1.mCreationDate,
+													  datesCallback2.mCreationDate);
+						NOTIFY(h_, kFilesDifferNotification, &params);
+					}
+					
+					if (datesCallback1.mModificationDate != datesCallback2.mModificationDate) {
+						match = false;
+						FileNotificationParams params(kModificationDatesDiffer,
+													  filePath1,
+													  filePath2,
+													  datesCallback1.mModificationDate,
+													  datesCallback2.mModificationDate);
+						NOTIFY(h_, kFilesDifferNotification, &params);
+					}
+				}
+				
+				if (match) {
+					FileNotificationParams params(kFilesMatch, filePath1, filePath2);
+					NOTIFY(h_, kFilesMatchNotification, &params);
+				}
+				
+				return CompareLinksStatus::kSuccess;
+			}
+			
 			//
 			bool CompareAttributes(const HermitPtr& h_,
 								   const FilePathPtr& filePath1,
@@ -521,6 +722,20 @@ namespace hermit {
 					if (fileType1 == FileType::kDirectory) {
 						if (!PrepareDirectories(h_, context, filePath1, filePath2)) {
 							NOTIFY_ERROR(h_, "PrepareDirectories failed for:", filePath1, filePath2);
+							mStatus = CompareFilesStatus::kError;
+						}
+						ClearBusyFlag(h_);
+						return;
+					}
+					
+					// Are these both symbolic links?
+					if (fileType1 == FileType::kSymbolicLink) {
+						auto status = CompareLinks(h_, mFilePath1, filePath1, mFilePath2, filePath2, mIgnoreDates);
+						if (status == CompareLinksStatus::kCancel) {
+							mStatus = CompareFilesStatus::kCancel;
+						}
+						else if (status != CompareLinksStatus::kSuccess) {
+							NOTIFY_ERROR(h_, "CompareLinks failed for path 1:", filePath1, "path 2:", filePath2);
 							mStatus = CompareFilesStatus::kError;
 						}
 						ClearBusyFlag(h_);

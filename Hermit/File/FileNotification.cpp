@@ -55,6 +55,7 @@ namespace hermit {
 		const char* kUserOwnersDiffer = "userownersdiffer";
 		const char* kGroupOwnersDiffer = "groupownersdiffer";
 		const char* kLinkTargetsDiffer = "linktargetsdiffer";
+		const char* kLinkIsLocalDiffers = "linkislocaldiffers";
 		const char* kIsAliasDiffers = "isaliasdiffers";
 		const char* kAliasTargetsDiffer = "aliastargetsdiffer";
 		const char* kIsHardLinkDiffers = "ishardlinkdiffers";

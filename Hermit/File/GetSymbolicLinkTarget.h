@@ -19,7 +19,6 @@
 #ifndef GetSymbolicLinkTarget_h
 #define GetSymbolicLinkTarget_h
 
-#include "Hermit/Foundation/Callback.h"
 #include "Hermit/Foundation/Hermit.h"
 #include "FilePath.h"
 
@@ -27,57 +26,10 @@ namespace hermit {
 	namespace file {
 		
 		//
-		//
-		DEFINE_CALLBACK_3A(
-						   GetSymbolicLinkTargetCallback,
-						   bool,						// inSuccess
-						   FilePathPtr,				// inTargetFilePath
-						   bool);						// inIsRelativePath
-		
-		//
-		//
-		template <typename ManagedFilePathPtrT>
-		class GetSymbolicLinkTargetCallbackClassT
-		:
-		public GetSymbolicLinkTargetCallback
-		{
-		public:
-			//
-			//
-			GetSymbolicLinkTargetCallbackClassT()
-			:
-			mSuccess(false),
-			mIsRelativePath(false)
-			{
-			}
-			
-			//
-			//
-			bool Function(
-						  const bool& inSuccess,
-						  const FilePathPtr& inTargetFilePath,
-						  const bool& inIsRelativePath)
-			{
-				mSuccess = inSuccess;
-				if (inSuccess)
-				{
-					mFilePath = ManagedFilePathPtrT(inTargetFilePath);
-					mIsRelativePath = inIsRelativePath;
-				}
-				return true;
-			}
-			
-			//
-			//
-			bool mSuccess;
-			ManagedFilePathPtrT mFilePath;
-			bool mIsRelativePath;
-		};
-		
-		//
-		void GetSymbolicLinkTarget(const HermitPtr& h_,
-								   const FilePathPtr& inLinkPath,
-								   const GetSymbolicLinkTargetCallbackRef& inCallback);
+		bool GetSymbolicLinkTarget(const HermitPtr& h_,
+								   const FilePathPtr& linkPath,
+								   FilePathPtr& outTargetPath,
+								   bool& outIsRelativePath);
 		
 	} // namespace file
 } // namespace hermit
