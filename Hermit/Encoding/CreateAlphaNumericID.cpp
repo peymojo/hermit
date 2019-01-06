@@ -24,15 +24,16 @@
 
 namespace hermit {
 	namespace encoding {
-		
-		namespace {
+		namespace CreateAlphaNumericID_Impl {
+			
+			//
+			const char* kCharacterSet = "bcdfghjkmpqrtvwxy2346789";
+			const int kCharacterSetSize = 24;
+			const int kLettersCount = 17;
 			
 			//
 			class Buffer {
 			public:
-				//
-				typedef size_t size_type;
-				
 				//
 				Buffer() : mSize(0), mData(nullptr), mAllocatedBuf(nullptr) {
 				}
@@ -69,90 +70,28 @@ namespace hermit {
 				char* mAllocatedBuf;
 			};
 			
-			//
-			bool ContainsUnwantedText(const char* text) {
-				static const char* sWords[] = {
-					"arse",
-					"ass",
-					"bitch",
-					"boob",
-					"butt",
-					"cock",
-					"cunt",
-					"damn",
-					"dick",
-					"fag",
-					"fanny",
-					"fart",
-					"fuck",
-					"hell",
-					"homo",
-					"nigger",
-					"penis",
-					"piss",
-					"poop",
-					"prick",
-					"pussy",
-					"rape",
-					"sex",
-					"shit",
-					"slut",
-					"tits",
-					"turd",
-					"twat",
-					"whore" };
-				const int kNumWords = 29;
-				
-				int trackers[kNumWords] = { 0 };
-				const char* p = text;
-				while (*p) {
-					for (int n = 0; n < kNumWords; ++n) {
-						if (*p == sWords[n][trackers[n]]) {
-							trackers[n]++;
-							
-							if (sWords[n][trackers[n]] == 0) {
-								return true;
-							}
-						}
-						else {
-							trackers[n] = 0;
-						}
-					}
-					
-					p++;
-				}
-				return false;
-			}
-			
-		} // private namespace
+		} // namespace CreateAlphaNumericID_Impl
+		using namespace CreateAlphaNumericID_Impl;
 		
 		//
-		bool CreateAlphaNumericID(const HermitPtr& h_, const uint32_t& size, std::string& outAlphaNumericID) {
-			while (true) {
-				std::string randomBytes;
-				if (!GenerateSecureRandomBytes(h_, size, randomBytes)) {
-					NOTIFY_ERROR(h_, "GenerateSecureRandomBytes failed, size:", size);
-					return false;
-				}
-				
-				Buffer buf;
-				buf.assign(randomBytes.data(), randomBytes.size());
-				for (uint32_t n = 0; n < size; ++n) {
-					//	always start with a letter...
-					int mod = (n == 0) ? 26 : 36;
-					int r = ((uint8_t)buf.mData[n]) % mod;
-					if (r < 26) {
-						buf.mData[n] = ('a' + r);
-					}
-					else {
-						buf.mData[n] = ('0' + (r - 26));
-					}
-				}
-				if (!ContainsUnwantedText(buf.mData)) {
-					outAlphaNumericID = std::string(buf.mData, buf.mSize);
-					break;
-				}
+		bool CreateAlphaNumericID(const HermitPtr& h_,
+								  const uint32_t& size,
+								  std::string& outAlphaNumericID) {
+			std::string randomBytes;
+			if (!GenerateSecureRandomBytes(h_, size, randomBytes)) {
+				NOTIFY_ERROR(h_, "GenerateSecureRandomBytes failed, size:", size);
+				return false;
 			}
+				
+			Buffer buf;
+			buf.assign(randomBytes.data(), randomBytes.size());
+			for (uint32_t n = 0; n < size; ++n) {
+				//	always start with a letter...
+				int mod = (n == 0) ? kLettersCount : kCharacterSetSize;
+				int r = ((uint8_t)buf.mData[n]) % mod;
+				buf.mData[n] = kCharacterSet[r];
+			}
+			outAlphaNumericID = std::string(buf.mData, buf.mSize);
 			return true;
 		}
 		
